@@ -18,7 +18,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * Dies ist ein Megetest
+ * Dies ist ein Mergetest
+ * dies ist ein zweiter mergetest 
  * Entry point classes define <code>onModuleLoad()</code>
  */
 public class Hdm_sms implements EntryPoint {
