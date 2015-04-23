@@ -17,6 +17,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+
+//Test Merge bei Mario 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -150,5 +152,3 @@ public class Hdm_sms implements EntryPoint {
 		nameField.addKeyUpHandler(handler);
 	}
 }
-
-//Test Merge bei Mario 
