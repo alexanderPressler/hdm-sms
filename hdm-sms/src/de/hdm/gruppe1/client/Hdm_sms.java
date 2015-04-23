@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Das ist ein Testeidu test
  * Entry point classes define <code>onModuleLoad()</code>.
+ * Entry point classes Test Mario  define <code>onModuleLoad()</code>.
  */
 public class Hdm_sms implements EntryPoint {
 	/**
@@ -151,4 +152,3 @@ public class Hdm_sms implements EntryPoint {
 		nameField.addKeyUpHandler(handler);
 	}
 }
-
