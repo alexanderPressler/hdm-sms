@@ -25,7 +25,7 @@ public abstract class BusinessObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	//TODO: Aenderungdatum und User einfuegen + getter/setter 
+	
 	/**
 	 * Eindeutige ID alles BOs samt getter und setter.
 	 */
