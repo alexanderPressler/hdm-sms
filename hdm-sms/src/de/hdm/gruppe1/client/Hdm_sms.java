@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Das ist ein Testeidu test
  * Entry point classes define <code>onModuleLoad()</code>.
+ * Galina try
  */
 public class Hdm_sms implements EntryPoint {
 	/**
