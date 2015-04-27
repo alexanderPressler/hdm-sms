@@ -1,9 +1,12 @@
 package de.hdm.gruppe1.server;
 
+import java.util.Vector;
+
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
+
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -178,10 +181,10 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * 
 	   * <p>
 	   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
-	   * von {@link #save(Bauteil c)} in die Datenbank transferiert werden.
+	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
 	   * </p>
 	   * 
-	   * @see save(Customer c)
+	   * @see save(Bauteil b)
 	   */
 	  @Override
 	public Bauteil createBauteil(String bauteilBeschreibung, String materialBeschreibung)
@@ -202,13 +205,25 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  
 
 	  /**
+	   * Speichern eines Bauteils.
+	   */
+	  @Override
+	public void save(Bauteil b) throws IllegalArgumentException {
+	    bauteilMapper.update(b);
+	  }
+	  
+	  /**
 	   * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung von
 	   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
 	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
 	   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
 	   * vorstellen.
 	   */
-	  
+	  @Override
+	public void delete(Bauteil b) throws IllegalArgumentException {
+	 
+	    this.bauteilMapper.delete(b);
+	  }
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
