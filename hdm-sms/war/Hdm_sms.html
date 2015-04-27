@@ -16,7 +16,7 @@
     <!--                                           -->
     <!-- Any title is fine                         -->
     <!--                                           -->
-    <title>Web Application Starter Project</title>
+    <title>HDM sms</title>
     
     <!--                                           -->
     <!-- This script loads your compiled module.   -->
@@ -44,19 +44,37 @@
       </div>
     </noscript>
 
-    <h1>Web Application Starter Project</h1>
+    <!-- <h1>Web Application Starter Project</h1> -->
 
-    <table align="center">
-      <tr>
-        <td colspan="2" style="font-weight:bold;">Please enter your name:</td>        
-      </tr>
-      <tr>
-        <td id="nameFieldContainer"></td>
-        <td id="sendButtonContainer"></td>
-      </tr>
-      <tr>
-        <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
-      </tr>
-    </table>
+	<!-- warp definiert einen Container, der alle individuellen Elemente für HDM sms aufnimmt -->
+	<div id="wrap">
+	
+		<!-- Das head_wrap wird unterteilt in 2 Elemente -->
+		<div id="head_wrap">
+               
+                <!-- Im linken head_wrap_left wird das Logo von HDM sms platziert -->
+                <div id="head_wrap_left">
+				<a href="#"><img src="img/logo_itprojekt.png" alt="Logo " alt="test" /> </a>     
+          	    </div>             
+        
+     			<!-- Im rechten head_wrap_right wird ein Menü platziert -->
+				<div id="head_wrap_right"></div> <div  class="menuBar">
+				</div>
+		</div>
+		
+		<!-- Im content_wrap werden dynamisch alle Funktionen von HDM sms angezeigt -->
+		<div id="content_wrap">
+        </div>
+        
+        <!-- Der footer_wrap bietet eine direkte Übersicht, wer für die angezeigten Inhalte verantwortlich ist -->
+        <div id="footer_wrap"><div></div><div class="impressumTxt">&copy; Gruppe 1 [Alexander Pressler, Galina Schmidt, Katja Thiere, Andreas Herrmann, Mario Theiler]
+		</div>
+		
+		<!-- Da die Applikation in der Cloud verfügbar ist, besteht rechtlich eine Impressumpflicht -->
+		<div id="Impressum">
+		</div>
+	
+	</div>
+
   </body>
 </html>
