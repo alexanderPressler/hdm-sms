@@ -37,11 +37,11 @@ public class BauteilGeneral implements IsWidget {
 		BauteilOverviewPanel.add(SublineLabel);
 		BauteilOverviewPanel.add(NewBauteilButton);
 		BauteilOverviewPanel.add(Overview);
-		RootPanel.get("content_wrap").add(BauteilOverviewPanel);
 		
 		NewBauteilButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
+//				RootPanel.get("content_wrap").add(new createBauteil());
 				Window.alert("Platzhalter für RPC-Funktion: Neues Bauteil anlegen");
 			    }
 
@@ -56,6 +56,8 @@ public class BauteilGeneral implements IsWidget {
 		Overview.setWidget(1, 6, new Button("Edit"));
 		Overview.setWidget(1, 7, new Button("Delete"));
 
+		RootPanel.get("content_wrap").add(BauteilOverviewPanel);
+		
 	}
 
 }

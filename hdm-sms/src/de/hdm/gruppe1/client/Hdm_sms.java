@@ -29,15 +29,11 @@ public class Hdm_sms implements EntryPoint, ClickHandler {
 		menuPanel.add(enderzeugnisBtn);
 		menuPanel.add(stuecklistebtn);
 
-		bauteilBtn.addClickHandler(this);
-		baugruppeBtn.addClickHandler(this);
-		enderzeugnisBtn.addClickHandler(this);
-		stuecklistebtn.addClickHandler(this);
-		
 		bauteilBtn.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new BauteilGeneral());
+//				Window.alert("Platzhalter für Bauteil-GUI");
 			    }
 		});
 		
