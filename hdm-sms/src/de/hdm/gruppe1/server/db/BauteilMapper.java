@@ -1,8 +1,10 @@
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
+import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.*;
+
 
 
 
@@ -152,6 +154,44 @@ public class BauteilMapper {
 	    catch (SQLException e2) {
 	      e2.printStackTrace();
 	    }
+	  }
+	  
+	  /**
+	   * Auslesen aller Kunden.
+	   * 
+	   * @return Ein Vektor mit Customer-Objekten, die sämtliche Kunden
+	   *         repräsentieren. Bei evtl. Exceptions wird ein partiell gef�llter
+	   *         oder ggf. auch leerer Vetor zurückgeliefert.
+	   */
+	  public Vector<Bauteil> findAll() {
+	    Connection con = DBConnection.connection();
+	    // Ergebnisvektor vorbereiten
+	    Vector<Bauteil> result = new Vector<Bauteil>();
+
+	    try {
+	      Statement stmt = con.createStatement();
+
+	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
+	          + "FROM bauteile " + "ORDER BY name");
+
+	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
+	      // erstellt.
+	      while (rs.next()) {
+	        Bauteil b = new Bauteil();
+	        b.setId(rs.getInt("id"));
+	        b.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
+	        b.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
+
+	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
+	        result.addElement(b);
+	      }
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+
+	    // Ergebnisvektor zurückgeben
+	    return result;
 	  }
 
 }

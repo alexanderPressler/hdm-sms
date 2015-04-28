@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.shared;
 
+import java.util.Vector;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe1.shared.bo.Bauteil;
@@ -22,6 +24,8 @@ public interface SmsAsync {
 	void delete(Bauteil b, AsyncCallback<Void> callback);
 
 	void init(AsyncCallback<Void> callback);
+
+	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
 	
 	
 

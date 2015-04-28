@@ -7,7 +7,6 @@ import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
 
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -223,6 +222,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	public void delete(Bauteil b) throws IllegalArgumentException {
 	 
 	    this.bauteilMapper.delete(b);
+	  }
+	  
+	  /**
+	   * Auslesen aller Bauteile.
+	   */
+	  @Override
+	public Vector<Bauteil> getAllBauteile() throws IllegalArgumentException {
+	    return this.bauteilMapper.findAll();
 	  }
 	  /*
 	   * ***************************************************************************

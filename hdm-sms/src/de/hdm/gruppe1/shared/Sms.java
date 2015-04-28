@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.shared;
 
+import java.util.Vector;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -77,5 +79,7 @@ public interface Sms extends RemoteService {
 	   * @throws IllegalArgumentException
 	   */
 	void delete(Bauteil b) throws IllegalArgumentException;
+
+	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
 }
