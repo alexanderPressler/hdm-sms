@@ -99,7 +99,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	/**
 	 * Referenz auf das zugehörige BusinessObjekt.
 	 */
-	private Bauteil bauteil = null;
+	private Bauteil b = null;
 	
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte

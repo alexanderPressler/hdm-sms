@@ -37,8 +37,8 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
  * 
  * @author Thies
  */
-// TODO: Hier den Path anpassen vorher "greet"
-@RemoteServiceRelativePath("sms")
+// TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
+@RemoteServiceRelativePath("greet")
 public interface Sms extends RemoteService {
 
 	/**
