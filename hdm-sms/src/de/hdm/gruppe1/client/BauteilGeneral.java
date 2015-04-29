@@ -2,7 +2,6 @@ package de.hdm.gruppe1.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -22,13 +21,14 @@ public class BauteilGeneral implements IsWidget {
 		return null;
 	}
 	
-	//Vertikales Panel, um alle relevanten Elemente für Bauteile anzuordnen.
+	//Vertikales Panel, um alle relevanten Elemente für Bauteile aufzunehmen.
 	private final VerticalPanel BauteilOverviewPanel = new VerticalPanel ();
 	
 	//Elemente für Bauteile initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteilübersicht");
 	private final Label SublineLabel = new Label ("In dieser Übersicht sehen Sie alle im System vorhandenen Bauteile. Um diese zu editieren oder löschen, klicken Sie in der Tabelle auf den entsprechenden Button. Um ein neues Bauteil anzulegen, klicken Sie auf den <Neues Bauteil>-Button.");
 	private final Button NewBauteilButton = new Button ("Neues Bauteil");
+	private final Label OverviewTableLabel = new Label ("Diese Tabelle enthält eine Übersicht über alle Bauteile im System");
 	private final FlexTable Overview = new FlexTable ();
 
 	public BauteilGeneral() {
@@ -36,16 +36,21 @@ public class BauteilGeneral implements IsWidget {
 		BauteilOverviewPanel.add(HeadlineLabel);
 		BauteilOverviewPanel.add(SublineLabel);
 		BauteilOverviewPanel.add(NewBauteilButton);
+		BauteilOverviewPanel.add(OverviewTableLabel);
 		BauteilOverviewPanel.add(Overview);
 		
 		NewBauteilButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
-//				RootPanel.get("content_wrap").add(new createBauteil());
-				Window.alert("Platzhalter für RPC-Funktion: Neues Bauteil anlegen");
+				RootPanel.get("content_wrap").add(new CreateBauteil());
+//				Window.alert("Platzhalter für RPC-Funktion: Neues Bauteil anlegen");
 			    }
 
 		});
+		
+		//Applikationsschicht liefert <Bauteil>-Vector.
+		//Diesen mithilfe for-Schleife durchlaufen und angemessen darstellen.
+		//Hier sind aktuell lediglich die Tabellenüberschriften definiert.
 		
 		Overview.setText(1, 0, "Nummer");
 		Overview.setText(1, 1, "Bezeichnung");
