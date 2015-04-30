@@ -1,5 +1,9 @@
 package de.hdm.gruppe1.client;
 
+import de.hdm.gruppe1.shared.FieldVerifier;
+import de.hdm.gruppe1.shared.Sms;
+import de.hdm.gruppe1.shared.SmsAsync;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -8,66 +12,58 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
-/**
- * Entry point classes define <code>onModuleLoad()</code>.
- */
-public class Hdm_sms implements EntryPoint, ClickHandler {
-	
+public class Hdm_sms implements EntryPoint {
+
 	HorizontalPanel menuPanel = new HorizontalPanel();
 	Button bauteilBtn = new Button("Bauteile");
-   	Button baugruppeBtn = new Button("Baugruppen");
+	Button baugruppeBtn = new Button("Baugruppen");
 	Button enderzeugnisBtn = new Button("Enderzeugnisse");
-	Button stuecklistebtn = new Button("Stücklisten");
+	Button stuecklistebtn = new Button("Stï¿½cklisten");
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
+
 		menuPanel.add(bauteilBtn);
 		menuPanel.add(baugruppeBtn);
 		menuPanel.add(enderzeugnisBtn);
 		menuPanel.add(stuecklistebtn);
 
-		bauteilBtn.addClickHandler(new ClickHandler(){
+		bauteilBtn.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new BauteilGeneralView());
-//				Window.alert("Platzhalter für Bauteil-GUI");
-			    }
+				// Window.alert("Platzhalter fï¿½r Bauteil-GUI");
+			}
 		});
-		
-		baugruppeBtn.addClickHandler(new ClickHandler(){
+
+		baugruppeBtn.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
-//				RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter für Baugruppe-GUI");
-		    }
+				// RootPanel.get("content_wrap").add(new XY());
+				Window.alert("Platzhalter fï¿½r Baugruppe-GUI");
+			}
 		});
-		
-		enderzeugnisBtn.addClickHandler(new ClickHandler(){
+
+		enderzeugnisBtn.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
-//				RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter für Enderzeugnis-GUI");
-			    }
+				// RootPanel.get("content_wrap").add(new XY());
+				Window.alert("Platzhalter fï¿½r Enderzeugnis-GUI");
+			}
 		});
-		
-		stuecklistebtn.addClickHandler(new ClickHandler(){
+
+		stuecklistebtn.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
-//				RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter für Stückliste-GUI");
-			    }
+				// RootPanel.get("content_wrap").add(new XY());
+				Window.alert("Platzhalter fï¿½r Stï¿½ckliste-GUI");
+			}
 		});
-		
+
 		RootPanel.get("head_wrap_right").add(menuPanel);
-	 	
+
 	}
-	
-	@Override
-	public void onClick(ClickEvent event) {
-		
-	}
-	
+
 }
