@@ -4,23 +4,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 //Die Klasse CreateBauteil liefert alle benötigten Elemente, um ein neues Bauteil im System anzulegen.
-public class CreateBauteil implements IsWidget {
-
-	@Override
-	public Widget asWidget() {
-		return null;
-	}
-	
-	//Vertikales Panel, um alle relevanten Elemente anzuordnen, um ein neues Bauteil anzulegen.
-	private final VerticalPanel CreateBauteilPanel= new VerticalPanel ();
+public class CreateBauteil extends VerticalPanel {
 	
 	//Elemente für CreateBauteil initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteil anlegen");
@@ -35,26 +25,43 @@ public class CreateBauteil implements IsWidget {
 	
 	public CreateBauteil(){
 		
-		CreateBauteilPanel.add(HeadlineLabel);
-		CreateBauteilPanel.add(SublineLabel);
-		CreateBauteilPanel.add(NameFieldLabel);
-		CreateBauteilPanel.add(NameField);
-		CreateBauteilPanel.add(MaterialFieldLabel);
-		CreateBauteilPanel.add(MaterialField);
-		CreateBauteilPanel.add(DescriptionFieldLabel);
-		CreateBauteilPanel.add(DescriptionField);
-		CreateBauteilPanel.add(CreateBauteilButton);
+		this.add(HeadlineLabel);
+		this.add(SublineLabel);
+		this.add(NameFieldLabel);
+		this.add(NameField);
+		this.add(MaterialFieldLabel);
+		this.add(MaterialField);
+		this.add(DescriptionFieldLabel);
+		this.add(DescriptionField);
+		this.add(CreateBauteilButton);
 		
-		CreateBauteilButton.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content_wrap").clear();
-				Window.alert("Bauteil wurde (nicht) angelegt");
-			    }
-
-		});
+		CreateBauteilButton.addClickHandler(new CreateClickHandler());
 		
-		RootPanel.get("content_wrap").add(CreateBauteilPanel);
+		RootPanel.get("content_wrap").add(this);
 		
 	}
+	
+	/*
+	 * Click Handlers.
+	 */
+	
+	/**
+	  * Die Anlage eines Bauteils bezieht sich auf seinen Vor- und/oder
+	  * Nachnamen. Es erfolgt der Aufruf der Service-Methode "create".
+	  * 
+	  */
+	 private class CreateClickHandler implements ClickHandler {
+	  @Override
+	  public void onClick(ClickEvent event) {
+//	   if (customerToDisplay != null) {
+
+			RootPanel.get("content_wrap").clear();
+			Window.alert("Bauteil wurde (nicht) angelegt");
+		   
+//	   } else {
+//	    Window.alert("kein Kunde ausgewählt");
+//	   }
+	  }
+	 }
 	
 }

@@ -4,26 +4,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /*
  * Die Klasse BauteilGeneral liefert eine Übersicht mit allen vorhandenen Bauteilen im System
  * und bietet Möglichkeiten, diese anzulegen, zu editieren oder zu löschen.
  */
-public class BauteilGeneral implements IsWidget {
+public class BauteilGeneralView extends VerticalPanel {
 
-	@Override
-	public Widget asWidget() {
-		return null;
-	}
-	
-	//Vertikales Panel, um alle relevanten Elemente für Bauteile aufzunehmen.
-	private final VerticalPanel BauteilOverviewPanel = new VerticalPanel ();
-	
 	//Elemente für Bauteile initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteilübersicht");
 	private final Label SublineLabel = new Label ("In dieser Übersicht sehen Sie alle im System vorhandenen Bauteile. Um diese zu editieren oder löschen, klicken Sie in der Tabelle auf den entsprechenden Button. Um ein neues Bauteil anzulegen, klicken Sie auf den <Neues Bauteil>-Button.");
@@ -31,13 +21,13 @@ public class BauteilGeneral implements IsWidget {
 	private final Label OverviewTableLabel = new Label ("Diese Tabelle enthält eine Übersicht über alle Bauteile im System");
 	private final FlexTable Overview = new FlexTable ();
 
-	public BauteilGeneral() {
+	public BauteilGeneralView() {
 
-		BauteilOverviewPanel.add(HeadlineLabel);
-		BauteilOverviewPanel.add(SublineLabel);
-		BauteilOverviewPanel.add(NewBauteilButton);
-		BauteilOverviewPanel.add(OverviewTableLabel);
-		BauteilOverviewPanel.add(Overview);
+		this.add(HeadlineLabel);
+		this.add(SublineLabel);
+		this.add(NewBauteilButton);
+		this.add(OverviewTableLabel);
+		this.add(Overview);
 		
 		NewBauteilButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
@@ -61,7 +51,7 @@ public class BauteilGeneral implements IsWidget {
 		Overview.setWidget(1, 6, new Button("Edit"));
 		Overview.setWidget(1, 7, new Button("Delete"));
 
-		RootPanel.get("content_wrap").add(BauteilOverviewPanel);
+		RootPanel.get("content_wrap").add(this);
 		
 	}
 
