@@ -9,12 +9,12 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-//Die Klasse CreateBauteil liefert alle benötigten Elemente, um ein neues Bauteil im System anzulegen.
+//Die Klasse CreateBauteil liefert alle benÃ¶tigten Elemente, um ein neues Bauteil im System anzulegen.
 public class CreateBauteil extends VerticalPanel {
 	
-	//Elemente für CreateBauteil initialisieren
+	//Elemente fÃ¼r CreateBauteil initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteil anlegen");
-	private final Label SublineLabel = new Label ("Um ein Bauteil anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
+	private final Label SublineLabel = new Label ("Um ein Bauteil anzulegen, fÃ¼llen Sie bitte alle Felder aus und bestÃ¤tigen mit dem <anlegen>-Button ihre Eingabe.");
 	private final Label NameFieldLabel = new Label ("Bezeichnung");
 	private final TextBox NameField = new TextBox ();
 	private final Label MaterialFieldLabel = new Label ("Materialbezeichnung");
@@ -60,7 +60,7 @@ public class CreateBauteil extends VerticalPanel {
 			RootPanel.get("content_wrap").add(new BauteilGeneralView());
 		   
 //	   } else {
-//	    Window.alert("kein Kunde ausgewählt");
+//	    Window.alert("kein Kunde ausgewÃ¤hlt");
 //	   }
 	  }
 	 }

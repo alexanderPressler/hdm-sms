@@ -8,9 +8,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 	/**
-	* Die Klasse Impressum ist notwendig, um nach TMG §5 den Betreiber der Website eindeutig identifizieren zu können.
+	* Die Klasse Impressum ist notwendig, um nach TMG Â§5 den Betreiber der Website eindeutig identifizieren zu kÃ¶nnen.
 	* Dieses Impressum ist mithilfe eines Buttons von jeder Unterseite der Anwendung aus zu erreichen.
-	* <p>Im Footer der html-Seite ist ein eigens angelegter Bereich für den Button vorhanden.
+	* <p>Im Footer der html-Seite ist ein eigens angelegter Bereich fÃ¼r den Button vorhanden.
 	* 
 	* @author Mario Theiler
 	* @version 1.0
@@ -20,13 +20,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 		public void onLoad(){
 	    
 	    	Button impressumBtn = new Button("Impressum");
-//	    	impressumBtn.setStylePrimaryName("impressumBtn");
+	    	impressumBtn.setStylePrimaryName("Button");
 	        
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
-	        		"<h2>Angaben gemäß § 5 TMG:</h2>"+
+	        		"<h2>Angaben gemÃ¤ÃŸ Â§ 5 TMG:</h2>"+
 	        		"<p>Mario Theiler<br />"+
-	        		"Nobelstraße 10<br />"+
+	        		"NobelstraÃŸe 10<br />"+
 	        		"70569 Stuttgart"+
 	        		"</p>" +
 	        		"<h2>Kontakt:</h2>"+

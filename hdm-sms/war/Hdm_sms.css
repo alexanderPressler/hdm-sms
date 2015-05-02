@@ -2,17 +2,35 @@
 
 
 /** Example rules used by the template application (remove for your app) */
+
+/** Tabelle für Overview-GUI's */
+.BauteilTable{
+    border: 1px solid black;
+    background-color: #fff;
+    border-spacing: 5px;
+    margin-bottom: 0px;
+    border-style: solid;
+    border-color: #CCCCCC;
+}
+
+/** Jedes GUI hat eine Headline, um dem User zu zeigen, auf welcher Unterseite des Systems er sich befindet */
+.headline{
+	padding-top: 14px;
+	padding-bottom: 14px;
+	font-weight: bold;
+}
+
+/** Jedes GUI hat eine Subline, um dem User eine Erklärung zur darunterstehenden Software-Funktion zu geben */
+.subline{
+	padding-bottom: 20px;
+}
+
 h1 {
   font-size: 2em;
   font-weight: bold;
   color: #777777;
   margin: 40px 0px 70px;
   text-align: center;
-}
-
-.sendButton {
-  display: block;
-  font-size: 16pt;
 }
 
 /** Most GWT widgets already have a style name defined */
@@ -28,7 +46,26 @@ h1 {
   color: red;
 }
 
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
+/** Standard-Buttons */
+.Button {
   margin: 15px 6px 6px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/** Individuelle Buttons für edit & delete */
+.editButton {
+	background:url(./img/EditButton.png) no-repeat;
+    cursor:pointer;
+    border:none;
+    width:50px;
+    height:30px;
+}
+
+.deleteButton {
+	background:url(./img/DeleteButton.png) no-repeat;
+    cursor:pointer;
+    border:none;
+    width:50px;
+    height:25px;
 }
