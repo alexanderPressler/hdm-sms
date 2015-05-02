@@ -84,8 +84,7 @@ public class BauteilGeneralView extends VerticalPanel {
 	        editBtn.addClickHandler(new ClickHandler(){
 				public void onClick(ClickEvent event) {
 					RootPanel.get("content_wrap").clear();
-//					RootPanel.get("content_wrap").add(new EditBauteil());
-					Window.alert("Platzhalter f�r EditBauteil GUI");
+					RootPanel.get("content_wrap").add(new EditBauteil());
 				    }
 
 			});

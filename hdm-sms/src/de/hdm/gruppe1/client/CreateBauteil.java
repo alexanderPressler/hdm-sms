@@ -6,6 +6,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -20,7 +21,7 @@ public class CreateBauteil extends VerticalPanel {
 	private final Label MaterialFieldLabel = new Label ("Materialbezeichnung");
 	private final TextBox MaterialField = new TextBox ();
 	private final Label DescriptionFieldLabel = new Label ("Textuelle Beschreibung");
-	private final TextBox DescriptionField = new TextBox ();
+	private final TextArea DescriptionField = new TextArea ();
 	private final Button CreateBauteilButton = new Button ("anlegen");
 	
 	public CreateBauteil(){
@@ -35,6 +36,9 @@ public class CreateBauteil extends VerticalPanel {
 		this.add(DescriptionField);
 		this.add(CreateBauteilButton);
 		
+		DescriptionField.setStyleName("DescriptionFieldText");
+		CreateBauteilButton.setStyleName("Button");
+		
 		CreateBauteilButton.addClickHandler(new CreateClickHandler());
 		
 		RootPanel.get("content_wrap").add(this);
@@ -46,8 +50,7 @@ public class CreateBauteil extends VerticalPanel {
 	 */
 	
 	/**
-	  * Die Anlage eines Bauteils bezieht sich auf seinen Vor- und/oder
-	  * Nachnamen. Es erfolgt der Aufruf der Service-Methode "create".
+	  * Die Anlage eines Bauteils ruft die Service-Methode "create" auf.
 	  * 
 	  */
 	 private class CreateClickHandler implements ClickHandler {

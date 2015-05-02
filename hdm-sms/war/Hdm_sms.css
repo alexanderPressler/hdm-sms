@@ -69,3 +69,9 @@ h1 {
     width:50px;
     height:25px;
 }
+
+.DescriptionFieldText {
+	width: 50%;
+	height: 100px;
+	word-wrap: break-word;
+}
