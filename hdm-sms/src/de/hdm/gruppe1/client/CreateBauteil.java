@@ -57,6 +57,7 @@ public class CreateBauteil extends VerticalPanel {
 
 			RootPanel.get("content_wrap").clear();
 			Window.alert("Bauteil wurde (nicht) angelegt");
+			RootPanel.get("content_wrap").add(new BauteilGeneralView());
 		   
 //	   } else {
 //	    Window.alert("kein Kunde ausgewählt");
