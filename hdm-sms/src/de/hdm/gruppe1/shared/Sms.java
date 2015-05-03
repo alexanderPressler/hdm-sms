@@ -43,15 +43,7 @@ import de.hdm.gruppe1.shared.bo.Element;
 @RemoteServiceRelativePath("greet")
 public interface Sms extends RemoteService {
 
-	/**
-	 * Initialisierung des Objekts. Diese Methode ist vor dem Hintergrund von
-	 * GWT RPC zusätzlich zum No Argument Constructor der implementierenden
-	 * Klasse {@link BankVerwaltungImpl} notwendig. Bitte diese Methode direkt
-	 * nach der Instantiierung aufrufen.
-	 * 
-	 * @throws IllegalArgumentException
-	 */
-	public void init() throws IllegalArgumentException;
+	Bauteil init();
 
 	/**
 	 * Ein Bauteil anlegen.
@@ -66,39 +58,19 @@ public interface Sms extends RemoteService {
 	Bauteil createBauteil(String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
-	 /**
-	   * Speichern eines Bauteils-Objekts in der Datenbank.
-	   * 
-	   * @param b zu sicherndes Objekt.
-	   * @throws IllegalArgumentException
-	   */
-	void save(Bauteil b) throws IllegalArgumentException;
+	 Bauteil save(Bauteil b);
 
-	 /**
-	   * Löschen des übergebenen Bauteils.
-	   * 
-	   * @param b der zu löschende Bauteil
-	   * @throws IllegalArgumentException
-	   */
-	void delete(Bauteil b) throws IllegalArgumentException;
+	 Bauteil delete(Bauteil b);
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
 	
-	/**
-	 * Eine Baugruppe anlegen, bearbeiten und entfernen als Methoden zur 
-	 * Verwaltung .
-	 * Beim anlegen wird eine Liste mit elementen erzeugt.
-	 */
-	
-	Baugruppe createBaugruppe (String name, ArrayList<Element> element )
-			 throws IllegalArgumentException;
+	Baugruppe createBaugruppe(String name, ArrayList<Element> element);
 	
 	Baugruppe editBaugruppe (Baugruppe baugruppe)
 			 throws IllegalArgumentException;
 	
-	Baugruppe deleteBaugruppe (Baugruppe baugruppe)
-			 throws IllegalArgumentException;
+	Baugruppe deleteBaugruppe(Baugruppe baugruppe);
 	
 	
 	

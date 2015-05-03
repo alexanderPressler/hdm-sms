@@ -16,6 +16,16 @@ public class Baugruppe extends Element{
 	public void setStueckliste(Stueckliste stueckliste){
 	this.stueckliste = stueckliste;
 	}
+	
+	String name;
+	
+	public String getName(){
+		return this.name;
+	}
+		public void setName(String name){
+		this.name = name;
+	}
+		
 	  /**
 	   * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.
 	   * Diese besteht aus dem Text, der durch die <code>toString()</code>-Methode
@@ -23,8 +33,9 @@ public class Baugruppe extends Element{
 	   * der Baugruppe.
 	   */
 	  public String toString() {
-	    return super.toString() + " " + this.stueckliste ;
+	    return super.toString() + " Elementname: #" + this.name + " " + this.stueckliste ;
 	  }
+
 
 	}
 

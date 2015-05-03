@@ -1,5 +1,6 @@
 package de.hdm.gruppe1.server;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import de.hdm.gruppe1.shared.FieldVerifier;
@@ -86,10 +87,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @author Thies
  */
 @SuppressWarnings("serial")
-public class SmsImpl extends RemoteServiceServlet implements
-		Sms {
+public class SmsImpl extends RemoteServiceServlet implements Sms {
 
-	
+
 	//TODO: Checken ob wir Diese Variable Brauchen
 	// Wie lautet die Standardkontonummer für das Kassenkonto der Bank?
 	// Bankprojekt: public static final int DEFAULT_CASH_ACCOUNT_ID = 10000;
@@ -100,12 +100,13 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 * Referenz auf das zugehörige BusinessObjekt.
 	 */
 	private Bauteil b = null;
-	
+	private Baugruppe baugruppe = null;
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte
 	 * mit der Datenbank abgleicht.
 	 */
 	private BauteilMapper bauteilMapper = null;
+	private BaugruppeMapper baugruppeMapper = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -160,6 +161,8 @@ public class SmsImpl extends RemoteServiceServlet implements
 	     * kommunizieren kann.
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
+	    this.baugruppeMapper = BaugruppeMapper.baugruppeMapper();
+	    
 	  }
 	  /*
 	   * ***************************************************************************
@@ -238,5 +241,52 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  
 	
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Beginn: Methoden fuer Baugruppe-Objekte
+	   * ***************************************************************************
+	   */
+	public Baugruppe createBaugruppe(String name, ArrayList<Element> element)
+			      throws IllegalArgumentException {
+			   
+			    Stueckliste stueckliste;
+				baugruppe.setStueckliste(stueckliste);
+			    // Objekt in der DB speichern.
+			    return this.baugruppeMapper.insert(baugruppe);
+		}
+
 	
+
+	@Override
+	public Baugruppe editBaugruppe(Baugruppe baugruppe)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Baugruppe deleteBaugruppe(Baugruppe baugruppe) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Baugruppe getBaugruppeByName(String name)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Baugruppe getBaugruppeById(int id) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Baugruppe getAllBaugruppen(ArrayList<Baugruppe> baugruppe)
+			throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
