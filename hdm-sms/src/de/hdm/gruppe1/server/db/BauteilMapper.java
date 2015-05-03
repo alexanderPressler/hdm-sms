@@ -69,7 +69,7 @@ public class BauteilMapper {
 	   * @return das bereits übergebene Objekt, jedoch mit ggf. korrigierter
 	   *         <code>id</code>.
 	   */
-	  public Bauteil insert(Bauteil a) {
+	  public Bauteil insert(Bauteil bauteil) {
 	    Connection con = DBConnection.connection();
 
 	    try {
@@ -88,13 +88,14 @@ public class BauteilMapper {
 	         * a erhält den bisher maximalen, nun um 1 inkrementierten
 	         * Primärschlüssel.
 	         */
-	        a.setId(rs.getInt("maxid") + 1);
+	    	  bauteil.setId(rs.getInt("maxid") + 1);
 
 	        stmt = con.createStatement();
 
 	        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
-	        stmt.executeUpdate("INSERT INTO bauteile (id, name) " + "VALUES ("
-	            + a.getId() + "," + a.getName() + ")");
+	        stmt.executeUpdate("INSERT INTO bauteile (id, name, beschreibung, materialBeschreibung) " + "VALUES ("
+	            + bauteil.getId() + "," + bauteil.getName() +"," + bauteil.getBauteilBeschreibung() 
+	            +"," + bauteil.getMaterialBeschreibung()+")");
 	      }
 	    }
 	    catch (SQLException e2) {
@@ -110,7 +111,7 @@ public class BauteilMapper {
 	     * explizite Rückgabe von a ist eher ein Stilmittel, um zu signalisieren,
 	     * dass sich das Objekt evtl. im Laufe der Methode verändert hat.
 	     */
-	    return a;
+	    return bauteil;
 	  }
 	  
 	  /**

@@ -186,9 +186,10 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * @see save(Bauteil b)
 	   */
 	  @Override
-	public Bauteil createBauteil(String bauteilBeschreibung, String materialBeschreibung)
+	public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
 	      throws IllegalArgumentException {
 	    Bauteil b = new Bauteil();
+	    b.setName(name);
 	    b.setBauteilBeschreibung(bauteilBeschreibung);
 	    b.setMaterialBeschreibung(materialBeschreibung);
 

@@ -60,7 +60,7 @@ public interface Sms extends RemoteService {
 	 * @return Ein fertiges Kunden-Objekt.
 	 * @throws IllegalArgumentException
 	 */
-	Bauteil createBauteil(String bauteilBeschreibung,
+	Bauteil createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
 	 /**
