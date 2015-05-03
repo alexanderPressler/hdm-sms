@@ -11,11 +11,6 @@ public class Enderzeugnis extends Baugruppe {
 		this.zugehoerigeBaugruppe = zugehoerigeBaugruppe;
 	}
 	   
-	   
-	   
-	
-	
-	
 	
 	
 	/**
@@ -25,7 +20,7 @@ public class Enderzeugnis extends Baugruppe {
 	   * des Enderzeugnisses.
 	   */
 	  public String toString() {
-	    return super.toString() + " " + this.firstName + " " + this.lastName;
+	    return super.toString() + " " + this.zugehoerigeBaugruppe;
 	  }
 
 	}
