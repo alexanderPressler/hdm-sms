@@ -8,9 +8,9 @@ public class Baugruppe extends Element{
 	 * die Baugruppe werden in Stücklisten verwendet, dadruch werden
 	 * in die Klassen Stückliste angelegt und gesetzt.
 	 **/
-	Stueckliste stueckliste = "";
+	Stueckliste stueckliste;
 	
-	public getStueckliste(){
+	public Stueckliste getStueckliste(){
 		return this.stueckliste;
 	}
 	public void setStueckliste(Stueckliste stueckliste){

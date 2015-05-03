@@ -9,6 +9,7 @@ public class Bauteil extends Element {
 	 *Bauteilbeschreibung + die Setzen und Auslesen Methoden 
 	 **/
 	String bauteilBeschreibung = "leer";
+	
 	public String getBauteilBeschreibung() {
 		return this.bauteilBeschreibung;
 	}
@@ -19,6 +20,7 @@ public class Bauteil extends Element {
 	 *Bauteil-Materialbeschreibung + die Setzen und Auslesen Methoden 
 	 **/
 	String materialBeschreibung = "leer";
+	
 	public String getMaterialBeschreibung() {
 		return this.materialBeschreibung;
 	}
