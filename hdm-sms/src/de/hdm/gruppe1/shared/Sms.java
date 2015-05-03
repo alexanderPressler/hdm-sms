@@ -1,11 +1,14 @@
 package de.hdm.gruppe1.shared;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Element;
 
 /**
  * <p>
@@ -81,4 +84,45 @@ public interface Sms extends RemoteService {
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
+	
+	/**
+	 * Eine Baugruppe anlegen, bearbeiten und entfernen als Methoden zur 
+	 * Verwaltung .
+	 * Beim anlegen wird eine Liste mit elementen erzeugt.
+	 */
+	
+	Baugruppe createBaugruppe (String name, ArrayList<Element> element )
+			 throws IllegalArgumentException;
+	
+	Baugruppe editBaugruppe (Baugruppe baugruppe)
+			 throws IllegalArgumentException;
+	
+	Baugruppe deleteBaugruppe (Baugruppe baugruppe)
+			 throws IllegalArgumentException;
+	
+	
+	
+	
+	
+	
+	Baugruppe getBaugruppeByName (String name)
+			 throws IllegalArgumentException;
+	
+	Baugruppe getBaugruppeById(int id)
+			 throws IllegalArgumentException;
+	
+	
+	Baugruppe getAllBaugruppen (ArrayList<Baugruppe> baugruppe)
+			 throws IllegalArgumentException;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
