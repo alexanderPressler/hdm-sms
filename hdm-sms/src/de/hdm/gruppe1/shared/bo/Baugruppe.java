@@ -16,4 +16,15 @@ public class Baugruppe extends Element{
 	public void setStueckliste(Stueckliste stueckliste){
 	this.stueckliste = stueckliste;
 	}
-}
+	  /**
+	   * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.
+	   * Diese besteht aus dem Text, der durch die <code>toString()</code>-Methode
+	   * der Superklasse erzeugt wird, ergaenzt durch die verwendete Stueckliste.
+	   * der Baugruppe.
+	   */
+	  public String toString() {
+	    return super.toString() + " " + this.stueckliste ;
+	  }
+
+	}
+
