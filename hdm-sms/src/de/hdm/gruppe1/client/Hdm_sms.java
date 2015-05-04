@@ -18,7 +18,7 @@ public class Hdm_sms implements EntryPoint {
 	Button bauteilBtn = new Button("Bauteile");
 	Button baugruppeBtn = new Button("Baugruppen");
 	Button enderzeugnisBtn = new Button("Enderzeugnisse");
-	Button stuecklistebtn = new Button("St�cklisten");
+	Button stuecklistebtn = new Button("Stücklisten");
 
 	/**
 	 * This is the entry point method.
@@ -34,7 +34,7 @@ public class Hdm_sms implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new BauteilGeneralView());
-				// Window.alert("Platzhalter f�r Bauteil-GUI");
+				// Window.alert("Platzhalter für Bauteil-GUI");
 			}
 		});
 
@@ -42,7 +42,7 @@ public class Hdm_sms implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
 				// RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter f�r Baugruppe-GUI");
+				Window.alert("Platzhalter für Baugruppe-GUI");
 			}
 		});
 
@@ -50,7 +50,7 @@ public class Hdm_sms implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
 				// RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter f�r Enderzeugnis-GUI");
+				Window.alert("Platzhalter für Enderzeugnis-GUI");
 			}
 		});
 
@@ -58,11 +58,12 @@ public class Hdm_sms implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
 				// RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter f�r St�ckliste-GUI");
+				Window.alert("Platzhalter für Stückliste-GUI");
 			}
 		});
 
 		RootPanel.get("head_wrap_right").add(menuPanel);
+		RootPanel.get("Impressum").add(new Impressum());
 
 	}
 

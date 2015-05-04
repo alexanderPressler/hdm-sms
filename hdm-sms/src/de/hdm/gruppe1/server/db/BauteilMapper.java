@@ -190,11 +190,12 @@ public class BauteilMapper {
 	        Bauteil bauteil = new Bauteil();
 	        bauteil.setId(rs.getInt("id"));
 	        bauteil.setName(rs.getString("name"));
-	        bauteil.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
+	        bauteil.setBauteilBeschreibung(rs.getString("beschreibung"));
 	        bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
 
 	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
 	        result.addElement(bauteil);
+	        
 	      }
 	    }
 	    catch (SQLException e) {
