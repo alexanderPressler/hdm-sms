@@ -69,7 +69,7 @@ public class BauteilMapper {
 	   * @return das bereits übergebene Objekt, jedoch mit ggf. korrigierter
 	   *         <code>id</code>.
 	   */
-	  public Bauteil insert(Bauteil a) {
+	  public Bauteil insert(Bauteil bauteil) {
 	    Connection con = DBConnection.connection();
 
 	    try {
@@ -88,13 +88,17 @@ public class BauteilMapper {
 	         * a erhält den bisher maximalen, nun um 1 inkrementierten
 	         * Primärschlüssel.
 	         */
-	        a.setId(rs.getInt("maxid") + 1);
+	    	  bauteil.setId(rs.getInt("maxid") + 1);
 
 	        stmt = con.createStatement();
 
 	        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
-	        stmt.executeUpdate("INSERT INTO bauteile (id, name) " + "VALUES ("
-	            + a.getId() + "," + a.getName() + ")");
+//	        stmt.executeUpdate("INSERT INTO bauteile (id, name, beschreibung, materialBeschreibung) " + "VALUES ("
+//	            + bauteil.getId() + "," + bauteil.getName() +"," + bauteil.getBauteilBeschreibung() 
+//	            +"," + bauteil.getMaterialBeschreibung()+")");
+	      
+	        stmt.executeUpdate("INSERT INTO `bauteile` (`id`, `name`, `beschreibung`, `materialBeschreibung`) VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '"+ bauteil.getMaterialBeschreibung() +"');");
+	      
 	      }
 	    }
 	    catch (SQLException e2) {
@@ -110,7 +114,7 @@ public class BauteilMapper {
 	     * explizite Rückgabe von a ist eher ein Stilmittel, um zu signalisieren,
 	     * dass sich das Objekt evtl. im Laufe der Methode verändert hat.
 	     */
-	    return a;
+	    return bauteil;
 	  }
 	  
 	  /**
@@ -119,14 +123,16 @@ public class BauteilMapper {
 	   * @param a das Objekt, das in die DB geschrieben werden soll
 	   * @return das als Parameter übergebene Objekt
 	   */
-	  public Bauteil update(Bauteil a) {
+	  public Bauteil update(Bauteil bauteil) {
 	    Connection con = DBConnection.connection();
 
 	    try {
 	      Statement stmt = con.createStatement();
 
-	      stmt.executeUpdate("UPDATE bauteile " + "SET name=\"" + a.getName()
-	          + "\" " + "WHERE id=" + a.getId());
+//	      stmt.executeUpdate("UPDATE bauteile " + "SET name=\"" + a.getName()
+//	          + "\" " + "WHERE id=" + a.getId());
+	      
+	      stmt.executeUpdate("UPDATE `bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBauteilBeschreibung() +"',`materialBeschreibung`='"+ bauteil.getMaterialBeschreibung() +"' WHERE `id`= "+ bauteil.getId() +";");
 
 	    }
 	    catch (SQLException e2) {
@@ -134,7 +140,7 @@ public class BauteilMapper {
 	    }
 
 	    // Um Analogie zu insert(Bauteil a) zu wahren, geben wir a zurück
-	    return a;
+	    return bauteil;
 	  }
 	  
 	  /**
@@ -142,13 +148,15 @@ public class BauteilMapper {
 	   * 
 	   * @param a das aus der DB zu löschende "Objekt"
 	   */
-	  public void delete(Bauteil a) {
+	  public void delete(Bauteil bauteil) {
 	    Connection con = DBConnection.connection();
 
 	    try {
 	      Statement stmt = con.createStatement();
 
-	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
+//	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
+	      
+	      stmt.executeUpdate("DELETE FROM `bauteile` WHERE `id`="+ bauteil.getId());
 
 	    }
 	    catch (SQLException e2) {
@@ -171,19 +179,22 @@ public class BauteilMapper {
 	    try {
 	      Statement stmt = con.createStatement();
 
-	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
-	          + "FROM bauteile " + "ORDER BY name");
+//	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
+//	          + "FROM bauteile " + "ORDER BY name");
+	      
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `bauteile` ORDER BY `name`");
 
 	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 	      // erstellt.
 	      while (rs.next()) {
-	        Bauteil b = new Bauteil();
-	        b.setId(rs.getInt("id"));
-	        b.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
-	        b.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
+	        Bauteil bauteil = new Bauteil();
+	        bauteil.setId(rs.getInt("id"));
+	        bauteil.setName(rs.getString("name"));
+	        bauteil.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
+	        bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
 
 	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
-	        result.addElement(b);
+	        result.addElement(bauteil);
 	      }
 	    }
 	    catch (SQLException e) {

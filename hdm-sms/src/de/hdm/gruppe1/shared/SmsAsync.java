@@ -16,7 +16,7 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
  */
 public interface SmsAsync {
 	
-	void createBauteil(String bauteilBeschreibung,
+	void createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung, AsyncCallback<Bauteil> callback);
 
 	void save(Bauteil b, AsyncCallback<Void> callback);
