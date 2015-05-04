@@ -46,7 +46,7 @@ public class DBConnection {
      */
     //TODO: !!!! URLs anpassen !!!!  
     private static String googleUrl = "jdbc:google:mysql://prof-thies.de:thies-bankproject:thies-bankproject/bankproject?user=demo&password=demo";
-    private static String localUrl = "jdbc:mysql://127.0.0.1:3306/bankproject?user=demo&password=demo";
+    private static String localUrl = "jdbc:mysql://rdbms.strato.de/DB2126929?user=U2126929&password=itprojekt132";
 
     /**
      * Diese statische Methode kann aufgrufen werden durch
