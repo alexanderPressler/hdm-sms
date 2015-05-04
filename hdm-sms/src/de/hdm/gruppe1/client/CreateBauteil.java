@@ -71,8 +71,9 @@ public class CreateBauteil extends VerticalPanel {
 			stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
 					materialBeschreibung, new CreateBauteilCallback());
 			
-			// RootPanel.get("content_wrap").clear();
-			// Window.alert("Bauteil wurde (nicht) angelegt");
+			 RootPanel.get("content_wrap").clear();
+			 RootPanel.get("content_wrap").add(new BauteilGeneralView());
+			 
 		}
 	}
 	
@@ -86,7 +87,7 @@ public class CreateBauteil extends VerticalPanel {
 		@Override
 		public void onSuccess(Bauteil bauteil) {
 
-			Window.alert("Der Kunde wurde angelegt !");	
+			Window.alert("Das Bauteil wurde erfolgreich angelegt.");
 			//TODO: Klären ob das catvm gebraucht wird 
 			// if (bauteil != null) {
 			// Das erfolgreiche Hinzufügen eines Kunden wird an den

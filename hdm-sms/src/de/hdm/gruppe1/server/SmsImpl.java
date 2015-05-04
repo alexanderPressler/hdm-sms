@@ -197,7 +197,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
 	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
 	     */
-	    b.setId(1);
+//	    b.setId(10);
 
 	    // Objekt in der DB speichern.
 	    return this.bauteilMapper.insert(b);
