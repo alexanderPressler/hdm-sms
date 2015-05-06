@@ -96,16 +96,19 @@ public class SmsImpl extends RemoteServiceServlet implements
 	// Standard StundenplaneintragID
 	// Jennys projekt: private static final long serialVersionUID = 7027992284251455305L;
 	
+	//TODO: brauchen wir diese Referezen, wie im Bankprojekt?
 	/**
 	 * Referenz auf das zugehörige BusinessObjekt.
 	 */
 	private Bauteil b = null;
+	private Stueckliste s = null;
 	
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte
 	 * mit der Datenbank abgleicht.
 	 */
 	private BauteilMapper bauteilMapper = null;
+	private StuecklisteMapper stuecklisteMapper = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -160,6 +163,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	     * kommunizieren kann.
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
+	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
 	  }
 	  /*
 	   * ***************************************************************************
@@ -183,7 +187,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
 	   * </p>
 	   * 
-	   * @see save(Bauteil b)
+	   * @see createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
 	   */
 	  @Override
 	public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
@@ -192,12 +196,6 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    b.setName(name);
 	    b.setBauteilBeschreibung(bauteilBeschreibung);
 	    b.setMaterialBeschreibung(materialBeschreibung);
-
-	    /*
-	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
-	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
-	     */
-//	    b.setId(10);
 
 	    // Objekt in der DB speichern.
 	    return this.bauteilMapper.insert(b);
@@ -213,7 +211,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  }
 	  
 	  /**
-	   * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung von
+	   * Löschen eines Bauteils. Natürlich würde ein reales System zur Verwaltung von
 	   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
 	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
 	   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
@@ -245,7 +243,68 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
 	   * ***************************************************************************
 	   */
+	  /**
+	   * <p>
+	   * Anlegen eines neuen Stueckliste. Dies führt implizit zu einem Speichern des
+	   * neuen Stuecklistes in der Datenbank.
+	   * </p>
+	   * 
+	   * <p>
+	   * <b>HINWEIS:</b> Änderungen an Stueckliste-Objekten müssen stets durch Aufruf
+	   * von {@link #save(Stueckliste s)} in die Datenbank transferiert werden.
+	   * </p>
+	   * 
+	   * @see createStueckliste(String name)
+	   */
+	  @Override
+	public Stueckliste createStueckliste(String name)
+	      throws IllegalArgumentException {
+		Stueckliste s = new Stueckliste();
+	    s.setName(name);
+	    // Objekt in der DB speichern.
+	    return this.stuecklisteMapper.insert(s);
+	  }
 	  
-	
+	  /**
+	   * Speichern einer Stueckliste.
+	   */
+	  @Override
+	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+		stuecklisteMapper.update(s);
+	  }
+	  
+	  /**
+	   * Löschen einer Stueckliste. Natürlich würde ein reales System zur Verwaltung von
+	   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
+	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
+	   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
+	   * vorstellen.
+	   */
+	  @Override
+	public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
+	 
+	    this.stuecklisteMapper.delete(s);
+	  }
+	  /**
+	   * Auslesen aller Stuecklisten.
+	   */
+	  @Override
+	public Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException {
+	    return this.stuecklisteMapper.findAll();
+	  }
+	  
+	  /**
+	   * Auslesen eines Stueckliste anhand seiner Id.
+	   */
+	  @Override
+	public Stueckliste getStuecklisteById(int id) throws IllegalArgumentException {
+	    return this.stuecklisteMapper.findById(id);
+	  }
+
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Beginn: Methoden für Bauteil-Objekte
+	   * ***************************************************************************
+	   */
 	
 }

@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
  * <p>
@@ -82,5 +83,15 @@ public interface Sms extends RemoteService {
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
 	Bauteil getBauteilById(int id) throws IllegalArgumentException;
+
+	Stueckliste createStueckliste(String name) throws IllegalArgumentException;
+
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
+
+	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
 
 }
