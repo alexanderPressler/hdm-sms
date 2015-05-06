@@ -1,58 +1,172 @@
 package de.hdm.gruppe1.client;
 
+import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import de.hdm.gruppe1.shared.SmsAsync;
+import de.hdm.gruppe1.shared.bo.Bauteil;
 
 /*
- * Die Klasse BauteilGeneral liefert eine Übersicht mit allen vorhandenen Bauteilen im System
- * und bietet Möglichkeiten, diese anzulegen, zu editieren oder zu löschen.
+ * Die Klasse BauteilGeneralView liefert eine Ãœbersicht mit allen vorhandenen Bauteilen im System
+ * und bietet MÃ¶glichkeiten, diese anzulegen, zu editieren oder zu lÃ¶schen.
  */
 public class BauteilGeneralView extends VerticalPanel {
 
-	//Elemente für Bauteile initialisieren
-	private final Label HeadlineLabel = new Label ("Bauteilübersicht");
-	private final Label SublineLabel = new Label ("In dieser Übersicht sehen Sie alle im System vorhandenen Bauteile. Um diese zu editieren oder löschen, klicken Sie in der Tabelle auf den entsprechenden Button. Um ein neues Bauteil anzulegen, klicken Sie auf den <Neues Bauteil>-Button.");
+	//Elemente fÃ¼r Bauteile initialisieren
+	private final Label HeadlineLabel = new Label ("BauteilÃ¼bersicht");
+	private final Label SublineLabel = new Label ("In dieser Ãœbersicht sehen Sie alle im System vorhandenen Bauteile. Um diese zu editieren oder lÃ¶schen, klicken Sie in der Tabelle auf den entsprechenden Button. Um ein neues Bauteil anzulegen, klicken Sie auf den <Neues Bauteil>-Button.");
 	private final Button NewBauteilButton = new Button ("Neues Bauteil");
-	private final Label OverviewTableLabel = new Label ("Diese Tabelle enthält eine Übersicht über alle Bauteile im System");
-	private final FlexTable Overview = new FlexTable ();
-
+	private final Label OverviewTableLabel = new Label ("Diese Tabelle enthÃ¤lt eine Ãœbersicht Ã¼ber alle Bauteile im System");
+	private final FlexTable table = new FlexTable();
+	
+	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
+	
+	// Remote Service via ClientsideSettings
+	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+	
 	public BauteilGeneralView() {
 
-		this.add(HeadlineLabel);
-		this.add(SublineLabel);
-		this.add(NewBauteilButton);
-		this.add(OverviewTableLabel);
-		this.add(Overview);
+//		this.add(HeadlineLabel);
+//		this.add(SublineLabel);
+//		this.add(NewBauteilButton);
+//		this.add(OverviewTableLabel);
+//		this.add(table);
+		
+		HeadlineLabel.setStyleName("headline");
+		SublineLabel.setStyleName("subline");
+		NewBauteilButton.setStyleName("Button");
+		OverviewTableLabel.setStyleName("subline");
+		table.setStyleName("BauteilTable");
 		
 		NewBauteilButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new CreateBauteil());
-//				Window.alert("Platzhalter für RPC-Funktion: Neues Bauteil anlegen");
 			    }
 
 		});
 		
 		//Applikationsschicht liefert <Bauteil>-Vector.
 		//Diesen mithilfe for-Schleife durchlaufen und angemessen darstellen.
-		//Hier sind aktuell lediglich die Tabellenüberschriften definiert.
-		
-		Overview.setText(1, 0, "Nummer");
-		Overview.setText(1, 1, "Bezeichnung");
-		Overview.setText(1, 2, "Beschreibung");
-		Overview.setText(1, 3, "Materialbezeichnung");
-		Overview.setText(1, 4, "Letzter Änderer");
-		Overview.setText(1, 5, "Datum letzte Änderung");
-		Overview.setWidget(1, 6, new Button("Edit"));
-		Overview.setWidget(1, 7, new Button("Delete"));
 
+		stuecklistenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
+
+	    table.setText(0, 0, "ID");
+	    table.setText(0, 1, "Name");
+	    table.setText(0, 2, "Material");
+	    table.setText(0, 3, "Beschreibung");
+	    table.setText(0, 4, "Letzter Ã„nderer");
+	    table.setText(0, 5, "Letztes Ã„nderungsdatum");
+	    table.setText(0, 6, "Editieren");
+	    table.setText(0, 7, "LÃ¶schen");
+	    
+	    table.setStyleName("tableHead");
+	    
+	    for(int i = 0; i < allBauteile.size(); i++){
+	    	System.out.println("Inhalt id: "+allBauteile.get(i).getId());
+	    	System.out.println("Inhalt name: "+allBauteile.get(i).getName());
+	    	System.out.println("Inhalt beschreibung: "+allBauteile.get(i).getMaterialBeschreibung());
+	    }
+	    
+		this.add(HeadlineLabel);
+		this.add(SublineLabel);
+		this.add(NewBauteilButton);
+		this.add(OverviewTableLabel);
+		this.add(table);
+	    
 		RootPanel.get("content_wrap").add(this);
 		
 	}
+	
+	/*
+	 * Click Handlers.
+	 */
+	
+	/**
+	  * Das LÃ¶schen eines Bauteils wird mithilfe der mitgelieferten Objekt-ID Ã¼ber die Applikationsschicht
+	  * an den Server geschickt. Der User erhÃ¤lt eine entsprechende Hinweismeldung angezeigt und die
+	  * Tabelle wird neu geladen.
+	  * 
+	  */
+	 private class DeleteClickHandler implements ClickHandler {
+	  @Override
+	  public void onClick(ClickEvent event) {
+//	   if (customerToDisplay != null) {
+
+			RootPanel.get("content_wrap").clear();
+			Window.alert("Bauteil wurde vielleich gelÃ¶scht");
+			RootPanel.get("content_wrap").add(new BauteilGeneralView());
+		   
+//	   } else {
+//	    Window.alert("kein Kunde ausgewÃ¤hlt");
+//	   }
+	  }
+	 }
+	 		
+		class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Bauteile konnten nicht geladen werden");
+			}
+
+			@Override
+			public void onSuccess(Vector<Bauteil> alleBauteile) {
+
+//				Window.alert("Inhalt allBauteile: "+allBauteile);
+				allBauteile = alleBauteile;
+//				System.out.println("Inhalt allBauteile: "+allBauteile);
+				
+				for (int row = 1; row <= allBauteile.size(); row++) {
+//				      for (int col = 0; col < numColumns; col++) {
+
+				    	//Da die erste Reihe der Tabelle als Ãœberschriften der Spalten dient, wird eine neue Variable benÃ¶tigt,
+				    	//die den Index 0 des Vectors auslesen kann.
+				    	int i = row-1;
+				    	
+				        Button editBtn = new Button("");
+				        Button deleteBtn = new Button("");
+				        
+				        editBtn.setStyleName("editButton");
+				        deleteBtn.setStyleName("deleteButton");
+				        
+				        editBtn.addClickHandler(new ClickHandler(){
+							public void onClick(ClickEvent event) {
+								RootPanel.get("content_wrap").clear();
+								RootPanel.get("content_wrap").add(new EditBauteil());
+							    }
+
+						});
+				        
+				        deleteBtn.addClickHandler(new DeleteClickHandler());
+				    	
+				        table.setText(row, 0, ""+allBauteile.get(i).getId());
+				        table.setText(row, 1, allBauteile.get(i).getName());
+				        table.setText(row, 2, allBauteile.get(i).getBauteilBeschreibung());
+				        table.setText(row, 3, allBauteile.get(i).getMaterialBeschreibung());
+				        table.setText(row, 4, "Mario");
+				        table.setText(row, 5, "02.05.2015, 18 Uhr");
+				        table.setWidget(row, 6, editBtn);
+				        table.setWidget(row, 7, deleteBtn);
+				    	  
+//				      }
+				    }
+				
+				//TODO: KlÃ¤ren ob das catvm gebraucht wird 
+				// if (bauteil != null) {
+				// Das erfolgreiche HinzufÃ¼gen eines Kunden wird an den
+				// Kunden- und
+				// Kontenbaum propagiert.
+				// catvm.addCustomer(customer);
+				// }
+			}
+		}
 
 }

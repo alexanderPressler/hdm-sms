@@ -36,6 +36,7 @@ public class Bauteil extends Element {
 	   */
 	@Override
 	public String toString() {
-	    return super.toString() + " Elementname: #" + this.name + " Teilbeschreibung: " + this.bauteilBeschreibung;
+	    return super.toString() + " Teilbeschreibung: " + this.bauteilBeschreibung
+	    		+"Materialbeschreibung"+this.materialBeschreibung;
 	  }
 }

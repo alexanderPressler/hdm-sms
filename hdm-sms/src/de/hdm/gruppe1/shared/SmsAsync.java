@@ -7,7 +7,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+<<<<<<< HEAD
 import de.hdm.gruppe1.shared.bo.Element;
+=======
+import de.hdm.gruppe1.shared.bo.Stueckliste;
+>>>>>>> refs/remotes/origin/Alex
 
 /**
  * Das asynchrone Gegenstueck des Interface {@link Sms}. Es wird
@@ -19,7 +23,7 @@ import de.hdm.gruppe1.shared.bo.Element;
  */
 public interface SmsAsync {
 	
-	void createBauteil(String bauteilBeschreibung,
+	void createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung, AsyncCallback<Bauteil> callback);
 
 	void save(Bauteil b, AsyncCallback<Bauteil> callback);
@@ -29,6 +33,7 @@ public interface SmsAsync {
 	void init(AsyncCallback<Bauteil> callback);
 
 	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
+<<<<<<< HEAD
 	
 	
 	
@@ -40,8 +45,24 @@ public interface SmsAsync {
 	void editBaugruppe(Baugruppe baugruppe, AsyncCallback<Baugruppe> callback);
 	
 	void deleteBaugruppe(Baugruppe baugruppe, AsyncCallback<Baugruppe> callback);
+=======
+>>>>>>> refs/remotes/origin/Alex
 
+<<<<<<< HEAD
 	void getBaugruppeByName(String name, AsyncCallback<Baugruppe> callback);
+=======
+	void getBauteilById(int id, AsyncCallback<Bauteil> callback);
+
+	void createStueckliste(String name, AsyncCallback<Stueckliste> callback);
+
+	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
+
+	void deleteStueckliste(Stueckliste s, AsyncCallback<Void> callback);
+
+	void getAllStuecklisten(AsyncCallback<Vector<Stueckliste>> callback);
+
+	void getStuecklisteById(int id, AsyncCallback<Stueckliste> callback);
+>>>>>>> refs/remotes/origin/Alex
 
 	void getBaugruppeById(int id, AsyncCallback<Baugruppe> callback);
 

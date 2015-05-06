@@ -8,7 +8,11 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+<<<<<<< HEAD
 import de.hdm.gruppe1.shared.bo.Element;
+=======
+import de.hdm.gruppe1.shared.bo.Stueckliste;
+>>>>>>> refs/remotes/origin/Alex
 
 /**
  * <p>
@@ -40,7 +44,7 @@ import de.hdm.gruppe1.shared.bo.Element;
  * @author Thies
  */
 // TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
-@RemoteServiceRelativePath("greet")
+@RemoteServiceRelativePath("sms")
 public interface Sms extends RemoteService {
 
 	Bauteil init();
@@ -55,7 +59,7 @@ public interface Sms extends RemoteService {
 	 * @return Ein fertiges Kunden-Objekt.
 	 * @throws IllegalArgumentException
 	 */
-	Bauteil createBauteil(String bauteilBeschreibung,
+	Bauteil createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
 	 Bauteil save(Bauteil b);
@@ -64,6 +68,7 @@ public interface Sms extends RemoteService {
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
+<<<<<<< HEAD
 	
 	Baugruppe createBaugruppe(String name, ArrayList<Element> element);
 	
@@ -97,4 +102,18 @@ public interface Sms extends RemoteService {
 	
 	
 	
+=======
+	Bauteil getBauteilById(int id) throws IllegalArgumentException;
+
+	Stueckliste createStueckliste(String name) throws IllegalArgumentException;
+
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
+
+	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
+
+>>>>>>> refs/remotes/origin/Alex
 }

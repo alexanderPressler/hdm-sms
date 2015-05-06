@@ -5,9 +5,6 @@ import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.*;
 
-
-
-
 /**
  * Mapper-Klasse, die <code>bauteil</code>-Objekte auf eine relationale
  * Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
@@ -38,160 +35,232 @@ public class BauteilMapper {
 	 */
 	protected BauteilMapper() {
 	}
-	
-	 /**
-	   * Diese statische Methode kann aufgrufen werden durch
-	   * <code>BauteilMapper.bauteilMapper()</code>. Sie stellt die
-	   * Singleton-Eigenschaft sicher, indem Sie dafür sorgt, dass nur eine einzige
-	   * Instanz von <code>BauteilMapper</code> existiert.
-	   * <p>
-	   * 
-	   * <b>Fazit:</b> BauteilMapper sollte nicht mittels <code>new</code>
-	   * instantiiert werden, sondern stets durch Aufruf dieser statischen Methode.
-	   * 
-	   * @return DAS <code>BauteilMapper</code>-Objekt.
-	   * @see bauteilMapper
-	   */
-	  public static BauteilMapper bauteilMapper() {
-	    if (bauteilMapper == null) {
-	    	bauteilMapper = new BauteilMapper();
-	    }
 
-	    return bauteilMapper;
-	  }
-	  
-	  /**
-	   * Einfügen eines <code>Bauteil</code>-Objekts in die Datenbank. Dabei wird
-	   * auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
-	   * berichtigt.
-	   * 
-	   * @param a das zu speichernde Objekt
-	   * @return das bereits übergebene Objekt, jedoch mit ggf. korrigierter
-	   *         <code>id</code>.
-	   */
-	  public Bauteil insert(Bauteil a) {
-	    Connection con = DBConnection.connection();
+	/**
+	 * Diese statische Methode kann aufgrufen werden durch
+	 * <code>BauteilMapper.bauteilMapper()</code>. Sie stellt die
+	 * Singleton-Eigenschaft sicher, indem Sie dafür sorgt, dass nur eine
+	 * einzige Instanz von <code>BauteilMapper</code> existiert.
+	 * <p>
+	 * 
+	 * <b>Fazit:</b> BauteilMapper sollte nicht mittels <code>new</code>
+	 * instantiiert werden, sondern stets durch Aufruf dieser statischen
+	 * Methode.
+	 * 
+	 * @return DAS <code>BauteilMapper</code>-Objekt.
+	 * @see bauteilMapper
+	 */
+	public static BauteilMapper bauteilMapper() {
+		if (bauteilMapper == null) {
+			bauteilMapper = new BauteilMapper();
+		}
 
-	    try {
-	      Statement stmt = con.createStatement();
+		return bauteilMapper;
+	}
 
-	      /*
-	       * Zunächst schauen wir nach, welches der momentan höchste
-	       * Primärschlüsselwert ist.
-	       */
-	      ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid "
-	          + "FROM bauteile ");
+	/**
+	 * Einfügen eines <code>Bauteil</code>-Objekts in die Datenbank. Dabei wird
+	 * auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
+	 * berichtigt.
+	 * 
+	 * @param a
+	 *            das zu speichernde Objekt
+	 * @return das bereits übergebene Objekt, jedoch mit ggf. korrigierter
+	 *         <code>id</code>.
+	 */
+	public Bauteil insert(Bauteil bauteil) {
+		Connection con = DBConnection.connection();
 
-	      // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
-	      if (rs.next()) {
-	        /*
-	         * a erhält den bisher maximalen, nun um 1 inkrementierten
-	         * Primärschlüssel.
-	         */
-	        a.setId(rs.getInt("maxid") + 1);
+		try {
+			Statement stmt = con.createStatement();
 
-	        stmt = con.createStatement();
+			/*
+			 * Zunächst schauen wir nach, welches der momentan höchste
+			 * Primärschlüsselwert ist.
+			 */
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid "
+					+ "FROM bauteile ");
 
-	        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
-	        stmt.executeUpdate("INSERT INTO bauteile (id, name) " + "VALUES ("
-	            + a.getId() + "," + a.getName() + ")");
-	      }
-	    }
-	    catch (SQLException e2) {
-	      e2.printStackTrace();
-	    }
+			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+			if (rs.next()) {
+				/*
+				 * a erhält den bisher maximalen, nun um 1 inkrementierten
+				 * Primärschlüssel.
+				 */
+				bauteil.setId(rs.getInt("maxid") + 1);
 
-	    /*
-	     * Rückgabe, des evtl. korrigierten Bauteil.
-	     * 
-	     * HINWEIS: Da in Java nur Referenzen auf Objekte und keine physischen
-	     * Objekte übergeben werden, wäre die Anpassung des bauteil-Objekts auch
-	     * ohne diese explizite Rückgabe au�erhalb dieser Methode sichtbar. Die
-	     * explizite Rückgabe von a ist eher ein Stilmittel, um zu signalisieren,
-	     * dass sich das Objekt evtl. im Laufe der Methode verändert hat.
-	     */
-	    return a;
-	  }
-	  
-	  /**
-	   * Wiederholtes Schreiben eines Objekts in die Datenbank.
-	   * 
-	   * @param a das Objekt, das in die DB geschrieben werden soll
-	   * @return das als Parameter übergebene Objekt
-	   */
-	  public Bauteil update(Bauteil a) {
-	    Connection con = DBConnection.connection();
+				stmt = con.createStatement();
 
-	    try {
-	      Statement stmt = con.createStatement();
+				// Jetzt erst erfolgt die tatsächliche Einfügeoperation
+				stmt.executeUpdate("INSERT INTO `bauteile` (`id`, `name`, `beschreibung`, `materialBeschreibung`) VALUES ('"
+						+ bauteil.getId()
+						+ "', '"
+						+ bauteil.getName()
+						+ "', '"
+						+ bauteil.getBauteilBeschreibung()
+						+ "', '"
+						+ bauteil.getMaterialBeschreibung() + "');");
 
-	      stmt.executeUpdate("UPDATE bauteile " + "SET name=\"" + a.getName()
-	          + "\" " + "WHERE id=" + a.getId());
+			}
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
 
-	    }
-	    catch (SQLException e2) {
-	      e2.printStackTrace();
-	    }
+		/*
+		 * Rückgabe, des evtl. korrigierten Bauteil.
+		 * 
+		 * HINWEIS: Da in Java nur Referenzen auf Objekte und keine physischen
+		 * Objekte übergeben werden, wäre die Anpassung des bauteil-Objekts auch
+		 * ohne diese explizite Rückgabe au�erhalb dieser Methode sichtbar. Die
+		 * explizite Rückgabe von a ist eher ein Stilmittel, um zu
+		 * signalisieren, dass sich das Objekt evtl. im Laufe der Methode
+		 * verändert hat.
+		 */
+		return bauteil;
+	}
 
-	    // Um Analogie zu insert(Bauteil a) zu wahren, geben wir a zurück
-	    return a;
-	  }
-	  
-	  /**
-	   * Löschen der Daten eines <code>Bauteil</code>-Objekts aus der Datenbank.
-	   * 
-	   * @param a das aus der DB zu löschende "Objekt"
-	   */
-	  public void delete(Bauteil a) {
-	    Connection con = DBConnection.connection();
+	/**
+	 * Wiederholtes Schreiben eines Bauteil Objekts in die Datenbank.
+	 * 
+	 * @param a
+	 *            das Objekt, das in die DB geschrieben werden soll
+	 * @return das als Parameter übergebene Bauteil Objekt
+	 */
+	public Bauteil update(Bauteil bauteil) {
+		Connection con = DBConnection.connection();
 
-	    try {
-	      Statement stmt = con.createStatement();
+		try {
+			Statement stmt = con.createStatement();
 
-	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
+			// stmt.executeUpdate("UPDATE bauteile " + "SET name=\"" +
+			// a.getName()
+			// + "\" " + "WHERE id=" + a.getId());
 
-	    }
-	    catch (SQLException e2) {
-	      e2.printStackTrace();
-	    }
-	  }
-	  
-	  /**
-	   * Auslesen aller Kunden.
-	   * 
-	   * @return Ein Vektor mit Customer-Objekten, die sämtliche Kunden
-	   *         repräsentieren. Bei evtl. Exceptions wird ein partiell gef�llter
-	   *         oder ggf. auch leerer Vetor zurückgeliefert.
-	   */
-	  public Vector<Bauteil> findAll() {
-	    Connection con = DBConnection.connection();
-	    // Ergebnisvektor vorbereiten
-	    Vector<Bauteil> result = new Vector<Bauteil>();
+			stmt.executeUpdate("UPDATE `bauteile` SET `name`='"
+					+ bauteil.getName() + "',`beschreibung`='"
+					+ bauteil.getBauteilBeschreibung()
+					+ "',`materialBeschreibung`='"
+					+ bauteil.getMaterialBeschreibung() + "' WHERE `id`= "
+					+ bauteil.getId() + ";");
 
-	    try {
-	      Statement stmt = con.createStatement();
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
 
-	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
-	          + "FROM bauteile " + "ORDER BY name");
+		// Um Analogie zu insert(Bauteil a) zu wahren, geben wir a zurück
+		return bauteil;
+	}
 
-	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
-	      // erstellt.
-	      while (rs.next()) {
-	        Bauteil b = new Bauteil();
-	        b.setId(rs.getInt("id"));
-	        b.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
-	        b.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
+	/**
+	 * Löschen der Daten eines <code>Bauteil</code>-Objekts aus der Datenbank.
+	 * 
+	 * @param a
+	 *            das aus der DB zu löschende "Objekt"
+	 */
+	public void delete(Bauteil bauteil) {
+		Connection con = DBConnection.connection();
 
-	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
-	        result.addElement(b);
-	      }
-	    }
-	    catch (SQLException e) {
-	      e.printStackTrace();
-	    }
+		try {
+			Statement stmt = con.createStatement();
 
-	    // Ergebnisvektor zurückgeben
-	    return result;
-	  }
+			// stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" +
+			// a.getId());
+
+			stmt.executeUpdate("DELETE FROM `bauteile` WHERE `id`="
+					+ bauteil.getId());
+
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+	}
+
+	/**
+	 * Auslesen aller Bauteile.
+	 * 
+	 * @return Ein Vektor mit Bauteil-Objekten, die sämtliche Bauteile
+	 *         repräsentieren. Bei evtl. Exceptions wird ein partiell gef�llter
+	 *         oder ggf. auch leerer Vetor zurückgeliefert.
+	 */
+	public Vector<Bauteil> findAll() {
+		Connection con = DBConnection.connection();
+		// Ergebnisvektor vorbereiten
+		Vector<Bauteil> result = new Vector<Bauteil>();
+
+		try {
+			Statement stmt = con.createStatement();
+
+			ResultSet rs = stmt
+					.executeQuery("SELECT * FROM `bauteile` ORDER BY `name`");
+
+			// Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
+			// erstellt.
+			while (rs.next()) {
+				Bauteil bauteil = new Bauteil();
+				bauteil.setId(rs.getInt("id"));
+				bauteil.setName(rs.getString("name"));
+				bauteil.setBauteilBeschreibung(rs.getString("beschreibung"));
+				bauteil.setMaterialBeschreibung(rs
+						.getString("materialBeschreibung"));
+
+				// Hinzufügen des neuen Objekts zum Ergebnisvektor
+				result.addElement(bauteil);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// Ergebnisvektor zurückgeben
+		return result;
+	}
+
+	/**
+	 * Suchen eines Bauteils mit vorgegebener Id. Da diese eindeutig
+	 * ist, wird genau ein Objekt zur�ckgegeben.
+	 * 
+	 * @param id
+	 *            Primärschlüsselattribut (->DB)
+	 * @return Bauteil-Objekt, das dem übergebenen Schlüssel entspricht, null bei
+	 *         nicht vorhandenem DB-Tupel.
+	 */
+	public Bauteil findById(int id) {
+		// DB-Verbindung holen
+		Connection con = DBConnection.connection();
+
+		try {
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+
+			// Statement ausfüllen und als Query an die DB schicken
+			// TODO: SQL Statement anpassen 
+			ResultSet rs = stmt
+					.executeQuery("SELECT id, name, bauteilBeschreibung, materialBeschreibung"
+							+ "  FROM bauteile "
+							+ "WHERE id="
+							+ id
+							+ " ORDER BY name");
+			// "SELECT * FROM `bauteile` ORDER BY `name`"
+
+			/*
+			 * Da id Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben
+			 * werden. Prüfe, ob ein Ergebnis vorliegt.
+			 */
+			if (rs.next()) {
+				// Ergebnis-Tupel in Objekt umwandeln
+				Bauteil bauteil = new Bauteil();
+				bauteil.setId(rs.getInt("id"));
+				bauteil.setName(rs.getString("name"));
+				bauteil.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
+				bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
+
+				return bauteil;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return null;
+	}
 
 }

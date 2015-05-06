@@ -5,16 +5,16 @@ public class Baugruppe extends Element{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * die Baugruppe werden in Stücklisten verwendet, dadruch werden
+	 * die Baugruppe werden mitunter in den Stücklisten verwendet, dadurch werden
 	 * in die Klassen Stückliste angelegt und gesetzt.
 	 **/
-	Stueckliste stueckliste;
+	Stueckliste enthalteneElemente;
 	
 	public Stueckliste getStueckliste(){
-		return this.stueckliste;
+		return this.enthalteneElemente;
 	}
 	public void setStueckliste(Stueckliste stueckliste){
-	this.stueckliste = stueckliste;
+	this.enthalteneElemente = stueckliste;
 	}
 	
 	String name;
