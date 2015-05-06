@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 package de.hdm.gruppe1.shared.bo;
 
 public class Stueckliste {
@@ -16,7 +16,7 @@ public class Stueckliste {
 	    return super.toString() + " " + this.zugehoerigeBaugruppe;
 	  }
 }
-=======
+
 package de.hdm.gruppe1.shared.bo;
 
 import java.util.ArrayList;
@@ -50,4 +50,4 @@ public class Stueckliste extends ArrayList {
 	}
 	
 }
->>>>>>> refs/remotes/origin/Alex
+
