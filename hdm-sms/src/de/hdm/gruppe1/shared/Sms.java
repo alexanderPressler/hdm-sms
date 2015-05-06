@@ -81,4 +81,6 @@ public interface Sms extends RemoteService {
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
+	Bauteil getBauteilById(int id) throws IllegalArgumentException;
+
 }

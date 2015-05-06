@@ -232,6 +232,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	public Vector<Bauteil> getAllBauteile() throws IllegalArgumentException {
 	    return this.bauteilMapper.findAll();
 	  }
+	  
+	  /**
+	   * Auslesen eines Bauteils anhand seiner Id.
+	   */
+	  @Override
+	public Bauteil getBauteilById(int id) throws IllegalArgumentException {
+	    return this.bauteilMapper.findById(id);
+	  }
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte

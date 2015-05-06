@@ -27,4 +27,6 @@ public interface SmsAsync {
 
 	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
 
+	void getBauteilById(int id, AsyncCallback<Bauteil> callback);
+
 }
