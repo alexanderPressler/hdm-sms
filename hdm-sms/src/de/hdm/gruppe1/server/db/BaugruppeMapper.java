@@ -1,5 +1,8 @@
 package de.hdm.gruppe1.server.db;
 import java.sql.*;
+import java.util.ArrayList;
+
+
 
 import de.hdm.gruppe1.shared.bo.*;
 
@@ -69,16 +72,16 @@ public class BaugruppeMapper {
 			Statement stmt = con.createStatement();
 
 			/*
-			 * Zunächst schauen wir nach, welches der momentan höchste
-			 * Primärschlüsselwert ist.
+			 * Zunaechst schauen wir nach, welches der momentan hoechste
+			 * Primaerschluesselwert ist.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid "
 					+ "FROM baugruppe ");
 
-			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+			// Wenn wir etwas zurueckerhalten, kann dies nur einzeilig sein
 			if (rs.next()) {
 				/*
-				 * a erhält den bisher maximalen, nun um 1 inkrementierten
+				 * baugruppe erhält den bisher maximalen, nun um 1 inkrementierten
 				 * Primärschlüssel.
 				 */
 				baugruppe.setId(rs.getInt("maxid") + 1);
@@ -95,7 +98,7 @@ public class BaugruppeMapper {
 			e2.printStackTrace();
 		}
 	    /*
-	     * Rückgabe, des evtl. korrigierten Accounts.
+	     * Rueckgabe, des evtl. korrigierter Buagruppe.
 	     * 
 	     * HINWEIS: Da in Java nur Referenzen auf Objekte und keine physischen
 	     * Objekte übergeben werden, wäre die Anpassung des Baugruppe-Objekts auch
@@ -104,7 +107,111 @@ public class BaugruppeMapper {
 	     * dass sich das Objekt evtl. im Laufe der Methode verändert hat.
 	     */
 		return baugruppe;
-	}}
+	
+	}
+	public void delete(Baugruppe baugruppe) {
+		Connection con = DBConnection.connection();
+
+		try {
+			Statement stmt = con.createStatement();
+
+			// stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" +
+			// a.getId());
+
+			stmt.executeUpdate("DELETE FROM `baugruppe` WHERE `id`="
+					+ baugruppe.getId());
+
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+	}
+	/**
+	 * Auslesen aller Bautgruppen
+	 * 
+	 * @return Ein Vektor mit Bauteil-Objekten, die sämtliche Bauteile
+	 *         repräsentieren. Bei evtl. Exceptions wird ein partiell gef�llter
+	 *         oder ggf. auch leerer Vetor zurückgeliefert.
+	 */
+	public ArrayList<Baugruppe> findAll() {
+		Connection con = DBConnection.connection();
+		// Ergebnisvektor vorbereiten
+		ArrayList<Baugruppe> result = new ArrayList<Baugruppe>();
+
+		try {
+			Statement stmt = con.createStatement();
+
+			ResultSet rs = stmt
+					.executeQuery("SELECT * FROM `baugruppe` ORDER BY `name`");
+
+			// Fuer jeden Eintrag im Suchergebnis wird nun ein Objekt
+			// erstellt.
+			while (rs.next()) {
+				Baugruppe baugruppe = new Baugruppe();
+				baugruppe.setId(rs.getInt("id"));
+				baugruppe.setName(rs.getString("name"));
+		
+
+				// Hinzufügen des neuen Objekts zum Ergebnis
+				result.addElement(baugruppe);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// Ergebnisliste zurueckgeben
+		return result;
+	}
+	
+	
+	/**
+	 * Suchen einer Baugrupp mit vorgegebener Id. Da diese eindeutig
+	 * ist, wird genau ein Objekt zurueckgegeben.
+	 * 
+	 * @param id
+	 *            Primaerschluesselattribut (->DB)
+	 * @return Baugruppe-Objekt, das dem uebergebenen Schluessel entspricht, null bei
+	 *         nicht vorhandenem DB-Tupel.
+	 */
+	public Baugruppe findById(int id) {
+		// DB-Verbindung holen
+		Connection con = DBConnection.connection();
+
+		try {
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+
+			// Statement ausfüllen und als Query an die DB schicken
+			// TODO: SQL Statement anpassen 
+			ResultSet rs = stmt
+					.executeQuery("SELECT id, name "
+							+ "FROM baugruppe "
+							+ "WHERE id="
+							+ id
+							+ " ORDER BY name");
+			// "SELECT * FROM `baugruppe` ORDER BY `name`"
+
+			/*
+			 * Da ID Primaerschluessel ist, kann max. nur ein Tupel zurückgegeben
+			 * werden. Prüfe, ob ein Ergebnis vorliegt.
+			 */
+			if (rs.next()) {
+				// Ergebnis-Tupel in Objekt umwandeln
+				Baugruppe baugruppe = new Baugruppe();
+				baugruppe.setId(rs.getInt("id"));
+				baugruppe.setName(rs.getString("name"));
+			
+
+				return baugruppe;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return null;
+	}
+}
 	
 	
 	
