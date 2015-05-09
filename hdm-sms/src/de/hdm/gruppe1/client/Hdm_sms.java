@@ -7,10 +7,13 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class Hdm_sms implements EntryPoint {
+
+	Image welcomeImage = new Image();
 
 	/**
 	 * This is the entry point method.
@@ -62,14 +65,18 @@ public class Hdm_sms implements EntryPoint {
 
 	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
-//	    mainMenu.setWidth("200px"); 
+	    mainMenu.setWidth("100%"); 
 	    mainMenu.addItem("Bauteile", bauteilMenu);
 	    mainMenu.addItem("Baugruppen", baugruppeMenu);
 	    mainMenu.addItem("Enderzeugnisse", enderzeugnisMenu);
 	    mainMenu.addItem("Stücklisten", stuecklisteMenu);
+	    
+	    //Das Begrüßungsbild der Applikation
+	    welcomeImage.setStyleName("initialPicture");
 		    
 	    //Hautpmenü schließlich dem RootPanel in den Menü-div Container zuordnen
 	    RootPanel.get("head_wrap_right").add(mainMenu);
+	    RootPanel.get("content_wrap").add(welcomeImage);
 		RootPanel.get("Impressum").add(new Impressum());
 
 	}
