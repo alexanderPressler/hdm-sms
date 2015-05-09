@@ -182,7 +182,7 @@ public class BauteilMapper {
 //	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
 //	          + "FROM bauteile " + "ORDER BY name");
 	      
-	      ResultSet rs = stmt.executeQuery("SELECT * FROM `bauteile` ORDER BY `name`");
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `bauteile` ORDER BY `id`");
 
 	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 	      // erstellt.

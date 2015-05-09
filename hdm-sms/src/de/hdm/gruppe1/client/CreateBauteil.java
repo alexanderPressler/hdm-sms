@@ -43,6 +43,8 @@ public class CreateBauteil extends VerticalPanel {
 		this.add(DescriptionField);
 		this.add(CreateBauteilButton);
 		
+		HeadlineLabel.setStyleName("headline");
+		SublineLabel.setStyleName("subline");
 		DescriptionField.setStyleName("DescriptionFieldText");
 		CreateBauteilButton.setStyleName("Button");
 

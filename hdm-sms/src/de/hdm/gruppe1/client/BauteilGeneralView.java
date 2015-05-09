@@ -15,15 +15,19 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 
 /*
  * Die Klasse BauteilGeneralView liefert eine Übersicht mit allen vorhandenen Bauteilen im System
- * und bietet Möglichkeiten, diese anzulegen, zu editieren oder zu löschen.
+ * und bietet Möglichkeiten, diese zu editieren oder löschen.
  */
 public class BauteilGeneralView extends VerticalPanel {
 
 	//Elemente für Bauteile initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteilübersicht");
-	private final Label SublineLabel = new Label ("In dieser Übersicht sehen Sie alle im System vorhandenen Bauteile. Um diese zu editieren oder löschen, klicken Sie in der Tabelle auf den entsprechenden Button. Um ein neues Bauteil anzulegen, klicken Sie auf den <Neues Bauteil>-Button.");
-	private final Button NewBauteilButton = new Button ("Neues Bauteil");
-	private final Label OverviewTableLabel = new Label ("Diese Tabelle enthält eine Übersicht über alle Bauteile im System");
+	private final Label SublineLabel = new Label ("In dieser Übersicht sehen Sie alle im System vorhandenen Bauteile. Um diese zu editieren oder löschen, klicken Sie in der Tabelle auf den entsprechenden Button.");
+	
+	//Neu: Single-Button Editieren
+	private final Button editButton = new Button("Element editieren");
+	//Neu: Single-Button Löschen
+	private final Button deleteButton = new Button("Auswahl löschen");
+
 	private final FlexTable table = new FlexTable();
 	
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
@@ -33,31 +37,16 @@ public class BauteilGeneralView extends VerticalPanel {
 	
 	public BauteilGeneralView() {
 
-//		this.add(HeadlineLabel);
-//		this.add(SublineLabel);
-//		this.add(NewBauteilButton);
-//		this.add(OverviewTableLabel);
-//		this.add(table);
-		
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
-		NewBauteilButton.setStyleName("Button");
-		OverviewTableLabel.setStyleName("subline");
 		table.setStyleName("BauteilTable");
-		
-		NewBauteilButton.addClickHandler(new ClickHandler(){
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new CreateBauteil());
-			    }
-
-		});
 		
 		//Applikationsschicht liefert <Bauteil>-Vector.
 		//Diesen mithilfe for-Schleife durchlaufen und angemessen darstellen.
 
 		stuecklistenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
 
+		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 	    table.setText(0, 0, "ID");
 	    table.setText(0, 1, "Name");
 	    table.setText(0, 2, "Material");
@@ -67,18 +56,18 @@ public class BauteilGeneralView extends VerticalPanel {
 	    table.setText(0, 6, "Editieren");
 	    table.setText(0, 7, "Löschen");
 	    
-	    table.setStyleName("tableHead");
-	    
-	    for(int i = 0; i < allBauteile.size(); i++){
-	    	System.out.println("Inhalt id: "+allBauteile.get(i).getId());
-	    	System.out.println("Inhalt name: "+allBauteile.get(i).getName());
-	    	System.out.println("Inhalt beschreibung: "+allBauteile.get(i).getMaterialBeschreibung());
-	    }
+	    //Das FlexTable Widget unterstützt keine Headlines. Daher wird die erste Reihe über folgenden Umweg formatiert
+	    table.getCellFormatter().addStyleName(0, 0, "tableHead");
+	    table.getCellFormatter().addStyleName(0, 1, "tableHead");
+	    table.getCellFormatter().addStyleName(0, 2, "tableHead");
+	    table.getCellFormatter().addStyleName(0, 3, "tableHead");
+	    table.getCellFormatter().addStyleName(0, 4, "tableHead");
+	    table.getCellFormatter().addStyleName(0, 5, "tableHead");
+	    table.getCellFormatter().addStyleName(0, 6, "tableHead");
+	    table.getCellFormatter().addStyleName(0, 7, "tableHead");
 	    
 		this.add(HeadlineLabel);
 		this.add(SublineLabel);
-		this.add(NewBauteilButton);
-		this.add(OverviewTableLabel);
 		this.add(table);
 	    
 		RootPanel.get("content_wrap").add(this);
@@ -147,6 +136,7 @@ public class BauteilGeneralView extends VerticalPanel {
 				        
 				        deleteBtn.addClickHandler(new DeleteClickHandler());
 				    	
+				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
 				        table.setText(row, 0, ""+allBauteile.get(i).getId());
 				        table.setText(row, 1, allBauteile.get(i).getName());
 				        table.setText(row, 2, allBauteile.get(i).getBauteilBeschreibung());
@@ -155,6 +145,8 @@ public class BauteilGeneralView extends VerticalPanel {
 				        table.setText(row, 5, "02.05.2015, 18 Uhr");
 				        table.setWidget(row, 6, editBtn);
 				        table.setWidget(row, 7, deleteBtn);
+				        
+				        table.setStyleName("BauteilTable");
 				    	  
 //				      }
 				    }

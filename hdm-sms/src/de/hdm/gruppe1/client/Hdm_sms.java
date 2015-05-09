@@ -61,7 +61,7 @@ public class Hdm_sms implements EntryPoint {
 	    stuecklisteMenu.addItem("Alle Anzeigen", testCmd);
 
 	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
-	    MenuBar mainMenu = new MenuBar(true);
+	    MenuBar mainMenu = new MenuBar();
 //	    mainMenu.setWidth("200px"); 
 	    mainMenu.addItem("Bauteile", bauteilMenu);
 	    mainMenu.addItem("Baugruppen", baugruppeMenu);
