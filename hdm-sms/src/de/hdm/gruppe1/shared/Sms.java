@@ -68,8 +68,7 @@ public interface Sms extends RemoteService {
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
-<<<<<<< HEAD
-	
+
 	Baugruppe createBaugruppe(String name, ArrayList<Element> element);
 	
 	Baugruppe editBaugruppe (Baugruppe baugruppe)
@@ -102,7 +101,7 @@ public interface Sms extends RemoteService {
 	
 	
 	
-=======
+
 	Bauteil getBauteilById(int id) throws IllegalArgumentException;
 
 	Stueckliste createStueckliste(String name) throws IllegalArgumentException;
@@ -115,5 +114,5 @@ public interface Sms extends RemoteService {
 
 	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
 
->>>>>>> refs/remotes/origin/Alex
+
 }

@@ -101,22 +101,20 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	 * Referenz auf das zugehörige BusinessObjekt.
 	 */
 	private Bauteil b = null;
-<<<<<<< HEAD
-	private Baugruppe baugruppe = null;
-=======
+
+	private Baugruppe bg = null;
+
 	private Stueckliste s = null;
-	
->>>>>>> refs/remotes/origin/Alex
+
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte
 	 * mit der Datenbank abgleicht.
 	 */
 	private BauteilMapper bauteilMapper = null;
-<<<<<<< HEAD
 	private BaugruppeMapper baugruppeMapper = null;
-=======
+
 	private StuecklisteMapper stuecklisteMapper = null;
->>>>>>> refs/remotes/origin/Alex
+
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -171,12 +169,9 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	     * kommunizieren kann.
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
-<<<<<<< HEAD
 	    this.baugruppeMapper = BaugruppeMapper.baugruppeMapper();
-	    
-=======
 	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
->>>>>>> refs/remotes/origin/Alex
+
 	  }
 	  /*
 	   * ***************************************************************************
@@ -278,7 +273,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	    return this.stuecklisteMapper.insert(s);
 	  }
 	  
-<<<<<<< HEAD
+
 	
 	  /*
 	   * ***************************************************************************
@@ -289,12 +284,12 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 			      throws IllegalArgumentException {
 			   
 			    Stueckliste stueckliste;
-				baugruppe.setStueckliste(stueckliste);
+				bg.setStueckliste(stueckliste);
 			    // Objekt in der DB speichern.
-			    return this.baugruppeMapper.insert(baugruppe);
+			    return this.baugruppeMapper.insert(bg);
 		}
 
-=======
+
 	  /**
 	   * Speichern einer Stueckliste.
 	   */
@@ -336,14 +331,12 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * ABSCHNITT, Beginn: Methoden für Bauteil-Objekte
 	   * ***************************************************************************
 	   */
->>>>>>> refs/remotes/origin/Alex
+
 	
 
 	@Override
 	public Baugruppe editBaugruppe(Baugruppe baugruppe)
-			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+	baugruppeMapper.edit(bg);
 	}
 
 	@Override
