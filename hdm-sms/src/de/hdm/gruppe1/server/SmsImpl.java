@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.server;
 
+import Customer;
+
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -300,7 +302,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	  
 	  /**
 	   * Löschen einer Stueckliste. Natürlich würde ein reales System zur Verwaltung von
-	   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
+	   * Stuecklisten ein Löschen allein schon aus Gründen der Dokumentation nicht
 	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
 	   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
 	   * vorstellen.
@@ -328,40 +330,41 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Beginn: Methoden für Bauteil-Objekte
+	   * ABSCHNITT, Beginn: Methoden fue BAugruppe-Objekte
 	   * ***************************************************************************
 	   */
 
-	
+
 
 	@Override
-	public Baugruppe editBaugruppe(Baugruppe baugruppe)
-	baugruppeMapper.edit(bg);
+	public void editBaugruppe(Baugruppe baugruppe) throws IllegalArgumentException {
+		baugruppeMapper.update(baugruppe);
+		}
+
+	@Override
+	public void deleteBaugruppe(Baugruppe baugruppe) throws IllegalArgumentException{
 	}
 
-	@Override
-	public Baugruppe deleteBaugruppe(Baugruppe baugruppe) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
 	public Baugruppe getBaugruppeByName(String name)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.baugruppeMapper.findByName(name);
 	}
 
 	@Override
 	public Baugruppe getBaugruppeById(int id) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+	    return this.baugruppeMapper.findById(id);
 	}
 
 	@Override
 	public Baugruppe getAllBaugruppen(ArrayList<Baugruppe> baugruppe)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	    return this.baugruppeMapper.findAll();
+}
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Ende: Methoden für-Objekte
+	   * ***************************************************************************
+	   */
+
 }
