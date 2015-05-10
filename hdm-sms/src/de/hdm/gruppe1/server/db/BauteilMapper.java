@@ -147,9 +147,16 @@ public class BauteilMapper {
 			e2.printStackTrace();
 		}
 
+<<<<<<< HEAD
 		// Um Analogie zu insert(Bauteil a) zu wahren, geben wir a zurück
 		return bauteil;
 	}
+=======
+//	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
+//	          + "FROM bauteile " + "ORDER BY name");
+	      
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `bauteile` ORDER BY `id`");
+>>>>>>> refs/remotes/origin/Mario
 
 	/**
 	 * Löschen der Daten eines <code>Bauteil</code>-Objekts aus der Datenbank.

@@ -6,64 +6,78 @@ import de.hdm.gruppe1.shared.Sms;
 import de.hdm.gruppe1.shared.SmsAsync;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class Hdm_sms implements EntryPoint {
 
-	HorizontalPanel menuPanel = new HorizontalPanel();
-	Button bauteilBtn = new Button("Bauteile");
-	Button baugruppeBtn = new Button("Baugruppen");
-	Button enderzeugnisBtn = new Button("Enderzeugnisse");
-	Button stuecklistebtn = new Button("Stücklisten");
+	Image welcomeImage = new Image();
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
 
-		menuPanel.add(bauteilBtn);
-		menuPanel.add(baugruppeBtn);
-		menuPanel.add(enderzeugnisBtn);
-		menuPanel.add(stuecklistebtn);
+		//Neu: MenuBar mit Commands (~ClickHandler)
+		Command createBauteil = new Command() {
+		      public void execute() {
+			        RootPanel.get("content_wrap").clear();
+			        RootPanel.get("content_wrap").add(new CreateBauteil());
+		      }
+		};
+		
+		Command allBauteile = new Command() {
+		      public void execute() {
+		        RootPanel.get("content_wrap").clear();
+		        RootPanel.get("content_wrap").add(new BauteilGeneralView());
+		      }
+		};
+		
+		Command testCmd = new Command() {
+		      public void execute() {
+		        Window.alert("Platzhalter");
+		      }
+		};
 
-		bauteilBtn.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new BauteilGeneralView());
-				// Window.alert("Platzhalter für Bauteil-GUI");
-			}
-		});
+		//Neu: MenuBar mit Mouse-Over Untermenüs
+		
+		//Das Menü von Bauteile erhält folgende Mouse-Over Untermenüs
+	    MenuBar bauteilMenu = new MenuBar(true);
+	    bauteilMenu.addItem("Bauteil anlegen", createBauteil);
+	    bauteilMenu.addItem("Alle anzeigen", allBauteile);
 
-		baugruppeBtn.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content_wrap").clear();
-				// RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter für Baugruppe-GUI");
-			}
-		});
+	    //Das Menü von Baugruppen erhält folgende Mouse-Over Untermenüs
+	    MenuBar baugruppeMenu = new MenuBar(true);
+	    baugruppeMenu.addItem("Baugruppe anlegen", testCmd);
+	    baugruppeMenu.addItem("Alle anzeigen", testCmd);
 
-		enderzeugnisBtn.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content_wrap").clear();
-				// RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter für Enderzeugnis-GUI");
-			}
-		});
+	    //Das Menü von Enderzeugnissen erhält folgende Mouse-Over Untermenüs
+	    MenuBar enderzeugnisMenu = new MenuBar(true);
+	    enderzeugnisMenu.addItem("Enderzeugnis anlegen", testCmd);
+	    enderzeugnisMenu.addItem("Alle Anzeigen", testCmd);
+	    
+	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
+	    MenuBar stuecklisteMenu = new MenuBar(true);
+	    stuecklisteMenu.addItem("Stückliste anlegen", testCmd);
+	    stuecklisteMenu.addItem("Alle Anzeigen", testCmd);
 
-		stuecklistebtn.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content_wrap").clear();
-				// RootPanel.get("content_wrap").add(new XY());
-				Window.alert("Platzhalter für Stückliste-GUI");
-			}
-		});
-
-		RootPanel.get("head_wrap_right").add(menuPanel);
+	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
+	    MenuBar mainMenu = new MenuBar();
+	    mainMenu.setWidth("100%"); 
+	    mainMenu.addItem("Bauteile", bauteilMenu);
+	    mainMenu.addItem("Baugruppen", baugruppeMenu);
+	    mainMenu.addItem("Enderzeugnisse", enderzeugnisMenu);
+	    mainMenu.addItem("Stücklisten", stuecklisteMenu);
+	    
+	    //Das Begrüßungsbild der Applikation
+	    welcomeImage.setStyleName("initialPicture");
+		    
+	    //Hautpmenü schließlich dem RootPanel in den Menü-div Container zuordnen
+	    RootPanel.get("head_wrap_right").add(mainMenu);
+	    RootPanel.get("content_wrap").add(welcomeImage);
 		RootPanel.get("Impressum").add(new Impressum());
 
 	}

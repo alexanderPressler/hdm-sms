@@ -3,6 +3,19 @@
 
 /** Example rules used by the template application (remove for your app) */
 
+/** Initiales Bild bei Aufruf der Applikation */
+.initialPicture{
+	background:url(./img/Welcome.jpg) no-repeat center center fixed; 
+	background-size: cover;
+	position: fixed;
+	width: 100%;
+}
+
+/** Tabellenüberschriften */
+.tableHead{
+	font-weight: bold;
+}
+
 /** Tabelle für Overview-GUI's */
 .BauteilTable{
     border: 1px solid black;
