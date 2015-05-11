@@ -5,7 +5,10 @@ import java.util.Vector;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
+
 
 /**
  * <p>
@@ -60,7 +63,7 @@ public interface Sms extends RemoteService {
 	 * @return Ein fertiges Kunden-Objekt.
 	 * @throws IllegalArgumentException
 	 */
-	Bauteil createBauteil(String name, String bauteilBeschreibung,
+	Bauteil createBauteil (String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
 	 /**
@@ -77,8 +80,42 @@ public interface Sms extends RemoteService {
 	   * @param b der zu löschende Bauteil
 	   * @throws IllegalArgumentException
 	   */
+
 	void delete(Bauteil b) throws IllegalArgumentException;
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
+	
+	Bauteil getBauteilById(int id) throws IllegalArgumentException;
+
+
+	
+	
+	Baugruppe createBaugruppe(String name) throws IllegalArgumentException;
+	
+	void saveBaugruppe(Baugruppe bg) throws IllegalArgumentException;
+	
+	// Baugruppe editBaugruppe (Baugruppe bg) throws IllegalArgumentException;
+	
+	void deleteBaugruppe(Baugruppe bg) throws IllegalArgumentException;
+	
+	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
+	
+	Baugruppe getBaugruppeById(int id) throws IllegalArgumentException;
+	
+	// Baugruppe getBaugruppeByName (String name) throws IllegalArgumentException;
+	
+	
+	
+	
+	Stueckliste createStueckliste(String name) throws IllegalArgumentException;
+
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
+
+	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
+
 
 }

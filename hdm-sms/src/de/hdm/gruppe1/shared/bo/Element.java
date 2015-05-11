@@ -23,7 +23,7 @@ public abstract class Element extends BusinessObject {
 	   */
 	  @Override
 	public String toString() {
-	    return super.toString() + " Elementname: #" + this.name;
+	    return super.toString() + " Elementname:" + this.name;
 	  }
 
 	  /**
