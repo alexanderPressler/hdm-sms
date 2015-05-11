@@ -13,6 +13,8 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class Hdm_sms implements EntryPoint {
+	
+	//Test
 
 	HorizontalPanel menuPanel = new HorizontalPanel();
 	Button bauteilBtn = new Button("Bauteile");
