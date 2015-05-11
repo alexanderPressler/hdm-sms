@@ -33,7 +33,7 @@ public class Baugruppe extends Element{
 	   * der Baugruppe.
 	   */
 	  public String toString() {
-	    return super.toString() + " Elementname: #" + this.name;
+	    return super.toString() + this.name;
 	  }
 
 

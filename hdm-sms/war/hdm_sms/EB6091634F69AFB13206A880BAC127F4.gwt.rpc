@@ -1,0 +1,15 @@
+com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException, true, true, true, true, com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException/3936916533, 3936916533
+com.google.gwt.user.client.rpc.RpcTokenException, true, true, false, false, com.google.gwt.user.client.rpc.RpcTokenException/2345075298, 2345075298
+com.google.gwt.user.client.rpc.XsrfToken, false, false, true, true, com.google.gwt.user.client.rpc.XsrfToken/4254043109, 4254043109
+de.hdm.gruppe1.shared.Sms, false, false, false, false, _, 1313561851
+de.hdm.gruppe1.shared.bo.Bauteil, true, true, true, true, de.hdm.gruppe1.shared.bo.Bauteil/2164918238, 2164918238
+de.hdm.gruppe1.shared.bo.BusinessObject, true, false, true, false, de.hdm.gruppe1.shared.bo.BusinessObject/294087307, 294087307
+de.hdm.gruppe1.shared.bo.Element, true, false, true, false, de.hdm.gruppe1.shared.bo.Element/2408103292, 2408103292
+java.lang.Exception, true, false, true, false, java.lang.Exception/1920171873, 1920171873
+java.lang.IllegalArgumentException, true, true, false, false, java.lang.IllegalArgumentException/1755012560, 1755012560
+java.lang.NumberFormatException, true, true, false, false, java.lang.NumberFormatException/3305228476, 3305228476
+java.lang.RuntimeException, true, false, true, false, java.lang.RuntimeException/515124647, 515124647
+java.lang.String, true, true, true, true, java.lang.String/2004016611, 2004016611
+java.lang.Throwable, true, false, true, false, java.lang.Throwable/2953622131, 2953622131
+java.util.Stack, true, true, false, false, java.util.Stack/1346942793, 1346942793
+java.util.Vector, true, true, false, false, java.util.Vector/3057315478, 3057315478
