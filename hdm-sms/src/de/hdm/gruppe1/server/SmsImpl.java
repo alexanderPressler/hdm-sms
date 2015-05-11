@@ -7,6 +7,7 @@ import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -209,7 +210,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public void save(Bauteil b) throws IllegalArgumentException {
-	    bauteilMapper.update(b);
+		  this.bauteilMapper.update(b);
 	  }
 	  
 	  /**
@@ -232,6 +233,15 @@ public class SmsImpl extends RemoteServiceServlet implements
 	public Vector<Bauteil> getAllBauteile() throws IllegalArgumentException {
 	    return this.bauteilMapper.findAll();
 	  }
+	  
+	  /**
+	   * Auslesen eines Bauteils anhand seiner Id.
+	   */
+	  @Override
+	public Bauteil getBauteilById(int id) throws IllegalArgumentException {
+	    return this.bauteilMapper.findById(id);
+	  }
+	  
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
