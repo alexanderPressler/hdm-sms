@@ -20,7 +20,7 @@ public class CreateBauteil extends VerticalPanel {
 	//Elemente für CreateBauteil initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteil anlegen");
 	private final Label SublineLabel = new Label ("Um ein Bauteil anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
-	private final Label NameFieldLabel = new Label ("Bezeichnung");
+	private final Label NameFieldLabel = new Label ("Name");
 	private final TextBox NameField = new TextBox ();
 	private final Label MaterialFieldLabel = new Label ("Materialbezeichnung");
 	private final TextBox MaterialField = new TextBox ();

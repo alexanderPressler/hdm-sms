@@ -7,6 +7,7 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -14,6 +15,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class Hdm_sms implements EntryPoint {
 
 	Image welcomeImage = new Image();
+	HTML welcomeText = new HTML("<h1>Wilkommen!</h1><br/><h1>Melden Sie sich mit Ihrem Google-Account im System an,<br/>um Zugriff zum gesamten Funktionsumfang der Applikation<br/>zu bekommen.</h1>");
 
 	/**
 	 * This is the entry point method.
@@ -71,12 +73,16 @@ public class Hdm_sms implements EntryPoint {
 	    mainMenu.addItem("Enderzeugnisse", enderzeugnisMenu);
 	    mainMenu.addItem("Stücklisten", stuecklisteMenu);
 	    
+	    //Der Default-Text, der beim Aufruf der Applikation angezeigt wird
+	    
 	    //Das Begrüßungsbild der Applikation
+		welcomeImage.setUrl("./img/Welcome.jpg");
 	    welcomeImage.setStyleName("initialPicture");
 		    
 	    //Hautpmenü schließlich dem RootPanel in den Menü-div Container zuordnen
 	    RootPanel.get("head_wrap_right").add(mainMenu);
 	    RootPanel.get("content_wrap").add(welcomeImage);
+	    RootPanel.get("content_wrap").add(welcomeText);
 		RootPanel.get("Impressum").add(new Impressum());
 
 	}

@@ -160,8 +160,8 @@ public class BauteilGeneralView extends VerticalPanel {
 				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
 				        table.setText(row, 0, ""+allBauteile.get(i).getId());
 				        table.setText(row, 1, allBauteile.get(i).getName());
-				        table.setText(row, 2, allBauteile.get(i).getBauteilBeschreibung());
-				        table.setText(row, 3, allBauteile.get(i).getMaterialBeschreibung());
+				        table.setText(row, 2, allBauteile.get(i).getMaterialBeschreibung());
+				        table.setText(row, 3, allBauteile.get(i).getBauteilBeschreibung());
 				        table.setText(row, 4, "Mario");
 				        table.setText(row, 5, "02.05.2015, 18 Uhr");
 //				        table.setWidget(row, 6, editBtn);
