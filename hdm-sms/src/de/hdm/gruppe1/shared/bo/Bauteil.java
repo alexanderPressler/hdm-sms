@@ -1,4 +1,4 @@
-package de.hdm.gruppe1.shared.bo;
+package src.de.hdm.gruppe1.shared.bo;
 
 public class Bauteil extends Element {
 	
