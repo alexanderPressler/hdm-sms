@@ -70,12 +70,22 @@ public class CreateBauteil extends VerticalPanel {
 			String bauteilBeschreibung = DescriptionField.getText();
 			String materialBeschreibung = MaterialField.getText();
 
-			stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
-					materialBeschreibung, new CreateBauteilCallback());
+			if(NameField.getText().isEmpty() != true && DescriptionField.getText().isEmpty() != true && MaterialField.getText().isEmpty() != true){
+				
+				stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
+						materialBeschreibung, new CreateBauteilCallback());
+				
+				 RootPanel.get("content_wrap").clear();
+				 RootPanel.get("content_wrap").add(new BauteilGeneralView());
+				 
+			}
 			
-			 RootPanel.get("content_wrap").clear();
-			 RootPanel.get("content_wrap").add(new BauteilGeneralView());
-			 
+			else {
+				
+				Window.alert("Bitte alle Felder ausfüllen.");
+				
+			}
+			
 		}
 	}
 	

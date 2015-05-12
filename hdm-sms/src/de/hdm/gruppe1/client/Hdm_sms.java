@@ -37,12 +37,27 @@ public class Hdm_sms implements EntryPoint {
 		      }
 		};
 		
-		Command testCmd = new Command() {
+		Command createStueckliste = new Command() {
 		      public void execute() {
-		        Window.alert("Platzhalter");
+		    	  RootPanel.get("content_wrap").clear();
+		    	  RootPanel.get("content_wrap").add(new CreateStueckliste());
 		      }
 		};
-
+		
+		Command allStuecklisten = new Command() {
+		      public void execute() {
+		    	  RootPanel.get("content_wrap").clear();
+		    	  RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+		      }
+		};
+		
+		Command testCmd = new Command() {
+		      public void execute() {
+		    	  RootPanel.get("content_wrap").clear();
+		    	  Window.alert("Platzhalter");
+		      }
+		};
+		
 		//Neu: MenuBar mit Mouse-Over Untermenüs
 		
 		//Das Menü von Bauteile erhält folgende Mouse-Over Untermenüs
@@ -62,8 +77,8 @@ public class Hdm_sms implements EntryPoint {
 	    
 	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
 	    MenuBar stuecklisteMenu = new MenuBar(true);
-	    stuecklisteMenu.addItem("Stückliste anlegen", testCmd);
-	    stuecklisteMenu.addItem("Alle Anzeigen", testCmd);
+	    stuecklisteMenu.addItem("Stückliste anlegen", createStueckliste);
+	    stuecklisteMenu.addItem("Alle Anzeigen", allStuecklisten);
 
 	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
