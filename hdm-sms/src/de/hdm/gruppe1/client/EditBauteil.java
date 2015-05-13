@@ -46,12 +46,12 @@ public class EditBauteil extends VerticalPanel {
 			Bauteil b = new Bauteil();
 			
 			b.setName("Schraube");
-			b.setMaterialBeschreibung("Eisen");
-			b.setBauteilBeschreibung("Beispieltext");
+			b.setMaterialBezeichnung("Eisen");
+			b.setBeschreibung("Beispieltext");
 			
 			NameField.setText(b.getName());
-			MaterialField.setText(b.getMaterialBeschreibung());
-			DescriptionField.setText(b.getBauteilBeschreibung());
+			MaterialField.setText(b.getMaterialBezeichnung());
+			DescriptionField.setText(b.getBeschreibung());
 			
 			RootPanel.get("content_wrap").add(this);
 			
