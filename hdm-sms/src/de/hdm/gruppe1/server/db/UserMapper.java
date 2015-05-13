@@ -21,4 +21,21 @@ public class UserMapper {
 		return userMapper;
 	}
 	
+	public User insert(User user){
+		return user;
+	}
+	
+	public User findByGoogleID (String googleID){
+		User user = new User();
+		
+		return user;
+	}
+	
+	public User findByUserID(int userID){
+		User user = new User();
+		
+		return user;
+	}
+	
+	
 }
