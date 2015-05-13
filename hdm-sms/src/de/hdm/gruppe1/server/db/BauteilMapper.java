@@ -1,7 +1,7 @@
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import de.hdm.gruppe1.shared.bo.*;
 
@@ -148,7 +148,7 @@ public class BauteilMapper {
 	   * 
 	   * @param a das aus der DB zu löschende "Objekt"
 	   */
-	  public void delete(Bauteil bauteil) {
+	  public boolean delete(Bauteil bauteil) {
 	    Connection con = DBConnection.connection();
 
 	    try {
@@ -156,12 +156,25 @@ public class BauteilMapper {
 
 //	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
 	      
-	      stmt.executeUpdate("DELETE FROM `bauteile` WHERE `id`="+ bauteil.getId());
+	      if(stmt.executeUpdate("DELETE FROM `bauteile` WHERE `id`="+ bauteil.getId())==0){
+	    	  return false;
+	      }
+	      else{
+	    	  return true;
+	      }
 
 	    }
 	    catch (SQLException e2) {
 	      e2.printStackTrace();
 	    }
+	  }
+	  
+	  public Bauteil findByID(int id){
+		  
+	  }
+	  
+	  public ArrayList<Bauteil> findByName(String name){
+		  
 	  }
 	  
 	  /**
@@ -171,10 +184,10 @@ public class BauteilMapper {
 	   *         repräsentieren. Bei evtl. Exceptions wird ein partiell gef�llter
 	   *         oder ggf. auch leerer Vetor zurückgeliefert.
 	   */
-	  public Vector<Bauteil> findAll() {
+	  public ArrayList<Bauteil> getAll() {
 	    Connection con = DBConnection.connection();
 	    // Ergebnisvektor vorbereiten
-	    Vector<Bauteil> result = new Vector<Bauteil>();
+	    ArrayList<Bauteil> result = new ArrayList<Bauteil>();
 
 	    try {
 	      Statement stmt = con.createStatement();
@@ -194,7 +207,7 @@ public class BauteilMapper {
 	        bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
 
 	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
-	        result.addElement(bauteil);
+	        result.add(bauteil);
 	        
 	      }
 	    }
