@@ -69,9 +69,11 @@ public class BauteilMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
+	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+	      Integer aendererID = new Integer(bauteil.getAenderer().getId());
 	      //Der Datumstring von AenderungsDatum muss um die Nanosekunden gekürzt werden, da die Datenbank diese nicht aufnehmen kann
 	      ResultSet rs = stmt.executeQuery("INSERT INTO 'Bauteile'('material','bearbeitet_Von','name','beschreibung','datum') VALUES('"
-	      +bauteil.getMaterialBeschreibung()+"','"+bauteil.getAenderer.getId.toString()+"','"+bauteil.getName()+"','"+bauteil.getBauteilBeschreibung()+"','"
+	      +bauteil.getMaterialBeschreibung()+"','"+aendererID.toString()+"','"+bauteil.getName()+"','"+bauteil.getBauteilBeschreibung()+"','"
 	    		  +bauteil.getAenderungsDatum().toString().substring(0,19)+"');");
 
 	      // Zurückerhalten werden wir den von der Datenbank erstellten Primärschlüssel
@@ -99,12 +101,10 @@ public class BauteilMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
-
-//	      stmt.executeUpdate("UPDATE bauteile " + "SET name=\"" + a.getName()
-//	          + "\" " + "WHERE id=" + a.getId());
-	      
+	    //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+	      Integer aendererID = new Integer(bauteil.getAenderer().getId());
 	      stmt.executeUpdate("UPDATE `Bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBauteilBeschreibung() +"',`material`='"
-	      + bauteil.getMaterialBeschreibung() + "','bearbeitet_Von'='" + bauteil.getAenderer.getId.toString() + "','datum'='"
+	      + bauteil.getMaterialBeschreibung() + "','bearbeitet_Von'='" + aendererID.toString() + "','datum'='"
 	    		  + bauteil.getAenderungsDatum().toString().substring(0,19) + "' WHERE `teilnummer`= "+ bauteil.getId() +";");
 
 	    }
@@ -124,8 +124,10 @@ public class BauteilMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
+	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+	      Integer bauteilID = new Integer(bauteil.getId());
 	      
-	      if(stmt.executeUpdate("DELETE FROM `bauteile` WHERE `id`="+ bauteil.getId())==0){
+	      if(stmt.executeUpdate("DELETE FROM `Bauteile` WHERE `teilnummer`="+ bauteilID.toString()+"';")==0){
 	    	  return false;
 	      }
 	      else{
@@ -144,7 +146,10 @@ public class BauteilMapper {
 		  Bauteil bauteil = null;
 		  try{
 			  Statement stmt = con.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'USER' ON 'Bauteile.teilnummer'='User.userID' WHERE 'Bauteile.teilnummer'='"+id+"';");
+			  //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		      Integer bauteilID = new Integer(id);
+			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'USER' ON 'Bauteile.teilnummer'='User.userID' WHERE 'Bauteile.teilnummer'='"
+					  +bauteilID.toString()+"';");
 			  //Da es nur ein Bauteil mit dieser ID geben kann können wir davon ausgehen, dass wir nur eine Zeile zurück bekommen
 			  if(rs.next()){
 				  bauteil = new Bauteil();
@@ -173,7 +178,7 @@ public class BauteilMapper {
 		  Connection con = DBConnection.connection();
 		  try{
 			  Statement stmt = con.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'User' ON 'Bauteile.teilnummer'='User.UserID' WHERE 'Bauteile.name' LIKE '%"
+			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'User' ON 'Bauteile.bearbeitet_Von'='User.UserID' WHERE 'Bauteile.name' LIKE '%"
 			  +name+"%';");
 			  alBauteil = new ArrayList<Bauteil>();
 			  //Da es viele Bauteile geben kann, die diesen Namen haben müssen wir eine Schleife benutzen
@@ -237,7 +242,6 @@ public class BauteilMapper {
 		  }
 		  catch(SQLException e){
 			  e.printStackTrace();
-			  return alBauteil;
 		  }
 		  return alBauteil;
 	  }
