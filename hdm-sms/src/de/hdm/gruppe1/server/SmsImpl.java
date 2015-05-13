@@ -230,7 +230,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public Vector<Bauteil> getAllBauteile() throws IllegalArgumentException {
-	    return this.bauteilMapper.findAll();
+	    return this.bauteilMapper.getAll();
 	  }
 	  /*
 	   * ***************************************************************************
