@@ -3,15 +3,20 @@ package de.hdm.gruppe1.server.db;
 import java.sql.*;
 import java.util.ArrayList;
 
-import com.google.storage.onestore.v3.OnestoreEntity.User;
-
 import de.hdm.gruppe1.shared.bo.*;
 
 
 
 
 /**
- * @author Andreas Herrmann
+ * Mapper-Klasse, die <code>bauteil</code>-Objekte auf eine relationale
+ * Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur VerfÃ¼gung
+ * gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
+ * gelÃ¶scht werden kÃ¶nnen. Das Mapping ist bidirektional. D.h., Objekte kÃ¶nnen
+ * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
+ * 
+ * @see CustomerMapper, TransactionMapper
+ * @author Thies
  */
 public class BauteilMapper {
 
@@ -69,22 +74,46 @@ public class BauteilMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      //Der Datumstring von AenderungsDatum muss um die Nanosekunden gekürzt werden, da die Datenbank diese nicht aufnehmen kann
-	      ResultSet rs = stmt.executeQuery("INSERT INTO 'Bauteile'('material','bearbeitet_Von','name','beschreibung','datum') VALUES('"
-	      +bauteil.getMaterialBezeichnung()+"','"+bauteil.getAenderer.getId.toString()+"','"+bauteil.getName()+"','"+bauteil.getBeschreibung()+"','"
-	    		  +bauteil.getAenderungsDatum().toString().substring(0,19)+"');");
 
-	      // Zurückerhalten werden wir den von der Datenbank erstellten Primärschlüssel
+	      /*
+	       * ZunÃ¤chst schauen wir nach, welches der momentan hÃ¶chste
+	       * PrimÃ¤rschlÃ¼sselwert ist.
+	       */
+	      ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid "
+	          + "FROM bauteile ");
+
+	      // Wenn wir etwas zurÃ¼ckerhalten, kann dies nur einzeilig sein
 	      if (rs.next()) {
-	        
-	    	  bauteil.setId(rs.getInt("teilnummer"));
+	        /*
+	         * a erhÃ¤lt den bisher maximalen, nun um 1 inkrementierten
+	         * PrimÃ¤rschlÃ¼ssel.
+	         */
+	    	  bauteil.setId(rs.getInt("maxid") + 1);
 
+	        stmt = con.createStatement();
+
+	        // Jetzt erst erfolgt die tatsÃ¤chliche EinfÃ¼geoperation
+//	        stmt.executeUpdate("INSERT INTO bauteile (id, name, beschreibung, materialBeschreibung) " + "VALUES ("
+//	            + bauteil.getId() + "," + bauteil.getName() +"," + bauteil.getBauteilBeschreibung() 
+//	            +"," + bauteil.getMaterialBeschreibung()+")");
+	      
+	        stmt.executeUpdate("INSERT INTO `bauteile` (`id`, `name`, `beschreibung`, `materialBeschreibung`) VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '"+ bauteil.getMaterialBeschreibung() +"');");
+	      
 	      }
 	    }
-	    catch (SQLException e) {
-	      e.printStackTrace();
+	    catch (SQLException e2) {
+	      e2.printStackTrace();
 	    }
-	    //Rückgabe des Bauteils mit der ID
+
+	    /*
+	     * RÃ¼ckgabe, des evtl. korrigierten Bauteil.
+	     * 
+	     * HINWEIS: Da in Java nur Referenzen auf Objekte und keine physischen
+	     * Objekte Ã¼bergeben werden, wÃ¤re die Anpassung des bauteil-Objekts auch
+	     * ohne diese explizite RÃ¼ckgabe auï¿½erhalb dieser Methode sichtbar. Die
+	     * explizite RÃ¼ckgabe von a ist eher ein Stilmittel, um zu signalisieren,
+	     * dass sich das Objekt evtl. im Laufe der Methode verÃ¤ndert hat.
+	     */
 	    return bauteil;
 	  }
 	  
@@ -103,14 +132,14 @@ public class BauteilMapper {
 //	      stmt.executeUpdate("UPDATE bauteile " + "SET name=\"" + a.getName()
 //	          + "\" " + "WHERE id=" + a.getId());
 	      
-	      stmt.executeUpdate("UPDATE `Bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBeschreibung() +"',`material`='"
-	      + bauteil.getMaterialBezeichnung() + "','bearbeitet_Von'='" + bauteil.getAenderer.getId.toString() + "','datum'='"
-	    		  + bauteil.getAenderungsDatum().toString().substring(0,19) + "' WHERE `teilnummer`= "+ bauteil.getId() +";");
+	      stmt.executeUpdate("UPDATE `bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBauteilBeschreibung() +"',`materialBeschreibung`='"+ bauteil.getMaterialBeschreibung() +"' WHERE `id`= "+ bauteil.getId() +";");
 
 	    }
-	    catch (SQLException e) {
-	      e.printStackTrace();
+	    catch (SQLException e2) {
+	      e2.printStackTrace();
 	    }
+
+	    // Um Analogie zu insert(Bauteil a) zu wahren, geben wir a zurÃ¼ck
 	    return bauteil;
 	  }
 	  
@@ -124,6 +153,8 @@ public class BauteilMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
+
+//	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
 	      
 	      if(stmt.executeUpdate("DELETE FROM `bauteile` WHERE `id`="+ bauteil.getId())==0){
 	    	  return false;
@@ -135,71 +166,15 @@ public class BauteilMapper {
 	    }
 	    catch (SQLException e2) {
 	      e2.printStackTrace();
-	      return false;
 	    }
 	  }
 	  
 	  public Bauteil findByID(int id){
-		  Connection con = DBConnection.connection();
-		  Bauteil bauteil = null;
-		  try{
-			  Statement stmt = con.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'USER' ON 'Bauteile.teilnummer'='User.userID' WHERE 'Bauteile.teilnummer'='"+id+"';");
-			  //Da es nur ein Bauteil mit dieser ID geben kann können wir davon ausgehen, dass wir nur eine Zeile zurück bekommen
-			  if(rs.next()){
-				  bauteil = new Bauteil();
-				  bauteil.setId(rs.getInt("Bauteile.teilnummer"));
-				  bauteil.setName(rs.getString("Bauteile.name"));
-				  bauteil.setMaterialBezeichnung(rs.getString("Bauteile.material"));
-				  bauteil.setBeschreibung(rs.getString("Bauteile.beschreibung"));
-				  //User Objekt erzeugen, um es in auteil einzufügen
-				  User user = new User();
-				  user.setId(rs.getInt("User.userID"));
-				  user.setEmail(rs.getString("User.eMail"));
-				  bauteil.setAenderer(user);
-				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
-				  Timestamp timestamp = Timestamp.valueOf(rs.getString("Bauteile.datum"));
-				  bauteil.setAenderungsDatum(timestamp);
-			  }
-		  }
-		  catch (SQLException e){
-			  e.printStackTrace();
-		  }
-		  return bauteil;
+		  
 	  }
 	  
 	  public ArrayList<Bauteil> findByName(String name){
-		  ArrayList<Bauteil> alBauteil = null;
-		  Connection con = DBConnection.connection();
-		  try{
-			  Statement stmt = con.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'User' ON 'Bauteile.teilnummer'='User.UserID' WHERE 'Bauteile.name' LIKE '%"
-			  +name+"%';");
-			  alBauteil = new ArrayList<Bauteil>();
-			  //Da es viele Bauteile geben kann, die diesen Namen haben müssen wir eine Schleife benutzen
-			  while(rs.next()){
-				  Bauteil bauteil = new Bauteil();
-				  bauteil.setId(rs.getInt("Bauteile.teilnummer"));
-				  bauteil.setName(rs.getString("Bauteile.name"));
-				  bauteil.setMaterialBezeichnung(rs.getString("Bauteile.material"));
-				  bauteil.setBeschreibung(rs.getString("Bauteile.beschreibung"));
-				  //User Objekt erzeugen, um es in auteil einzufügen
-				  User user = new User();
-				  user.setId(rs.getInt("User.userID"));
-				  user.setEmail(rs.getString("User.eMail"));
-				  bauteil.setAenderer(user);
-				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
-				  Timestamp timestamp = Timestamp.valueOf(rs.getString("Bauteile.datum"));
-				  bauteil.setAenderungsDatum(timestamp);
-				  //bauteil der ArrayList hinzufügen
-				  alBauteil.add(bauteil);
-				  }
-		  }
-		  catch(SQLException e){
-			  e.printStackTrace();
-			  return alBauteil;
-		  }
-		  return alBauteil;
+		  
 	  }
 	  
 	  /**
@@ -210,36 +185,38 @@ public class BauteilMapper {
 	   *         oder ggf. auch leerer Vetor zurÃ¼ckgeliefert.
 	   */
 	  public ArrayList<Bauteil> getAll() {
-		  ArrayList<Bauteil> alBauteil = null;
-		  Connection con = DBConnection.connection();
-		  try{
-			  Statement stmt = con.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'User' ON 'Bauteile.teilnummer'='User.UserID';");
-			  alBauteil = new ArrayList<Bauteil>();
-			  //Da es viele Bauteile in der Datenbank geben kann setzen wir eine Schleife ein
-			  while(rs.next()){
-				  Bauteil bauteil = new Bauteil();
-				  bauteil.setId(rs.getInt("Bauteile.teilnummer"));
-				  bauteil.setName(rs.getString("Bauteile.name"));
-				  bauteil.setMaterialBezeichnung(rs.getString("Bauteile.material"));
-				  bauteil.setBeschreibung(rs.getString("Bauteile.beschreibung"));
-				  //User Objekt erzeugen, um es in auteil einzufügen
-				  User user = new User();
-				  user.setId(rs.getInt("User.userID"));
-				  user.setEmail(rs.getString("User.eMail"));
-				  bauteil.setAenderer(user);
-				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
-				  Timestamp timestamp = Timestamp.valueOf(rs.getString("Bauteile.datum"));
-				  bauteil.setAenderungsDatum(timestamp);
-				  //bauteil der ArrayList hinzufügen
-				  alBauteil.add(bauteil);
-				  }
-		  }
-		  catch(SQLException e){
-			  e.printStackTrace();
-			  return alBauteil;
-		  }
-		  return alBauteil;
+	    Connection con = DBConnection.connection();
+	    // Ergebnisvektor vorbereiten
+	    ArrayList<Bauteil> result = new ArrayList<Bauteil>();
+
+	    try {
+	      Statement stmt = con.createStatement();
+
+//	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
+//	          + "FROM bauteile " + "ORDER BY name");
+	      
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `bauteile` ORDER BY `name`");
+
+	      // FÃ¼r jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
+	      // erstellt.
+	      while (rs.next()) {
+	        Bauteil bauteil = new Bauteil();
+	        bauteil.setId(rs.getInt("id"));
+	        bauteil.setName(rs.getString("name"));
+	        bauteil.setBauteilBeschreibung(rs.getString("beschreibung"));
+	        bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
+
+	        // HinzufÃ¼gen des neuen Objekts zum Ergebnisvektor
+	        result.add(bauteil);
+	        
+	      }
+	    }
+	    catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+
+	    // Ergebnisvektor zurÃ¼ckgeben
+	    return result;
 	  }
 
 }

@@ -72,7 +72,7 @@ public class BauteilGeneralView extends VerticalPanel {
 	    for(int i = 0; i < allBauteile.size(); i++){
 	    	System.out.println("Inhalt id: "+allBauteile.get(i).getId());
 	    	System.out.println("Inhalt name: "+allBauteile.get(i).getName());
-	    	System.out.println("Inhalt beschreibung: "+allBauteile.get(i).getMaterialBezeichnung());
+	    	System.out.println("Inhalt beschreibung: "+allBauteile.get(i).getMaterialBeschreibung());
 	    }
 	    
 		this.add(HeadlineLabel);
@@ -149,8 +149,8 @@ public class BauteilGeneralView extends VerticalPanel {
 				    	
 				        table.setText(row, 0, ""+allBauteile.get(i).getId());
 				        table.setText(row, 1, allBauteile.get(i).getName());
-				        table.setText(row, 2, allBauteile.get(i).getBeschreibung());
-				        table.setText(row, 3, allBauteile.get(i).getMaterialBezeichnung());
+				        table.setText(row, 2, allBauteile.get(i).getBauteilBeschreibung());
+				        table.setText(row, 3, allBauteile.get(i).getMaterialBeschreibung());
 				        table.setText(row, 4, "Mario");
 				        table.setText(row, 5, "02.05.2015, 18 Uhr");
 				        table.setWidget(row, 6, editBtn);

@@ -190,8 +190,8 @@ public class SmsImpl extends RemoteServiceServlet implements
 	      throws IllegalArgumentException {
 	    Bauteil b = new Bauteil();
 	    b.setName(name);
-	    b.setBeschreibung(bauteilBeschreibung);
-	    b.setMaterialBezeichnung(materialBeschreibung);
+	    b.setBauteilBeschreibung(bauteilBeschreibung);
+	    b.setMaterialBeschreibung(materialBeschreibung);
 
 	    /*
 	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
