@@ -79,9 +79,10 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		table.setText(0, 0, "ID");
 		table.setText(0, 1, "Name");
 		table.setText(0, 2, "Erstellungsdatum");
-		table.setText(0, 3, "Letztes Änderungsdatum");
-		table.setText(0, 4, "Editieren");
-		table.setText(0, 5, "Löschen");
+		table.setText(0, 3, "Letzter Änderer");
+		table.setText(0, 4, "Letztes Änderungsdatum");
+		table.setText(0, 5, "Editieren");
+		table.setText(0, 6, "Löschen");
 			    
 		//Das FlexTable Widget unterstützt keine Headlines. Daher wird die erste Reihe über folgenden Umweg formatiert
 		table.getCellFormatter().addStyleName(0, 0, "tableHead");
@@ -90,6 +91,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		table.getCellFormatter().addStyleName(0, 3, "tableHead");
 		table.getCellFormatter().addStyleName(0, 4, "tableHead");
 		table.getCellFormatter().addStyleName(0, 5, "tableHead");
+		table.getCellFormatter().addStyleName(0, 6, "tableHead");
 			    
 		this.add(HeadlineLabel);
 		this.add(editButtonPanel);
