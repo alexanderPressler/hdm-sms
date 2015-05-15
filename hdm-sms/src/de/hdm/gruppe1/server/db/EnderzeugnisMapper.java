@@ -31,7 +31,7 @@ public class EnderzeugnisMapper {
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
-	      Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
+	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
 		try{
 			ResultSet rs = stmt.executeQuery("INSERT INTO 'Enderzeugnis' ('name','baugruppe') VALUES ('"+enderzeugnis.getName()+"','"+baugruppenID.toString()+"');");
 			if(rs.next()){
@@ -45,7 +45,19 @@ public class EnderzeugnisMapper {
 	}
 	
 	public Enderzeugnis update(Enderzeugnis enderzeugnis){
-		
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
+	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
+		try{
+			stmt.executeUpdate("UPDATE 'Enderzeugnis' SET 'name'='"+enderzeugnis.getName()+"','baugruppe'='"+baugruppenID.toString()+"' WHERE 'ee_ID'='"
+				+enderzeugnisID.toString()+"';");
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return enderzeugnis;
 	}
 	
 	public boolean delete(Enderzeugnis enderzeugnis){
