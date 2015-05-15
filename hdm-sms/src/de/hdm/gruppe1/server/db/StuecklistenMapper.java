@@ -42,7 +42,23 @@ public class StuecklistenMapper {
 				stueckliste.setId(rs.getInt("sl_ID"));
 				//Wenn die Stueckliste eine ID bekommen hat, dann können die Elemente hinzugefügt werden
 				for(int i=0;i<stueckliste.size();i++){
-						addElementZuStueckliste(stueckliste,stueckliste.get(i));
+					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+					Integer stuecklistenID = new Integer(stueckliste.getId());
+					Integer anzahl = new Integer(stueckliste.get(i).getAnzahl());
+					Integer elementID = new Integer(stueckliste.get(i).getElement().getId());
+					
+					//Herausfinden, ob das Element im StuecklistenPaar von der Klasse Bauteil ist
+					if(stueckliste.get(i).getElement().getClass()==Bauteil.class){
+						//Bauteil hinzufügen
+						stmt.executeUpdate("INSERT INTO 'StuecklistenBauteile' ('stueckliste','anzahl','bauteil') VALUES ('"+stuecklistenID.toString()+"','"
+									+anzahl.toString()+"','"+elementID.toString()+"');");
+					}
+					//Oder, ob das Element im StuecklistenPaar von der Klasse Baugruppe ist
+					else if(stueckliste.get(i).getElement().getClass()==Baugruppe.class){
+						//Baugruppe hinzufügen
+						stmt.executeUpdate("INSERT INTO 'StuecklistenBaugruppe' ('stueckliste','anzahl','baugruppe') VALUES ('"+stuecklistenID.toString()+"','"
+									+anzahl.toString()+"','"+elementID.toString()+"');");
+					}
 				}
 			}
 		}
@@ -72,12 +88,38 @@ public class StuecklistenMapper {
 				//Wenn es schon ein Teil ist, dann herausfinden ob die Anzahl nicht übereinstimmt
 				if(rs.next() && stueckliste.get(i).getAnzahl!=rs.getInt("anzahl")){
 					//Wenn die Anzahl nicht übereinstimmt, dann ein Update vornehmen
-					updateElementVonStueckliste(stueckliste,stueckliste.get(i));
+					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+					Integer anzahl = new Integer(stueckliste.get(i).getAnzahl());
+					
+					//Herausfinden, ob das Element im StuecklistenPaar von der Klasse Bauteil ist
+					if(stueckliste.get(i).getElement().getClass()==Bauteil.class){
+						//Anzahl des Bauteils korrigieren
+						stmt.executeUpdate("UPDATE 'StuecklistenBauteile' SET 'anzahl'='"+anzahl.toString()+"' WHERE 'sbt_ID'='"+elementID.toString()+"';");
+					}
+					//Oder, ob das Element im StuecklistenPaar von der Klasse Baugruppe ist
+					else if(stueckliste.get(i).getElement().getClass()==Baugruppe.class){
+						//Anzahl des Bauteils korrigieren
+						stmt.executeUpdate("UPDATE 'StuecklistenBaugruppe' SET 'anzahl'='"+anzahl.toString()+"' WHERE 'sbg_ID'='"+elementID.toString()+"';");
+					}
 				}
 				//Wenn das Element noch kein Teil ist...
 				else{
 					//... es hinzufügen
-					addElementZuStueckliste(stueckliste,stueckliste.get(i));
+					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+					Integer anzahl = new Integer(stueckliste.get(i).getAnzahl());
+					
+					//Herausfinden, ob das Element im StuecklistenPaar von der Klasse Bauteil ist
+					if(stueckliste.get(i).getElement().getClass()==Bauteil.class){
+						//Bauteil hinzufügen
+						stmt.executeUpdate("INSERT INTO 'StuecklistenBauteile' ('stueckliste','anzahl','bauteil') VALUES ('"+stuecklistenID.toString()+"','"
+									+anzahl.toString()+"','"+elementID.toString()+"');");
+					}
+					//Oder, ob das Element im StuecklistenPaar von der Klasse Baugruppe ist
+					else if(stueckliste.get(i).getElement().getClass()==Baugruppe.class){
+						//Baugruppe hinzufügen
+						stmt.executeUpdate("INSERT INTO 'StuecklistenBaugruppe' ('stueckliste','anzahl','baugruppe') VALUES ('"+stuecklistenID.toString()+"','"
+									+anzahl.toString()+"','"+elementID.toString()+"');");
+					}
 				}
 			}
 		}
@@ -359,13 +401,5 @@ public class StuecklistenMapper {
 			e.printStackTrace();
 		}
 		return alStueckliste;
-	}
-	
-	protected void addElementZuStueckliste(Stueckliste stueckliste,Element element){
-		
-	}
-	
-	protected void updateElementVonSteuckliste (Stueckliste stueckliste, Element element){
-		
 	}
 }
