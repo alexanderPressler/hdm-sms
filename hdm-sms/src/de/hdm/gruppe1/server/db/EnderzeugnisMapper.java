@@ -80,7 +80,23 @@ public class EnderzeugnisMapper {
 	}
 	
 	public Enderzeugnis findByID(int id){
-		
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
+		Enderzeugnis enderzeugnis = null;
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		Integer enderzeugnisID = new Integer(id);
+		BaugruppenMapper bMapper = new BaugruppenMapper();
+		try{
+			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'ee_ID'="+enderzeugnisID.toString()+"';");
+			enderzeugnis = new Enderzeugnis();
+			enderzeugnis.setId(rs.getInt("ee_ID"));
+			enderzeugnis.setName(rs.getString("name"));
+			enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return enderzeugnis;
 	}
 	
 	public ArrayList<Enderzeugnis> findByName(String name){
