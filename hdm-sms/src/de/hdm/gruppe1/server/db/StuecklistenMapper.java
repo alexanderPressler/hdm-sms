@@ -277,7 +277,88 @@ public class StuecklistenMapper {
 	}
 	
 	public ArrayList<Stueckliste> getAll(){
-		
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
+		ArrayList<Stueckliste> alStueckliste = new ArrayList<Stueckliste>();
+		try{
+			//Zuerst die Daten der Stuecklisten abfragen
+			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Stueckliste JOIN 'User' ON 'Stueckliste.ersteller'='User.userID';");
+			while(rs.next()){
+				//Stueckliste anlegen und Daten eintragen
+				Stueckliste stueckliste = new Stueckliste();
+				stueckliste = new Stueckliste();
+				stueckliste.setId(rs.getInt("sl_ID"));
+				stueckliste.setName(rs.getString("name"));
+			
+				User user = new User();
+				user.setID(rs.getInt("userID"));
+				user.setEmail(rs.getString("eMail"));
+				user.setGoogleId(rs.getString("googleID"));
+				stueckliste.setAenderer(user);
+				//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
+				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
+				stueckliste.setAenderungsDatum(timestamp);
+				//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+				Integer stuecklistenID = new Integer(stueckliste.getId());
+				
+				//Bauteile der Stueckliste abfragen
+				ResultSet rs2 = stmt.executeQuery("SELECT * FROM 'StuecklistenBauteile' JOIN (SELECT * FROM 'Bauteile' JOIN 'User' ON 'Bauteile.bearbeitet_Von'='User.userID')"
+						+" ON 'StuecklistenBauteile.bauteil'='Bauteile.teilnummer' WHERE 'StuecklistenBauteile.stueckliste'='"+stuecklistenID.toString()+"';");
+				while(rs.next()){
+					//Letzter Aenderer anlegen
+					user = new User();
+					user.setID(rs2.getInt("User.userID"));
+					user.setEmail(rs2.getString("User.eMail"));
+					user.setGoogleId(rs2.getString("User.googleID"));
+					//Bauteil anlegen
+					Bauteil bauteil = new Bauteil();
+					bauteil.setId(rs2.getInt("Bauteile.teilnummer"));
+					bauteil.setName(rs2.getString("Bauteile.name"));
+					bauteil.setMaterialBeschreibung(rs2.getString("Bauteile.material"));
+					bauteil.setBauteilBeschreibung(rs2.getString("Bauteile.beschreibung"));
+					//User Objekt in bauteil einfügen
+					bauteil.setAenderer(user);
+					//Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
+					Timestamp timestamp = Timestamp.valueOf(rs2.getString("Bauteile.datum"));
+					bauteil.setAenderungsDatum(timestamp);
+					//StuecklistenPaar erstellen und bauteil hinzufügen
+					StuecklistenPaar stuecklistenPaar = new StuecklistenPaar();
+					stuecklistenPaar.setAnzahl(rs2.getInt("StuecklistenBauteile.anzahl"));
+					stuecklistenPaar.setElement(bauteil);
+					//stuecklistenPaar der Stueckliste hinzufügen
+					stueckliste.add(stuecklistenPaar);
+				}
+				//Baugruppen der Stueckliste Abfragen
+				rs2 = stmt.executeQuery("SELECT * FROM 'StuecklistenBaugruppe' JOIN (SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID')"
+						+" ON 'StuecklistenBaugruppe.baugruppe'='Baugruppe.bg_ID' WHERE 'StuecklistenBaugruppe.stueckliste'='"+stuecklistenID.toString()+"';");
+				while(rs.next()){
+					//Letzter Aenderer anlegen
+					user = new User();
+					user.setID(rs2.getInt("User.userID"));
+					user.setEmail(rs2.getString("User.eMail"));
+					user.setGoogleId(rs2.getString("User.googleID"));
+					//Baugruppe anlegen
+					Baugruppe baugruppe = new Baugruppe();
+					baugruppe.setId(rs2.getInt("Baugruppe.bg_ID"));
+					baugruppe.setName(rs2.getString("Baugruppe.name"));
+					//User Objekt in baugruppe einfügen
+					baugruppe.setAenderer(user);
+					//Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
+					Timestamp timestamp = Timestamp.valueOf(rs2.getString("Baugruppe.datum"));
+					baugruppe.setAenderungsDatum(timestamp);
+					//Stueckliste der Baugruppe abfragen und einfügen
+					baugruppe.setStueckliste(findByID(rs2.getInt("Baugruppe.stueckliste")));
+					//Baugruppe der Stueckliste hinzufügen
+					stueckliste.add(baugruppe);
+				}
+				//Stueckliste dem Ergebnis hinzufügen
+				alStueckliste.add(stueckliste);
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return alStueckliste;
 	}
 	
 	protected void addElementZuStueckliste(Stueckliste stueckliste,Element element){
