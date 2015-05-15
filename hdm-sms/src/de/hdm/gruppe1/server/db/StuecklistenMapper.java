@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
+import com.google.storage.onestore.v3.OnestoreEntity.User;
+
 import de.hdm.gruppe1.shared.bo.*;
 
 /**
@@ -106,7 +108,84 @@ public class StuecklistenMapper {
 	}
 	
 	public Stueckliste findByID(int id){
-		
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
+		Stueckliste stueckliste = null;
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		Integer stuecklistenID = new Integer(id);
+		try{
+			//Zuerst die Daten der Stueckliste abfragen
+			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Stueckliste JOIN 'User' ON 'Stueckliste.ersteller'='User.userID' WHERE 'sl_ID'='"
+					+stuecklistenID.toString()+"';");
+			//Es sollte nur eine Stueckliste mit dieser ID geben
+			if(rs.next()){
+				stueckliste = new Stueckliste();
+				stueckliste.setId(rs.getInt("sl_ID"));
+				stueckliste.setName(rs.getString("name"));
+			
+				User user = new User();
+				user.setID(rs.getInt("userID"));
+				user.setEmail(rs.getString("eMail"));
+				user.setGoogleId(rs.getString("googleID"));
+				stueckliste.setAenderer(user);
+				//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
+				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
+				stueckliste.setAenderungsDatum(timestamp);
+				
+				//Bauteile der Stueckliste abfragen
+				rs = stmt.executeQuery("SELECT * FROM 'StuecklistenBauteile' JOIN (SELECT * FROM 'Bauteile' JOIN 'User' ON 'Bauteile.bearbeitet_Von'='User.userID')"
+						+" ON 'StuecklistenBauteile.bauteil'='Bauteile.teilnummer' WHERE 'StuecklistenBauteile.stueckliste'='"+stuecklistenID.toString()+"';");
+				while(rs.next()){
+					//Letzter Aenderer anlegen
+					user = new User();
+					user.setID(rs.getInt("User.userID"));
+					user.setEmail(rs.getString("User.eMail"));
+					user.setGoogleId(rs.getString("User.googleID"));
+					//Bauteil anlegen
+					Bauteil bauteil = new Bauteil();
+					bauteil.setId(rs.getInt("Bauteile.teilnummer"));
+					bauteil.setName(rs.getString("Bauteile.name"));
+					bauteil.setMaterialBeschreibung(rs.getString("Bauteile.material"));
+					bauteil.setBauteilBeschreibung(rs.getString("Bauteile.beschreibung"));
+					//User Objekt in bauteil einfügen
+					bauteil.setAenderer(user);
+					//Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
+					Timestamp timestamp = Timestamp.valueOf(rs.getString("Bauteile.datum"));
+					bauteil.setAenderungsDatum(timestamp);
+					//StuecklistenPaar erstellen und bauteil hinzufügen
+					StuecklistenPaar stuecklistenPaar = new StuecklistenPaar();
+					stuecklistenPaar.setAnzahl(rs.getInt("StuecklistenBauteile.anzahl"));
+					stuecklistenPaar.setElement(bauteil);
+					//stuecklistenPaar der Stueckliste hinzufügen
+					stueckliste.add(stuecklistenPaar);
+				}
+				//Baugruppen der Stueckliste Abfragen
+				rs = stmt.executeQuery("SELECT * FROM 'StuecklistenBaugruppe' JOIN (SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID')"
+						+" ON 'StuecklistenBaugruppe.baugruppe'='Baugruppe.bg_ID' WHERE 'StuecklistenBaugruppe.stueckliste'='"+stuecklistenID.toString()+"';");
+				while(rs.next()){
+					//Letzter Aenderer anlegen
+					user = new User();
+					user.setID(rs.getInt("User.userID"));
+					user.setEmail(rs.getString("User.eMail"));
+					user.setGoogleId(rs.getString("User.googleID"));
+					//Baugruppe anlegen
+					Baugruppe baugruppe = new Baugruppe();
+					baugruppe.setId(rs.getInt("Baugruppe.bg_ID"));
+					baugruppe.setName(rs.getString("Baugruppe.name"));
+					//User Objekt in baugruppe einfügen
+					baugruppe.setAenderer(user);
+					//Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
+					Timestamp timestamp = Timestamp.valueOf(rs.getString("Baugruppe.datum"));
+					baugruppe.setAenderungsDatum(timestamp);
+					//Stueckliste der Baugruppe abfragen und einfügen
+					baugruppe.setStueckliste(findByID(rs.getInt("Baugruppe.stueckliste")));
+				}
+			}
+			return stueckliste;
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 	public ArrayList<Stueckliste> findByName(String name){
