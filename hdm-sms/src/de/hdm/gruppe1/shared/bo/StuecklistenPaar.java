@@ -7,7 +7,7 @@ package de.hdm.gruppe1.shared.bo;
  * @author Andreas Herrmann
  *
  */
-public class ElementPaar {
+public class StuecklistenPaar {
 	private int anzahl=0;
 	private Element element = null;
 	
