@@ -8,11 +8,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
-<<<<<<< HEAD
-import de.hdm.gruppe1.shared.bo.Element;
-=======
-import de.hdm.gruppe1.shared.bo.Stueckliste;
->>>>>>> refs/remotes/origin/Alex
 
 /**
  * <p>
@@ -62,17 +57,12 @@ public interface Sms extends RemoteService {
 	Bauteil createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
-<<<<<<< HEAD
-	 Bauteil save(Bauteil b);
-=======
-	 public void save(Bauteil b) throws IllegalArgumentException;
->>>>>>> refs/remotes/origin/Mario
+
 
 	 Bauteil delete(Bauteil b);
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
-<<<<<<< HEAD
 
 	Baugruppe createBaugruppe(String name, ArrayList<Element> element);
 	
@@ -82,9 +72,7 @@ public interface Sms extends RemoteService {
 	Baugruppe deleteBaugruppe(Baugruppe baugruppe);
 	
 	
-	
-	
-	
+
 	
 	Baugruppe getBaugruppeByName (String name)
 			 throws IllegalArgumentException;
@@ -119,8 +107,6 @@ public interface Sms extends RemoteService {
 
 	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
 
-=======
-	Bauteil getBauteilById(int id) throws IllegalArgumentException;
->>>>>>> refs/remotes/origin/Mario
+
 
 }

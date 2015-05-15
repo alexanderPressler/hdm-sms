@@ -105,7 +105,6 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	 */
 	private Bauteil b = null;
 
-	private Baugruppe bg = null;
 
 	private Stueckliste s = null;
 
@@ -249,10 +248,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	public Bauteil getBauteilById(int id) throws IllegalArgumentException {
 	    return this.bauteilMapper.findById(id);
 	  }
-<<<<<<< HEAD
-=======
-	  
->>>>>>> refs/remotes/origin/Mario
+
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
@@ -282,21 +278,6 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	  
 
 	
-	  /*
-	   * ***************************************************************************
-	   * ABSCHNITT, Beginn: Methoden fuer Baugruppe-Objekte
-	   * ***************************************************************************
-	   */
-	public Baugruppe createBaugruppe(String name, ArrayList<Element> element)
-			      throws IllegalArgumentException {
-			   
-			    Stueckliste stueckliste;
-				bg.setStueckliste(stueckliste);
-			    // Objekt in der DB speichern.
-			    return this.baugruppeMapper.insert(bg);
-		}
-
-
 	  /**
 	   * Speichern einer Stueckliste.
 	   */
@@ -333,11 +314,24 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	    return this.stuecklisteMapper.findById(id);
 	  }
 
+
+		
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Beginn: Methoden fue BAugruppe-Objekte
+	   * ABSCHNITT, Beginn: Methoden fuer Baugruppe-Objekte
 	   * ***************************************************************************
 	   */
+	public Baugruppe createBaugruppe(String name, Stueckliste stueckliste, User user)
+			      throws IllegalArgumentException {
+			   
+			    Baugruppe baugruppe= new Baugruppe();
+				baugruppe.setStueckliste(stueckliste);
+				baugruppe.setName(name);
+				baugruppe.setAenderer(user);
+				
+			    // Objekt in der DB speichern.
+			    return this.baugruppeMapper.insert(baugruppe);
+		}
 
 
 
