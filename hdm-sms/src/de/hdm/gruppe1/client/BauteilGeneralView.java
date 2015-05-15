@@ -3,6 +3,8 @@ package de.hdm.gruppe1.client;
 import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -24,7 +26,6 @@ public class BauteilGeneralView extends VerticalPanel {
 
 	//Elemente für Bauteile initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteilübersicht");
-	private final Label SublineLabel = new Label ("In dieser Übersicht sehen Sie alle im System vorhandenen Bauteile. Um diese zu editieren oder löschen, klicken Sie in der Tabelle auf den entsprechenden Button.");
 	
 	//Buttons sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird ein "vertikales Zwischen-Panel" benötigt
 	private HorizontalPanel editButtonPanel = new HorizontalPanel();
@@ -41,6 +42,10 @@ public class BauteilGeneralView extends VerticalPanel {
 
 	private final FlexTable table = new FlexTable();
 	
+	//Bauteil, das editiert werden soll
+	Bauteil editBauteil = null;
+	
+	//Vektor wird mit allen Bauteilen aus der DB befüllt
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	
 	// Remote Service via ClientsideSettings
@@ -58,7 +63,6 @@ public class BauteilGeneralView extends VerticalPanel {
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
 		HeadlineLabel.setStyleName("headline");
-//		SublineLabel.setStyleName("subline");
 		table.setStyleName("BauteilTable");
 		
 		//Applikationsschicht liefert <Bauteil>-Vector.
@@ -87,7 +91,6 @@ public class BauteilGeneralView extends VerticalPanel {
 	    table.getCellFormatter().addStyleName(0, 7, "tableHead");
 	    
 		this.add(HeadlineLabel);
-//		this.add(SublineLabel);
 		this.add(editButtonPanel);
 		this.add(deleteButtonPanel);
 		this.add(table);
@@ -131,64 +134,62 @@ public class BauteilGeneralView extends VerticalPanel {
 			@Override
 			public void onSuccess(Vector<Bauteil> alleBauteile) {
 
-//				Window.alert("Inhalt allBauteile: "+allBauteile);
 				allBauteile = alleBauteile;
-//				System.out.println("Inhalt allBauteile: "+allBauteile);
 				
 				for (int row = 1; row <= allBauteile.size(); row++) {
 //				      for (int col = 0; col < numColumns; col++) {
 
 				    	//Da die erste Reihe der Tabelle als Überschriften der Spalten dient, wird eine neue Variable benötigt,
 				    	//die den Index 0 des Vectors auslesen kann.
-				    	int i = row-1;
+				    	final int i = row-1;
 				    	
-//				        Button deleteBtn = new Button("");
 				        RadioButton radioButton = new RadioButton("editRadioGroup", "");
 				        CheckBox checkBox = new CheckBox("");
 
-				        
-//				        editBtn.addClickHandler(new ClickHandler(){
-//							public void onClick(ClickEvent event) {
-//								RootPanel.get("content_wrap").clear();
-//								RootPanel.get("content_wrap").add(new EditBauteil());
-//							    }
-//
-//						});
-				        
 				        deleteBtn.addClickHandler(new DeleteClickHandler());
 				    	
 				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
 				        table.setText(row, 0, ""+allBauteile.get(i).getId());
 				        table.setText(row, 1, allBauteile.get(i).getName());
-				        table.setText(row, 2, allBauteile.get(i).getBauteilBeschreibung());
-				        table.setText(row, 3, allBauteile.get(i).getMaterialBeschreibung());
+				        table.setText(row, 2, allBauteile.get(i).getMaterialBeschreibung());
+				        table.setText(row, 3, allBauteile.get(i).getBauteilBeschreibung());
 				        table.setText(row, 4, "Mario");
 				        table.setText(row, 5, "02.05.2015, 18 Uhr");
-//				        table.setWidget(row, 6, editBtn);
 				        
 				        //RadioButton Widget für Single editieren-Button
 				        table.setWidget(row, 6, radioButton);
+				        
+				        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefügt
+						radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+				            @Override
+				            public void onValueChange(ValueChangeEvent<Boolean> e) {
+				                if(e.getValue() == true)
+				                {
+				                    editBauteil = allBauteile.get(i);
+				                }
+				            }
+				        }); 
 				        
 				        table.setWidget(row, 7, checkBox);
 				        
 				        table.setStyleName("BauteilTable");
 				        
-				        editBtn.addClickHandler(new ClickHandler(){
-							public void onClick(ClickEvent event) {
-								RootPanel.get("content_wrap").clear();
-								RootPanel.get("content_wrap").add(new EditBauteil());
-							    }
-
-						});
-				    	  
-//				      }
 				    }
 				
-				
-				//TODO: siehe Text
-				//Methode implementieren, die prüft, welcher RadioButton ausgewählt ist und die Id des Bauteil-Objektes
-				//per RPC an die Datenbank schickt. Daraufhin wird das Bauteil-Objekt an die EditBauteil-Klasse geschickt.
+				//ClickHandler für Aufruf der Klasse editBauteil
+		        editBtn.addClickHandler(new ClickHandler(){
+					public void onClick(ClickEvent event) {
+						
+						if(editBauteil==null){
+							Window.alert("Bitte wählen Sie ein Bauteil zum editieren aus.");
+						} else {
+							RootPanel.get("content_wrap").clear();
+							RootPanel.get("content_wrap").add(new EditBauteil(editBauteil));
+						}
 
+					}
+
+				});
 				
 				
 				//TODO: Klären ob das catvm gebraucht wird 

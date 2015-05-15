@@ -62,12 +62,17 @@ public interface Sms extends RemoteService {
 	Bauteil createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
+<<<<<<< HEAD
 	 Bauteil save(Bauteil b);
+=======
+	 public void save(Bauteil b) throws IllegalArgumentException;
+>>>>>>> refs/remotes/origin/Mario
 
 	 Bauteil delete(Bauteil b);
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
 
+<<<<<<< HEAD
 
 	Baugruppe createBaugruppe(String name, ArrayList<Element> element);
 	
@@ -114,5 +119,8 @@ public interface Sms extends RemoteService {
 
 	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
 
+=======
+	Bauteil getBauteilById(int id) throws IllegalArgumentException;
+>>>>>>> refs/remotes/origin/Mario
 
 }

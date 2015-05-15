@@ -5,10 +5,9 @@
 
 /** Initiales Bild bei Aufruf der Applikation */
 .initialPicture{
-	background:url(./img/Welcome.jpg) no-repeat center center fixed; 
-	background-size: cover;
 	position: fixed;
-	width: 100%;
+	max-width: 100%;
+	opacity: 0.3;
 }
 
 /** Tabellenüberschriften */

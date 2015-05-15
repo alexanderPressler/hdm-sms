@@ -32,6 +32,7 @@ public interface SmsAsync {
 
 	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
 
+<<<<<<< HEAD
 	
 	
 	
@@ -65,4 +66,8 @@ public interface SmsAsync {
 	void getAllBaugruppen(ArrayList<Baugruppe> baugruppe,
 			AsyncCallback<Baugruppe> callback);
 	
+=======
+	void getBauteilById(int id, AsyncCallback<Bauteil> callback);
+
+>>>>>>> refs/remotes/origin/Mario
 }

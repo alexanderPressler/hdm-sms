@@ -3,6 +3,8 @@ package de.hdm.gruppe1.server.db;
 import java.sql.*;
 import java.util.Vector;
 
+import com.google.gwt.user.client.Window;
+
 import de.hdm.gruppe1.shared.bo.*;
 
 /**
@@ -170,6 +172,7 @@ public class BauteilMapper {
 		try {
 			Statement stmt = con.createStatement();
 
+<<<<<<< HEAD
 			// stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" +
 			// a.getId());
 
@@ -269,5 +272,59 @@ public class BauteilMapper {
 
 		return null;
 	}
+=======
+	    // Ergebnisvektor zurückgeben
+	    return result;
+	  }
+	  
+	  /**
+		 * Suchen eines Bauteils mit vorgegebener Id. Da diese eindeutig
+		 * ist, wird genau ein Objekt zur�ckgegeben.
+		 * 
+		 * @param id
+		 *            Primärschlüsselattribut (->DB)
+		 * @return Bauteil-Objekt, das dem übergebenen Schlüssel entspricht, null bei
+		 *         nicht vorhandenem DB-Tupel.
+		 */
+		public Bauteil findById(int id) {
+			// DB-Verbindung holen
+			Connection con = DBConnection.connection();
+
+			try {
+				// Leeres SQL-Statement (JDBC) anlegen
+				Statement stmt = con.createStatement();
+
+				// Statement ausfüllen und als Query an die DB schicken
+				// TODO: SQL Statement anpassen 
+				ResultSet rs = stmt
+						.executeQuery("SELECT id, name, bauteilBeschreibung, materialBeschreibung"
+								+ "  FROM bauteile "
+								+ "WHERE id="
+								+ id
+								+ " ORDER BY name");
+				// "SELECT * FROM `bauteile` ORDER BY `name`"
+
+				/*
+				 * Da id Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben
+				 * werden. Prüfe, ob ein Ergebnis vorliegt.
+				 */
+				if (rs.next()) {
+					// Ergebnis-Tupel in Objekt umwandeln
+					Bauteil bauteil = new Bauteil();
+					bauteil.setId(rs.getInt("id"));
+					bauteil.setName(rs.getString("name"));
+					bauteil.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
+					bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
+
+					return bauteil;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+
+			return null;
+		}
+>>>>>>> refs/remotes/origin/Mario
 
 }

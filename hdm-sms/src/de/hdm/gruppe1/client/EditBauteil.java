@@ -3,12 +3,15 @@ package de.hdm.gruppe1.client;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
+import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
 //Die Klasse EditBauteil liefert alle benötigten Elemente, um ein bestehendes Bauteil im System zu ändern.
@@ -25,7 +28,10 @@ public class EditBauteil extends VerticalPanel {
 		private final TextBox DescriptionField = new TextBox ();
 		private final Button EditBauteilButton = new Button ("ändern");
 		
-		public EditBauteil () {
+		// Remote Service via ClientsideSettings
+		SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+		
+		public EditBauteil (Bauteil editBauteil) {
 			
 			this.add(HeadlineLabel);
 			this.add(SublineLabel);
@@ -42,16 +48,9 @@ public class EditBauteil extends VerticalPanel {
 			
 			EditBauteilButton.addClickHandler(new EditClickHandler());
 			
-			//Testweise bis zur Anbindung zur Applikationsschicht wird hier ein Beispiel-Bauteil initialisiert
-			Bauteil b = new Bauteil();
-			
-			b.setName("Schraube");
-			b.setMaterialBeschreibung("Eisen");
-			b.setBauteilBeschreibung("Beispieltext");
-			
-			NameField.setText(b.getName());
-			MaterialField.setText(b.getMaterialBeschreibung());
-			DescriptionField.setText(b.getBauteilBeschreibung());
+			NameField.setText(editBauteil.getName());
+			MaterialField.setText(editBauteil.getMaterialBeschreibung());
+			DescriptionField.setText(editBauteil.getBauteilBeschreibung());
 			
 			RootPanel.get("content_wrap").add(this);
 			
@@ -68,16 +67,38 @@ public class EditBauteil extends VerticalPanel {
 		 private class EditClickHandler implements ClickHandler {
 		  @Override
 		  public void onClick(ClickEvent event) {
-//		   if (customerToDisplay != null) {
 
-				RootPanel.get("content_wrap").clear();
-				Window.alert("Bauteil wurde (nicht) geändert");
-				RootPanel.get("content_wrap").add(new BauteilGeneralView());
+//			  if(){
+//				  
+//			  }
+			  
+			  Bauteil b = new Bauteil();
+			  b.setName(NameField.getText());
+			  b.setBauteilBeschreibung(DescriptionField.getText());
+			  b.setMaterialBeschreibung(MaterialField.getText());
+			  
+			  stuecklistenVerwaltung.save(b, new SaveCallback());
+				
+			  RootPanel.get("content_wrap").clear();
+			  RootPanel.get("content_wrap").add(new BauteilGeneralView());
 			   
-//		   } else {
-//		    Window.alert("kein Kunde ausgewählt");
-//		   }
 		  }
 		 }
+		 
+		 class SaveCallback implements AsyncCallback<Void> {
+
+			 @Override
+			 public void onFailure(Throwable caught) {
+				 Window.alert("Das Bauteil wurde nicht editiert.");
+				}
+
+				@Override
+				public void onSuccess(Void result) {
+					Window.alert("Das Bauteil wurde erfolgreich editiert.");
+					
+					
+					
+				}
+			}
 	
 }
