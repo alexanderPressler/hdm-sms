@@ -85,7 +85,24 @@ public class StuecklistenMapper {
 	}
 	
 	public boolean delete(Stueckliste stueckliste){
-		
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		Integer stuecklistenID = new Integer(stueckliste.getId());
+		try{
+			//Zuerst die Elementzuordnungen der Stueckliste löschen
+			//Bauteile
+			stmt.executeUpdate("DELETE FROM 'StuecklistenBauteile' WHERE 'stueckliste'='"+stuecklistenID.toString()+"';");
+			//Baugruppen
+			stmt.executeUpdate("DELETE FROM 'StuecklistenBaugruppe' WHERE 'stueckliste'='"+stuecklistenID.toString()+"';");
+			//Dann die Stueckliste löschen
+			stmt.executeUpdate("DELETE FROM 'Stueckliste' WHERE 'sl_ID'='"+stuecklistenID.toString()+"';");
+			return true;
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public Stueckliste findByID(int id){
