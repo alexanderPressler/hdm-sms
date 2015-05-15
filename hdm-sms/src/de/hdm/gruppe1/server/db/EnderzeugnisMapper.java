@@ -61,7 +61,22 @@ public class EnderzeugnisMapper {
 	}
 	
 	public boolean delete(Enderzeugnis enderzeugnis){
-		
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
+		try{
+			if(stmt.executeUpdate("DELETE FROM 'Enderzeugnis' WHERE 'ee_ID'='"+enderzeugnisID.toString()+"';")==0){
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public Enderzeugnis findByID(int id){
