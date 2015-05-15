@@ -28,7 +28,20 @@ public class EnderzeugnisMapper {
 	}
 	
 	public Enderzeugnis insert(Enderzeugnis enderzeugnis){
-		
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+	      Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
+		try{
+			ResultSet rs = stmt.executeQuery("INSERT INTO 'Enderzeugnis' ('name','baugruppe') VALUES ('"+enderzeugnis.getName()+"','"+baugruppenID.toString()+"');");
+			if(rs.next()){
+				enderzeugnis.setId(rs.getInt("ee_ID"));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return enderzeugnis;
 	}
 	
 	public Enderzeugnis update(Enderzeugnis enderzeugnis){
