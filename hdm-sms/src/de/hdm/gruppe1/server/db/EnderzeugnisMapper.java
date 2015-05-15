@@ -100,6 +100,8 @@ public class EnderzeugnisMapper {
 	}
 	
 	public ArrayList<Enderzeugnis> findByName(String name){
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
 		
 	}
 	
