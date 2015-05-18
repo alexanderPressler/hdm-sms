@@ -20,7 +20,7 @@ public class CreateBauteil extends VerticalPanel {
 	//Elemente für CreateBauteil initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteil anlegen");
 	private final Label SublineLabel = new Label ("Um ein Bauteil anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
-	private final Label NameFieldLabel = new Label ("Bezeichnung");
+	private final Label NameFieldLabel = new Label ("Name");
 	private final TextBox NameField = new TextBox ();
 	private final Label MaterialFieldLabel = new Label ("Materialbezeichnung");
 	private final TextBox MaterialField = new TextBox ();
@@ -43,6 +43,8 @@ public class CreateBauteil extends VerticalPanel {
 		this.add(DescriptionField);
 		this.add(CreateBauteilButton);
 		
+		HeadlineLabel.setStyleName("headline");
+		SublineLabel.setStyleName("subline");
 		DescriptionField.setStyleName("DescriptionFieldText");
 		CreateBauteilButton.setStyleName("Button");
 
@@ -68,12 +70,23 @@ public class CreateBauteil extends VerticalPanel {
 			String bauteilBeschreibung = DescriptionField.getText();
 			String materialBeschreibung = MaterialField.getText();
 
-			stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
-					materialBeschreibung, new CreateBauteilCallback());
+			if(NameField.getText().isEmpty() != true && DescriptionField.getText().isEmpty() != true && MaterialField.getText().isEmpty() != true){
+				
+				stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
+						materialBeschreibung, new CreateBauteilCallback());
+				
+				 RootPanel.get("content_wrap").clear();
+				 //TODO wieder implementieren
+//				 RootPanel.get("content_wrap").add(new BauteilGeneralView());
+				 
+			}
 			
-			 RootPanel.get("content_wrap").clear();
-			 RootPanel.get("content_wrap").add(new BauteilGeneralView());
-			 
+			else {
+				
+				Window.alert("Bitte alle Felder ausfüllen.");
+				
+			}
+			
 		}
 	}
 	

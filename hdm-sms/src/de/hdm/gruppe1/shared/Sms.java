@@ -64,13 +64,7 @@ public interface Sms extends RemoteService {
 	Bauteil createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
-	 /**
-	   * Speichern eines Bauteils-Objekts in der Datenbank.
-	   * 
-	   * @param b zu sicherndes Objekt.
-	   * @throws IllegalArgumentException
-	   */
-	void save(Bauteil b) throws IllegalArgumentException;
+	 public void save(Bauteil b) throws IllegalArgumentException;
 
 	 /**
 	   * Löschen des übergebenen Bauteils.
