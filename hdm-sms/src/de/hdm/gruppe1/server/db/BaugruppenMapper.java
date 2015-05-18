@@ -4,7 +4,7 @@
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.*;
 
@@ -66,7 +66,7 @@ public class BaugruppenMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 	      Integer baugruppeID = new Integer(baugruppe.getId());
 	      
 	      
@@ -90,17 +90,17 @@ public class BaugruppenMapper {
 		Baugruppe baugruppe = null;
 		try{
 			Statement stmt = con.createStatement();
-			//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+			//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 		    Integer baugruppeID = new Integer(id);
 		    
 		    ResultSet rs = stmt.executeQuery("SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID' WHERE 'bg_ID'='"
 		    		+baugruppeID.toString()+"';");
-		    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+		    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthÃ¤lt
 		    if(rs.next()){
 		    	baugruppe = new Baugruppe();
 		    	baugruppe.setId(rs.getInt("bg_ID"));
 		    	baugruppe.setName(rs.getString("name"));
-		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
+		    	//Da wir die Stueckliste der Baugruppe auflÃ¶sen mÃ¼ssen brauchen wir einen StuecklistenMapper
 		    	StuecklistenMapper slm = StuecklistenMapper.stuecklistenMapper();
 		    	baugruppe.setStueckliste(slm.findByID(rs.getInt("stueckliste")));
 		    	
@@ -109,7 +109,7 @@ public class BaugruppenMapper {
 		    	user.setEmail(rs.getString("eMail"));
 		    	user.setGoogleId(rs.getString("googleID"));
 		    	baugruppe.setAenderer(user);
-		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
+		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufÃ¼gen
 				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
 				baugruppe.setAenderungsDatum(timestamp);
 		    }
@@ -120,20 +120,20 @@ public class BaugruppenMapper {
 		return baugruppe;
 	}
 	
-	public ArrayList<Baugruppe> findByName(String name){
-		ArrayList<Baugruppe> alBaugruppe = new ArrayList<Baugruppe>();
+	public Vector<Baugruppe> findByName(String name){
+		Vector<Baugruppe> vBaugruppe = new Vector<Baugruppe>();
 		Connection con = DBConnection.connection();
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID' WHERE 'Baugruppe.name' LIKE '%"
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON 'Baugruppe.bearbeitet_Von'='User.userID' WHERE 'Baugruppe.name' LIKE '%"
 					+name+"%';");
-			//Da es viele Baugruppen geben kann, die diesen Namen haben müssen wir eine Schleife benutzen
+			//Da es viele Baugruppen geben kann, die diesen Namen haben mÃ¼ssen wir eine Schleife benutzen
 			while(rs.next()){
 				//Neue Baugruppe erzeugen
 				Baugruppe baugruppe = new Baugruppe();
 		    	baugruppe.setId(rs.getInt("bg_ID"));
 		    	baugruppe.setName(rs.getString("name"));
-		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
+		    	//Da wir die Stueckliste der Baugruppe auflÃ¶sen mÃ¼ssen brauchen wir einen StuecklistenMapper
 		    	StuecklistenMapper slm = StuecklistenMapper.stuecklistenMapper();
 		    	baugruppe.setStueckliste(slm.findByID(rs.getInt("stueckliste")));
 		    	//Neuen User erzeugen
@@ -142,31 +142,31 @@ public class BaugruppenMapper {
 		    	user.setEmail(rs.getString("eMail"));
 		    	user.setGoogleId(rs.getString("googleID"));
 		    	baugruppe.setAenderer(user);
-		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
+		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufÃ¼gen
 				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
 				baugruppe.setAenderungsDatum(timestamp);
-				//Baugruppe der ArrayList hinzufügen
-				alBaugruppe.add(baugruppe);
+				//Baugruppe der ArrayList hinzufÃ¼gen
+				vBaugruppe.addElement(baugruppe);
 			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return alBaugruppe;
+		return vBaugruppe;
 	}
-	public ArrayList<Baugruppe> getAll(){
-		ArrayList<Baugruppe> alBaugruppe = new ArrayList<Baugruppe>();
+	public Vector<Baugruppe> getAll(){
+		Vector<Baugruppe> vBaugruppe = new Vector<Baugruppe>();
 		Connection con = DBConnection.connection();
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID'%';");
-			//Da es viele Baugruppen geben kann müssen wir eine Schleife benutzen
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON 'Baugruppe.bearbeitet_Von'='User.userID'%';");
+			//Da es viele Baugruppen geben kann mÃ¼ssen wir eine Schleife benutzen
 			while(rs.next()){
 				//Neue Baugruppe erzeugen
 				Baugruppe baugruppe = new Baugruppe();
 		    	baugruppe.setId(rs.getInt("bg_ID"));
 		    	baugruppe.setName(rs.getString("name"));
-		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
+		    	//Da wir die Stueckliste der Baugruppe auflÃ¶sen mÃ¼ssen brauchen wir einen StuecklistenMapper
 		    	StuecklistenMapper slm = StuecklistenMapper.stuecklistenMapper();
 		    	baugruppe.setStueckliste(slm.findByID(rs.getInt("stueckliste")));
 		    	//Neuen User erzeugen
@@ -175,16 +175,16 @@ public class BaugruppenMapper {
 		    	user.setEmail(rs.getString("eMail"));
 		    	user.setGoogleId(rs.getString("googleID"));
 		    	baugruppe.setAenderer(user);
-		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
+		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufÃ¼gen
 				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
 				baugruppe.setAenderungsDatum(timestamp);
-				//Baugruppe der ArrayList hinzufügen
-				alBaugruppe.add(baugruppe);
+				//Baugruppe der ArrayList hinzufÃ¼gen
+				vBaugruppe.addElement(baugruppe);
 			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return alBaugruppe;
+		return vBaugruppe;
 	}
 }
