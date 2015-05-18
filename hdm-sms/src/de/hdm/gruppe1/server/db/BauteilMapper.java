@@ -81,8 +81,8 @@ public class BauteilMapper {
 	       * Zunächst schauen wir nach, welches der momentan höchste
 	       * Primärschlüsselwert ist.
 	       */
-	      ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid "
-	          + "FROM bauteile ");
+	      ResultSet rs = stmt.executeQuery("SELECT MAX(teilnummer) AS maxid "
+	          + "FROM Bauteile ");
 
 	      // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
 	      if (rs.next()) {
@@ -94,7 +94,7 @@ public class BauteilMapper {
 
 	        stmt = con.createStatement();
 
-	        stmt.executeUpdate("INSERT INTO `Bauteile` (`teilnummer`, `name`, `beschreibung`, `material`, `bearbeitet_Von`, `datum`) VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '"+ bauteil.getMaterialBeschreibung() +"', '1', '2015-05-18 12:12:12');");
+	        stmt.executeUpdate("INSERT INTO Bauteile VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getMaterialBeschreibung() +"', '1', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '2015-05-18 12:12:12');");
 	      
 	      }
 	    }
@@ -179,16 +179,16 @@ public class BauteilMapper {
 //	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
 //	          + "FROM bauteile " + "ORDER BY name");
 	      
-	      ResultSet rs = stmt.executeQuery("SELECT * FROM `bauteile` ORDER BY `id`");
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM `Bauteile` ORDER BY `teilnummer`");
 
 	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 	      // erstellt.
 	      while (rs.next()) {
 	        Bauteil bauteil = new Bauteil();
-	        bauteil.setId(rs.getInt("id"));
+	        bauteil.setId(rs.getInt("teilnummer"));
 	        bauteil.setName(rs.getString("name"));
 	        bauteil.setBauteilBeschreibung(rs.getString("beschreibung"));
-	        bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
+	        bauteil.setMaterialBeschreibung(rs.getString("material"));
 
 	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
 	        result.addElement(bauteil);
