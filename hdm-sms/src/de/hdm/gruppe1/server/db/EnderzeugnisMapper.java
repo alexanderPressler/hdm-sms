@@ -4,7 +4,7 @@
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.*;
 
@@ -30,7 +30,7 @@ public class EnderzeugnisMapper {
 	public Enderzeugnis insert(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
 		try{
 			ResultSet rs = stmt.executeQuery("INSERT INTO 'Enderzeugnis' ('name','baugruppe') VALUES ('"+enderzeugnis.getName()+"','"+baugruppenID.toString()+"');");
@@ -47,7 +47,7 @@ public class EnderzeugnisMapper {
 	public Enderzeugnis update(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
 	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
 		try{
@@ -63,7 +63,7 @@ public class EnderzeugnisMapper {
 	public boolean delete(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
 		try{
 			if(stmt.executeUpdate("DELETE FROM 'Enderzeugnis' WHERE 'ee_ID'='"+enderzeugnisID.toString()+"';")==0){
@@ -83,7 +83,7 @@ public class EnderzeugnisMapper {
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
 		Enderzeugnis enderzeugnis = null;
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 		Integer enderzeugnisID = new Integer(id);
 		BaugruppenMapper bMapper = new BaugruppenMapper();
 		try{
@@ -99,13 +99,13 @@ public class EnderzeugnisMapper {
 		return enderzeugnis;
 	}
 	
-	public ArrayList<Enderzeugnis> findByName(String name){
+	public Vector<Enderzeugnis> findByName(String name){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
 		
 	}
 	
-	public ArrayList<Enderzeugnis> getAll(){
+	public Vector<Enderzeugnis> getAll(){
 		
 	}
 }
