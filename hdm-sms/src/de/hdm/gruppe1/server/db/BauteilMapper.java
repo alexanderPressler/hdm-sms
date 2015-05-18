@@ -3,8 +3,6 @@ package de.hdm.gruppe1.server.db;
 import java.sql.*;
 import java.util.ArrayList;
 
-import com.google.storage.onestore.v3.OnestoreEntity.User;
-
 import de.hdm.gruppe1.shared.bo.*;
 
 
@@ -20,7 +18,7 @@ public class BauteilMapper {
 	 * hierbei von einem sogenannten <b>Singleton</b>.
 	 * <p>
 	 * Diese Variable ist durch den Bezeichner <code>static</code> nur einmal
-	 * für sämtliche eventuellen Instanzen dieser Klasse vorhanden. Sie
+	 * fÃ¼r sÃ¤mtliche eventuellen Instanzen dieser Klasse vorhanden. Sie
 	 * speichert die einzige Instanz dieser Klasse.
 	 * 
 	 * @see bauteilMapper()
@@ -28,7 +26,7 @@ public class BauteilMapper {
 	private static BauteilMapper bauteilMapper = null;
 
 	/**
-	 * Geschützter Konstruktor - verhindert die Möglichkeit, mit
+	 * GeschÃ¼tzter Konstruktor - verhindert die MÃ¶glichkeit, mit
 	 * <code>new</code> neue Instanzen dieser Klasse zu erzeugen.
 	 */
 	protected BauteilMapper() {
@@ -37,7 +35,7 @@ public class BauteilMapper {
 	 /**
 	   * Diese statische Methode kann aufgrufen werden durch
 	   * <code>BauteilMapper.bauteilMapper()</code>. Sie stellt die
-	   * Singleton-Eigenschaft sicher, indem Sie dafür sorgt, dass nur eine einzige
+	   * Singleton-Eigenschaft sicher, indem Sie dafÃ¼r sorgt, dass nur eine einzige
 	   * Instanz von <code>BauteilMapper</code> existiert.
 	   * <p>
 	   * 
@@ -56,12 +54,12 @@ public class BauteilMapper {
 	  }
 	  
 	  /**
-	   * Einfügen eines <code>Bauteil</code>-Objekts in die Datenbank. Dabei wird
-	   * auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
+	   * EinfÃ¼gen eines <code>Bauteil</code>-Objekts in die Datenbank. Dabei wird
+	   * auch der PrimÃ¤rschlÃ¼ssel des Ã¼bergebenen Objekts geprÃ¼ft und ggf.
 	   * berichtigt.
 	   * 
 	   * @param a das zu speichernde Objekt
-	   * @return das bereits übergebene Objekt, jedoch mit ggf. korrigierter
+	   * @return das bereits Ã¼bergebene Objekt, jedoch mit ggf. korrigierter
 	   *         <code>id</code>.
 	   */
 	  public Bauteil insert(Bauteil bauteil) {
@@ -69,14 +67,14 @@ public class BauteilMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies �ber eine Instanz der Klasse Integer geschehen
+	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
 	      Integer aendererID = new Integer(bauteil.getAenderer().getId());
-	      //Der Datumstring von AenderungsDatum muss um die Nanosekunden gek�rzt werden, da die Datenbank diese nicht aufnehmen kann
+	      //Der Datumstring von AenderungsDatum muss um die Nanosekunden gekürzt werden, da die Datenbank diese nicht aufnehmen kann
 	      ResultSet rs = stmt.executeQuery("INSERT INTO 'Bauteile'('material','bearbeitet_Von','name','beschreibung','datum') VALUES('"
 	      +bauteil.getMaterialBeschreibung()+"','"+aendererID.toString()+"','"+bauteil.getName()+"','"+bauteil.getBauteilBeschreibung()+"','"
 	    		  +bauteil.getAenderungsDatum().toString().substring(0,19)+"');");
 
-	      // Zur�ckerhalten werden wir den von der Datenbank erstellten Prim�rschl�ssel
+	      // Zurückerhalten werden wir den von der Datenbank erstellten Primärschlüssel
 	      if (rs.next()) {
 	        
 	    	  bauteil.setId(rs.getInt("teilnummer"));
@@ -86,7 +84,7 @@ public class BauteilMapper {
 	    catch (SQLException e) {
 	      e.printStackTrace();
 	    }
-	    //R�ckgabe des Bauteils mit der ID
+	    //Rückgabe des Bauteils mit der ID
 	    return bauteil;
 	  }
 	  
@@ -94,14 +92,14 @@ public class BauteilMapper {
 	   * Wiederholtes Schreiben eines Objekts in die Datenbank.
 	   * 
 	   * @param a das Objekt, das in die DB geschrieben werden soll
-	   * @return das als Parameter übergebene Objekt
+	   * @return das als Parameter Ã¼bergebene Objekt
 	   */
 	  public Bauteil update(Bauteil bauteil) {
 	    Connection con = DBConnection.connection();
 
 	    try {
 	      Statement stmt = con.createStatement();
-	    //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies �ber eine Instanz der Klasse Integer geschehen
+	    //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
 	      Integer aendererID = new Integer(bauteil.getAenderer().getId());
 	      stmt.executeUpdate("UPDATE `Bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBauteilBeschreibung() +"',`material`='"
 	      + bauteil.getMaterialBeschreibung() + "','bearbeitet_Von'='" + aendererID.toString() + "','datum'='"
@@ -115,16 +113,16 @@ public class BauteilMapper {
 	  }
 	  
 	  /**
-	   * Löschen der Daten eines <code>Bauteil</code>-Objekts aus der Datenbank.
+	   * LÃ¶schen der Daten eines <code>Bauteil</code>-Objekts aus der Datenbank.
 	   * 
-	   * @param a das aus der DB zu löschende "Objekt"
+	   * @param a das aus der DB zu lÃ¶schende "Objekt"
 	   */
 	  public boolean delete(Bauteil bauteil) {
 	    Connection con = DBConnection.connection();
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies �ber eine Instanz der Klasse Integer geschehen
+	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
 	      Integer bauteilID = new Integer(bauteil.getId());
 	      
 	      if(stmt.executeUpdate("DELETE FROM `Bauteile` WHERE `teilnummer`="+ bauteilID.toString()+"';")==0){
@@ -146,23 +144,23 @@ public class BauteilMapper {
 		  Bauteil bauteil = null;
 		  try{
 			  Statement stmt = con.createStatement();
-			  //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies �ber eine Instanz der Klasse Integer geschehen
+			  //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
 		      Integer bauteilID = new Integer(id);
 			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'USER' ON 'Bauteile.teilnummer'='User.userID' WHERE 'Bauteile.teilnummer'='"
 					  +bauteilID.toString()+"';");
-			  //Da es nur ein Bauteil mit dieser ID geben kann k�nnen wir davon ausgehen, dass wir nur eine Zeile zur�ck bekommen
+			  //Da es nur ein Bauteil mit dieser ID geben kann können wir davon ausgehen, dass wir nur eine Zeile zurück bekommen
 			  if(rs.next()){
 				  bauteil = new Bauteil();
 				  bauteil.setId(rs.getInt("Bauteile.teilnummer"));
 				  bauteil.setName(rs.getString("Bauteile.name"));
 				  bauteil.setMaterialBeschreibung(rs.getString("Bauteile.material"));
 				  bauteil.setBauteilBeschreibung(rs.getString("Bauteile.beschreibung"));
-				  //User Objekt erzeugen, um es in auteil einzuf�gen
+				  //User Objekt erzeugen, um es in auteil einzufügen
 				  User user = new User();
 				  user.setId(rs.getInt("User.userID"));
 				  user.setEmail(rs.getString("User.eMail"));
 				  bauteil.setAenderer(user);
-				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzuf�gen
+				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
 				  Timestamp timestamp = Timestamp.valueOf(rs.getString("Bauteile.datum"));
 				  bauteil.setAenderungsDatum(timestamp);
 			  }
@@ -173,54 +171,54 @@ public class BauteilMapper {
 		  return bauteil;
 	  }
 	  
-	  public ArrayList<Bauteil> findByName(String name){
-		  ArrayList<Bauteil> alBauteil = null;
+	  public Vector<Bauteil> findByName(String name){
+		  Vector<Bauteil> vBauteil = null;
 		  Connection con = DBConnection.connection();
 		  try{
 			  Statement stmt = con.createStatement();
 			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'User' ON 'Bauteile.bearbeitet_Von'='User.UserID' WHERE 'Bauteile.name' LIKE '%"
 			  +name+"%';");
-			  alBauteil = new ArrayList<Bauteil>();
-			  //Da es viele Bauteile geben kann, die diesen Namen haben m�ssen wir eine Schleife benutzen
+			  vBauteil = new Vector<Bauteil>();
+			  //Da es viele Bauteile geben kann, die diesen Namen haben müssen wir eine Schleife benutzen
 			  while(rs.next()){
 				  Bauteil bauteil = new Bauteil();
 				  bauteil.setId(rs.getInt("Bauteile.teilnummer"));
 				  bauteil.setName(rs.getString("Bauteile.name"));
 				  bauteil.setMaterialBeschreibung(rs.getString("Bauteile.material"));
 				  bauteil.setBauteilBeschreibung(rs.getString("Bauteile.beschreibung"));
-				  //User Objekt erzeugen, um es in auteil einzuf�gen
+				  //User Objekt erzeugen, um es in auteil einzufügen
 				  User user = new User();
 				  user.setId(rs.getInt("User.userID"));
 				  user.setEmail(rs.getString("User.eMail"));
 				  bauteil.setAenderer(user);
-				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzuf�gen
+				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
 				  Timestamp timestamp = Timestamp.valueOf(rs.getString("Bauteile.datum"));
 				  bauteil.setAenderungsDatum(timestamp);
-				  //bauteil der ArrayList hinzuf�gen
-				  alBauteil.add(bauteil);
+				  //bauteil der ArrayList hinzufügen
+				  vBauteil.addElement(bauteil);
 				  }
 		  }
 		  catch(SQLException e){
 			  e.printStackTrace();
-			  return alBauteil;
+			  return vBauteil;
 		  }
-		  return alBauteil;
+		  return vBauteil;
 	  }
 	  
 	  /**
 	   * Auslesen aller Kunden.
 	   * 
-	   * @return Ein Vektor mit Customer-Objekten, die sämtliche Kunden
-	   *         repräsentieren. Bei evtl. Exceptions wird ein partiell gef�llter
-	   *         oder ggf. auch leerer Vetor zurückgeliefert.
+	   * @return Ein Vektor mit Customer-Objekten, die sÃ¤mtliche Kunden
+	   *         reprÃ¤sentieren. Bei evtl. Exceptions wird ein partiell gefï¿½llter
+	   *         oder ggf. auch leerer Vetor zurÃ¼ckgeliefert.
 	   */
-	  public ArrayList<Bauteil> getAll() {
-		  ArrayList<Bauteil> alBauteil = null;
+	  public Vector<Bauteil> getAll() {
+		  Vector<Bauteil> vBauteil = null;
 		  Connection con = DBConnection.connection();
 		  try{
 			  Statement stmt = con.createStatement();
 			  ResultSet rs = stmt.executeQuery("SELECT * FROM 'Bauteile' JOIN 'User' ON 'Bauteile.teilnummer'='User.UserID';");
-			  alBauteil = new ArrayList<Bauteil>();
+			  vBauteil = new Vector<Bauteil>();
 			  //Da es viele Bauteile in der Datenbank geben kann setzen wir eine Schleife ein
 			  while(rs.next()){
 				  Bauteil bauteil = new Bauteil();
@@ -228,22 +226,22 @@ public class BauteilMapper {
 				  bauteil.setName(rs.getString("Bauteile.name"));
 				  bauteil.setMaterialBeschreibung(rs.getString("Bauteile.material"));
 				  bauteil.setBauteilBeschreibung(rs.getString("Bauteile.beschreibung"));
-				  //User Objekt erzeugen, um es in auteil einzuf�gen
+				  //User Objekt erzeugen, um es in auteil einzufügen
 				  User user = new User();
 				  user.setId(rs.getInt("User.userID"));
 				  user.setEmail(rs.getString("User.eMail"));
 				  bauteil.setAenderer(user);
-				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzuf�gen
+				  //Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
 				  Timestamp timestamp = Timestamp.valueOf(rs.getString("Bauteile.datum"));
 				  bauteil.setAenderungsDatum(timestamp);
-				  //bauteil der ArrayList hinzuf�gen
-				  alBauteil.add(bauteil);
+				  //bauteil der ArrayList hinzufügen
+				  vBauteil.addElement(bauteil);
 				  }
 		  }
 		  catch(SQLException e){
 			  e.printStackTrace();
 		  }
-		  return alBauteil;
+		  return vBauteil;
 	  }
 
 }
