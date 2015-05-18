@@ -1,7 +1,7 @@
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.*;
 
