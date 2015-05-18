@@ -94,12 +94,7 @@ public class BauteilMapper {
 
 	        stmt = con.createStatement();
 
-	        // Jetzt erst erfolgt die tatsächliche Einfügeoperation
-//	        stmt.executeUpdate("INSERT INTO bauteile (id, name, beschreibung, materialBeschreibung) " + "VALUES ("
-//	            + bauteil.getId() + "," + bauteil.getName() +"," + bauteil.getBauteilBeschreibung() 
-//	            +"," + bauteil.getMaterialBeschreibung()+")");
-	      
-	        stmt.executeUpdate("INSERT INTO `bauteile` (`id`, `name`, `beschreibung`, `materialBeschreibung`) VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '"+ bauteil.getMaterialBeschreibung() +"');");
+	        stmt.executeUpdate("INSERT INTO `Bauteile` (`teilnummer`, `name`, `beschreibung`, `material`, `bearbeitet_Von`, `datum`) VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '"+ bauteil.getMaterialBeschreibung() +"', '1', '2015-05-18 12:12:12');");
 	      
 	      }
 	    }
