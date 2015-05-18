@@ -3,49 +3,29 @@ package de.hdm.gruppe1.client;
 import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
 /*
- * Die Klasse BauteilGeneralView liefert eine Ãœbersicht mit allen vorhandenen Bauteilen im System
- * und bietet MÃ¶glichkeiten, diese zu editieren oder lÃ¶schen.
+ * Die Klasse BauteilGeneralView liefert eine Übersicht mit allen vorhandenen Bauteilen im System
+ * und bietet Möglichkeiten, diese anzulegen, zu editieren oder zu löschen.
  */
 public class BauteilGeneralView extends VerticalPanel {
 
-	//Elemente fÃ¼r Bauteile initialisieren
-	private final Label HeadlineLabel = new Label ("BauteilÃ¼bersicht");
-	
-	//Buttons sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird ein "vertikales Zwischen-Panel" benÃ¶tigt
-	private HorizontalPanel editButtonPanel = new HorizontalPanel();
-	private HorizontalPanel deleteButtonPanel = new HorizontalPanel();
-	
-	//Den Buttons wird jeweils ein erklÃ¤render Text hinzugefÃ¼gt
-	private final Label editLabel = new Label("WÃ¤hlen Sie in der Ãœbersicht ein Bauteil aus, um es mithilfe dieses Buttons zu editieren: ");
-	private final Label deleteLabel = new Label("WÃ¤hlen Sie in der Ãœbersicht mindestens ein Bauteil aus, um es mithilfe dieses Buttons zu lÃ¶schen: ");
-	
-	//Neu: Single-Button Editieren
-	private final Button editBtn = new Button("");
-	//Neu: Single-Button LÃ¶schen
-	private final Button deleteBtn = new Button("");
-
+	//Elemente für Bauteile initialisieren
+	private final Label HeadlineLabel = new Label ("Bauteilübersicht");
+	private final Label SublineLabel = new Label ("In dieser Übersicht sehen Sie alle im System vorhandenen Bauteile. Um diese zu editieren oder löschen, klicken Sie in der Tabelle auf den entsprechenden Button. Um ein neues Bauteil anzulegen, klicken Sie auf den <Neues Bauteil>-Button.");
+	private final Button NewBauteilButton = new Button ("Neues Bauteil");
+	private final Label OverviewTableLabel = new Label ("Diese Tabelle enthält eine Übersicht über alle Bauteile im System");
 	private final FlexTable table = new FlexTable();
 	
-	//Bauteil, das editiert werden soll
-	Bauteil editBauteil = null;
-	
-	//Vektor wird mit allen Bauteilen aus der DB befÃ¼llt
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	
 	// Remote Service via ClientsideSettings
@@ -53,46 +33,52 @@ public class BauteilGeneralView extends VerticalPanel {
 	
 	public BauteilGeneralView() {
 
-		//Damit die edit und delete Buttons horizontal angeordnet werden, mÃ¼ssen diese dem ButtonPanel zugeordnet werden
-		editButtonPanel.add(editLabel);
-		editButtonPanel.add(editBtn);
+//		this.add(HeadlineLabel);
+//		this.add(SublineLabel);
+//		this.add(NewBauteilButton);
+//		this.add(OverviewTableLabel);
+//		this.add(table);
 		
-		deleteButtonPanel.add(deleteLabel);
-		deleteButtonPanel.add(deleteBtn);
-		
-		editBtn.setStyleName("editButton");
-		deleteBtn.setStyleName("deleteButton");
 		HeadlineLabel.setStyleName("headline");
+		SublineLabel.setStyleName("subline");
+		NewBauteilButton.setStyleName("Button");
+		OverviewTableLabel.setStyleName("subline");
 		table.setStyleName("BauteilTable");
+		
+		NewBauteilButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event) {
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new CreateBauteil());
+			    }
+
+		});
 		
 		//Applikationsschicht liefert <Bauteil>-Vector.
 		//Diesen mithilfe for-Schleife durchlaufen und angemessen darstellen.
 
 		stuecklistenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
 
-		//Die erste Reihe der Tabelle wird mit Ãœberschriften vordefiniert
 	    table.setText(0, 0, "ID");
 	    table.setText(0, 1, "Name");
 	    table.setText(0, 2, "Material");
 	    table.setText(0, 3, "Beschreibung");
-	    table.setText(0, 4, "Letzter Ã„nderer");
-	    table.setText(0, 5, "Letztes Ã„nderungsdatum");
+	    table.setText(0, 4, "Letzter Änderer");
+	    table.setText(0, 5, "Letztes Änderungsdatum");
 	    table.setText(0, 6, "Editieren");
-	    table.setText(0, 7, "LÃ¶schen");
+	    table.setText(0, 7, "Löschen");
 	    
-	    //Das FlexTable Widget unterstÃ¼tzt keine Headlines. Daher wird die erste Reihe Ã¼ber folgenden Umweg formatiert
-	    table.getCellFormatter().addStyleName(0, 0, "tableHead");
-	    table.getCellFormatter().addStyleName(0, 1, "tableHead");
-	    table.getCellFormatter().addStyleName(0, 2, "tableHead");
-	    table.getCellFormatter().addStyleName(0, 3, "tableHead");
-	    table.getCellFormatter().addStyleName(0, 4, "tableHead");
-	    table.getCellFormatter().addStyleName(0, 5, "tableHead");
-	    table.getCellFormatter().addStyleName(0, 6, "tableHead");
-	    table.getCellFormatter().addStyleName(0, 7, "tableHead");
+	    table.setStyleName("tableHead");
+	    
+	    for(int i = 0; i < allBauteile.size(); i++){
+	    	System.out.println("Inhalt id: "+allBauteile.get(i).getId());
+	    	System.out.println("Inhalt name: "+allBauteile.get(i).getName());
+	    	System.out.println("Inhalt beschreibung: "+allBauteile.get(i).getMaterialBeschreibung());
+	    }
 	    
 		this.add(HeadlineLabel);
-		this.add(editButtonPanel);
-		this.add(deleteButtonPanel);
+		this.add(SublineLabel);
+		this.add(NewBauteilButton);
+		this.add(OverviewTableLabel);
 		this.add(table);
 	    
 		RootPanel.get("content_wrap").add(this);
@@ -104,8 +90,8 @@ public class BauteilGeneralView extends VerticalPanel {
 	 */
 	
 	/**
-	  * Das LÃ¶schen eines Bauteils wird mithilfe der mitgelieferten Objekt-ID Ã¼ber die Applikationsschicht
-	  * an den Server geschickt. Der User erhÃ¤lt eine entsprechende Hinweismeldung angezeigt und die
+	  * Das Löschen eines Bauteils wird mithilfe der mitgelieferten Objekt-ID über die Applikationsschicht
+	  * an den Server geschickt. Der User erhält eine entsprechende Hinweismeldung angezeigt und die
 	  * Tabelle wird neu geladen.
 	  * 
 	  */
@@ -115,11 +101,11 @@ public class BauteilGeneralView extends VerticalPanel {
 //	   if (customerToDisplay != null) {
 
 			RootPanel.get("content_wrap").clear();
-			Window.alert("Bauteil wurde vielleicht gelÃ¶scht");
+			Window.alert("Bauteil wurde vielleich gelöscht");
 			RootPanel.get("content_wrap").add(new BauteilGeneralView());
 		   
 //	   } else {
-//	    Window.alert("kein Kunde ausgewÃ¤hlt");
+//	    Window.alert("kein Kunde ausgewählt");
 //	   }
 	  }
 	 }
@@ -134,67 +120,48 @@ public class BauteilGeneralView extends VerticalPanel {
 			@Override
 			public void onSuccess(Vector<Bauteil> alleBauteile) {
 
+//				Window.alert("Inhalt allBauteile: "+allBauteile);
 				allBauteile = alleBauteile;
+//				System.out.println("Inhalt allBauteile: "+allBauteile);
 				
 				for (int row = 1; row <= allBauteile.size(); row++) {
 //				      for (int col = 0; col < numColumns; col++) {
 
-				    	//Da die erste Reihe der Tabelle als Ãœberschriften der Spalten dient, wird eine neue Variable benÃ¶tigt,
+				    	//Da die erste Reihe der Tabelle als Überschriften der Spalten dient, wird eine neue Variable benötigt,
 				    	//die den Index 0 des Vectors auslesen kann.
-				    	final int i = row-1;
+				    	int i = row-1;
 				    	
-				        RadioButton radioButton = new RadioButton("editRadioGroup", "");
-				        CheckBox checkBox = new CheckBox("");
+				        Button editBtn = new Button("");
+				        Button deleteBtn = new Button("");
+				        
+				        editBtn.setStyleName("editButton");
+				        deleteBtn.setStyleName("deleteButton");
+				        
+				        editBtn.addClickHandler(new ClickHandler(){
+							public void onClick(ClickEvent event) {
+								RootPanel.get("content_wrap").clear();
+								RootPanel.get("content_wrap").add(new EditBauteil());
+							    }
 
+						});
+				        
 				        deleteBtn.addClickHandler(new DeleteClickHandler());
 				    	
-				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
 				        table.setText(row, 0, ""+allBauteile.get(i).getId());
 				        table.setText(row, 1, allBauteile.get(i).getName());
-				        table.setText(row, 2, allBauteile.get(i).getMaterialBeschreibung());
-				        table.setText(row, 3, allBauteile.get(i).getBauteilBeschreibung());
+				        table.setText(row, 2, allBauteile.get(i).getBauteilBeschreibung());
+				        table.setText(row, 3, allBauteile.get(i).getMaterialBeschreibung());
 				        table.setText(row, 4, "Mario");
 				        table.setText(row, 5, "02.05.2015, 18 Uhr");
-				        
-				        //RadioButton Widget fÃ¼r Single editieren-Button
-				        table.setWidget(row, 6, radioButton);
-				        
-				        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefÃ¼gt
-						radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-				            @Override
-				            public void onValueChange(ValueChangeEvent<Boolean> e) {
-				                if(e.getValue() == true)
-				                {
-				                    editBauteil = allBauteile.get(i);
-				                }
-				            }
-				        }); 
-				        
-				        table.setWidget(row, 7, checkBox);
-				        
-				        table.setStyleName("BauteilTable");
-				        
+				        table.setWidget(row, 6, editBtn);
+				        table.setWidget(row, 7, deleteBtn);
+				    	  
+//				      }
 				    }
 				
-				//ClickHandler fÃ¼r Aufruf der Klasse editBauteil
-		        editBtn.addClickHandler(new ClickHandler(){
-					public void onClick(ClickEvent event) {
-						
-						if(editBauteil==null){
-							Window.alert("Bitte wÃ¤hlen Sie ein Bauteil zum editieren aus.");
-						} else {
-							RootPanel.get("content_wrap").clear();
-							RootPanel.get("content_wrap").add(new EditBauteil(editBauteil));
-						}
-
-					}
-
-				});
-				
-				
-				//TODO: KlÃ¤ren ob das catvm gebraucht wird 
+				//TODO: Klären ob das catvm gebraucht wird 
 				// if (bauteil != null) {
-				// Das erfolgreiche HinzufÃ¼gen eines Kunden wird an den
+				// Das erfolgreiche Hinzufügen eines Kunden wird an den
 				// Kunden- und
 				// Kontenbaum propagiert.
 				// catvm.addCustomer(customer);

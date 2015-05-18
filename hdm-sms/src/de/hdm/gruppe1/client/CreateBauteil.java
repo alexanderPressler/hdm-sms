@@ -14,12 +14,12 @@ import de.hdm.gruppe1.client.ClientsideSettings;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
-//Die Klasse CreateBauteil liefert alle benÃ¶tigten Elemente, um ein neues Bauteil im System anzulegen.
+//Die Klasse CreateBauteil liefert alle benötigten Elemente, um ein neues Bauteil im System anzulegen.
 public class CreateBauteil extends VerticalPanel {
 	
-	//Elemente fÃ¼r CreateBauteil initialisieren
+	//Elemente für CreateBauteil initialisieren
 	private final Label HeadlineLabel = new Label ("Bauteil anlegen");
-	private final Label SublineLabel = new Label ("Um ein Bauteil anzulegen, fÃ¼llen Sie bitte alle Felder aus und bestÃ¤tigen mit dem <anlegen>-Button ihre Eingabe.");
+	private final Label SublineLabel = new Label ("Um ein Bauteil anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
 	private final Label NameFieldLabel = new Label ("Name");
 	private final TextBox NameField = new TextBox ();
 	private final Label MaterialFieldLabel = new Label ("Materialbezeichnung");
@@ -70,12 +70,23 @@ public class CreateBauteil extends VerticalPanel {
 			String bauteilBeschreibung = DescriptionField.getText();
 			String materialBeschreibung = MaterialField.getText();
 
-			stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
-					materialBeschreibung, new CreateBauteilCallback());
+			if(NameField.getText().isEmpty() != true && DescriptionField.getText().isEmpty() != true && MaterialField.getText().isEmpty() != true){
+				
+				stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
+						materialBeschreibung, new CreateBauteilCallback());
+				
+				 RootPanel.get("content_wrap").clear();
+				 //TODO wieder implementieren
+//				 RootPanel.get("content_wrap").add(new BauteilGeneralView());
+				 
+			}
 			
-			 RootPanel.get("content_wrap").clear();
-			 RootPanel.get("content_wrap").add(new BauteilGeneralView());
-			 
+			else {
+				
+				Window.alert("Bitte alle Felder ausfüllen.");
+				
+			}
+			
 		}
 	}
 	
@@ -90,9 +101,9 @@ public class CreateBauteil extends VerticalPanel {
 		public void onSuccess(Bauteil bauteil) {
 
 			Window.alert("Das Bauteil wurde erfolgreich angelegt.");
-			//TODO: KlÃ¤ren ob das catvm gebraucht wird 
+			//TODO: Klären ob das catvm gebraucht wird 
 			// if (bauteil != null) {
-			// Das erfolgreiche HinzufÃ¼gen eines Kunden wird an den
+			// Das erfolgreiche Hinzufügen eines Kunden wird an den
 			// Kunden- und
 			// Kontenbaum propagiert.
 			// catvm.addCustomer(customer);

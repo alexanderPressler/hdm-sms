@@ -8,30 +8,32 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Element;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
  * <p>
- * Synchrone Schnittstelle fÃ¼r eine RPC-fÃ¤hige Klasse zur Verwaltung von Banken.
+ * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Banken.
  * </p>
  * <p>
  * <b>Frage:</b> Warum werden diese Methoden nicht als Teil der Klassen
  * {@link Bank}, {@link Customer}, {@link Account} oder {@link Transaction}
  * implementiert?<br>
- * <b>Antwort:</b> Z.B. das LÃ¶schen eines Kunden erfordert Kenntnisse Ã¼ber die
+ * <b>Antwort:</b> Z.B. das Löschen eines Kunden erfordert Kenntnisse über die
  * Verflechtung eines Kunden mit Konto-Objekten. Um die Klasse <code>Bank</code>
  * bzw. <code>Customer</code> nicht zu stark an andere Klassen zu koppeln, wird
- * das Wissen darÃ¼ber, wie einzelne "Daten"-Objekte koexistieren, in der
+ * das Wissen darüber, wie einzelne "Daten"-Objekte koexistieren, in der
  * vorliegenden Klasse gekapselt.
  * </p>
  * <p>
- * NatÃ¼rlich existieren Frameworks wie etwa Hibernate, die dies auf eine andere
+ * Natürlich existieren Frameworks wie etwa Hibernate, die dies auf eine andere
  * Weise realisieren. Wir haben jedoch ganz bewusst auf deren Nutzung
  * verzichtet, um in diesem kleinen Demoprojekt den Blick auf das Wesentliche
- * nicht unnÃ¶tig zu verstellen.
+ * nicht unnötig zu verstellen.
  * </p>
  * <p>
  * <code>@RemoteServiceRelativePath("bankadministration")</code> ist bei der
- * Adressierung des aus der zugehÃ¶rigen Impl-Klasse entstehenden
+ * Adressierung des aus der zugehörigen Impl-Klasse entstehenden
  * Servlet-Kompilats behilflich. Es gibt im Wesentlichen einen Teil der URL des
  * Servlets an.
  * </p>
@@ -42,7 +44,15 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 @RemoteServiceRelativePath("sms")
 public interface Sms extends RemoteService {
 
-	Bauteil init();
+	/**
+	 * Initialisierung des Objekts. Diese Methode ist vor dem Hintergrund von
+	 * GWT RPC zusätzlich zum No Argument Constructor der implementierenden
+	 * Klasse {@link BankVerwaltungImpl} notwendig. Bitte diese Methode direkt
+	 * nach der Instantiierung aufrufen.
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public void init() throws IllegalArgumentException;
 
 	/**
 	 * Ein Bauteil anlegen.
@@ -57,11 +67,37 @@ public interface Sms extends RemoteService {
 	Bauteil createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
+	 /**
+	   * Speichern eines Bauteils-Objekts in der Datenbank.
+	   * 
+	   * @param b zu sicherndes Objekt.
+	   * @throws IllegalArgumentException
+	   */
+	void save(Bauteil b) throws IllegalArgumentException;
 
-
-	 Bauteil delete(Bauteil b);
+	 /**
+	   * Löschen des übergebenen Bauteils.
+	   * 
+	   * @param b der zu löschende Bauteil
+	   * @throws IllegalArgumentException
+	   */
+	void delete(Bauteil b) throws IllegalArgumentException;
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
+
+	Bauteil getBauteilById(int id) throws IllegalArgumentException;
+
+	
+	
+	Stueckliste createStueckliste(String name) throws IllegalArgumentException;
+
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
+
+	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
 
 
 	Baugruppe createBaugruppe(String name, ArrayList<Element> element);
@@ -71,8 +107,6 @@ public interface Sms extends RemoteService {
 	
 	Baugruppe deleteBaugruppe(Baugruppe baugruppe);
 	
-	
-
 	
 	Baugruppe getBaugruppeByName (String name)
 			 throws IllegalArgumentException;
@@ -88,24 +122,11 @@ public interface Sms extends RemoteService {
 	
 	
 	
+	}
+
 	
 	
 	
-	
-	
-	
-
-	Bauteil getBauteilById(int id) throws IllegalArgumentException;
-
-	Stueckliste createStueckliste(String name) throws IllegalArgumentException;
-
-	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
-
-	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
-
-	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
-
-	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
 
 
 

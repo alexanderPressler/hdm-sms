@@ -20,15 +20,17 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
  * @author thies& Schmidt
  */
 public interface SmsAsync {
+	void init(AsyncCallback<Void> callback);
+	
 	
 	void createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung, AsyncCallback<Bauteil> callback);
 
-	void save(Bauteil b, AsyncCallback<Bauteil> callback);
+	void save(Bauteil b, AsyncCallback<Void> callback);
 
-	void delete(Bauteil b, AsyncCallback<Bauteil> callback);
+	void delete(Bauteil b, AsyncCallback<Void> callback);
 
-	void init(AsyncCallback<Bauteil> callback);
+
 
 	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
 

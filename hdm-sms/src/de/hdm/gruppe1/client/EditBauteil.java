@@ -3,35 +3,29 @@ package de.hdm.gruppe1.client;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
-import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
-//Die Klasse EditBauteil liefert alle benÃ¶tigten Elemente, um ein bestehendes Bauteil im System zu Ã¤ndern.
+//Die Klasse EditBauteil liefert alle benötigten Elemente, um ein bestehendes Bauteil im System zu ändern.
 public class EditBauteil extends VerticalPanel {
 
-	//Elemente fÃ¼r EditBauteil initialisieren
-		private final Label HeadlineLabel = new Label ("Bauteil Ã¤ndern");
-		private final Label SublineLabel = new Label ("Um ein Bauteil zu Ã¤ndern, fÃ¼llen Sie bitte alle Felder aus und bestÃ¤tigen mit dem <editieren>-Button ihre Eingabe.");
+	//Elemente für EditBauteil initialisieren
+		private final Label HeadlineLabel = new Label ("Bauteil ändern");
+		private final Label SublineLabel = new Label ("Um ein Bauteil zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
 		private final Label NameFieldLabel = new Label ("Bezeichnung");
 		private final TextBox NameField = new TextBox ();
 		private final Label MaterialFieldLabel = new Label ("Materialbezeichnung");
 		private final TextBox MaterialField = new TextBox ();
 		private final Label DescriptionFieldLabel = new Label ("Textuelle Beschreibung");
 		private final TextBox DescriptionField = new TextBox ();
-		private final Button EditBauteilButton = new Button ("Ã¤ndern");
+		private final Button EditBauteilButton = new Button ("ändern");
 		
-		// Remote Service via ClientsideSettings
-		SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
-		
-		public EditBauteil (Bauteil editBauteil) {
+		public EditBauteil () {
 			
 			this.add(HeadlineLabel);
 			this.add(SublineLabel);
@@ -48,9 +42,16 @@ public class EditBauteil extends VerticalPanel {
 			
 			EditBauteilButton.addClickHandler(new EditClickHandler());
 			
-			NameField.setText(editBauteil.getName());
-			MaterialField.setText(editBauteil.getMaterialBeschreibung());
-			DescriptionField.setText(editBauteil.getBauteilBeschreibung());
+			//Testweise bis zur Anbindung zur Applikationsschicht wird hier ein Beispiel-Bauteil initialisiert
+			Bauteil b = new Bauteil();
+			
+			b.setName("Schraube");
+			b.setMaterialBeschreibung("Eisen");
+			b.setBauteilBeschreibung("Beispieltext");
+			
+			NameField.setText(b.getName());
+			MaterialField.setText(b.getMaterialBeschreibung());
+			DescriptionField.setText(b.getBauteilBeschreibung());
 			
 			RootPanel.get("content_wrap").add(this);
 			
@@ -61,44 +62,22 @@ public class EditBauteil extends VerticalPanel {
 		 */
 		
 		/**
-		  * Das Ã„ndern eines Bauteils ruft die Service-Methode "edit" auf.
+		  * Das Ändern eines Bauteils ruft die Service-Methode "edit" auf.
 		  * 
 		  */
 		 private class EditClickHandler implements ClickHandler {
 		  @Override
 		  public void onClick(ClickEvent event) {
+//		   if (customerToDisplay != null) {
 
-//			  if(){
-//				  
-//			  }
-			  
-			  Bauteil b = new Bauteil();
-			  b.setName(NameField.getText());
-			  b.setBauteilBeschreibung(DescriptionField.getText());
-			  b.setMaterialBeschreibung(MaterialField.getText());
-			  
-			  stuecklistenVerwaltung.save(b, new SaveCallback());
-				
-			  RootPanel.get("content_wrap").clear();
-			  RootPanel.get("content_wrap").add(new BauteilGeneralView());
+				RootPanel.get("content_wrap").clear();
+				Window.alert("Bauteil wurde (nicht) geändert");
+				RootPanel.get("content_wrap").add(new BauteilGeneralView());
 			   
+//		   } else {
+//		    Window.alert("kein Kunde ausgewählt");
+//		   }
 		  }
 		 }
-		 
-		 class SaveCallback implements AsyncCallback<Void> {
-
-			 @Override
-			 public void onFailure(Throwable caught) {
-				 Window.alert("Das Bauteil wurde nicht editiert.");
-				}
-
-				@Override
-				public void onSuccess(Void result) {
-					Window.alert("Das Bauteil wurde erfolgreich editiert.");
-					
-					
-					
-				}
-			}
 	
 }

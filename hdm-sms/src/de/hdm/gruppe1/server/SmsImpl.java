@@ -2,6 +2,8 @@ package de.hdm.gruppe1.server;
 
 
 
+
+
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -113,7 +115,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	 * mit der Datenbank abgleicht.
 	 */
 	private BauteilMapper bauteilMapper = null;
-	private BaugruppeMapper baugruppeMapper = null;
+	private BaugruppenMapper baugruppenMapper = null;
 
 	private StuecklisteMapper stuecklisteMapper = null;
 
@@ -171,7 +173,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	     * kommunizieren kann.
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
-	    this.baugruppeMapper = BaugruppeMapper.baugruppeMapper();
+	    this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
 	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
 
 	  }
@@ -200,122 +202,120 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * @see createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
 	   */
 	  @Override
-	public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
-	      throws IllegalArgumentException {
-	    Bauteil b = new Bauteil();
-	    b.setName(name);
-	    b.setBauteilBeschreibung(bauteilBeschreibung);
-	    b.setMaterialBeschreibung(materialBeschreibung);
+		public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
+		      throws IllegalArgumentException {
+		    Bauteil b = new Bauteil();
+		    b.setName(name);
+		    b.setBauteilBeschreibung(bauteilBeschreibung);
+		    b.setMaterialBeschreibung(materialBeschreibung);
 
-	    // Objekt in der DB speichern.
-	    return this.bauteilMapper.insert(b);
-	  }
-	  
+		    /*
+		     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
+		     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
+		     */
+//		    b.setId(10);
 
-	  /**
-	   * Speichern eines Bauteils.
-	   */
-	  @Override
-	public void save(Bauteil b) throws IllegalArgumentException {
-		  this.bauteilMapper.update(b);
-	  }
-	  
-	  /**
-	   * LÃ¶schen eines Bauteils. NatÃ¼rlich wÃ¼rde ein reales System zur Verwaltung von
-	   * Bankkunden ein LÃ¶schen allein schon aus GrÃ¼nden der Dokumentation nicht
-	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" Ã¤ndern. Wir
-	   * wollen hier aber dennoch zu Demonstrationszwecken eine LÃ¶schfunktion
-	   * vorstellen.
-	   */
-	  @Override
-	public void delete(Bauteil b) throws IllegalArgumentException {
-	 
-	    this.bauteilMapper.delete(b);
-	  }
-	  
-	  /**
-	   * Auslesen aller Bauteile.
-	   */
-	  @Override
-	public Vector<Bauteil> getAllBauteile() throws IllegalArgumentException {
-	    return this.bauteilMapper.findAll();
-	  }
-	  
-	  /**
-	   * Auslesen eines Bauteils anhand seiner Id.
-	   */
-	  @Override
-	public Bauteil getBauteilById(int id) throws IllegalArgumentException {
-	    return this.bauteilMapper.findById(id);
-	  }
+		    // Objekt in der DB speichern.
+		    return this.bauteilMapper.insert(b);
+		  }
+		  
 
-	  /*
-	   * ***************************************************************************
-	   * ABSCHNITT, Ende: Methoden fÃ¼r Bauteil-Objekte
-	   * ***************************************************************************
-	   */
-	  /**
-	   * <p>
-	   * Anlegen eines neuen Stueckliste. Dies fÃ¼hrt implizit zu einem Speichern des
-	   * neuen Stuecklistes in der Datenbank.
-	   * </p>
-	   * 
-	   * <p>
-	   * <b>HINWEIS:</b> Ã„nderungen an Stueckliste-Objekten mÃ¼ssen stets durch Aufruf
-	   * von {@link #save(Stueckliste s)} in die Datenbank transferiert werden.
-	   * </p>
-	   * 
-	   * @see createStueckliste(String name)
-	   */
-	  @Override
-	public Stueckliste createStueckliste(String name)
-	      throws IllegalArgumentException {
-		Stueckliste s = new Stueckliste();
-	    s.setName(name);
-	    // Objekt in der DB speichern.
-	    return this.stuecklisteMapper.insert(s);
-	  }
-	  
-
-	
-	  /**
-	   * Speichern einer Stueckliste.
-	   */
-	  @Override
-	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
-		stuecklisteMapper.update(s);
-	  }
-	  
-	  /**
-	   * LÃ¶schen einer Stueckliste. NatÃ¼rlich wÃ¼rde ein reales System zur Verwaltung von
-	   * Stuecklisten ein LÃ¶schen allein schon aus GrÃ¼nden der Dokumentation nicht
-	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" Ã¤ndern. Wir
-	   * wollen hier aber dennoch zu Demonstrationszwecken eine LÃ¶schfunktion
-	   * vorstellen.
-	   */
-	  @Override
-	public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
-	 
-	    this.stuecklisteMapper.delete(s);
-	  }
-	  /**
-	   * Auslesen aller Stuecklisten.
-	   */
-	  @Override
-	public Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException {
-	    return this.stuecklisteMapper.findAll();
-	  }
-	  
-	  /**
-	   * Auslesen eines Stueckliste anhand seiner Id.
-	   */
-	  @Override
-	public Stueckliste getStuecklisteById(int id) throws IllegalArgumentException {
-	    return this.stuecklisteMapper.findById(id);
-	  }
-
-
+		  /**
+		   * Speichern eines Bauteils.
+		   */
+		  @Override
+		public void save(Bauteil b) throws IllegalArgumentException {
+			  this.bauteilMapper.update(b);
+		  }
+		  
+		  /**
+		   * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung von
+		   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
+		   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
+		   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
+		   * vorstellen.
+		   */
+		  @Override
+		public void delete(Bauteil b) throws IllegalArgumentException {
+		 
+		    this.bauteilMapper.delete(b);
+		  }
+		  
+		  /**
+		   * Auslesen aller Bauteile.
+		   */
+		  @Override
+		public Vector<Bauteil> getAllBauteile() throws IllegalArgumentException {
+		    return this.bauteilMapper.findAll();
+		  }
+		  
+		  /**
+		   * Auslesen eines Bauteils anhand seiner Id.
+		   */
+		  @Override
+		public Bauteil getBauteilById(int id) throws IllegalArgumentException {
+		    return this.bauteilMapper.findById(id);
+		  }
+		  
+		  /*
+		   * ***************************************************************************
+		   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+		   * ***************************************************************************
+		   */
+		  
 		
+		
+	
+		  @Override
+//		public Stueckliste createStueckliste(String name)
+//		      throws IllegalArgumentException {
+//			Stueckliste s = new Stueckliste();
+//		    s.setName(name);
+//		    // Objekt in der DB speichern.
+//		    return this.stuecklisteMapper.insert(s);
+//		  }
+//		  
+//		  /**
+//		   * Speichern einer Stueckliste.
+//		   */
+//		  @Override
+//		public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+//			stuecklisteMapper.update(s);
+//		  }
+//		  
+//		  /**
+//		   * Löschen einer Stueckliste. Natürlich würde ein reales System zur Verwaltung von
+//		   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
+//		   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
+//		   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
+//		   * vorstellen.
+//		   */
+//		  @Override
+//		public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
+//		 
+//		    this.stuecklisteMapper.delete(s);
+//		  }
+//		  /**
+//		   * Auslesen aller Stuecklisten.
+//		   */
+//		  @Override
+//		public Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException {
+//		    return this.stuecklisteMapper.findAll();
+//		  }
+//		  
+//		  /**
+//		   * Auslesen eines Stueckliste anhand seiner Id.
+//		   */
+//		  @Override
+//		public Stueckliste getStuecklisteById(int id) throws IllegalArgumentException {
+//		    return this.stuecklisteMapper.findById(id);
+//		  }
+
+		  /*
+		   * ***************************************************************************
+		   * ABSCHNITT, Beginn: Methoden für Bauteil-Objekte
+		   * ***************************************************************************
+		   */
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Beginn: Methoden fuer Baugruppe-Objekte
@@ -335,39 +335,55 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 				baugruppe.setId(1);
 				
 			    // Objekt in der DB speichern.
-			    return this.baugruppeMapper.insert(baugruppe);
+			    return this.baugruppenMapper.insert(baugruppe);
 		}
 
 
 
 	@Override
 	public void editBaugruppe(Baugruppe baugruppe) throws IllegalArgumentException {
-		baugruppeMapper.update(baugruppe);
+		baugruppenMapper.update(baugruppe);
 		}
 
 	@Override
 	public void deleteBaugruppe(Baugruppe baugruppe) throws IllegalArgumentException{
-	}
+		   /*
+	     * ZunÃ¤chst werden sÃ¤mtl. Konten des Kunden aus der DB entfernt.
+	     * 
+	     * Beachten Sie, dass wir dies auf Ebene der Applikationslogik, konkret: in
+	     * der Klasse BankVerwaltungImpl, durchfÃ¼hren. Grund: In der Klasse
+	     * BankVerwaltungImpl ist die Verflechtung sÃ¤mtlicher Klassen bzw. ihrer
+	     * Objekte bekannt. Nur hier kann sinnvoll ein umfassender Verwaltungsakt
+	     * wie z.B. dieser LÃ¶schvorgang realisiert werden.
+	     * 
+	     * NatÃ¼rlich kÃ¶nnte man argumentieren, dass dies auch auf Datenbankebene
+	     * (sprich: mit SQL) effizienter mÃ¶glich ist. Das Gegenargument ist jedoch
+	     * eine dramatische Verschlechterung der Wartbarkeit Ihres Gesamtsystems
+	     * durch einen zu niedrigen Abstraktionsgrad und der Verortung von Aufgaben
+	     * an einer Stelle (Datenbankschicht), die die zuvor genannte Verflechtung
+	     * nicht umfÃ¤nglich kennen kann.
+	     */
 
+	}
 
 	public Baugruppe getBaugruppeByName(String name)
 			throws IllegalArgumentException {
-		return this.baugruppeMapper.findByName(name);
+		return this.baugruppenMapper.findByName(name);
 	}
 
 	@Override
 	public Baugruppe getBaugruppeById(int id) throws IllegalArgumentException {
-	    return this.baugruppeMapper.findById(id);
+	    return this.baugruppenMapper.findById(id);
 	}
 
 	@Override
-	public Baugruppe getAllBaugruppen(ArrayList<Baugruppe> baugruppe)
-			throws IllegalArgumentException {
-	    return this.baugruppeMapper.findAll();
+	public Baugruppe getAllBaugruppen( ArrayList<Baugruppe> baugruppe)
+		throws IllegalArgumentException {
+		return this.baugruppenMapper.findAll();
 }
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Ende: Methoden fÃ¼r-Objekte
+	   * ABSCHNITT, Ende: Methoden fÃ¼r Bugruppe-Objekte
 	   * ***************************************************************************
 	   */
 
