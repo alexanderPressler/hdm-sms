@@ -85,13 +85,15 @@ public class EnderzeugnisMapper {
 		Enderzeugnis enderzeugnis = null;
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
 		Integer enderzeugnisID = new Integer(id);
-		BaugruppenMapper bMapper = new BaugruppenMapper();
+		BaugruppenMapper bMapper = new BaugruppenMapper.BaugruppenMapper();
 		try{
 			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'ee_ID'="+enderzeugnisID.toString()+"';");
-			enderzeugnis = new Enderzeugnis();
-			enderzeugnis.setId(rs.getInt("ee_ID"));
-			enderzeugnis.setName(rs.getString("name"));
-			enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+			if(rs.next()){
+				Enderzeugnis enderzeugnis = new Enderzeugnis();
+				enderzeugnis.setId(rs.getInt("ee_ID"));
+				enderzeugnis.setName(rs.getString("name"));
+				enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -102,7 +104,22 @@ public class EnderzeugnisMapper {
 	public Vector<Enderzeugnis> findByName(String name){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
-		
+		BaugruppenMapper bMapper = BaugruppenMapper.BaugruppenMapper();
+		Vector<Enderzeugnis> vEnderzeugnis = null;
+		try{
+			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'name' LIKE '%"+name+"%';");
+			while(rs.next()){
+				Enderzeugnis enderzeugnis = new Enderzeugnis();
+				enderzeugnis.setId(rs.getInt("ee_ID"));
+				enderzeugnis.setName(rs.getString("name"));
+				enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+				vEnderzeugnis.addElement(enderzeugnis);
+			}	
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return vEnderzeugnis;
 	}
 	
 	public Vector<Enderzeugnis> getAll(){
