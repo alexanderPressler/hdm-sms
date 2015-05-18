@@ -2,13 +2,7 @@ package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
 import java.util.Vector;
-
-import com.google.gwt.user.client.Window;
-
 import de.hdm.gruppe1.shared.bo.*;
-
-
-
 
 /**
  * Mapper-Klasse, die <code>bauteil</code>-Objekte auf eine relationale
@@ -87,7 +81,7 @@ public class BauteilMapper {
 	      // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
 	      if (rs.next()) {
 	        /*
-	         * a erhält den bisher maximalen, nun um 1 inkrementierten
+	         * Man erhält den bisher maximalen, nun um 1 inkrementierten
 	         * Primärschlüssel.
 	         */
 	    	  bauteil.setId(rs.getInt("maxid") + 1);
@@ -122,14 +116,13 @@ public class BauteilMapper {
 	   */
 	  public Bauteil update(Bauteil bauteil) {
 	    Connection con = DBConnection.connection();
+	    
+	    Integer bId = new Integer(bauteil.getId());
 
 	    try {
 	      Statement stmt = con.createStatement();
 
-//	      stmt.executeUpdate("UPDATE bauteile " + "SET name=\"" + a.getName()
-//	          + "\" " + "WHERE id=" + a.getId());
-	      
-	      stmt.executeUpdate("UPDATE `bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBauteilBeschreibung() +"',`materialBeschreibung`='"+ bauteil.getMaterialBeschreibung() +"' WHERE `id`= "+ bauteil.getId() +";");
+	      stmt.executeUpdate("UPDATE Bauteile SET name='"+ bauteil.getName() +"',beschreibung='"+ bauteil.getBauteilBeschreibung() +"',material='"+ bauteil.getMaterialBeschreibung() +"' WHERE teilnummer='"+bId.toString()+"';");
 
 	    }
 	    catch (SQLException e2) {
@@ -152,8 +145,8 @@ public class BauteilMapper {
 	      Statement stmt = con.createStatement();
 
 //	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
-	      
-	      stmt.executeUpdate("DELETE FROM `bauteile` WHERE `id`="+ bauteil.getId());
+	      System.out.println("Id: "+bauteil.getId());
+	      stmt.executeUpdate("DELETE FROM `Bauteile` WHERE `teilnummer`="+ bauteil.getId());
 
 	    }
 	    catch (SQLException e2) {
@@ -176,9 +169,7 @@ public class BauteilMapper {
 	    try {
 	      Statement stmt = con.createStatement();
 
-//	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
-//	          + "FROM bauteile " + "ORDER BY name");
-	      
+	      //Ergebnis soll anhand der Id sortiert werden
 	      ResultSet rs = stmt.executeQuery("SELECT * FROM `Bauteile` ORDER BY `teilnummer`");
 
 	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt

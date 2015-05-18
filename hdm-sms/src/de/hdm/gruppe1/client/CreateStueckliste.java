@@ -133,12 +133,12 @@ public class CreateStueckliste extends VerticalPanel {
 				final int index = listBoxBauteile.getSelectedIndex();
 				String myValue = listBoxBauteile.getValue(index);
 				
-				final CheckBox removeBtBtn = new CheckBox();			
+				final CheckBox removeBtCheckBox = new CheckBox();			
 				
 				bauteilCollection.setText(index+1, 0, ""+bT.getId());
 				bauteilCollection.setText(index+1, 1, "Zahl");
 				bauteilCollection.setText(index+1, 2, bT.getName());
-				bauteilCollection.setWidget(index+1, 3, removeBtBtn);
+				bauteilCollection.setWidget(index+1, 3, removeBtCheckBox);
 				
 				//TODO fehlerhaft!
 				//Dem globalen Remove-Button wird ein ClickHandler hinzugefügt, der alle markierten Bauteile entfernt
@@ -146,7 +146,7 @@ public class CreateStueckliste extends VerticalPanel {
 					public void onClick(ClickEvent event) {
 						
 						for(int i = 0; i <= bauteilCollection.getRowCount(); i++){
-							if (removeBtBtn.getValue() == true){
+							if (removeBtCheckBox.getValue() == true){
 								bauteilCollection.removeRow(i+1);
 							} else {
 								Window.alert("In else: "+bauteilCollection.getRowFormatter().getElement(index+1).getId());

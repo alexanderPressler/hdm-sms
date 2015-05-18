@@ -20,6 +20,8 @@ public class EditBauteil extends VerticalPanel {
 	//Elemente für EditBauteil initialisieren
 		private final Label HeadlineLabel = new Label ("Bauteil ändern");
 		private final Label SublineLabel = new Label ("Um ein Bauteil zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
+		private final Label IdLabel = new Label("Id");
+		private final TextBox IdField = new TextBox();
 		private final Label NameFieldLabel = new Label ("Bezeichnung");
 		private final TextBox NameField = new TextBox ();
 		private final Label MaterialFieldLabel = new Label ("Materialbezeichnung");
@@ -35,6 +37,8 @@ public class EditBauteil extends VerticalPanel {
 			
 			this.add(HeadlineLabel);
 			this.add(SublineLabel);
+			this.add(IdLabel);
+			this.add(IdField);
 			this.add(NameFieldLabel);
 			this.add(NameField);
 			this.add(MaterialFieldLabel);
@@ -43,11 +47,17 @@ public class EditBauteil extends VerticalPanel {
 			this.add(DescriptionField);
 			this.add(EditBauteilButton);
 			
+			//Das Id-Textfeld darf nicht verändert werden
+			IdField.setReadOnly(true);
+			
 			DescriptionField.setStyleName("DescriptionFieldText");
 			EditBauteilButton.setStyleName("Button");
 			
 			EditBauteilButton.addClickHandler(new EditClickHandler());
 			
+			Integer iD = new Integer(editBauteil.getId());
+			
+			IdField.setText(iD.toString());
 			NameField.setText(editBauteil.getName());
 			MaterialField.setText(editBauteil.getMaterialBeschreibung());
 			DescriptionField.setText(editBauteil.getBauteilBeschreibung());
@@ -68,11 +78,8 @@ public class EditBauteil extends VerticalPanel {
 		  @Override
 		  public void onClick(ClickEvent event) {
 
-//			  if(){
-//				  
-//			  }
-			  
 			  Bauteil b = new Bauteil();
+			  b.setId(Integer.parseInt(IdField.getText()));
 			  b.setName(NameField.getText());
 			  b.setBauteilBeschreibung(DescriptionField.getText());
 			  b.setMaterialBeschreibung(MaterialField.getText());

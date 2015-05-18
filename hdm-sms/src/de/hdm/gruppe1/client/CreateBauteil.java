@@ -76,8 +76,7 @@ public class CreateBauteil extends VerticalPanel {
 						materialBeschreibung, new CreateBauteilCallback());
 				
 				 RootPanel.get("content_wrap").clear();
-				 //TODO wieder implementieren
-//				 RootPanel.get("content_wrap").add(new BauteilGeneralView());
+				 RootPanel.get("content_wrap").add(new BauteilGeneralView());
 				 
 			}
 			

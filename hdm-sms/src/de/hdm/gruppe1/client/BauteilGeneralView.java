@@ -48,6 +48,9 @@ public class BauteilGeneralView extends VerticalPanel {
 	//Vektor wird mit allen Bauteilen aus der DB befüllt
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	
+	//Vektor, der befüllt wird mit allen zu löschenden Bauteilen
+	Vector<Bauteil> deleteBauteile = new Vector<Bauteil>();
+	
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
@@ -112,31 +115,31 @@ public class BauteilGeneralView extends VerticalPanel {
 	 private class DeleteClickHandler implements ClickHandler {
 	  @Override
 	  public void onClick(ClickEvent event) {
-//	   if (customerToDisplay != null) {
 
-			RootPanel.get("content_wrap").clear();
-			Window.alert("Bauteil wurde vielleicht gelöscht");
-			RootPanel.get("content_wrap").add(new BauteilGeneralView());
+		  for(int i = 0; i<=deleteBauteile.size(); i++){
+			  stuecklistenVerwaltung.delete(deleteBauteile.get(i), null);
+		  }
+		  
+		  RootPanel.get("content_wrap").clear();
+		  Window.alert("Bauteil wurde vielleicht gelöscht");
+		  RootPanel.get("content_wrap").add(new BauteilGeneralView());
 		   
-//	   } else {
-//	    Window.alert("kein Kunde ausgewählt");
-//	   }
 	  }
 	 }
 	 		
-		class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
+	 class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Bauteile konnten nicht geladen werden");
-			}
+		 @Override
+		 public void onFailure(Throwable caught) {
+			 Window.alert("Bauteile konnten nicht geladen werden");
+		 }
 
-			@Override
-			public void onSuccess(Vector<Bauteil> alleBauteile) {
+		 @Override
+		 public void onSuccess(Vector<Bauteil> alleBauteile) {
 
-				allBauteile = alleBauteile;
+			 allBauteile = alleBauteile;
 				
-				for (int row = 1; row <= allBauteile.size(); row++) {
+			 for (int row = 1; row <= allBauteile.size(); row++) {
 //				      for (int col = 0; col < numColumns; col++) {
 
 				    	//Da die erste Reihe der Tabelle als Überschriften der Spalten dient, wird eine neue Variable benötigt,
@@ -171,6 +174,18 @@ public class BauteilGeneralView extends VerticalPanel {
 				        }); 
 				        
 				        table.setWidget(row, 7, checkBox);
+				        
+				        checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+							@Override
+							public void onValueChange(ValueChangeEvent<Boolean> a) {
+								if(a.getValue() == true){
+									deleteBauteile.add(allBauteile.get(i));
+								}
+								
+							}
+				        	
+				        });
 				        
 				        table.setStyleName("BauteilTable");
 				        
