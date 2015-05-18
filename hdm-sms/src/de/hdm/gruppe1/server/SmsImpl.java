@@ -1,6 +1,6 @@
 package de.hdm.gruppe1.server;
 
-import Customer;
+
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -328,6 +328,11 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 				baugruppe.setStueckliste(stueckliste);
 				baugruppe.setName(name);
 				baugruppe.setAenderer(user);
+	/*
+	* Setzen einer vorlaufige BaugruppenNummer, der insert-Aufruf liefert dann ein
+	* Objekt, dessen Nummer mit der Datenbank konsistent ist.
+	*/
+				baugruppe.setId(1);
 				
 			    // Objekt in der DB speichern.
 			    return this.baugruppeMapper.insert(baugruppe);
