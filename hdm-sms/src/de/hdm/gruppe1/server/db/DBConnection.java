@@ -44,7 +44,7 @@ public class DBConnection {
      * Software neu komilieren zu müssen.
      */
     //TODO: !!!! URLs anpassen !!!!  
-    private static String googleUrl = "jdbc:google:mysql://hdm-sms:usdb/sms?user=root";
+    private static String googleUrl = "jdbc:mysql://hdm-sms:usdb/sms?user=root";
     private static String localUrl = "jdbc:mysql://173.194.236.86:3306/sms?user=root";
     
     /**
