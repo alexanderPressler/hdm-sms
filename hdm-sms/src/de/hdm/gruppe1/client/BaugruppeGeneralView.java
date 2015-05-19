@@ -118,7 +118,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 
 			RootPanel.get("content_wrap").clear();
 			Window.alert("Baugruppe wurde vielleicht gelöscht");
-			RootPanel.get("content_wrap").add(new BauteilGeneralView());
+			RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
 		   
 //	   } else {
 //	    Window.alert("kein Kunde ausgewählt");
