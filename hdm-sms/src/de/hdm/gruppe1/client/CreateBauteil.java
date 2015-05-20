@@ -14,25 +14,43 @@ import de.hdm.gruppe1.client.ClientsideSettings;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
-//Die Klasse CreateBauteil liefert alle benötigten Elemente, um ein neues Bauteil im System anzulegen.
+/**
+ * Mithilfe der Klasse CreateBauteil wird dem User der Applikation ermöglicht,
+ * ein Bauteil-Objekt in der Datenbank anzulegen.
+ * 
+ * @author Mario Theiler
+ * @version 1.0
+ */
 public class CreateBauteil extends VerticalPanel {
-	
-	//Elemente für CreateBauteil initialisieren
-	private final Label HeadlineLabel = new Label ("Bauteil anlegen");
-	private final Label SublineLabel = new Label ("Um ein Bauteil anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
-	private final Label NameFieldLabel = new Label ("Name");
-	private final TextBox NameField = new TextBox ();
-	private final Label MaterialFieldLabel = new Label ("Materialbezeichnung");
-	private final TextBox MaterialField = new TextBox ();
-	private final Label DescriptionFieldLabel = new Label ("Textuelle Beschreibung");
-	private final TextArea DescriptionField = new TextArea ();
-	private final Button CreateBauteilButton = new Button ("anlegen");
-	
-	// Remote Service via ClientsideSettings
-	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
-	
-	public CreateBauteil(){
 
+	/**
+	 * GUI-Elemente für CreateBauteil initialisieren
+	 */
+	private final Label HeadlineLabel = new Label("Bauteil anlegen");
+	private final Label SublineLabel = new Label(
+			"Um ein Bauteil anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
+	private final Label NameFieldLabel = new Label("Name");
+	private final TextBox NameField = new TextBox();
+	private final Label MaterialFieldLabel = new Label("Materialbezeichnung");
+	private final TextBox MaterialField = new TextBox();
+	private final Label DescriptionFieldLabel = new Label(
+			"Textuelle Beschreibung");
+	private final TextArea DescriptionField = new TextArea();
+	private final Button CreateBauteilButton = new Button("anlegen");
+
+	/**
+	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
+	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
+	 * werden.
+	 */
+	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+
+	public CreateBauteil() {
+
+		/**
+		 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
+		 * zugeordnet, da diese Klasse von VerticalPanel erbt.
+		 */
 		this.add(HeadlineLabel);
 		this.add(SublineLabel);
 		this.add(NameFieldLabel);
@@ -42,14 +60,24 @@ public class CreateBauteil extends VerticalPanel {
 		this.add(DescriptionFieldLabel);
 		this.add(DescriptionField);
 		this.add(CreateBauteilButton);
-		
+
+		/**
+		 * Diverse css-Formatierungen
+		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
 		DescriptionField.setStyleName("DescriptionFieldText");
 		CreateBauteilButton.setStyleName("Button");
 
+		/**
+		 * Der Create-Button ruft die RPC-Methode auf, welche das Erstellen
+		 * eines Bauteils in der DB ermöglicht.
+		 */
 		CreateBauteilButton.addClickHandler(new CreateClickHandler());
 
+		/**
+		 * Abschließend wird alles dem RootPanel zugeordnet
+		 */
 		RootPanel.get("content_wrap").add(this);
 
 	}
@@ -57,10 +85,13 @@ public class CreateBauteil extends VerticalPanel {
 	/*
 	 * Click Handlers.
 	 */
-	
+
 	/**
-	 * Die Anlage eines Bauteils. 
-	 * Es erfolgt der Aufruf der Service-Methode "create".
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt in der
+	 * Datenbank anlegt.
+	 * 
+	 * @author Mario
+	 * 
 	 */
 	private class CreateClickHandler implements ClickHandler {
 		@Override
@@ -70,25 +101,47 @@ public class CreateBauteil extends VerticalPanel {
 			String bauteilBeschreibung = DescriptionField.getText();
 			String materialBeschreibung = MaterialField.getText();
 
-			if(NameField.getText().isEmpty() != true && DescriptionField.getText().isEmpty() != true && MaterialField.getText().isEmpty() != true){
-				
+			/**
+			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
+			 * notwendigen Felder befüllt sind.
+			 */
+			if (NameField.getText().isEmpty() != true
+					&& DescriptionField.getText().isEmpty() != true
+					&& MaterialField.getText().isEmpty() != true) {
+
+				/**
+				 * Die konkrete RPC-Methode für den create-Befehl wird
+				 * aufgerufen. Hierbei werden die gewünschten Werte
+				 * mitgeschickt.
+				 */
 				stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
 						materialBeschreibung, new CreateBauteilCallback());
-				
-				 RootPanel.get("content_wrap").clear();
-				 RootPanel.get("content_wrap").add(new BauteilGeneralView());
-				 
+
+				/**
+				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
+				 * zurück zur Übersichtstabelle weiterleiten.
+				 */
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new BauteilGeneralView());
+
 			}
-			
+
 			else {
-				
+
 				Window.alert("Bitte alle Felder ausfüllen.");
-				
+
 			}
-			
+
 		}
 	}
-	
+
+	/**
+	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
+	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
+	 * 
+	 * @author Mario
+	 * 
+	 */
 	class CreateBauteilCallback implements AsyncCallback<Bauteil> {
 
 		@Override
@@ -100,13 +153,6 @@ public class CreateBauteil extends VerticalPanel {
 		public void onSuccess(Bauteil bauteil) {
 
 			Window.alert("Das Bauteil wurde erfolgreich angelegt.");
-			//TODO: Klären ob das catvm gebraucht wird 
-			// if (bauteil != null) {
-			// Das erfolgreiche Hinzufügen eines Kunden wird an den
-			// Kunden- und
-			// Kontenbaum propagiert.
-			// catvm.addCustomer(customer);
-			// }
 		}
 	}
 

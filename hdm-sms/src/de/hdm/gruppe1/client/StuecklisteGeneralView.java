@@ -67,7 +67,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
 		HeadlineLabel.setStyleName("headline");
-		table.setStyleName("BauteilTable");
+		table.setStyleName("tableBody");
 				
 		//Applikationsschicht liefert <Stueckliste>-Vector.
 		//Diesen mithilfe for-Schleife durchlaufen und angemessen darstellen.
