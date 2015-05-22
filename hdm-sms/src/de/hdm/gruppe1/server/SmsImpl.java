@@ -2,8 +2,6 @@ package de.hdm.gruppe1.server;
 
 
 
-
-
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -106,9 +104,9 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	 * Referenz auf das zugehörige BusinessObjekt.
 	 */
 	private Bauteil b = null;
+	private Baugruppe bg= null;
 
-
-	private Stueckliste s = null;
+//	private Stueckliste s = null;
 
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte
@@ -117,7 +115,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	private BauteilMapper bauteilMapper = null;
 	private BaugruppenMapper baugruppenMapper = null;
 
-	private StuecklisteMapper stuecklisteMapper = null;
+//	private StuecklisteMapper stuecklisteMapper = null;
 
 	
 	/*
@@ -173,8 +171,8 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	     * kommunizieren kann.
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
-	    this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
-	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
+        this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
+//	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
 
 	  }
 	  /*
@@ -213,7 +211,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		     * Setzen einer vorl�ufigen Kundennr. Der insert-Aufruf liefert dann ein
 		     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
 		     */
-//		    b.setId(10);
+		    b.setId(10);
 
 		    // Objekt in der DB speichern.
 		    return this.bauteilMapper.insert(b);
@@ -266,7 +264,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		
 		
 	
-		  @Override
+	  @Override
 //		public Stueckliste createStueckliste(String name)
 //		      throws IllegalArgumentException {
 //			Stueckliste s = new Stueckliste();
@@ -322,53 +320,35 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * ***************************************************************************
 	   */
 	public Baugruppe createBaugruppe(String name, Stueckliste stueckliste, User user)
-			      throws IllegalArgumentException {
+		      throws IllegalArgumentException {
 			   
 			    Baugruppe baugruppe= new Baugruppe();
-				baugruppe.setStueckliste(stueckliste);
-				baugruppe.setName(name);
+			    baugruppe.setStueckliste(stueckliste);
+			    baugruppe.setName(name);
 				baugruppe.setAenderer(user);
 	/*
 	* Setzen einer vorlaufige BaugruppenNummer, der insert-Aufruf liefert dann ein
 	* Objekt, dessen Nummer mit der Datenbank konsistent ist.
 	*/
-				baugruppe.setId(1);
-				
+				baugruppe.setId(10);
+			
 			    // Objekt in der DB speichern.
 			    return this.baugruppenMapper.insert(baugruppe);
-		}
-
-
-
-	@Override
-	public void editBaugruppe(Baugruppe baugruppe) throws IllegalArgumentException {
-		baugruppenMapper.update(baugruppe);
-		}
-
-	@Override
-	public void deleteBaugruppe(Baugruppe baugruppe) throws IllegalArgumentException{
-		   /*
-	     * Zunächst werden sämtl. Konten des Kunden aus der DB entfernt.
-	     * 
-	     * Beachten Sie, dass wir dies auf Ebene der Applikationslogik, konkret: in
-	     * der Klasse BankVerwaltungImpl, durchführen. Grund: In der Klasse
-	     * BankVerwaltungImpl ist die Verflechtung sämtlicher Klassen bzw. ihrer
-	     * Objekte bekannt. Nur hier kann sinnvoll ein umfassender Verwaltungsakt
-	     * wie z.B. dieser Löschvorgang realisiert werden.
-	     * 
-	     * Natürlich könnte man argumentieren, dass dies auch auf Datenbankebene
-	     * (sprich: mit SQL) effizienter möglich ist. Das Gegenargument ist jedoch
-	     * eine dramatische Verschlechterung der Wartbarkeit Ihres Gesamtsystems
-	     * durch einen zu niedrigen Abstraktionsgrad und der Verortung von Aufgaben
-	     * an einer Stelle (Datenbankschicht), die die zuvor genannte Verflechtung
-	     * nicht umfänglich kennen kann.
-	     */
-
 	}
 
-	public Baugruppe getBaugruppeByName(String name)
-			throws IllegalArgumentException {
-		return this.baugruppenMapper.findByName(name);
+
+	@Override
+	  public void editBaugruppe(Baugruppe baugruppe) throws IllegalArgumentException {
+			baugruppenMapper.update(baugruppe);
+	}
+
+	@Override
+	public void delete(Baugruppe baugruppe) throws IllegalArgumentException{}
+
+ 
+ 	public Vector<Baugruppe> getBaugruppeByName(String name)
+		throws IllegalArgumentException {
+ 		return this.baugruppenMapper.findByName(name);
 	}
 
 	@Override
@@ -377,14 +357,14 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	}
 
 	@Override
-	public Baugruppe getAllBaugruppen( ArrayList<Baugruppe> baugruppe)
-		throws IllegalArgumentException {
-		return this.baugruppenMapper.findAll();
+	public Vector<Baugruppe> getAllBaugruppen()	throws IllegalArgumentException {
+		return this.baugruppenMapper.getAll();
+		
 }
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Ende: Methoden für Bugruppe-Objekte
+   * ABSCHNITT, Ende: Methoden für Bugruppe-Objekte
 	   * ***************************************************************************
-	   */
+   */
 
 }

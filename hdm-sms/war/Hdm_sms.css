@@ -16,7 +16,7 @@
 }
 
 /** Tabelle für Overview-GUI's */
-.BauteilTable{
+.tableBody{
     border: 1px solid black;
     background-color: #fff;
     border-spacing: 5px;

@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import de.hdm.gruppe1.server.db.User;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Element;
@@ -30,43 +31,40 @@ public interface SmsAsync {
 
 	void delete(Bauteil b, AsyncCallback<Void> callback);
 
-
+	void getBauteilById(int id, AsyncCallback<Bauteil> callback);
 
 	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
 
 
+	;
+
 	
-	
-	
-	
-	
-	void createBaugruppe(String name, ArrayList<Element> element,
+	void createBaugruppe(String name, Stueckliste stueckliste, User user,
 			AsyncCallback<Baugruppe> callback);
+
+	void editBaugruppe(Baugruppe baugruppe, AsyncCallback<Void> callback);
 	
-	void editBaugruppe(Baugruppe baugruppe, AsyncCallback<Baugruppe> callback);
-	
-	void deleteBaugruppe(Baugruppe baugruppe, AsyncCallback<Baugruppe> callback);
+	void delete(Baugruppe baugruppe, AsyncCallback<Void> callback);
 
-	void getBaugruppeByName(String name, AsyncCallback<Baugruppe> callback);
-
-	void getBauteilById(int id, AsyncCallback<Bauteil> callback);
-
-	
-	
-	void createStueckliste(String name, AsyncCallback<Stueckliste> callback);
-
-	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
-
-	void deleteStueckliste(Stueckliste s, AsyncCallback<Void> callback);
-
-	void getAllStuecklisten(AsyncCallback<Vector<Stueckliste>> callback);
-
-	void getStuecklisteById(int id, AsyncCallback<Stueckliste> callback);
-
+	void getBaugruppeByName(String name,
+			AsyncCallback<Vector<Baugruppe>> callback);
 	void getBaugruppeById(int id, AsyncCallback<Baugruppe> callback);
+	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
+	
+	
+//	void createStueckliste(String name, AsyncCallback<Stueckliste> callback);
 
-	void getAllBaugruppen(ArrayList<Baugruppe> baugruppe,
-			AsyncCallback<Baugruppe> callback);
+//	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
+
+//	void deleteStueckliste(Stueckliste s, AsyncCallback<Void> callback);
+
+//	void getAllStuecklisten(AsyncCallback<Vector<Stueckliste>> callback);
+
+//	void getStuecklisteById(int id, AsyncCallback<Stueckliste> callback);
+
+
+
+
 	
 
 }

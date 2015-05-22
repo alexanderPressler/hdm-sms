@@ -7,7 +7,7 @@ import com.google.gwt.core.client.GWT;
 import de.hdm.gruppe1.shared.*;
 
 /**
- * Klasse mit Eigenschaften und Diensten, die fÃ¼r alle Client-seitigen Klassen
+ * Klasse mit Eigenschaften und Diensten, die für alle Client-seitigen Klassen
  * relevant sind.
  * 
  * @author thies
@@ -65,21 +65,21 @@ public class ClientsideSettings extends CommonSettings {
 	   * <h2>HINWEIS:</h2>
 	   * <p>
 	   * Beachten Sie, dass Sie den auszugebenden Log nun nicht mehr durch
-	   * bedarfsweise EinfÃ¼gen und Auskommentieren etwa von
-	   * <code>System.out.println(...);</code> steuern. Sie belassen kÃ¼nftig
-	   * sÃ¤mtliches Logging im Code und kÃ¶nnen ohne abermaliges Kompilieren den Log
-	   * Level "von auÃŸen" durch die Datei <code>logging.properties</code> steuern.
+	   * bedarfsweise Einfügen und Auskommentieren etwa von
+	   * <code>System.out.println(...);</code> steuern. Sie belassen künftig
+	   * sämtliches Logging im Code und können ohne abermaliges Kompilieren den Log
+	   * Level "von außen" durch die Datei <code>logging.properties</code> steuern.
 	   * Sie finden diese Datei in Ihrem <code>war/WEB-INF</code>-Ordner. Der dort
-	   * standardmÃ¤ÃŸig vorgegebene Log Level ist <code>WARN</code>. Dies wÃ¼rde
+	   * standardmäßig vorgegebene Log Level ist <code>WARN</code>. Dies würde
 	   * bedeuten, dass Sie keine <code>INFO</code>-Meldungen wohl aber
 	   * <code>WARN</code>- und <code>SEVERE</code>-Meldungen erhielten. Wenn Sie
-	   * also auch Log des Levels <code>INFO</code> wollten, mÃ¼ssten Sie in dieser
+	   * also auch Log des Levels <code>INFO</code> wollten, müssten Sie in dieser
 	   * Datei <code>.level = INFO</code> setzen.
 	   * </p>
 	   * 
 	   * Weitere Infos siehe Dokumentation zu Java Logging.
 	   * 
-	   * @return die Logger-Instanz fÃ¼r die Server-Seite
+	   * @return die Logger-Instanz für die Server-Seite
 	   */
 	  public static Logger getLogger() {
 	    return log;
@@ -89,7 +89,7 @@ public class ClientsideSettings extends CommonSettings {
 	   * Anlegen und Auslesen der applikationsweit eindeutigen Sms(Service). Diese
 	   * Methode erstellt die Sms (Service), sofern sie noch nicht existiert. Bei
 	   * wiederholtem Aufruf dieser Methode wird stets das bereits zuvor angelegte
-	   * Objekt zurÃ¼ckgegeben.
+	   * Objekt zurückgegeben.
 	   * </p>
 	   * 
 	   * <p>
@@ -105,11 +105,11 @@ public class ClientsideSettings extends CommonSettings {
 	  public static SmsAsync getSmsVerwaltung() {
 	    // Gab es bislang noch keine Sms (Service)-Instanz, dann...
 	    if ( stuecklistenVerwaltung == null) {
-	      // ZunÃ¤chst instantiieren wir Sms(Service)
+	      // Zunächst instantiieren wir Sms(Service)
 	    	stuecklistenVerwaltung = GWT.create(Sms.class);
 	    }
 
-	    // So, nun brauchen wir die Sms(Service) nur noch zurÃ¼ckzugeben.
+	    // So, nun brauchen wir die Sms(Service) nur noch zurückzugeben.
 	    return stuecklistenVerwaltung;
 	  }
 
