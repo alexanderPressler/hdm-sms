@@ -72,7 +72,9 @@ public class BauteilGeneralView extends VerticalPanel {
 	 * Vektor, der mit allen Bauteilen aus der DB befüllt wird.
 	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
-
+	
+	Vector<Bauteil> deleteBauteile = new Vector<Bauteil>();
+	
 	/**
 	 * Remote Service via ClientsideSettings Wird an dieser Stelle einmalig in
 	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
@@ -188,8 +190,8 @@ public class BauteilGeneralView extends VerticalPanel {
 				 */
 				final int i = row - 1;
 
-				RadioButton radioButton = new RadioButton("editRadioGroup", "");
 				CheckBox checkBox = new CheckBox("");
+				RadioButton radioButton = new RadioButton("editRadioGroup", "");
 
 				/**
 				 * Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben.
@@ -234,6 +236,22 @@ public class BauteilGeneralView extends VerticalPanel {
 				 * Widget hinzugefügt.
 				 */
 				table.setWidget(row, 7, checkBox);
+				
+				checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					@Override
+					public void onValueChange(
+							ValueChangeEvent<Boolean> e) {
+						if (e.getValue() == true) {
+							Bauteil deleteBauteil = allBauteile.get(i);
+							deleteBauteile.add(deleteBauteil);
+							Window.alert("Inhalt Vektor: "+deleteBauteile.toString());
+						} else if (e.getValue() == false) {
+							Bauteil removeBauteil = allBauteile.get(i);
+							deleteBauteile.remove(removeBauteil);
+							Window.alert("Gelöscht: "+deleteBauteile.toString());
+						}
+					}
+				});
 
 				/**
 				 * Die Tabelle erhält ein css-Element für den Body, welches sich
