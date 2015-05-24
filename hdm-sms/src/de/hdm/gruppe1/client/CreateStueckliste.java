@@ -88,10 +88,6 @@ public class CreateStueckliste extends VerticalPanel {
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
 		amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
 		
-		//Bauteil vorübergehend statisch befüllt
-		bT.setId(1);
-		bT.setName("Schraube");
-		
 		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 		bauteilCollection.setText(0, 0, "ID");
 		bauteilCollection.setText(0, 1, "Anzahl");
@@ -123,39 +119,64 @@ public class CreateStueckliste extends VerticalPanel {
 		collectBtButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
 
-				final int index = listBoxBauteile.getSelectedIndex();
+				int index = listBoxBauteile.getSelectedIndex();
 				
-				final CheckBox removeBtCheckBox = new CheckBox();			
+//				final CheckBox removeBtCheckBox = new CheckBox();	
+				Button removeButton = new Button();
 				
-				bauteilCollection.setText(index+1, 0, ""+allBauteile.get(index).getId());
-				bauteilCollection.setText(index+1, 1, "Zahl");
-				bauteilCollection.setText(index+1, 2, allBauteile.get(index).getName());
-				bauteilCollection.setWidget(index+1, 3, removeBtCheckBox);
+				collectBauteile.add(allBauteile.get(index));
+				Window.alert("Inhalt Vektor: " +collectBauteile.toString());
+				
+				for(int i = 0; i<= collectBauteile.size(); i++){
+					bauteilCollection.setText(i+1, 0, ""+collectBauteile.get(i).getId());
+					bauteilCollection.setText(i+1, 1, "Zahl");
+					bauteilCollection.setText(i+1, 2, collectBauteile.get(i).getName());
+					bauteilCollection.setWidget(i+1, 3, removeButton);
+					
+					removeButton.addClickHandler(new ClickHandler(){
+						public void onClick(ClickEvent event) {
+							
+							Window.alert("Inhalt Bauteil Vektor: "+collectBauteile.toString());
+							
+//							int a= i;
+//							collectBauteile.remove(0);
+							
+//							bauteilCollection.removeRow(i+1);
+							
+							//ListBox-Element, das entfernt wurde, wird für erneutes Hinzufügen wieder angezeigt
+//							listBoxBauteile.getElement().getElementsByTagName("option").getItem(index+1).setAttribute("enabled", "enabled");
+							
+
+						}
+
+					});
+				}
+				
+//				bauteilCollection.setText(index+1, 0, ""+allBauteile.get(index).getId());
+//				bauteilCollection.setText(index+1, 1, "Zahl");
+//				bauteilCollection.setText(index+1, 2, allBauteile.get(index).getName());
+//				bauteilCollection.setWidget(index+1, 3, removeButton);
 				
 				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
-				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
+//				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
 				
 				//TODO fehlerhaft!
 				//Dem globalen Remove-Button wird ein ClickHandler hinzugefügt, der alle markierten Bauteile entfernt
-				deleteBauteilButton.addClickHandler(new ClickHandler(){
-					public void onClick(ClickEvent event) {
-						
-						for(int i = 0; i <= bauteilCollection.getRowCount(); i++){
-							if (removeBtCheckBox.getValue() == true){
-								bauteilCollection.removeRow(i+1);
-								
-								//ListBox-Element, das entfernt wurde, wird für erneutes Hinzufügen wieder angezeigt
-								listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("enabled", "enabled");
-								
-							} else {
-								Window.alert("In else: "+bauteilCollection.getRowFormatter().getElement(index+1).getId());
-							}
-							
-						}
-
-					}
-
-				});
+//				removeButton.addClickHandler(new ClickHandler(){
+//					public void onClick(ClickEvent event) {
+//						
+//						Window.alert("Inhalt Bauteil Vektor: "+collectBauteile.toString());
+////						collectBauteile.remove(index);
+//						
+//						bauteilCollection.removeRow(index+1);
+//						
+//						//ListBox-Element, das entfernt wurde, wird für erneutes Hinzufügen wieder angezeigt
+////						listBoxBauteile.getElement().getElementsByTagName("option").getItem(index+1).setAttribute("enabled", "enabled");
+//						
+//
+//					}
+//
+//				});
 				
 		        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefügt
 //				removeBtBtn.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
