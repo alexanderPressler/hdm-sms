@@ -22,7 +22,12 @@ import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
-//Die Klasse CreateStueckliste liefert alle benötigten Elemente, um eine neue Stückliste im System anzulegen.
+/**
+ * Die Klasse CreateStueckliste ermöglicht dem User, Objekte von Stückliste in der Datenbank anzulegen.
+ * 
+ * @author Mario Theiler
+ * @version 1.0
+ */
 public class CreateStueckliste extends VerticalPanel {
 
 	//Elemente für CreateStückliste initialisieren
@@ -30,7 +35,6 @@ public class CreateStueckliste extends VerticalPanel {
 	private final Label SublineLabel = new Label ("Um eine Stückliste anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
 	private final Label bauteilLabel = new Label("Bauteile für Stückliste");
 	private final Label baugruppeLabel = new Label("Baugruppen für Stückliste");
-//	private final Label NameFieldLabel = new Label ("Name");
 	private final TextBox NameField = new TextBox ();
 	private final Label BauteilLabel = new Label ("Gewünschte Anzahl von Bauteilen hinzufügen");
 	private final Label BaugruppeLabel = new Label ("Gewünschte Anzahl von Baugruppen hinzufügen");
@@ -76,6 +80,8 @@ public class CreateStueckliste extends VerticalPanel {
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 		
+	//Konstruktor der Klasse CreateStueckliste. Gibt vor, dass bei jeder Instantiierung die entsprechenden GUI-Elemente
+	//geladen werden.
 	public CreateStueckliste(){
 
 		NameField.getElement().setPropertyString("placeholder", "Hier bitte Namen eintragen");
@@ -98,8 +104,8 @@ public class CreateStueckliste extends VerticalPanel {
 		baugruppeCollection.setText(0, 3, "Entfernen");
 		
 		//css für Tabelle definieren
-		bauteilCollection.setStyleName("BauteilTable");
-		baugruppeCollection.setStyleName("BauteilTable");
+		bauteilCollection.setStyleName("tableBody");
+		baugruppeCollection.setStyleName("tableBody");
 	    
 	    //Das FlexTable Widget unterstützt keine Headlines. Daher wird die erste Reihe über folgenden Umweg formatiert
 		bauteilCollection.getCellFormatter().addStyleName(0, 0, "tableHead");
@@ -114,31 +120,20 @@ public class CreateStueckliste extends VerticalPanel {
 		
 		stuecklistenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
 		
-//		Window.alert("Inhalt: "+allBauteile.get(2).getName());
-		
-		//Da RPC-Methoden noch nicht implementiert sind, wird hier beispielhaft das Dropdown manuell befüllt
-//		for(int i = 0; i< allBauteile.size(); i++){
-//			listBoxBauteile.addItem(allBauteile.get(i).getName());
-//		}
-		
-		listBoxBauteile.addItem(bT.getName()+" 1");
-		listBoxBauteile.addItem(bT.getName()+" 2");
-		listBoxBauteile.addItem(bT.getName()+" 3");
-		listBoxBauteile.addItem(bT.getName()+" 4");
-		listBoxBauteile.addItem(bT.getName()+" 5");
-		
 		collectBtButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
 
 				final int index = listBoxBauteile.getSelectedIndex();
-				String myValue = listBoxBauteile.getValue(index);
 				
-				final CheckBox removeBtBtn = new CheckBox();			
+				final CheckBox removeBtCheckBox = new CheckBox();			
 				
-				bauteilCollection.setText(index+1, 0, ""+bT.getId());
+				bauteilCollection.setText(index+1, 0, ""+allBauteile.get(index).getId());
 				bauteilCollection.setText(index+1, 1, "Zahl");
-				bauteilCollection.setText(index+1, 2, bT.getName());
-				bauteilCollection.setWidget(index+1, 3, removeBtBtn);
+				bauteilCollection.setText(index+1, 2, allBauteile.get(index).getName());
+				bauteilCollection.setWidget(index+1, 3, removeBtCheckBox);
+				
+				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
+				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
 				
 				//TODO fehlerhaft!
 				//Dem globalen Remove-Button wird ein ClickHandler hinzugefügt, der alle markierten Bauteile entfernt
@@ -146,8 +141,12 @@ public class CreateStueckliste extends VerticalPanel {
 					public void onClick(ClickEvent event) {
 						
 						for(int i = 0; i <= bauteilCollection.getRowCount(); i++){
-							if (removeBtBtn.getValue() == true){
+							if (removeBtCheckBox.getValue() == true){
 								bauteilCollection.removeRow(i+1);
+								
+								//ListBox-Element, das entfernt wurde, wird für erneutes Hinzufügen wieder angezeigt
+								listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("enabled", "enabled");
+								
 							} else {
 								Window.alert("In else: "+bauteilCollection.getRowFormatter().getElement(index+1).getId());
 							}
@@ -197,7 +196,6 @@ public class CreateStueckliste extends VerticalPanel {
 			
 		this.add(HeadlineLabel);
 		this.add(SublineLabel);
-//		this.add(NameFieldLabel);
 		this.add(NameField);
 		this.add(BauteilLabel);
 		this.add(btPanel);
@@ -293,7 +291,16 @@ public class CreateStueckliste extends VerticalPanel {
 		@Override
 		public void onSuccess(Vector<Bauteil> alleBauteile) {
 
+			//Befüllung des noch leeren Klassen-Vektors mit Bauteil-Vektor aus RPC-Callback
 			allBauteile = alleBauteile;
+			
+			//Schleife durchläuft kompletten Vektor
+			for(int c = 0; c <=allBauteile.size(); c++){
+				
+				//Dropdown listBoxBauteile wird mit Bauteil-Objekten (nur Name) befüllt
+				listBoxBauteile.addItem(allBauteile.get(c).getName());
+				
+			}
 			
 		}
 	}
