@@ -76,11 +76,8 @@ public class BauteilGeneralView extends VerticalPanel {
 	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	
-	/**
-	 * Checkbox, zum löschen von Bauteilen.
-	 */
-	CheckBox checkBox = new CheckBox("");
-
+	Vector<Bauteil> deleteBauteile = new Vector<Bauteil>();
+	
 	/**
 	 * Remote Service via ClientsideSettings Wird an dieser Stelle einmalig in
 	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
@@ -97,6 +94,7 @@ public class BauteilGeneralView extends VerticalPanel {
 		editButtonPanel.add(editLabel);
 		editButtonPanel.add(editBtn);
 
+		deleteBtn.addClickHandler(new deleteClickHandler());
 		deleteButtonPanel.add(deleteLabel);
 		deleteButtonPanel.add(deleteBtn);
 
@@ -196,6 +194,7 @@ public class BauteilGeneralView extends VerticalPanel {
 				 */
 				final int i = row - 1;
 
+				CheckBox checkBox = new CheckBox("");
 				RadioButton radioButton = new RadioButton("editRadioGroup", "");
 
 				/**
@@ -241,6 +240,22 @@ public class BauteilGeneralView extends VerticalPanel {
 				 * Widget hinzugefügt.
 				 */
 				table.setWidget(row, 7, checkBox);
+				
+				checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					@Override
+					public void onValueChange(
+							ValueChangeEvent<Boolean> e) {
+						if (e.getValue() == true) {
+							Bauteil deleteBauteil = allBauteile.get(i);
+							deleteBauteile.add(deleteBauteil);
+							Window.alert("Inhalt Vektor: "+deleteBauteile.toString());
+						} else if (e.getValue() == false) {
+							Bauteil removeBauteil = allBauteile.get(i);
+							deleteBauteile.remove(removeBauteil);
+							Window.alert("Gelöscht: "+deleteBauteile.toString());
+						}
+					}
+				});
 
 				/**
 				 * Die Tabelle erhält ein css-Element für den Body, welches sich
@@ -282,10 +297,27 @@ public class BauteilGeneralView extends VerticalPanel {
 	private class deleteClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
+			
+			if (deleteBauteile.isEmpty() == true){
+				Window.alert("Es wurde kein Bauteil zum Löschen ausgewählt.");
+			}
+			
+			else {
+			for (int i=0;i<=deleteBauteile.size();i++) {
+			Bauteil b = new Bauteil();
+			b = deleteBauteile.get(i);
+				/**
+				 * Die konkrete RPC-Methode für den create-Befehl wird
+				 * aufgerufen. Hierbei werden die gewünschten Werte
+				 * mitgeschickt.
+				 */
+				stuecklistenVerwaltung.delete(b,new DeleteBauteilCallback());
+				}
+			}
 		}
 	}
 
-	class DeleteBauteilCallback implements AsyncCallback<Bauteil> {
+	class DeleteBauteilCallback implements AsyncCallback<Void> {
 
 		@Override
 		public void onFailure(Throwable caught) {
@@ -293,10 +325,9 @@ public class BauteilGeneralView extends VerticalPanel {
 		}
 
 		@Override
-		public void onSuccess(Bauteil bauteil) {
+		public void onSuccess(Void result) {
 
 			Window.alert("Das Bauteil wurde erfolgreich geloescht.");
 		}
 	}
-
 }

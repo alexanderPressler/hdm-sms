@@ -144,9 +144,7 @@ public class BauteilMapper {
 	    try {
 	      Statement stmt = con.createStatement();
 
-//	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
-	      System.out.println("Id: "+bauteil.getId());
-	      stmt.executeUpdate("DELETE FROM `Bauteile` WHERE `teilnummer`="+ bauteil.getId());
+	      stmt.executeUpdate("DELETE FROM Bauteile WHERE teilnummer ='"+ bauteil.getId()+"'");
 
 	    }
 	    catch (SQLException e2) {
