@@ -81,7 +81,7 @@ public class BauteilMapper {
 	      // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
 	      if (rs.next()) {
 	        /*
-	         * Man erhält den bisher maximalen, nun um 1 inkrementierten
+	         * a erhält den bisher maximalen, nun um 1 inkrementierten
 	         * Primärschlüssel.
 	         */
 	    	  bauteil.setId(rs.getInt("maxid") + 1);
@@ -144,9 +144,7 @@ public class BauteilMapper {
 	    try {
 	      Statement stmt = con.createStatement();
 
-//	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
-	      System.out.println("Id: "+bauteil.getId());
-	      stmt.executeUpdate("DELETE FROM `Bauteile` WHERE `teilnummer`="+ bauteil.getId());
+	      stmt.executeUpdate("DELETE FROM Bauteile WHERE teilnummer ='"+ bauteil.getId()+"'");
 
 	    }
 	    catch (SQLException e2) {

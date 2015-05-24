@@ -91,6 +91,7 @@ public class BauteilGeneralView extends VerticalPanel {
 		editButtonPanel.add(editLabel);
 		editButtonPanel.add(editBtn);
 
+		deleteBtn.addClickHandler(new deleteClickHandler());
 		deleteButtonPanel.add(deleteLabel);
 		deleteButtonPanel.add(deleteBtn);
 
@@ -281,6 +282,49 @@ public class BauteilGeneralView extends VerticalPanel {
 
 			});
 
+		}
+	}
+	
+	/**
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt löscht
+	 * 
+	 * @author Mario Alex
+	 * 
+	 */
+	private class deleteClickHandler implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+			
+			if (deleteBauteile.isEmpty() == true){
+				Window.alert("Es wurde kein Bauteil zum Löschen ausgewählt.");
+			}
+			
+			else {
+			for (int i=0;i<=deleteBauteile.size();i++) {
+			Bauteil b = new Bauteil();
+			b = deleteBauteile.get(i);
+				/**
+				 * Die konkrete RPC-Methode für den create-Befehl wird
+				 * aufgerufen. Hierbei werden die gewünschten Werte
+				 * mitgeschickt.
+				 */
+				stuecklistenVerwaltung.delete(b,new DeleteBauteilCallback());
+				}
+			}
+		}
+	}
+
+	class DeleteBauteilCallback implements AsyncCallback<Void> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Das Loeschen des Bauteils ist fehlgeschlagen!");
+		}
+
+		@Override
+		public void onSuccess(Void result) {
+
+			Window.alert("Das Bauteil wurde erfolgreich geloescht.");
 		}
 	}
 
