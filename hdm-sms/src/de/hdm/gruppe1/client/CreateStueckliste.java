@@ -20,7 +20,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
 import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.ElementPaar;
 
 /**
  * Die Klasse CreateStueckliste ermöglicht dem User, Objekte von Stückliste in der Datenbank anzulegen.
@@ -61,7 +63,7 @@ public class CreateStueckliste extends VerticalPanel {
 	//TODO implementieren
 	//Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
-//	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
+	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
 	//TODO implementieren
 	//Ein Bauteil und eine Baugruppe, die der zugehörigen Übersichtstabelle hinzugefügt werden
@@ -70,8 +72,8 @@ public class CreateStueckliste extends VerticalPanel {
 	
 	//TODO implementieren
 	//Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu sammeln, bevor die Stückliste gespeichert wird
-	Vector<Bauteil> collectBauteile = new Vector<Bauteil>();
-//	Vector<Baugruppe> collectBaugruppen = new Vector<Baugruppe>();
+	Vector<ElementPaar> collectBauteile = new Vector<ElementPaar>();
+	Vector<ElementPaar> collectBaugruppen = new Vector<ElementPaar>();
 	
 	//Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die Stückliste gespeichert wird
 	FlexTable bauteilCollection = new FlexTable();
@@ -124,13 +126,24 @@ public class CreateStueckliste extends VerticalPanel {
 //				final CheckBox removeBtCheckBox = new CheckBox();	
 				Button removeButton = new Button();
 				
-				collectBauteile.add(allBauteile.get(index));
-				Window.alert("Inhalt Vektor: " +collectBauteile.toString());
+				ElementPaar bauteilPaar = new ElementPaar();
+				
+				Integer anzahl = Integer.parseInt(amountBauteile.getText());
+				
+				bauteilPaar.setAnzahl(anzahl);
+				bauteilPaar.setElement(allBauteile.get(index));
+				
+				collectBauteile.add(bauteilPaar);
+				
+				Window.alert("Anzahl: "+bauteilPaar.getAnzahl()+ " Bauteil: "+bauteilPaar.getElement().getName());
+				
+				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
+				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
 				
 				for(int i = 0; i<= collectBauteile.size(); i++){
-					bauteilCollection.setText(i+1, 0, ""+collectBauteile.get(i).getId());
-					bauteilCollection.setText(i+1, 1, "Zahl");
-					bauteilCollection.setText(i+1, 2, collectBauteile.get(i).getName());
+					bauteilCollection.setText(i+1, 0, ""+collectBauteile.get(i).getElement().getId());
+					bauteilCollection.setText(i+1, 1, ""+collectBauteile.get(i).getAnzahl());
+					bauteilCollection.setText(i+1, 2, collectBauteile.get(i).getElement().getName());
 					bauteilCollection.setWidget(i+1, 3, removeButton);
 					
 					removeButton.addClickHandler(new ClickHandler(){
@@ -194,11 +207,67 @@ public class CreateStueckliste extends VerticalPanel {
 
 		});
 		
-		listBoxBaugruppen.addItem("Baugruppe 1");
-		listBoxBaugruppen.addItem("Baugruppe 2");
-		listBoxBaugruppen.addItem("Baugruppe 3");
-		listBoxBaugruppen.addItem("Baugruppe 4");
-		listBoxBaugruppen.addItem("Baugruppe 5");
+		Baugruppe a = new Baugruppe();
+		Baugruppe b = new Baugruppe();
+		Baugruppe c = new Baugruppe();
+		
+		a.setId(1);
+		b.setId(2);
+		c.setId(3);
+		
+		a.setName("Name1");
+		b.setName("Name2");
+		c.setName("Name3");
+		
+		allBaugruppen.add(a);
+		allBaugruppen.add(b);
+		allBaugruppen.add(c);
+		
+		listBoxBaugruppen.addItem(a.getName());
+		listBoxBaugruppen.addItem(b.getName());
+		listBoxBaugruppen.addItem(c.getName());
+		
+		collectBgButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event) {
+
+				int index = listBoxBaugruppen.getSelectedIndex();
+				
+				Button removeBgButton = new Button();
+				
+				ElementPaar baugruppePaar = new ElementPaar();
+				
+				Integer anzahl = Integer.parseInt(amountBaugruppen.getText());
+				
+				baugruppePaar.setAnzahl(anzahl);
+				baugruppePaar.setElement(allBaugruppen.get(index));
+				
+				collectBaugruppen.add(baugruppePaar);
+				
+				Window.alert("Anzahl: "+baugruppePaar.getAnzahl()+ " Bauteil: "+baugruppePaar.getElement().getName());
+				
+				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
+				listBoxBaugruppen.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
+				
+				for(int i = 0; i<= collectBaugruppen.size(); i++){
+					baugruppeCollection.setText(i+1, 0, ""+collectBaugruppen.get(i).getElement().getId());
+					baugruppeCollection.setText(i+1, 1, ""+collectBaugruppen.get(i).getAnzahl());
+					baugruppeCollection.setText(i+1, 2, collectBaugruppen.get(i).getElement().getName());
+					baugruppeCollection.setWidget(i+1, 3, removeBgButton);
+					
+					removeBgButton.addClickHandler(new ClickHandler(){
+						public void onClick(ClickEvent event) {
+							
+							Window.alert("Inhalt Baugruppe Vektor: "+collectBaugruppen.toString());
+							
+
+						}
+
+					});
+				}
+				
+			}
+
+		});
 		
 		btPanel.add(amountBauteile);
 		btPanel.add(listBoxBauteile);
