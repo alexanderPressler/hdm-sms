@@ -81,8 +81,8 @@ public class StuecklisteMapper {
 			 * Zunächst schauen wir nach, welches der momentan höchste
 			 * Primärschlüsselwert ist.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid "
-					+ "FROM stuecklisten ");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(sl_ID) AS maxid "
+					+ "FROM Stueckliste ");
 
 			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
 			if (rs.next()) {
@@ -95,11 +95,7 @@ public class StuecklisteMapper {
 				stmt = con.createStatement();
 
 				// Jetzt erst erfolgt die tatsächliche Einfügeoperation
-				stmt.executeUpdate("INSERT INTO `stuecklisten` (`id`, `name`) VALUES ('"
-						+ stueckliste.getId()
-						+ "', '"
-						+ stueckliste.getName()
-						+ "');");
+				stmt.executeUpdate("INSERT INTO Stueckliste VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '2015-05-18 12:12:12', '1');");
 
 			}
 		} catch (SQLException e2) {

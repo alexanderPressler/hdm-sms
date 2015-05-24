@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -17,10 +18,14 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
 import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.ElementPaar;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
  * Die Klasse CreateStueckliste ermöglicht dem User, Objekte von Stückliste in der Datenbank anzulegen.
@@ -61,7 +66,7 @@ public class CreateStueckliste extends VerticalPanel {
 	//TODO implementieren
 	//Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
-//	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
+	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
 	//TODO implementieren
 	//Ein Bauteil und eine Baugruppe, die der zugehörigen Übersichtstabelle hinzugefügt werden
@@ -70,8 +75,8 @@ public class CreateStueckliste extends VerticalPanel {
 	
 	//TODO implementieren
 	//Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu sammeln, bevor die Stückliste gespeichert wird
-	Vector<Bauteil> collectBauteile = new Vector<Bauteil>();
-//	Vector<Baugruppe> collectBaugruppen = new Vector<Baugruppe>();
+	Vector<ElementPaar> collectBauteile = new Vector<ElementPaar>();
+	Vector<ElementPaar> collectBaugruppen = new Vector<ElementPaar>();
 	
 	//Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die Stückliste gespeichert wird
 	FlexTable bauteilCollection = new FlexTable();
@@ -87,10 +92,6 @@ public class CreateStueckliste extends VerticalPanel {
 		NameField.getElement().setPropertyString("placeholder", "Hier bitte Namen eintragen");
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
 		amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
-		
-		//Bauteil vorübergehend statisch befüllt
-		bT.setId(1);
-		bT.setName("Schraube");
 		
 		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 		bauteilCollection.setText(0, 0, "ID");
@@ -123,39 +124,75 @@ public class CreateStueckliste extends VerticalPanel {
 		collectBtButton.addClickHandler(new ClickHandler(){
 			public void onClick(ClickEvent event) {
 
-				final int index = listBoxBauteile.getSelectedIndex();
+				int index = listBoxBauteile.getSelectedIndex();
 				
-				final CheckBox removeBtCheckBox = new CheckBox();			
+//				final CheckBox removeBtCheckBox = new CheckBox();	
+				Button removeButton = new Button();
 				
-				bauteilCollection.setText(index+1, 0, ""+allBauteile.get(index).getId());
-				bauteilCollection.setText(index+1, 1, "Zahl");
-				bauteilCollection.setText(index+1, 2, allBauteile.get(index).getName());
-				bauteilCollection.setWidget(index+1, 3, removeBtCheckBox);
+				ElementPaar bauteilPaar = new ElementPaar();
+				
+				Integer anzahl = Integer.parseInt(amountBauteile.getText());
+				
+				bauteilPaar.setAnzahl(anzahl);
+				bauteilPaar.setElement(allBauteile.get(index));
+				
+				collectBauteile.add(bauteilPaar);
+				
+				Window.alert("Anzahl: "+bauteilPaar.getAnzahl()+ " Bauteil: "+bauteilPaar.getElement().getName());
 				
 				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
 				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
 				
-				//TODO fehlerhaft!
-				//Dem globalen Remove-Button wird ein ClickHandler hinzugefügt, der alle markierten Bauteile entfernt
-				deleteBauteilButton.addClickHandler(new ClickHandler(){
-					public void onClick(ClickEvent event) {
-						
-						for(int i = 0; i <= bauteilCollection.getRowCount(); i++){
-							if (removeBtCheckBox.getValue() == true){
-								bauteilCollection.removeRow(i+1);
-								
-								//ListBox-Element, das entfernt wurde, wird für erneutes Hinzufügen wieder angezeigt
-								listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("enabled", "enabled");
-								
-							} else {
-								Window.alert("In else: "+bauteilCollection.getRowFormatter().getElement(index+1).getId());
-							}
+				for(int i = 0; i<= collectBauteile.size(); i++){
+					bauteilCollection.setText(i+1, 0, ""+collectBauteile.get(i).getElement().getId());
+					bauteilCollection.setText(i+1, 1, ""+collectBauteile.get(i).getAnzahl());
+					bauteilCollection.setText(i+1, 2, collectBauteile.get(i).getElement().getName());
+					bauteilCollection.setWidget(i+1, 3, removeButton);
+					
+					removeButton.addClickHandler(new ClickHandler(){
+						public void onClick(ClickEvent event) {
 							
+							Window.alert("Inhalt Bauteil Vektor: "+collectBauteile.toString());
+							
+//							int a= i;
+//							collectBauteile.remove(0);
+							
+//							bauteilCollection.removeRow(i+1);
+							
+							//ListBox-Element, das entfernt wurde, wird für erneutes Hinzufügen wieder angezeigt
+//							listBoxBauteile.getElement().getElementsByTagName("option").getItem(index+1).setAttribute("enabled", "enabled");
+							
+
 						}
 
-					}
-
-				});
+					});
+				}
+				
+//				bauteilCollection.setText(index+1, 0, ""+allBauteile.get(index).getId());
+//				bauteilCollection.setText(index+1, 1, "Zahl");
+//				bauteilCollection.setText(index+1, 2, allBauteile.get(index).getName());
+//				bauteilCollection.setWidget(index+1, 3, removeButton);
+				
+				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
+//				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
+				
+				//TODO fehlerhaft!
+				//Dem globalen Remove-Button wird ein ClickHandler hinzugefügt, der alle markierten Bauteile entfernt
+//				removeButton.addClickHandler(new ClickHandler(){
+//					public void onClick(ClickEvent event) {
+//						
+//						Window.alert("Inhalt Bauteil Vektor: "+collectBauteile.toString());
+////						collectBauteile.remove(index);
+//						
+//						bauteilCollection.removeRow(index+1);
+//						
+//						//ListBox-Element, das entfernt wurde, wird für erneutes Hinzufügen wieder angezeigt
+////						listBoxBauteile.getElement().getElementsByTagName("option").getItem(index+1).setAttribute("enabled", "enabled");
+//						
+//
+//					}
+//
+//				});
 				
 		        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefügt
 //				removeBtBtn.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
@@ -173,11 +210,67 @@ public class CreateStueckliste extends VerticalPanel {
 
 		});
 		
-		listBoxBaugruppen.addItem("Baugruppe 1");
-		listBoxBaugruppen.addItem("Baugruppe 2");
-		listBoxBaugruppen.addItem("Baugruppe 3");
-		listBoxBaugruppen.addItem("Baugruppe 4");
-		listBoxBaugruppen.addItem("Baugruppe 5");
+		Baugruppe a = new Baugruppe();
+		Baugruppe b = new Baugruppe();
+		Baugruppe c = new Baugruppe();
+		
+		a.setId(1);
+		b.setId(2);
+		c.setId(3);
+		
+		a.setName("Name1");
+		b.setName("Name2");
+		c.setName("Name3");
+		
+		allBaugruppen.add(a);
+		allBaugruppen.add(b);
+		allBaugruppen.add(c);
+		
+		listBoxBaugruppen.addItem(a.getName());
+		listBoxBaugruppen.addItem(b.getName());
+		listBoxBaugruppen.addItem(c.getName());
+		
+		collectBgButton.addClickHandler(new ClickHandler(){
+			public void onClick(ClickEvent event) {
+
+				int index = listBoxBaugruppen.getSelectedIndex();
+				
+				Button removeBgButton = new Button();
+				
+				ElementPaar baugruppePaar = new ElementPaar();
+				
+				Integer anzahl = Integer.parseInt(amountBaugruppen.getText());
+				
+				baugruppePaar.setAnzahl(anzahl);
+				baugruppePaar.setElement(allBaugruppen.get(index));
+				
+				collectBaugruppen.add(baugruppePaar);
+				
+				Window.alert("Anzahl: "+baugruppePaar.getAnzahl()+ " Bauteil: "+baugruppePaar.getElement().getName());
+				
+				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
+				listBoxBaugruppen.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
+				
+				for(int i = 0; i<= collectBaugruppen.size(); i++){
+					baugruppeCollection.setText(i+1, 0, ""+collectBaugruppen.get(i).getElement().getId());
+					baugruppeCollection.setText(i+1, 1, ""+collectBaugruppen.get(i).getAnzahl());
+					baugruppeCollection.setText(i+1, 2, collectBaugruppen.get(i).getElement().getName());
+					baugruppeCollection.setWidget(i+1, 3, removeBgButton);
+					
+					removeBgButton.addClickHandler(new ClickHandler(){
+						public void onClick(ClickEvent event) {
+							
+							Window.alert("Inhalt Baugruppe Vektor: "+collectBaugruppen.toString());
+							
+
+						}
+
+					});
+				}
+				
+			}
+
+		});
 		
 		btPanel.add(amountBauteile);
 		btPanel.add(listBoxBauteile);
@@ -222,65 +315,7 @@ public class CreateStueckliste extends VerticalPanel {
 	/*
 	 * Click Handlers.
 	 */
-	
-	/**
-	 * Die Anlage einer Stückliste. 
-	 * Es erfolgt der Aufruf der Service-Methode "create".
-	 */
-	private class CreateClickHandler implements ClickHandler {
-		@Override
-		public void onClick(ClickEvent event) {
-			
-			String name = NameField.getText();
-
-			if(NameField.getText().isEmpty() != true){
-					
-				//TODO callback implementieren
-//				stuecklistenVerwaltung.createStueckliste(name, new StuecklisteCallback());
-				
-				//Vector wird erstellt und an die Applikationsschicht übergeben, inkl. dem Namen
-				Vector<Bauteil> createBauteile = new Vector<Bauteil>();
-				//TODO implementieren, sobald Tabelle aus globalem collection-Vector befüllt wird
-				//bisher noch nicht möglich, da die Tabelle nicht mit einem Vector befüllt wird
-//				for(int i = 0; i<bauteilCollection.getRowCount(); i++){
-//					createBauteile.addElement(bauteilCollection.getElement());
-//				}
-				
-				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
-					 
-			}
-				
-			else {
-					
-				Window.alert("Bitte alle Felder ausfüllen.");
-					
-			}
-				
-		}
-	}
 		
-	class CreateBauteilCallback implements AsyncCallback<Bauteil> {
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen der Stückliste ist fehlgeschlagen!");
-		}
-
-		@Override
-		public void onSuccess(Bauteil bauteil) {
-
-			Window.alert("Die Stückliste wurde erfolgreich angelegt.");
-			//TODO: Klären ob das catvm gebraucht wird 
-			// if (bauteil != null) {
-			// Das erfolgreiche Hinzufügen eines Kunden wird an den
-			// Kunden- und
-			// Kontenbaum propagiert.
-			// catvm.addCustomer(customer);
-			// }
-		}
-	}
-	
 	class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
 
 		@Override
@@ -302,6 +337,70 @@ public class CreateStueckliste extends VerticalPanel {
 				
 			}
 			
+		}
+	}
+	
+	/**
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt in der
+	 * Datenbank anlegt.
+	 * 
+	 * @author Mario
+	 * 
+	 */
+	private class CreateClickHandler implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+
+			/**
+			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
+			 * notwendigen Felder befüllt sind.
+			 */
+			if (NameField.getText().isEmpty() != true) {
+
+				/**
+				 * Die konkrete RPC-Methode für den create-Befehl wird
+				 * aufgerufen. Hierbei werden die gewünschten Werte
+				 * mitgeschickt.
+				 */
+				String nameStueckliste = NameField.getText();
+				stuecklistenVerwaltung.createStueckliste(nameStueckliste, collectBauteile, collectBaugruppen, new CreateStuecklisteCallback());
+
+				/**
+				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
+				 * zurück zur Übersichtstabelle weiterleiten.
+				 */
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+
+			}
+
+			else {
+
+				Window.alert("Bitte Namensfeld ausfüllen.");
+
+			}
+
+		}
+	}
+
+	/**
+	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
+	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
+	 * 
+	 * @author Mario
+	 * 
+	 */
+	class CreateStuecklisteCallback implements AsyncCallback<Stueckliste> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Das Anlegen der Stueckliste ist fehlgeschlagen!");
+		}
+
+		@Override
+		public void onSuccess(Stueckliste stueckliste) {
+
+			Window.alert("Die Stueckliste wurde erfolgreich angelegt.");
 		}
 	}
 	

@@ -266,6 +266,12 @@ public class SmsImpl extends RemoteServiceServlet implements
 			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
 		Stueckliste s = new Stueckliste();
 	    s.setName(name);
+	    s.setBauteilPaare(BauteilPaare);
+	    s.setBaugruppenPaare(BaugruppenPaare);
+	    
+	    System.out.println("Stueckliste:" + s.getName());	
+	    System.out.println("Baugruppen:" + s.getBaugruppenPaare());
+	    System.out.println("Bauteile:" + s.getBauteilPaare());
 	    // Objekt in der DB speichern.
 	    return this.stuecklisteMapper.insert(s);
 	  }
