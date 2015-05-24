@@ -51,6 +51,8 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	//TODO implementieren
 	//Vektor wird mit allen Bauteilen aus der DB befüllt
 	Vector<Stueckliste> allStuecklisten = new Vector<Stueckliste>();
+	
+	Vector<Stueckliste> deleteStuecklisten = new Vector<Stueckliste>();
 		
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
@@ -170,6 +172,22 @@ public class StuecklisteGeneralView extends VerticalPanel {
 				        }); 
 				        
 				        table.setWidget(row, 7, checkBox);
+				        
+						checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+							@Override
+							public void onValueChange(
+									ValueChangeEvent<Boolean> e) {
+								if (e.getValue() == true) {
+									Stueckliste deleteStueckliste = allStuecklisten.get(i);
+									deleteStuecklisten.add(deleteStueckliste);
+									Window.alert("Inhalt Vektor: "+deleteStueckliste.toString());
+								} else if (e.getValue() == false) {
+									Stueckliste removeStueckliste = allStuecklisten.get(i);
+									deleteStuecklisten.remove(removeStueckliste);
+									Window.alert("Gelöscht: "+deleteStuecklisten.toString());
+								}
+							}
+						});
 				        
 				        table.setStyleName("tableBody");
 				        
