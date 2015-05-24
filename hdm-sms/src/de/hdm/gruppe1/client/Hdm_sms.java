@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class Hdm_sms implements EntryPoint {
 
 	Image welcomeImage = new Image();
-	HTML welcomeText = new HTML("<h1>Wilkommen!</h1><br/><h1>Melden Sie sich mit Ihrem Google-Account im System an,<br/>um Zugriff zum gesamten Funktionsumfang der Applikation<br/>zu bekommen.</h1>");
+	HTML welcomeText = new HTML("<h1>Wilkommen!</h1><br/><h2>Melden Sie sich mit Ihrem Google-Account im System an,<br/>um Zugriff zum gesamten Funktionsumfang der Applikation<br/>zu bekommen.</h2>");
 
 	/**
 	 * This is the entry point method.

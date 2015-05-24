@@ -5,6 +5,7 @@ import java.util.Vector;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
  * Das asynchrone Gegenstück des Interface {@link BankAdministration}. Es wird
@@ -28,5 +29,15 @@ public interface SmsAsync {
 	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
 
 	void getBauteilById(int id, AsyncCallback<Bauteil> callback);
+
+	void createStueckliste(String name, AsyncCallback<Stueckliste> callback);
+
+	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
+
+	void deleteStueckliste(Stueckliste s, AsyncCallback<Void> callback);
+
+	void getAllStuecklisten(AsyncCallback<Vector<Stueckliste>> callback);
+
+	void getStuecklisteById(int id, AsyncCallback<Stueckliste> callback);
 
 }
