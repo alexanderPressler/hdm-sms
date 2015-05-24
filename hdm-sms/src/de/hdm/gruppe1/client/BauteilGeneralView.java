@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -15,6 +16,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
@@ -72,6 +75,11 @@ public class BauteilGeneralView extends VerticalPanel {
 	 * Vektor, der mit allen Bauteilen aus der DB befüllt wird.
 	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
+	
+	/**
+	 * Checkbox, zum löschen von Bauteilen.
+	 */
+	CheckBox checkBox = new CheckBox("");
 
 	/**
 	 * Remote Service via ClientsideSettings Wird an dieser Stelle einmalig in
@@ -189,7 +197,6 @@ public class BauteilGeneralView extends VerticalPanel {
 				final int i = row - 1;
 
 				RadioButton radioButton = new RadioButton("editRadioGroup", "");
-				CheckBox checkBox = new CheckBox("");
 
 				/**
 				 * Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben.
@@ -263,6 +270,32 @@ public class BauteilGeneralView extends VerticalPanel {
 
 			});
 
+		}
+	}
+	
+	/**
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt löscht
+	 * 
+	 * @author Mario Alex
+	 * 
+	 */
+	private class deleteClickHandler implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+		}
+	}
+
+	class DeleteBauteilCallback implements AsyncCallback<Bauteil> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Das Loeschen des Bauteils ist fehlgeschlagen!");
+		}
+
+		@Override
+		public void onSuccess(Bauteil bauteil) {
+
+			Window.alert("Das Bauteil wurde erfolgreich geloescht.");
 		}
 	}
 

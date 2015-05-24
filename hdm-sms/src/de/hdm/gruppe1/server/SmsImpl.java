@@ -7,6 +7,7 @@ import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -86,250 +87,165 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @author Thies
  */
 @SuppressWarnings("serial")
-public class SmsImpl extends RemoteServiceServlet implements Sms {
+public class SmsImpl extends RemoteServiceServlet implements
+		Sms {
 
-	// TODO: Checken ob wir Diese Variable Brauchen
+	
+	//TODO: Checken ob wir Diese Variable Brauchen
 	// Wie lautet die Standardkontonummer für das Kassenkonto der Bank?
 	// Bankprojekt: public static final int DEFAULT_CASH_ACCOUNT_ID = 10000;
 	// Standard StundenplaneintragID
-	// Jennys projekt: private static final long serialVersionUID =
-	// 7027992284251455305L;
-
-	// TODO: brauchen wir diese Referezen, wie im Bankprojekt?
+	// Jennys projekt: private static final long serialVersionUID = 7027992284251455305L;
+	
 	/**
 	 * Referenz auf das zugehörige BusinessObjekt.
 	 */
 	private Bauteil b = null;
-	private Stueckliste s = null;
-
+	
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte
 	 * mit der Datenbank abgleicht.
 	 */
 	private BauteilMapper bauteilMapper = null;
-	private StuecklisteMapper stuecklisteMapper = null;
-
+	
 	/*
-	 * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
-	 * Hinweise, dass hier eine weitere Gliederung sinnvoll ist - haben wir zur
-	 * besseren Übersicht Abschnittskomentare eingefügt. Sie leiten ein Cluster
-	 * in irgeneinerweise zusammengehöriger Methoden ein. Ein entsprechender
-	 * Kommentar steht am Ende eines solchen Clusters.
-	 */
+	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
+	   * Hinweise, dass hier eine weitere Gliederung sinnvoll ist - haben wir zur
+	   * besseren Übersicht Abschnittskomentare eingefügt. Sie leiten ein Cluster in
+	   * irgeneinerweise zusammengehöriger Methoden ein. Ein entsprechender
+	   * Kommentar steht am Ende eines solchen Clusters.
+	   */
 
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Beginn: Initialisierung
-	 * ***************************************
-	 * ************************************
-	 */
-
-	/**
-	 * <p>
-	 * Ein <code>RemoteServiceServlet</code> wird unter GWT mittels
-	 * <code>GWT.create(Klassenname.class)</code> Client-seitig erzeugt. Hierzu
-	 * ist ein solcher No-Argument-Konstruktor anzulegen. Ein Aufruf eines
-	 * anderen Konstruktors ist durch die Client-seitige Instantiierung durch
-	 * <code>GWT.create(Klassenname.class)</code> nach derzeitigem Stand nicht
-	 * möglich.
-	 * </p>
-	 * <p>
-	 * Es bietet sich also an, eine separate Instanzenmethode zu erstellen, die
-	 * Client-seitig direkt nach <code>GWT.create(Klassenname.class)</code>
-	 * aufgerufen wird, um eine Initialisierung der Instanz vorzunehmen.
-	 * </p>
-	 * 
-	 * @see #init()
-	 */
-	public SmsImpl() throws IllegalArgumentException {
-		/*
-		 * Eine weitergehende Funktion muss der No-Argument-Constructor nicht
-		 * haben. Er muss einfach vorhanden sein.
-		 */
-	}
-
-	/**
-	 * Initialsierungsmethode. Siehe dazu Anmerkungen zum
-	 * No-Argument-Konstruktor {@link #ReportGeneratorImpl()}. Diese Methode
-	 * muss für jede Instanz von <code>BankVerwaltungImpl</code> aufgerufen
-	 * werden.
-	 * 
-	 * @see #ReportGeneratorImpl()
-	 */
-	@Override
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Beginn: Initialisierung
+	   * ***************************************************************************
+	   */
+	
+	  /**
+	   * <p>
+	   * Ein <code>RemoteServiceServlet</code> wird unter GWT mittels
+	   * <code>GWT.create(Klassenname.class)</code> Client-seitig erzeugt. Hierzu
+	   * ist ein solcher No-Argument-Konstruktor anzulegen. Ein Aufruf eines anderen
+	   * Konstruktors ist durch die Client-seitige Instantiierung durch
+	   * <code>GWT.create(Klassenname.class)</code> nach derzeitigem Stand nicht
+	   * möglich.
+	   * </p>
+	   * <p>
+	   * Es bietet sich also an, eine separate Instanzenmethode zu erstellen, die
+	   * Client-seitig direkt nach <code>GWT.create(Klassenname.class)</code>
+	   * aufgerufen wird, um eine Initialisierung der Instanz vorzunehmen.
+	   * </p>
+	   * 
+	   * @see #init()
+	   */
+	  public SmsImpl() throws IllegalArgumentException {
+	    /*
+	     * Eine weitergehende Funktion muss der No-Argument-Constructor nicht haben.
+	     * Er muss einfach vorhanden sein.
+	     */
+	  }
+	  
+	  /**
+	   * Initialsierungsmethode. Siehe dazu Anmerkungen zum No-Argument-Konstruktor
+	   * {@link #ReportGeneratorImpl()}. Diese Methode muss für jede Instanz von
+	   * <code>BankVerwaltungImpl</code> aufgerufen werden.
+	   * 
+	   * @see #ReportGeneratorImpl()
+	   */
+	  @Override
 	public void init() throws IllegalArgumentException {
-		/*
-		 * Ganz wesentlich ist, dass die BankAdministration einen vollständigen
-		 * Satz von Mappern besitzt, mit deren Hilfe sie dann mit der Datenbank
-		 * kommunizieren kann.
-		 */
-		this.bauteilMapper = BauteilMapper.bauteilMapper();
-		this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
-	}
+	    /*
+	     * Ganz wesentlich ist, dass die BankAdministration einen vollständigen Satz
+	     * von Mappern besitzt, mit deren Hilfe sie dann mit der Datenbank
+	     * kommunizieren kann.
+	     */
+	    this.bauteilMapper = BauteilMapper.bauteilMapper();
+	  }
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Ende: Initialisierung
+	   * ***************************************************************************
+	   */
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Beginn: Methoden für Bauteil-Objekte
+	   * ***************************************************************************
+	   */
+	  /**
+	   * <p>
+	   * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
+	   * neuen Bauteiles in der Datenbank.
+	   * </p>
+	   * 
+	   * <p>
+	   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
+	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
+	   * </p>
+	   * 
+	   * @see save(Bauteil b)
+	   */
+	  @Override
+	public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
+	      throws IllegalArgumentException {
+	    Bauteil b = new Bauteil();
+	    b.setName(name);
+	    b.setBauteilBeschreibung(bauteilBeschreibung);
+	    b.setMaterialBeschreibung(materialBeschreibung);
 
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Ende: Initialisierung
-	 * *****************************************
-	 * **********************************
-	 */
+	    /*
+	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
+	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
+	     */
+//	    b.setId(10);
 
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Beginn: Methoden für Bauteil-Objekte
-	 * **************************
-	 * *************************************************
-	 */
-	/**
-	 * <p>
-	 * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
-	 * neuen Bauteiles in der Datenbank.
-	 * </p>
-	 * 
-	 * <p>
-	 * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
-	 * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
-	 * </p>
-	 * 
-	 * @see createBauteil(String name, String bauteilBeschreibung, String
-	 *      materialBeschreibung)
-	 */
-	@Override
-	public Bauteil createBauteil(String name, String bauteilBeschreibung,
-			String materialBeschreibung) throws IllegalArgumentException {
-		Bauteil b = new Bauteil();
-		b.setName(name);
-		b.setBauteilBeschreibung(bauteilBeschreibung);
-		b.setMaterialBeschreibung(materialBeschreibung);
+	    // Objekt in der DB speichern.
+	    return this.bauteilMapper.insert(b);
+	  }
+	  
 
-		// Objekt in der DB speichern.
-		return this.bauteilMapper.insert(b);
-	}
-
-	/**
-	 * Speichern eines Bauteils.
-	 */
-	@Override
+	  /**
+	   * Speichern eines Bauteils.
+	   */
+	  @Override
 	public void save(Bauteil b) throws IllegalArgumentException {
-		this.bauteilMapper.update(b);
-	}
-
-	/**
-	 * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung
-	 * von Bankkunden ein Löschen allein schon aus Gründen der Dokumentation
-	 * nicht bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern.
-	 * Wir wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
-	 * vorstellen.
-	 */
-	@Override
+		  this.bauteilMapper.update(b);
+	  }
+	  
+	  /**
+	   * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung von
+	   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
+	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
+	   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
+	   * vorstellen.
+	   */
+	  @Override
 	public void delete(Bauteil b) throws IllegalArgumentException {
-
-		this.bauteilMapper.delete(b);
-	}
-
-	/**
-	 * Auslesen aller Bauteile.
-	 */
-	@Override
+	 
+	    this.bauteilMapper.delete(b);
+	  }
+	  
+	  /**
+	   * Auslesen aller Bauteile.
+	   */
+	  @Override
 	public Vector<Bauteil> getAllBauteile() throws IllegalArgumentException {
-		return this.bauteilMapper.findAll();
-	}
-
-	/**
-	 * Auslesen eines Bauteils anhand seiner Id.
-	 */
-	@Override
+	    return this.bauteilMapper.findAll();
+	  }
+	  
+	  /**
+	   * Auslesen eines Bauteils anhand seiner Id.
+	   */
+	  @Override
 	public Bauteil getBauteilById(int id) throws IllegalArgumentException {
-		return this.bauteilMapper.findById(id);
-	}
-
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
-	 * ****************************
-	 * ***********************************************
-	 */
-
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT,: Methoden für Stueckliste-Objekte
-	 * *****************************
-	 * **********************************************
-	 */
-
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
-	 * ****************************
-	 * ***********************************************
-	 */
-	/**
-	 * <p>
-	 * Anlegen eines neuen Stueckliste. Dies führt implizit zu einem Speichern
-	 * des neuen Stuecklistes in der Datenbank.
-	 * </p>
-	 * 
-	 * <p>
-	 * <b>HINWEIS:</b> Änderungen an Stueckliste-Objekten müssen stets durch
-	 * Aufruf von {@link #save(Stueckliste s)} in die Datenbank transferiert
-	 * werden.
-	 * </p>
-	 * 
-	 * @see createStueckliste(String name)
-	 */
-	@Override
-	public Stueckliste createStueckliste(String name)
-			throws IllegalArgumentException {
-		Stueckliste s = new Stueckliste();
-		s.setName(name);
-		// Objekt in der DB speichern.
-		return this.stuecklisteMapper.insert(s);
-	}
-
-	/**
-	 * Speichern einer Stueckliste.
-	 */
-	@Override
-	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
-		stuecklisteMapper.update(s);
-	}
-
-	/**
-	 * Löschen einer Stueckliste. Natürlich würde ein reales System zur
-	 * Verwaltung von Bankkunden ein Löschen allein schon aus Gründen der
-	 * Dokumentation nicht bieten, sondern deren Status z.B von "aktiv" in
-	 * "ehemalig" ändern. Wir wollen hier aber dennoch zu Demonstrationszwecken
-	 * eine Löschfunktion vorstellen.
-	 */
-	@Override
-	public void deleteStueckliste(Stueckliste s)
-			throws IllegalArgumentException {
-
-		this.stuecklisteMapper.delete(s);
-	}
-
-	/**
-	 * Auslesen aller Stuecklisten.
-	 */
-	@Override
-	public Vector<Stueckliste> getAllStuecklisten()
-			throws IllegalArgumentException {
-		return this.stuecklisteMapper.findAll();
-	}
-
-	/**
-	 * Auslesen eines Stueckliste anhand seiner Id.
-	 */
-	@Override
-	public Stueckliste getStuecklisteById(int id)
-			throws IllegalArgumentException {
-		return this.stuecklisteMapper.findById(id);
-	}
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Ende: Methoden für Stueckliste-Objekte
-	 * ************************
-	 * ***************************************************
-	 */
-
+	    return this.bauteilMapper.findById(id);
+	  }
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+	   * ***************************************************************************
+	   */
+	
 }
