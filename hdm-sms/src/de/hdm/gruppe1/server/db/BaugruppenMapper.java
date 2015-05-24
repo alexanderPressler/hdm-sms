@@ -1,18 +1,17 @@
-
-
-
+/**
+ * 
+ */
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.*;
 
-///**
-// * @author Andreas Herrmann
-// *
-// */
+/**
+ * @author Andreas Herrmann
+ *
+ */
 public class BaugruppenMapper {
 	
 	private static BaugruppenMapper baugruppenMapper = null;
@@ -23,11 +22,11 @@ public class BaugruppenMapper {
 	
 	public static BaugruppenMapper baugruppenMapper(){
 		if(baugruppenMapper==null){
-		baugruppenMapper= new BaugruppenMapper();
+			baugruppenMapper= new BaugruppenMapper();
+		}
+		return baugruppenMapper;
 	}
-	return baugruppenMapper;
-}
-
+	
 	public Baugruppe insert(Baugruppe baugruppe){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
@@ -42,24 +41,25 @@ public class BaugruppenMapper {
 		}
 		catch(SQLException e){
 			e.printStackTrace();
-	}
-	return baugruppe;		
-	
-}
-
-	public Baugruppe update(Baugruppe baugruppe){
-		Connection con = DBConnection.connection();
-	}
-		Statement stmt = con.createStatement()
+		}
+		return baugruppe;		
 		
+	}
+	
+	public Baugruppe update(Baugruppe baugruppe){
+		Integer aendererID = new Integer(baugruppe.getAenderer().getId());
+		Integer stuecklistenID = new Integer(baugruppe.getStueckliste().getId());
+		Connection con = DBConnection.connection();
+		Statement stmt = con.createStatement();
 		try{
 			stmt.executeUpdate("UPDATE 'Baugruppe' SET 'name'='"+baugruppe.getName()+"','stueckliste'='"+baugruppe.getStueckliste().getId().toString()
 					+"','bearbeitet_Von'='"+baugruppe.getAenderer().getId().toString()+"','datum'='"+baugruppe.getAenderungsDatum().toString().substring(0,19)
 					+"' WHERE 'bg_ID'='"+baugruppe.getId().toString()+"';");
 		}
 		catch(SQLException e){
-			}
-	return baugruppe;
+			e.printStackTrace();
+		}
+		return baugruppe;
 		
 	}
 	
@@ -67,35 +67,36 @@ public class BaugruppenMapper {
 		Connection con = DBConnection.connection();
 
 	    try {
-	     Statement stmt = con.createStatement();
+	      Statement stmt = con.createStatement();
 	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
 	      Integer baugruppeID = new Integer(baugruppe.getId());
 	      
 	      
 	      if(stmt.executeUpdate("DELETE FROM `Baugruppe` WHERE `bg_ID`="+baugruppeID.toString()+"';")==0){
-    	  return false;
+	    	  return false;
 	      }
 	      else{
-	    	  return true;	      }
+	    	  return true;
+	      }
 
-    }
+	    }
 	    catch (SQLException e2) {
-	     e2.printStackTrace();
+	      e2.printStackTrace();
 	      return false;
 	    }
 		
-	}	
+	}
 	
 	public Baugruppe findById (int id){
 		Connection con = DBConnection.connection();
 		Baugruppe baugruppe = null;
 		try{
 			Statement stmt = con.createStatement();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
-		    Integer baugruppeId = new Integer(id);
+			//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		    Integer baugruppeID = new Integer(id);
 		    
 		    ResultSet rs = stmt.executeQuery("SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID' WHERE 'bg_ID'='"
-		    		+baugruppeId.toString()+"';");
+		    		+baugruppeID.toString()+"';");
 		    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
 		    if(rs.next()){
 		    	baugruppe = new Baugruppe();
@@ -122,11 +123,11 @@ public class BaugruppenMapper {
 	}
 	
 	public Vector<Baugruppe> findByName(String name){
-		ArrayList<Baugruppe> alBaugruppe = new ArrayList<Baugruppe>();
+		Vector<Baugruppe> vBaugruppe = new Vector<Baugruppe>();
 		Connection con = DBConnection.connection();
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID' WHERE 'Baugruppe.name' LIKE '%"
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON 'Baugruppe.bearbeitet_Von'='User.userID' WHERE 'Baugruppe.name' LIKE '%"
 					+name+"%';");
 			//Da es viele Baugruppen geben kann, die diesen Namen haben müssen wir eine Schleife benutzen
 			while(rs.next()){
@@ -147,20 +148,20 @@ public class BaugruppenMapper {
 				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
 				baugruppe.setAenderungsDatum(timestamp);
 				//Baugruppe der ArrayList hinzufügen
-				alBaugruppe.add(baugruppe);
+				vBaugruppe.addElement(baugruppe);
 			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return alBaugruppe;
+		return vBaugruppe;
 	}
 	public Vector<Baugruppe> getAll(){
-		ArrayList<Baugruppe> alBaugruppe = new ArrayList<Baugruppe>();
+		Vector<Baugruppe> vBaugruppe = new Vector<Baugruppe>();
 		Connection con = DBConnection.connection();
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID'%';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON 'Baugruppe.bearbeitet_Von'='User.userID'%';");
 			//Da es viele Baugruppen geben kann müssen wir eine Schleife benutzen
 			while(rs.next()){
 				//Neue Baugruppe erzeugen
@@ -169,7 +170,7 @@ public class BaugruppenMapper {
 		    	baugruppe.setName(rs.getString("name"));
 		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
 		    	StuecklistenMapper slm = StuecklistenMapper.stuecklistenMapper();
-	    	baugruppe.setStueckliste(slm.findByID(rs.getInt("stueckliste")));
+		    	baugruppe.setStueckliste(slm.findByID(rs.getInt("stueckliste")));
 		    	//Neuen User erzeugen
 		    	User user = new User();
 		    	user.setID(rs.getInt("userID"));
@@ -179,13 +180,13 @@ public class BaugruppenMapper {
 		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
 				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
 				baugruppe.setAenderungsDatum(timestamp);
-			//Baugruppe der ArrayList hinzufügen
-				alBaugruppe.add(baugruppe);
+				//Baugruppe der ArrayList hinzufügen
+				vBaugruppe.addElement(baugruppe);
 			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return alBaugruppe;
+		return vBaugruppe;
 	}
 }

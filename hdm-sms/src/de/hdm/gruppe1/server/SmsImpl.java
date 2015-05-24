@@ -319,13 +319,13 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * ABSCHNITT, Beginn: Methoden fuer Baugruppe-Objekte
 	   * ***************************************************************************
 	   */
-	public Baugruppe createBaugruppe(String name, Stueckliste stueckliste, User user)
+	public Baugruppe createBaugruppe(String name, Stueckliste stueckliste, User letzterAenderer)
 		      throws IllegalArgumentException {
 			   
 			    Baugruppe baugruppe= new Baugruppe();
 			    baugruppe.setStueckliste(stueckliste);
 			    baugruppe.setName(name);
-				baugruppe.setAenderer(user);
+				baugruppe.setAenderer(letzterAenderer);
 	/*
 	* Setzen einer vorlaufige BaugruppenNummer, der insert-Aufruf liefert dann ein
 	* Objekt, dessen Nummer mit der Datenbank konsistent ist.

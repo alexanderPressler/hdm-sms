@@ -54,8 +54,8 @@ public abstract class BusinessObject implements Serializable {
 		return this.letzterAenderer;
 	}
 	
-	public void setAenderer(User letzterAenderer){
-		this.letzterAenderer = letzterAenderer;
+	public void setAenderer( Object letzterAenderer){
+		this.letzterAenderer = (User) letzterAenderer;
 	}
 	/**
 	 * @author thies 
