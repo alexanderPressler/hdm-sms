@@ -2,6 +2,8 @@ package de.hdm.gruppe1.shared.bo;
 
 import java.io.Serializable;
 
+import com.google.appengine.api.users.User;
+
 /**
  * <p>
  * Die Klasse <code>BusinessObject</code> stellt die Basisklasse aller in diesem
@@ -29,16 +31,32 @@ public abstract class BusinessObject implements Serializable {
 	/**
 	 * Eindeutige ID alles BOs samt getter und setter.
 	 */
-	private int id = 0;
-
+	protected int id = 0;
+	protected User letzterAenderer;
+	protected timestamp aenderungsDatum;
+	
 	public int getId() {
 		return this.id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	public timestamp getAenderungsDatum(){
+	
+		return this.aenderungsDatum;
+	}
+	public void setAenderungsDatum(timestamp aenderungsDatum){
+		this.aenderungsDatum = aenderungsDatum;
+	}
+	
+	public User getAenderer(){
+		return this.letzterAenderer;
+	}
+	
+	public void setAenderer(User letzterAenderer){
+		this.letzterAenderer = letzterAenderer;
+	}
 	/**
 	 * @author thies 
 	 * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.
