@@ -35,7 +35,7 @@ public abstract class BusinessObject implements Serializable {
 	 */
 	protected int id = 0;
 	protected User letzterAenderer;
-	protected timestamp aenderungsDatum;
+
 	
 	public int getId() {
 		return this.id;
@@ -44,14 +44,7 @@ public abstract class BusinessObject implements Serializable {
 		this.id = id;
 	}
 
-	public timestamp getAenderungsDatum(){
-	
-		return this.aenderungsDatum;
-	}
-	public void setAenderungsDatum(timestamp aenderungsDatum){
-		this.aenderungsDatum = aenderungsDatum;
-	}
-	
+
 	public User getAenderer(){
 		return this.letzterAenderer;
 	}

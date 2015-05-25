@@ -9,7 +9,6 @@ public class Bauteil extends Element {
 	 *Bauteilbeschreibung + die Setzen und Auslesen Methoden 
 	 **/
 	String bauteilBeschreibung = "leer";
-	
 	public String getBauteilBeschreibung() {
 		return this.bauteilBeschreibung;
 	}
@@ -20,7 +19,6 @@ public class Bauteil extends Element {
 	 *Bauteil-Materialbeschreibung + die Setzen und Auslesen Methoden 
 	 **/
 	String materialBeschreibung = "leer";
-	
 	public String getMaterialBeschreibung() {
 		return this.materialBeschreibung;
 	}
@@ -31,7 +29,7 @@ public class Bauteil extends Element {
 	/**
 	   * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.
 	   * Diese besteht aus dem Text, der durch die <code>toString()</code>-Methode
-	   * der Superklasse erzeugt wird, erg√§nzt durch den Name  und Teilbeschreibung des 
+	   * der Superklasse erzeugt wird, erg‰nzt durch den Name  und Teilbeschreibung des 
 	   * jeweiligen Bauteils.
 	   */
 	@Override

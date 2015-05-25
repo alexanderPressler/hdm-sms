@@ -114,7 +114,7 @@ public interface Sms extends RemoteService {
 	Baugruppe getBaugruppeById(int id)
 			 throws IllegalArgumentException;
 	
-		Vector<Baugruppe> getAllBaugruppen();
+	Vector<Baugruppe> getAllBaugruppen();
 
 
 

@@ -9,9 +9,12 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.client.ClientsideSettings;
+import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 //Die Klasse CreateBaugruppe liefert alle benoetigten Elemente, um eine neue Baugruppe im System anzulegen.
 
@@ -23,6 +26,8 @@ public class CreateBaugruppe extends VerticalPanel {
 	private final Label SublineLabel = new Label ("Um eine Baugruppe anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
 	private final Label NameFieldLabel = new Label ("Name");
 	private final TextBox NameField = new TextBox ();
+	private final Label StuecklisteFieldLabel = new Label("Stueckliste");
+
 	private final Button CreateBaugruppeButton = new Button ("anlegen");
 	
 	// Remote Service via ClientsideSettings  X
@@ -60,13 +65,23 @@ public class CreateBaugruppe extends VerticalPanel {
 		public void onClick(ClickEvent event) {
 
 			String name = NameField.getText();
-			
-			stuecklistenVerwaltung.createBaugruppe(name, null, null, new CreateBaugruppeCallback());
-			
+			Stueckliste stueckliste = StuecklisteField.getText();
+			if (NameField.getText().isEmpty() != true) {
+
+				/**
+				 * Die konkrete RPC-Methode für den create-Befehl wird
+				 * aufgerufen. Hierbei werden die gewünschten Werte
+				 * mitgeschickt.
+				 */
+				stuecklistenVerwaltung.createBaugruppe( name, stueckliste, new CreateBauteilCallback());
+
 			 RootPanel.get("content_wrap").clear();
 			 RootPanel.get("content_wrap").add(new BauteilGeneralView());
 			
 		}
+
+
+
 	}
 	
 	class CreateBaugruppeCallback implements AsyncCallback<Baugruppe> {
