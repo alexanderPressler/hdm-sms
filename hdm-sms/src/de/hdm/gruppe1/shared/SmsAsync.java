@@ -10,6 +10,7 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Element;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.ElementPaar;
 
 
 /**
@@ -35,12 +36,27 @@ public interface SmsAsync {
 
 	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
 
+	/*
+	 * Stuecklisten Async
+	 */
 
-	;
+	void createStueckliste(String name, Vector<ElementPaar> BauteilPaare,
+			Vector<ElementPaar> BaugruppenPaare,
+			AsyncCallback<Stueckliste> callback);
+
+	void getAllStuecklisten(AsyncCallback<Vector<Stueckliste>> callback);
+
+	void deleteStueckliste(Stueckliste s, AsyncCallback<Void> callback);
+
+	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
 
 	
+	/*
+	 * Baugruppen Async
+	 */
+	
 	void createBaugruppe(String name, Stueckliste stueckliste,
-			User letzterAenderer, AsyncCallback<Baugruppe> callback);
+			AsyncCallback<Baugruppe> callback);
 
 	void editBaugruppe(Baugruppe baugruppe, AsyncCallback<Void> callback);
 	
@@ -52,16 +68,6 @@ public interface SmsAsync {
 	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
 	
 	
-//	void createStueckliste(String name, AsyncCallback<Stueckliste> callback);
-
-//	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
-
-//	void deleteStueckliste(Stueckliste s, AsyncCallback<Void> callback);
-
-//	void getAllStuecklisten(AsyncCallback<Vector<Stueckliste>> callback);
-
-//	void getStuecklisteById(int id, AsyncCallback<Stueckliste> callback);
-
 
 
 

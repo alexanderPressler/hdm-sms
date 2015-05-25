@@ -6,11 +6,12 @@ import java.util.Vector;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import de.hdm.gruppe1.shared.bo.User;
+import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Element;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.User;
 
 /**
  * <p>
@@ -90,23 +91,22 @@ public interface Sms extends RemoteService {
 
 	
 	
-//	Stueckliste createStueckliste(String name) throws IllegalArgumentException;
-//
-//	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
-//
-//	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
-//
-////	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
-//
-//	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
-//
+	Stueckliste createStueckliste(String name,
+			Vector<ElementPaar> BauteilPaare,
+			Vector<ElementPaar> BaugruppenPaare)
+			throws IllegalArgumentException;
 
+	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
+
+	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+  
 	
-	Baugruppe createBaugruppe(String name, Stueckliste stueckliste,
-			User letzterAenderer) throws IllegalArgumentException;
+	Baugruppe createBaugruppe(String name, Stueckliste stueckliste) throws IllegalArgumentException;
 	void editBaugruppe (Baugruppe baugruppe)
 			 throws IllegalArgumentException;
-	
 	void delete(Baugruppe baugruppe);
 	
 	Vector<Baugruppe> getBaugruppeByName(String name);
@@ -114,8 +114,7 @@ public interface Sms extends RemoteService {
 	Baugruppe getBaugruppeById(int id)
 			 throws IllegalArgumentException;
 	
-	
-	Vector<Baugruppe> getAllBaugruppen();
+		Vector<Baugruppe> getAllBaugruppen();
 
 
 
