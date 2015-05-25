@@ -55,6 +55,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	//Vektor wird mit allen Bauteilen aus der DB befüllt
 	Vector<Stueckliste> allStuecklisten = new Vector<Stueckliste>();
 	
+	//Vektor wird temporär mit zu löschenden Stücklisten befüllt, wenn CheckBoxen aus- bzw. abgewählt werden
 	Vector<Stueckliste> deleteStuecklisten = new Vector<Stueckliste>();
 		
 	// Remote Service via ClientsideSettings
@@ -74,7 +75,6 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		HeadlineLabel.setStyleName("headline");
 		table.setStyleName("tableBody");
 			
-		//TODO implementieren
 		stuecklistenVerwaltung.getAllStuecklisten(new GetAllStuecklistenCallback());
 
 		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
@@ -108,8 +108,6 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * Click Handlers.
 	 */
 	
-	 
-	 //TODO implementieren
 	 class GetAllStuecklistenCallback implements AsyncCallback<Vector<Stueckliste>> {
 
 			@Override
@@ -121,6 +119,16 @@ public class StuecklisteGeneralView extends VerticalPanel {
 			public void onSuccess(Vector<Stueckliste> result) {
 
 				allStuecklisten = result;
+				
+				if (allStuecklisten.isEmpty() == true){
+					
+					table.getFlexCellFormatter().setColSpan(1, 0, 6);
+
+					table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
+					
+				}
+				
+				else {
 				
 				for (int row = 1; row <= allStuecklisten.size(); row++) {
 //				      for (int col = 0; col < numColumns; col++) {
@@ -137,11 +145,12 @@ public class StuecklisteGeneralView extends VerticalPanel {
 				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
 				        table.setText(row, 0, ""+allStuecklisten.get(i).getId());
 				        table.setText(row, 1, allStuecklisten.get(i).getName());
-				        table.setText(row, 4, "Mario");
-				        table.setText(row, 5, "02.05.2015, 18 Uhr");
+				        table.setText(row, 2, "01.01.2015, 11 Uhr");
+				        table.setText(row, 3, "Mario");
+				        table.setText(row, 4, "02.05.2015, 18 Uhr");
 				        
 				        //RadioButton Widget für Single editieren-Button
-				        table.setWidget(row, 6, radioButton);
+				        table.setWidget(row, 5, radioButton);
 				        
 				        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefügt
 						radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
@@ -154,7 +163,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 				            }
 				        }); 
 				        
-				        table.setWidget(row, 7, checkBox);
+				        table.setWidget(row, 6, checkBox);
 				        
 						checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 							@Override
@@ -173,6 +182,8 @@ public class StuecklisteGeneralView extends VerticalPanel {
 				        table.setStyleName("tableBody");
 				        
 				    }
+				
+				}
 				
 				//ClickHandler für Aufruf der Klasse editBauteil
 		        editBtn.addClickHandler(new ClickHandler(){

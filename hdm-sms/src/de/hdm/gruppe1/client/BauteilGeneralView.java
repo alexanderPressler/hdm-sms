@@ -177,6 +177,15 @@ public class BauteilGeneralView extends VerticalPanel {
 			 */
 			allBauteile = alleBauteile;
 
+			if (allBauteile.isEmpty() == true){
+				
+				table.getFlexCellFormatter().setColSpan(1, 0, 7);
+
+				table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
+				
+			}
+			
+			else {
 			/**
 			 * Die flexTable table wird mithilfe dieser for-Schleife Reihe um
 			 * Reihe für jedes Bauteil befüllt.
@@ -261,6 +270,7 @@ public class BauteilGeneralView extends VerticalPanel {
 				table.setStyleName("tableBody");
 
 			}
+		}
 
 			/**
 			 * ClickHandler für den Aufruf der Klasse editBauteil. Als Attribut

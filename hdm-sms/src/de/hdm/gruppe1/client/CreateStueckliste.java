@@ -4,6 +4,9 @@ import java.util.Vector;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
@@ -21,6 +24,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
 import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
+import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
@@ -92,6 +96,9 @@ public class CreateStueckliste extends VerticalPanel {
 		NameField.getElement().setPropertyString("placeholder", "Hier bitte Namen eintragen");
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
 		amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
+		
+		//Key-Down Event um zu prüfen, ob die Texteingabe numerisch ist
+		collectBtButton.addClickHandler(new numericHandler());
 		
 		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 		bauteilCollection.setText(0, 0, "ID");
@@ -337,6 +344,17 @@ public class CreateStueckliste extends VerticalPanel {
 				
 			}
 			
+		}
+	}
+	
+	private class numericHandler implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+
+			if (FieldVerifier.istZhal(amountBauteile.getText()) == false){
+				Window.alert("Bitte nur Zahlen eintragen.");
+			}
+
 		}
 	}
 	
