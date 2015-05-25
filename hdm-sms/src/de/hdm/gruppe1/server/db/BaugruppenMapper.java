@@ -6,6 +6,8 @@ package de.hdm.gruppe1.server.db;
 import java.sql.*;
 import java.util.Vector;
 
+import com.google.appengine.api.users.User;
+
 import de.hdm.gruppe1.shared.bo.*;
 
 /**
@@ -27,14 +29,16 @@ public class BaugruppenMapper {
 		return baugruppenMapper;
 	}
 	
-	public Baugruppe insert(Baugruppe baugruppe){
+	public Baugruppe insert(Baugruppe baugruppe) throws SQLException{
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
-		Integer aendererID = new Integer(baugruppe.getAenderer().getId());
+		Integer aendererID = new Integer(baugruppe.getAenderer().getUserId());
 		Integer stuecklistenID = new Integer(baugruppe.getStueckliste().getId());
 		try{
-			ResultSet rs = stmt.executeQuery("INSERT INTO 'Baugruppe'('name','stueckliste','bearbeitet_Von','datum') VALUES('"+baugruppe.getName()+"','"
-					+stuecklistenID.toString()+"','"+aendererID.toString()+"','"+baugruppe.getAenderungsDatum().toString().substring(0,19)+"');");
+			ResultSet rs = stmt.executeQuery("INSERT INTO 'Baugruppe'('name',"
+					+ "'stueckliste','bearbeitet_Von','datum') VALUES('"+baugruppe.getName()+"','"
+					+stuecklistenID.toString()+"','"+aendererID.toString()
+					+"','"+baugruppe.getAenderungsDatum().toString().substring(0,19)+"');");
 			if(rs.next()){
 				baugruppe.setId(rs.getInt("bg_ID"));
 			}
@@ -47,14 +51,17 @@ public class BaugruppenMapper {
 	}
 	
 	public Baugruppe update(Baugruppe baugruppe){
-		Integer aendererID = new Integer(baugruppe.getAenderer().getId());
+		Integer aendererID = new Integer(baugruppe.getAenderer().getUserId());
 		Integer stuecklistenID = new Integer(baugruppe.getStueckliste().getId());
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
 		try{
-			stmt.executeUpdate("UPDATE 'Baugruppe' SET 'name'='"+baugruppe.getName()+"','stueckliste'='"+baugruppe.getStueckliste().getId().toString()
-					+"','bearbeitet_Von'='"+baugruppe.getAenderer().getId().toString()+"','datum'='"+baugruppe.getAenderungsDatum().toString().substring(0,19)
-					+"' WHERE 'bg_ID'='"+baugruppe.getId().toString()+"';");
+			stmt.executeUpdate("UPDATE 'Baugruppe' SET 'name'='"
+		+baugruppe.getName()+"','stueckliste'='"+baugruppe.getStueckliste().getId().toString()
+		+"','bearbeitet_Von'='"
+		+baugruppe.getAenderer().getUserId().toString()+"','datum'='"
+		+baugruppe.getAenderungsDatum().toString().substring(0,19)
+		+"' WHERE 'bg_ID'='"+baugruppe.getId().toString()+"';");
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -107,7 +114,7 @@ public class BaugruppenMapper {
 		    	baugruppe.setStueckliste(slm.findByID(rs.getInt("stueckliste")));
 		    	
 		    	User user = new User();
-		    	user.setID(rs.getInt("userID"));
+		    	user.setId(rs.getInt("userID"));
 		    	user.setEmail(rs.getString("eMail"));
 		    	user.setGoogleId(rs.getString("googleID"));
 		    	baugruppe.setAenderer(user);
@@ -140,7 +147,7 @@ public class BaugruppenMapper {
 		    	baugruppe.setStueckliste(slm.findByID(rs.getInt("stueckliste")));
 		    	//Neuen User erzeugen
 		    	User user = new User();
-		    	user.setID(rs.getInt("userID"));
+		    	user.setId(rs.getInt("userID"));
 		    	user.setEmail(rs.getString("eMail"));
 		    	user.setGoogleId(rs.getString("googleID"));
 		    	baugruppe.setAenderer(user);

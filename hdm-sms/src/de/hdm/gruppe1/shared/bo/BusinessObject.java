@@ -1,6 +1,8 @@
 package de.hdm.gruppe1.shared.bo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import com.google.appengine.api.users.User;
 

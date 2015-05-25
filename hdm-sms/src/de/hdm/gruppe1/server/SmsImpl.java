@@ -2,6 +2,7 @@ package de.hdm.gruppe1.server;
 
 
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -320,7 +321,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * ***************************************************************************
 	   */
 	public Baugruppe createBaugruppe(String name, Stueckliste stueckliste, User letzterAenderer)
-		      throws IllegalArgumentException {
+		      throws IllegalArgumentException{
 			   
 			    Baugruppe baugruppe= new Baugruppe();
 			    baugruppe.setStueckliste(stueckliste);

@@ -121,25 +121,22 @@ public class BauteilMapper {
 	   * @return das als Parameter übergebene Objekt
 	   */
 	  public Bauteil update(Bauteil bauteil) {
-	    Connection con = DBConnection.connection();
+		    Connection con = DBConnection.connection();
 
-	    try {
-	      Statement stmt = con.createStatement();
+		    try {
+		      Statement stmt = con.createStatement();
+		    //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		      Integer aendererID = new Integer(bauteil.getAenderer().getId());
+		      stmt.executeUpdate("UPDATE `Bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBauteilBeschreibung() +"',`material`='"
+		      + bauteil.getMaterialBeschreibung() + "','bearbeitet_Von'='" + aendererID.toString() + "','datum'='"
+		    		  + bauteil.getAenderungsDatum().toString().substring(0,19) + "' WHERE `teilnummer`= "+ bauteil.getId() +";");
 
-//	      stmt.executeUpdate("UPDATE bauteile " + "SET name=\"" + a.getName()
-//	          + "\" " + "WHERE id=" + a.getId());
-	      
-	      stmt.executeUpdate("UPDATE `bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBauteilBeschreibung() +"',`materialBeschreibung`='"+ bauteil.getMaterialBeschreibung() +"' WHERE `id`= "+ bauteil.getId() +";");
-
-	    }
-	    catch (SQLException e2) {
-	      e2.printStackTrace();
-	    }
-
-	    // Um Analogie zu insert(Bauteil a) zu wahren, geben wir a zurück
-	    return bauteil;
-	  }
-	  
+		    }
+		    catch (SQLException e) {
+		      e.printStackTrace();
+		    }
+		    return bauteil;
+		  }
 	  /**
 	   * Löschen der Daten eines <code>Bauteil</code>-Objekts aus der Datenbank.
 	   * 

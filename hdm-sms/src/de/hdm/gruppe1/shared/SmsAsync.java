@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import de.hdm.gruppe1.server.db.User;
+import de.hdm.gruppe1.shared.bo.User;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Element;
@@ -39,8 +39,8 @@ public interface SmsAsync {
 	;
 
 	
-	void createBaugruppe(String name, Stueckliste stueckliste, User user,
-			AsyncCallback<Baugruppe> callback);
+	void createBaugruppe(String name, Stueckliste stueckliste,
+			User letzterAenderer, AsyncCallback<Baugruppe> callback);
 
 	void editBaugruppe(Baugruppe baugruppe, AsyncCallback<Void> callback);
 	
