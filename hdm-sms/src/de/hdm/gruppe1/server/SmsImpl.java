@@ -284,6 +284,13 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    this.stuecklisteMapper.delete(s);
 	  }
 	  /**
+	   * Speichern eines Bauteils.
+	   */
+	  @Override
+	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+		  this.stuecklisteMapper.update(s);
+	  }
+	  /**
 	   * Auslesen aller Stuecklisten.
 	   */
 	  @Override
