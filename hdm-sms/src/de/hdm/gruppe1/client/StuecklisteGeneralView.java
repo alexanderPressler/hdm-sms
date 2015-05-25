@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -16,6 +17,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import de.hdm.gruppe1.client.BauteilGeneralView.DeleteBauteilCallback;
 import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
@@ -72,7 +75,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		table.setStyleName("tableBody");
 			
 		//TODO implementieren
-//		stuecklistenVerwaltung.getAllStuecklisten(new GetAllStuecklistenCallback());
+		stuecklistenVerwaltung.getAllStuecklisten(new GetAllStuecklistenCallback());
 
 		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 		table.setText(0, 0, "ID");
@@ -105,26 +108,6 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * Click Handlers.
 	 */
 	
-	/**
-	  * Das Löschen einer Stückliste wird mithilfe der mitgelieferten Objekt-ID über die Applikationsschicht
-	  * an den Server geschickt. Der User erhält eine entsprechende Hinweismeldung angezeigt und die
-	  * Tabelle wird neu geladen.
-	  * 
-	  */
-	 private class DeleteClickHandler implements ClickHandler {
-	  @Override
-	  public void onClick(ClickEvent event) {
-//	   if (customerToDisplay != null) {
-
-			RootPanel.get("content_wrap").clear();
-			Window.alert("Stückliste wurde vielleicht gelöscht");
-			RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
-		   
-//	   } else {
-//	    Window.alert("kein Kunde ausgewählt");
-//	   }
-	  }
-	 }
 	 
 	 //TODO implementieren
 	 class GetAllStuecklistenCallback implements AsyncCallback<Vector<Stueckliste>> {
@@ -149,7 +132,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 				        RadioButton radioButton = new RadioButton("editRadioGroup", "");
 				        CheckBox checkBox = new CheckBox("");
 
-				        deleteBtn.addClickHandler(new DeleteClickHandler());
+				        deleteBtn.addClickHandler(new deleteClickHandler());
 				    	
 				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
 				        table.setText(row, 0, ""+allStuecklisten.get(i).getId());
@@ -180,11 +163,9 @@ public class StuecklisteGeneralView extends VerticalPanel {
 								if (e.getValue() == true) {
 									Stueckliste deleteStueckliste = allStuecklisten.get(i);
 									deleteStuecklisten.add(deleteStueckliste);
-									Window.alert("Inhalt Vektor: "+deleteStueckliste.toString());
 								} else if (e.getValue() == false) {
 									Stueckliste removeStueckliste = allStuecklisten.get(i);
 									deleteStuecklisten.remove(removeStueckliste);
-									Window.alert("Gelöscht: "+deleteStuecklisten.toString());
 								}
 							}
 						});
@@ -211,6 +192,51 @@ public class StuecklisteGeneralView extends VerticalPanel {
 				
 			}
 
+		}
+	 /**
+		 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt löscht
+		 * 
+		 * @author Mario Alex
+		 * 
+		 */
+		private class deleteClickHandler implements ClickHandler {
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				if (deleteStuecklisten.isEmpty() == true){
+					Window.alert("Es wurde kein Bauteil zum Löschen ausgewählt.");
+				}
+				
+				else {
+				for (int i=0;i<=deleteStuecklisten.size();i++) {
+				Stueckliste s = new Stueckliste();
+				s = deleteStuecklisten.get(i);
+					/**
+					 * Die konkrete RPC-Methode für den create-Befehl wird
+					 * aufgerufen. Hierbei werden die gewünschten Werte
+					 * mitgeschickt.
+					 */
+					stuecklistenVerwaltung.deleteStueckliste(s,new DeleteStuecklisteCallback());
+					RootPanel.get("content_wrap").clear();
+					RootPanel.get("content_wrap").add(
+							new StuecklisteGeneralView());
+					}
+				}
+			}
+		}
+
+		class DeleteStuecklisteCallback implements AsyncCallback<Void> {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Das Loeschen der Stueckliste ist fehlgeschlagen!");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+
+				Window.alert("Die Stueckliste wurde erfolgreich geloescht.");
+			}
 		}
 	
 }

@@ -81,8 +81,8 @@ public class StuecklisteMapper {
 			 * Zunächst schauen wir nach, welches der momentan höchste
 			 * Primärschlüsselwert ist.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid "
-					+ "FROM stuecklisten ");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(sl_ID) AS maxid "
+					+ "FROM Stueckliste ");
 
 			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
 			if (rs.next()) {
@@ -95,11 +95,7 @@ public class StuecklisteMapper {
 				stmt = con.createStatement();
 
 				// Jetzt erst erfolgt die tatsächliche Einfügeoperation
-				stmt.executeUpdate("INSERT INTO `stuecklisten` (`id`, `name`) VALUES ('"
-						+ stueckliste.getId()
-						+ "', '"
-						+ stueckliste.getName()
-						+ "');");
+				stmt.executeUpdate("INSERT INTO Stueckliste VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '2015-05-18 12:12:12', '1');");
 
 			}
 		} catch (SQLException e2) {
@@ -156,8 +152,8 @@ public class StuecklisteMapper {
 		try {
 			Statement stmt = con.createStatement();
 
-			stmt.executeUpdate("DELETE FROM `stuecklisten` WHERE `id`="
-					+ stueckliste.getId());
+			stmt.executeUpdate("DELETE FROM Stueckliste WHERE sl_ID ='"+ stueckliste.getId()+"'");
+			
 
 		} catch (SQLException e2) {
 			e2.printStackTrace();
@@ -180,13 +176,13 @@ public class StuecklisteMapper {
 			Statement stmt = con.createStatement();
 
 			ResultSet rs = stmt
-					.executeQuery("SELECT * FROM `stuecklisten` ORDER BY `name`");
+					.executeQuery("SELECT * FROM `Stueckliste` ORDER BY `sl_ID`");
 
 			// Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 			// erstellt.
 			while (rs.next()) {
 				Stueckliste stueckliste = new Stueckliste();
-				stueckliste.setId(rs.getInt("id"));
+				stueckliste.setId(rs.getInt("sl_ID"));
 				stueckliste.setName(rs.getString("name"));
 			
 

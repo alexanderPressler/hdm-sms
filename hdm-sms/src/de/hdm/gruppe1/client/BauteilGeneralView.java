@@ -327,5 +327,4 @@ public class BauteilGeneralView extends VerticalPanel {
 			Window.alert("Das Bauteil wurde erfolgreich geloescht.");
 		}
 	}
-
 }

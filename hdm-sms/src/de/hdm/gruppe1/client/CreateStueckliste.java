@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -17,12 +18,14 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
 import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
  * Die Klasse CreateStueckliste ermöglicht dem User, Objekte von Stückliste in der Datenbank anzulegen.
@@ -312,65 +315,7 @@ public class CreateStueckliste extends VerticalPanel {
 	/*
 	 * Click Handlers.
 	 */
-	
-	/**
-	 * Die Anlage einer Stückliste. 
-	 * Es erfolgt der Aufruf der Service-Methode "create".
-	 */
-	private class CreateClickHandler implements ClickHandler {
-		@Override
-		public void onClick(ClickEvent event) {
-			
-			String name = NameField.getText();
-
-			if(NameField.getText().isEmpty() != true){
-					
-				//TODO callback implementieren
-//				stuecklistenVerwaltung.createStueckliste(name, new StuecklisteCallback());
-				
-				//Vector wird erstellt und an die Applikationsschicht übergeben, inkl. dem Namen
-				Vector<Bauteil> createBauteile = new Vector<Bauteil>();
-				//TODO implementieren, sobald Tabelle aus globalem collection-Vector befüllt wird
-				//bisher noch nicht möglich, da die Tabelle nicht mit einem Vector befüllt wird
-//				for(int i = 0; i<bauteilCollection.getRowCount(); i++){
-//					createBauteile.addElement(bauteilCollection.getElement());
-//				}
-				
-				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
-					 
-			}
-				
-			else {
-					
-				Window.alert("Bitte alle Felder ausfüllen.");
-					
-			}
-				
-		}
-	}
 		
-	class CreateBauteilCallback implements AsyncCallback<Bauteil> {
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen der Stückliste ist fehlgeschlagen!");
-		}
-
-		@Override
-		public void onSuccess(Bauteil bauteil) {
-
-			Window.alert("Die Stückliste wurde erfolgreich angelegt.");
-			//TODO: Klären ob das catvm gebraucht wird 
-			// if (bauteil != null) {
-			// Das erfolgreiche Hinzufügen eines Kunden wird an den
-			// Kunden- und
-			// Kontenbaum propagiert.
-			// catvm.addCustomer(customer);
-			// }
-		}
-	}
-	
 	class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
 
 		@Override
@@ -392,6 +337,70 @@ public class CreateStueckliste extends VerticalPanel {
 				
 			}
 			
+		}
+	}
+	
+	/**
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt in der
+	 * Datenbank anlegt.
+	 * 
+	 * @author Mario
+	 * 
+	 */
+	private class CreateClickHandler implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+
+			/**
+			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
+			 * notwendigen Felder befüllt sind.
+			 */
+			if (NameField.getText().isEmpty() != true) {
+
+				/**
+				 * Die konkrete RPC-Methode für den create-Befehl wird
+				 * aufgerufen. Hierbei werden die gewünschten Werte
+				 * mitgeschickt.
+				 */
+				String nameStueckliste = NameField.getText();
+				stuecklistenVerwaltung.createStueckliste(nameStueckliste, collectBauteile, collectBaugruppen, new CreateStuecklisteCallback());
+
+				/**
+				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
+				 * zurück zur Übersichtstabelle weiterleiten.
+				 */
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+
+			}
+
+			else {
+
+				Window.alert("Bitte Namensfeld ausfüllen.");
+
+			}
+
+		}
+	}
+
+	/**
+	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
+	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
+	 * 
+	 * @author Mario
+	 * 
+	 */
+	class CreateStuecklisteCallback implements AsyncCallback<Stueckliste> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Das Anlegen der Stueckliste ist fehlgeschlagen!");
+		}
+
+		@Override
+		public void onSuccess(Stueckliste stueckliste) {
+
+			Window.alert("Die Stueckliste wurde erfolgreich angelegt.");
 		}
 	}
 	

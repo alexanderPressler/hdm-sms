@@ -107,6 +107,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 * mit der Datenbank abgleicht.
 	 */
 	private BauteilMapper bauteilMapper = null;
+	private StuecklisteMapper stuecklisteMapper = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -161,6 +162,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	     * kommunizieren kann.
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
+	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
 	  }
 	  /*
 	   * ***************************************************************************
@@ -248,6 +250,57 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ***************************************************************************
 	   */
 	  
-	
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, : Methoden für Stueckliste-Objekte
+	   * ***************************************************************************
+	   */
+	  /**
+	   * <p>
+	   * Anlegen eines neuen Stueckliste. Dies führt implizit zu einem Speichern des
+	   * neuen Stuecklistes in der Datenbank.
+	   * @see createStueckliste(String name)
+	   */
+	  @Override
+	public Stueckliste createStueckliste(String name, Vector<ElementPaar> BauteilPaare, 
+			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
+		Stueckliste s = new Stueckliste();
+	    s.setName(name);
+	    s.setBauteilPaare(BauteilPaare);
+	    s.setBaugruppenPaare(BaugruppenPaare);
+	    
+	    System.out.println("Stueckliste:" + s.getName());	
+	    System.out.println("Baugruppen:" + s.getBaugruppenPaare());
+	    System.out.println("Bauteile:" + s.getBauteilPaare());
+	    // Objekt in der DB speichern.
+	    return this.stuecklisteMapper.insert(s);
+	  }
+	  /**
+	   * Löschen einer Stueckliste 
+	   */
+	  @Override
+	public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
+	 
+	    this.stuecklisteMapper.delete(s);
+	  }
+	  /**
+	   * Speichern eines Bauteils.
+	   */
+	  @Override
+	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+		  this.stuecklisteMapper.update(s);
+	  }
+	  /**
+	   * Auslesen aller Stuecklisten.
+	   */
+	  @Override
+	public Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException {
+	    return this.stuecklisteMapper.findAll();
+	  }
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+	   * ***************************************************************************
+	   */
 	
 }
