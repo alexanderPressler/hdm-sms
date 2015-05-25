@@ -36,4 +36,6 @@ public interface SmsAsync {
 			AsyncCallback<Stueckliste> callback);
 
 	void getAllStuecklisten(AsyncCallback<Vector<Stueckliste>> callback);
+
+	void deleteStueckliste(Stueckliste s, AsyncCallback<Void> callback);
 }

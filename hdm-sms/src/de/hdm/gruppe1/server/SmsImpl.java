@@ -276,11 +276,24 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    return this.stuecklisteMapper.insert(s);
 	  }
 	  /**
+	   * Löschen einer Stueckliste 
+	   */
+	  @Override
+	public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
+	 
+	    this.stuecklisteMapper.delete(s);
+	  }
+	  /**
 	   * Auslesen aller Stuecklisten.
 	   */
 	  @Override
 	public Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException {
 	    return this.stuecklisteMapper.findAll();
 	  }
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+	   * ***************************************************************************
+	   */
 	
 }

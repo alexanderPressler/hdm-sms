@@ -152,8 +152,8 @@ public class StuecklisteMapper {
 		try {
 			Statement stmt = con.createStatement();
 
-			stmt.executeUpdate("DELETE FROM `stuecklisten` WHERE `id`="
-					+ stueckliste.getId());
+			stmt.executeUpdate("DELETE FROM Stueckliste WHERE sl_ID ='"+ stueckliste.getId()+"'");
+			
 
 		} catch (SQLException e2) {
 			e2.printStackTrace();
@@ -176,13 +176,13 @@ public class StuecklisteMapper {
 			Statement stmt = con.createStatement();
 
 			ResultSet rs = stmt
-					.executeQuery("SELECT * FROM `stuecklisten` ORDER BY `name`");
+					.executeQuery("SELECT * FROM `Stueckliste` ORDER BY `sl_ID`");
 
 			// Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 			// erstellt.
 			while (rs.next()) {
 				Stueckliste stueckliste = new Stueckliste();
-				stueckliste.setId(rs.getInt("id"));
+				stueckliste.setId(rs.getInt("sl_ID"));
 				stueckliste.setName(rs.getString("name"));
 			
 

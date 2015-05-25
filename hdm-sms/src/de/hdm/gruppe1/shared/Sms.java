@@ -85,4 +85,6 @@ public interface Sms extends RemoteService {
 			throws IllegalArgumentException;
 
 	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
+
+	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
 }
