@@ -2,13 +2,7 @@ package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
 import java.util.Vector;
-
-import com.google.gwt.user.client.Window;
-
 import de.hdm.gruppe1.shared.bo.*;
-
-
-
 
 /**
  * Mapper-Klasse, die <code>bauteil</code>-Objekte auf eine relationale
@@ -93,7 +87,6 @@ public class BauteilMapper {
 	    	  bauteil.setId(rs.getInt("maxid") + 1);
 
 	        stmt = con.createStatement();
-
 	        stmt.executeUpdate("INSERT INTO Bauteile VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getMaterialBeschreibung() +"', '1', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '2015-05-18 12:12:12');");
 	      
 	      }
@@ -121,22 +114,24 @@ public class BauteilMapper {
 	   * @return das als Parameter übergebene Objekt
 	   */
 	  public Bauteil update(Bauteil bauteil) {
-		    Connection con = DBConnection.connection();
+	    Connection con = DBConnection.connection();
+	    
+	    Integer bId = new Integer(bauteil.getId());
 
-		    try {
-		      Statement stmt = con.createStatement();
-		    //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
-		      Integer aendererID = new Integer(bauteil.getAenderer().getId());
-		      stmt.executeUpdate("UPDATE `Bauteile` SET `name`='"+ bauteil.getName() +"',`beschreibung`='"+ bauteil.getBauteilBeschreibung() +"',`material`='"
-		      + bauteil.getMaterialBeschreibung() + "','bearbeitet_Von'='" + aendererID.toString() + "','datum'='"
-		    		  + bauteil.getAenderungsDatum().toString().substring(0,19) + "' WHERE `teilnummer`= "+ bauteil.getId() +";");
+	    try {
+	      Statement stmt = con.createStatement();
 
-		    }
-		    catch (SQLException e) {
-		      e.printStackTrace();
-		    }
-		    return bauteil;
-		  }
+	      stmt.executeUpdate("UPDATE Bauteile SET name='"+ bauteil.getName() +"',beschreibung='"+ bauteil.getBauteilBeschreibung() +"',material='"+ bauteil.getMaterialBeschreibung() +"' WHERE teilnummer='"+bId.toString()+"';");
+
+	    }
+	    catch (SQLException e2) {
+	      e2.printStackTrace();
+	    }
+
+	    // Um Analogie zu insert(Bauteil a) zu wahren, geben wir a zurück
+	    return bauteil;
+	  }
+	  
 	  /**
 	   * Löschen der Daten eines <code>Bauteil</code>-Objekts aus der Datenbank.
 	   * 
@@ -148,9 +143,7 @@ public class BauteilMapper {
 	    try {
 	      Statement stmt = con.createStatement();
 
-//	      stmt.executeUpdate("DELETE FROM bauteile " + "WHERE id=" + a.getId());
-	      
-	      stmt.executeUpdate("DELETE FROM `bauteile` WHERE `id`="+ bauteil.getId());
+	      stmt.executeUpdate("DELETE FROM Bauteile WHERE teilnummer ='"+ bauteil.getId()+"'");
 
 	    }
 	    catch (SQLException e2) {
@@ -173,9 +166,7 @@ public class BauteilMapper {
 	    try {
 	      Statement stmt = con.createStatement();
 
-//	      ResultSet rs = stmt.executeQuery("SELECT id, name, beschreibung "
-//	          + "FROM bauteile " + "ORDER BY name");
-	      
+	      //Ergebnis soll anhand der Id sortiert werden
 	      ResultSet rs = stmt.executeQuery("SELECT * FROM `Bauteile` ORDER BY `teilnummer`");
 
 	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt

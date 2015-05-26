@@ -327,7 +327,6 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 			    Baugruppe baugruppe= new Baugruppe();
 			    baugruppe.setStueckliste(stueckliste);
 			    baugruppe.setName(name);
-				baugruppe.setAenderer(letzterAenderer);
 				baugruppe.setId(10);
 			
 			    // Objekt in der DB speichern.

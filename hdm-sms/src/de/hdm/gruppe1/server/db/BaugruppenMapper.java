@@ -39,7 +39,7 @@ public class BaugruppenMapper {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("INSERT INTO 'Baugruppe'('name',"
 					+ "'stueckliste','bearbeitet_Von','datum') VALUES('"+baugruppe.getName()+"','"
-					+ baugruppe.getStueckliste() +"','"+ baugruppe.getAenderer());
+					+ baugruppe.getStueckliste());
 			if(rs.next()){
 				baugruppe.setId(rs.getInt("bg_ID"));
 			}
@@ -60,7 +60,7 @@ public class BaugruppenMapper {
 			stmt.executeUpdate("UPDATE 'Baugruppe' SET 'name'='"
 					+baugruppe.getName()+"','stueckliste'='"+baugruppe.getStueckliste().getId()
 					+"','bearbeitet_Von'='"
-					+baugruppe.getAenderer().getUserId().toString()+"','datum'='"
+					+"','datum'='"
 					+"' WHERE 'bg_ID'='"+baugruppe.getId()+"';");
 		}
 		catch(SQLException e){

@@ -65,7 +65,7 @@ public class CreateBaugruppe extends VerticalPanel {
 		public void onClick(ClickEvent event) {
 
 			String name = NameField.getText();
-			Stueckliste stueckliste = StuecklisteField.getText();
+		
 			if (NameField.getText().isEmpty() != true) {
 
 				/**
@@ -73,10 +73,10 @@ public class CreateBaugruppe extends VerticalPanel {
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-				stuecklistenVerwaltung.createBaugruppe( name, stueckliste, new CreateBauteilCallback());
+//				stuecklistenVerwaltung.createBaugruppe( name,stueckliste new CreateBauteilCallback());
 
 			 RootPanel.get("content_wrap").clear();
-			 RootPanel.get("content_wrap").add(new BauteilGeneralView());
+			 RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
 			
 		}
 
@@ -111,5 +111,5 @@ public class CreateBaugruppe extends VerticalPanel {
 		}
 	}
 
-}
+}}
 	

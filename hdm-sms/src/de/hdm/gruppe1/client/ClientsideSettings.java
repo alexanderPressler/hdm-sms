@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.GWT;
 
 import de.hdm.gruppe1.shared.*;
-
+import de.hdm.gruppe1.shared.Sms;
 /**
  * Klasse mit Eigenschaften und Diensten, die für alle Client-seitigen Klassen
  * relevant sind.

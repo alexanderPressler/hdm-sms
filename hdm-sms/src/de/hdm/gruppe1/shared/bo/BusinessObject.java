@@ -34,7 +34,7 @@ public abstract class BusinessObject implements Serializable {
 	 * Eindeutige ID alles BOs samt getter und setter.
 	 */
 	protected int id = 0;
-	protected User letzterAenderer;
+
 
 	
 	public int getId() {
@@ -45,13 +45,6 @@ public abstract class BusinessObject implements Serializable {
 	}
 
 
-	public User getAenderer(){
-		return this.letzterAenderer;
-	}
-	
-	public void setAenderer( Object letzterAenderer){
-		this.letzterAenderer = (User) letzterAenderer;
-	}
 	/**
 	 * @author thies 
 	 * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.

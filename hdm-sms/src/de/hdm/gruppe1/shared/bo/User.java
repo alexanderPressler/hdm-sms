@@ -2,7 +2,7 @@ package de.hdm.gruppe1.shared.bo;
 
 import java.io.Serializable;
 
-public class User implements GoogleAccountAPI {
+public class User {
 
 	
 	private String googleId;
