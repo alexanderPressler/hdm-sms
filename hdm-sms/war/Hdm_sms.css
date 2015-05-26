@@ -5,10 +5,9 @@
 
 /** Initiales Bild bei Aufruf der Applikation */
 .initialPicture{
-	background:url(./img/Welcome.jpg) no-repeat center center fixed; 
-	background-size: cover;
 	position: fixed;
-	width: 100%;
+	max-width: 100%;
+	opacity: 0.3;
 }
 
 /** Tabellenüberschriften */
@@ -17,7 +16,7 @@
 }
 
 /** Tabelle für Overview-GUI's */
-.BauteilTable{
+.tableBody{
     border: 1px solid black;
     background-color: #fff;
     border-spacing: 5px;

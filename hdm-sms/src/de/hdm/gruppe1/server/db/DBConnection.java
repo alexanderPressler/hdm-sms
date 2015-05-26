@@ -2,7 +2,6 @@ package de.hdm.gruppe1.server.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-
 import com.google.appengine.api.utils.SystemProperty;
 
 /**
@@ -44,11 +43,8 @@ public class DBConnection {
      * mitgegeben, um bei einer Veränderung dieser URL nicht die gesamte
      * Software neu komilieren zu müssen.
      */
-    //TODO: !!!! URLs anpassen !!!!  
-    private static String googleUrl = "jdbc:google:mysql://prof-thies.de:thies-bankproject:thies-bankproject/bankproject?user=demo&password=demo";
-//  private static String localUrl = "jdbc:mysql://rdbms.strato.de/DB2126929?user=U2126929&password=itprojekt132";
-    
-    private static String localUrl = "jdbc:mysql://rdbms.strato.de/DB2126929?user=U2126929&password=itprojekt132";
+    private static String googleUrl = "jdbc:mysql://173.194.236.86:3306/sms?user=root";
+//    private static String localUrl = "jdbc:mysql://localhost:3306/phpmyadmin?root";
     
     /**
      * Diese statische Methode kann aufgrufen werden durch
@@ -77,43 +73,24 @@ public class DBConnection {
     public static Connection connection() {
         // Wenn es bisher keine Conncetion zur DB gab, ...
         if (con == null) {
-            String url = null;
-            try {
-              
-//            if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-//                    // Load the class that provides the new
-//                    // "jdbc:google:mysql://" prefix.
-//                    Class.forName("com.mysql.jdbc.GoogleDriver");
-//                    url = googleUrl;
-//               } else {
-//                    // Local MySQL instance to use during development.
-//                    Class.forName("com.mysql.jdbc.Driver");
-//                    url = localUrl;
-//               }
-                /*
-                 * Dann erst kann uns der DriverManager eine Verbindung mit den
-                 * oben in der Variable url angegebenen Verbindungsinformationen
-                 * aufbauen.
-                 * 
-                 * Diese Verbindung wird dann in der statischen Variable con
-                 * abgespeichert und fortan verwendet.
-                 */
-//                con = DriverManager.getConnection(url);
-                
-//                con = DriverManager.getConnection("jdbc:mysql://rdbms.strato.de", "U2126929", "itprojekt132");
-                
-//            	String dbHost = "hdm-sms:usdb";
-//            	String dbPort = "3706";
-//            	String database = "sms";
-//            	String dbUser = "U2126929";
-//            	String dbPassword = "itprojekt132";
-//            			
-//                con = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":" + dbPort + "/" + database + "?" + "user=" + dbUser + "&" + "password=" + dbPassword);
-            	Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-            	con = DriverManager.getConnection("jdbc:mysql://localhost:3306/phpmyadmin", "root", "");
-            	
-            } catch (Exception e) {
+        	String url=null;
+        	try {
+//        	      if (SystemProperty.environment.value() ==
+//        	          SystemProperty.Environment.Value.Production) {
+//        	        // Load the class that provides the new "jdbc:google:mysql://" prefix.
+//        	        Class.forName("com.mysql.jdbc.GoogleDriver");
+//        	        url = googleUrl;
+//        	      }
+//        	      else {
+//        	        // Local MySQL instance to use during development.
+//        	        Class.forName("com.mysql.jdbc.Driver");
+//        	        url = localUrl;
+//        	      }
+        	      Class.forName("com.mysql.jdbc.Driver");
+      	        url = googleUrl;
+        	      con= DriverManager.getConnection(url);
+            }
+        	catch (Exception e) {
                 con = null;
                 e.printStackTrace();
             }

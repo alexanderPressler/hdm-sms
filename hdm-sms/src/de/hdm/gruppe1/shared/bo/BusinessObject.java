@@ -1,6 +1,10 @@
 package de.hdm.gruppe1.shared.bo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Date;
+
+import com.google.appengine.api.users.User;
 
 /**
  * <p>
@@ -29,15 +33,17 @@ public abstract class BusinessObject implements Serializable {
 	/**
 	 * Eindeutige ID alles BOs samt getter und setter.
 	 */
-	private int id = 0;
+	protected int id = 0;
 
+
+	
 	public int getId() {
 		return this.id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
+
 
 	/**
 	 * @author thies 
