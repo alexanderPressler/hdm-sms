@@ -1,15 +1,17 @@
 package de.hdm.gruppe1.shared;
 
+
 import java.util.Vector;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.google.gwt.user.rebind.rpc.ServiceInterfaceProxyGenerator;
 
+import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Element;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
-
-
 /**
  * <p>
  * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Banken.
@@ -63,16 +65,10 @@ public interface Sms extends RemoteService {
 	 * @return Ein fertiges Kunden-Objekt.
 	 * @throws IllegalArgumentException
 	 */
-	Bauteil createBauteil (String name, String bauteilBeschreibung,
+	Bauteil createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException;
 
-	 /**
-	   * Speichern eines Bauteils-Objekts in der Datenbank.
-	   * 
-	   * @param b zu sicherndes Objekt.
-	   * @throws IllegalArgumentException
-	   */
-	void save(Bauteil b) throws IllegalArgumentException;
+	 public void save(Bauteil b) throws IllegalArgumentException;
 
 	 /**
 	   * Löschen des übergebenen Bauteils.
@@ -80,42 +76,36 @@ public interface Sms extends RemoteService {
 	   * @param b der zu löschende Bauteil
 	   * @throws IllegalArgumentException
 	   */
-
 	void delete(Bauteil b) throws IllegalArgumentException;
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
-	
+
 	Bauteil getBauteilById(int id) throws IllegalArgumentException;
 
-
-	
-	
-	Baugruppe createBaugruppe(String name) throws IllegalArgumentException;
-	
-	void saveBaugruppe(Baugruppe bg) throws IllegalArgumentException;
-	
-	// Baugruppe editBaugruppe (Baugruppe bg) throws IllegalArgumentException;
-	
-	void deleteBaugruppe(Baugruppe bg) throws IllegalArgumentException;
-	
-	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
-	
-	Baugruppe getBaugruppeById(int id) throws IllegalArgumentException;
-	
-	// Baugruppe getBaugruppeByName (String name) throws IllegalArgumentException;
-	
-	
-	
-	
-	Stueckliste createStueckliste(String name) throws IllegalArgumentException;
-
-	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
-
-	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
+	Stueckliste createStueckliste(String name,
+			Vector<ElementPaar> BauteilPaare,
+			Vector<ElementPaar> BaugruppenPaare)
+			throws IllegalArgumentException;
 
 	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
 
-	Stueckliste getStuecklisteById(int id) throws IllegalArgumentException;
+	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
 
-
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+	
+	Baugruppe createBaugruppe(String name, Stueckliste stueckliste) throws IllegalArgumentException;
+	
+	public void save (Baugruppe bg)
+			 throws IllegalArgumentException;
+	
+	void delete(Baugruppe bg)
+	throws IllegalArgumentException;
+	
+	Vector<Baugruppe> getBaugruppeByName(String name);
+	
+	Baugruppe getBaugruppeById(int id)
+			 throws IllegalArgumentException;
+	
+	Vector<Baugruppe> getAllBaugruppen()
+	throws IllegalArgumentException;
 }
