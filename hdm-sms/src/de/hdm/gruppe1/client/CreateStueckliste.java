@@ -134,9 +134,11 @@ public class CreateStueckliste extends VerticalPanel {
 				bauteilPaar.setAnzahl(anzahl);
 				bauteilPaar.setElement(allBauteile.get(index));
 				
+				Window.alert("Vor Hinzufügen zum Vektor: "+collectBauteile.capacity());
+				
 				collectBauteile.add(bauteilPaar);
 				
-//				Window.alert("Anzahl: "+bauteilPaar.getAnzahl()+ " Bauteil: "+bauteilPaar.getElement().getName());
+				Window.alert("Nach Hinzufügen zum Vektor: "+collectBauteile.capacity());
 				
 				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
 				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
@@ -149,9 +151,9 @@ public class CreateStueckliste extends VerticalPanel {
 //					final int x = index;
 					final int a = i;
 					
-					bauteilCollection.setText(a, 0, ""+collectBauteile.get(i).getElement().getId());
-					bauteilCollection.setText(a, 1, ""+collectBauteile.get(i).getAnzahl());
-					bauteilCollection.setText(a, 2, collectBauteile.get(i).getElement().getName());
+					bauteilCollection.setText(a, 0, ""+collectBauteile.get(i-1).getElement().getId());
+					bauteilCollection.setText(a, 1, ""+collectBauteile.get(i-1).getAnzahl());
+					bauteilCollection.setText(a, 2, collectBauteile.get(i-1).getElement().getName());
 					bauteilCollection.setWidget(a, 3, removeBtButton);
 					
 					removeBtButton.addClickHandler(new ClickHandler() {
@@ -159,7 +161,7 @@ public class CreateStueckliste extends VerticalPanel {
 						public void onClick(ClickEvent event) {
 							
 //							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).setAttribute("enabled", "enabled");
-							Window.alert("Aus Vektor wird entfernt: "+collectBauteile.get(a).getElement().getName());
+							Window.alert("Aus Vektor wird entfernt: "+collectBauteile.get(a-1).getElement().getName());
 							bauteilCollection.removeRow(a);
 							collectBauteile.remove(a-1);
 							Window.alert("Inhalt collectBauteile: "+collectBauteile.toString());
