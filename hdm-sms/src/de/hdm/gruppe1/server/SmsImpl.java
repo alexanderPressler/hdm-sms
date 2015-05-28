@@ -209,7 +209,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		    b.setMaterialBeschreibung(materialBeschreibung);
 
 		    /*
-		     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
+		     * Setzen einer vorlï¿½ufigen Kundennr. Der insert-Aufruf liefert dann ein
 		     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
 		     */
 //		    b.setId(10);
@@ -228,10 +228,10 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		  }
 		  
 		  /**
-		   * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung von
-		   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
-		   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
-		   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
+		   * Lï¿½schen eines Kunden. Natï¿½rlich wï¿½rde ein reales System zur Verwaltung von
+		   * Bankkunden ein Lï¿½schen allein schon aus Grï¿½nden der Dokumentation nicht
+		   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ï¿½ndern. Wir
+		   * wollen hier aber dennoch zu Demonstrationszwecken eine Lï¿½schfunktion
 		   * vorstellen.
 		   */
 		  @Override
@@ -258,18 +258,18 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		  
 		  /*
 		   * ***************************************************************************
-		   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+		   * ABSCHNITT, Ende: Methoden fï¿½r Bauteil-Objekte
 		   * ***************************************************************************
 		   */
 		  
 		  /*
 		   * ***************************************************************************
-		   * ABSCHNITT, : Methoden für Stueckliste-Objekte
+		   * ABSCHNITT, : Methoden fï¿½r Stueckliste-Objekte
 		   * ***************************************************************************
 		   */
 		  /**
 		   * <p>
-		   * Anlegen eines neuen Stueckliste. Dies führt implizit zu einem Speichern des
+		   * Anlegen eines neuen Stueckliste. Dies fï¿½hrt implizit zu einem Speichern des
 		   * neuen Stuecklistes in der Datenbank.
 		   * @see createStueckliste(String name)
 		   */
@@ -288,7 +288,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		    return this.stuecklisteMapper.insert(s);
 		  }
 		  /**
-		   * Löschen einer Stueckliste 
+		   * Lï¿½schen einer Stueckliste 
 		   */
 	
 		public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
@@ -311,7 +311,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		  }
 		  /*
 		   * ***************************************************************************
-		   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+		   * ABSCHNITT, Ende: Methoden fï¿½r Bauteil-Objekte
 		   * ***************************************************************************
 		   */
 		
@@ -335,8 +335,8 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 
 	}
 	@Override
-	  public void editBaugruppe(Baugruppe baugruppe) throws IllegalArgumentException {
-			baugruppenMapper.update(baugruppe);
+	  public void save (Baugruppe bg) throws IllegalArgumentException {
+			baugruppenMapper.update(bg);
 	}
 
 	@Override

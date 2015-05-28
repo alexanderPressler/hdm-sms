@@ -5,8 +5,8 @@ public class Baugruppe extends Element{
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * die Baugruppe werden mitunter in den Stücklisten verwendet, dadurch werden
-	 * in die Klassen Stückliste angelegt und gesetzt.
+	 * die Baugruppe werden mitunter in den Stï¿½cklisten verwendet, dadurch werden
+	 * in die Klassen Stï¿½ckliste angelegt und gesetzt.
 	 **/
 	Stueckliste enthalteneElemente;
 	
@@ -25,6 +25,10 @@ public class Baugruppe extends Element{
 		public void setName(String name){
 		this.name = name;
 	}
+		public void add(Baugruppe deleteBaugruppe) {
+			// TODO Auto-generated method stub
+			
+		}
 		
 		
 	  /**

@@ -56,14 +56,15 @@ public interface SmsAsync {
 	
 	void createBaugruppe(String name, Stueckliste stueckliste,
 			AsyncCallback<Baugruppe> callback);
-
-	void editBaugruppe(Baugruppe baugruppe, AsyncCallback<Void> callback);
 	
+	void save(Baugruppe bg, AsyncCallback<Void> callback);
+
 	void delete(Baugruppe baugruppe, AsyncCallback<Void> callback);
 
 	void getBaugruppeByName(String name,
 			AsyncCallback<Vector<Baugruppe>> callback);
 	void getBaugruppeById(int id, AsyncCallback<Baugruppe> callback);
+	
 	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
 	
 	

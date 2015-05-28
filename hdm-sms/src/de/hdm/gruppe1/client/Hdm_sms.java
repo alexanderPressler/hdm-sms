@@ -37,6 +37,21 @@ public class Hdm_sms implements EntryPoint {
 		      }
 		};
 		
+		Command createBaugruppe = new Command() {
+		      public void execute() {
+			        RootPanel.get("content_wrap").clear();
+			        RootPanel.get("content_wrap").add(new CreateBaugruppe());
+		      }
+		};
+		
+		Command allBaugruppen = new Command() {
+		      public void execute() {
+		        RootPanel.get("content_wrap").clear();
+		        RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
+		      }
+		};
+
+		
 		Command createStueckliste = new Command() {
 		      public void execute() {
 		    	  RootPanel.get("content_wrap").clear();
@@ -58,43 +73,43 @@ public class Hdm_sms implements EntryPoint {
 		      }
 		};
 		
-		//Neu: MenuBar mit Mouse-Over Untermenüs
+		//Neu: MenuBar mit Mouse-Over UntermenÃ¼s
 		
-		//Das Menü von Bauteile erhält folgende Mouse-Over Untermenüs
+		//Das MenÃ¼ von Bauteile erhÃ¤lt folgende Mouse-Over UntermenÃ¼s
 	    MenuBar bauteilMenu = new MenuBar(true);
 	    bauteilMenu.addItem("Bauteil anlegen", createBauteil);
 	    bauteilMenu.addItem("Alle anzeigen", allBauteile);
 
-	    //Das Menü von Baugruppen erhält folgende Mouse-Over Untermenüs
+	  //Das MenÃ¼ von Baugruppen erhÃ¤lt folgende Mouse-Over UntermenÃ¼s
 	    MenuBar baugruppeMenu = new MenuBar(true);
-	    baugruppeMenu.addItem("Baugruppe anlegen", testCmd);
-	    baugruppeMenu.addItem("Alle anzeigen", testCmd);
+	    baugruppeMenu.addItem("Baugruppe anlegen", createBaugruppe);
+	    baugruppeMenu.addItem("Alle anzeigen", allBaugruppen);
 
-	    //Das Menü von Enderzeugnissen erhält folgende Mouse-Over Untermenüs
+	    //Das MenÃ¼ von Enderzeugnissen erhÃ¤lt folgende Mouse-Over UntermenÃ¼s
 	    MenuBar enderzeugnisMenu = new MenuBar(true);
 	    enderzeugnisMenu.addItem("Enderzeugnis anlegen", testCmd);
 	    enderzeugnisMenu.addItem("Alle Anzeigen", testCmd);
 	    
-	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
+	    //Das MenÃ¼ von StÃ¼cklisten erhÃ¤lt folgende Mouse-Over UntermenÃ¼s
 	    MenuBar stuecklisteMenu = new MenuBar(true);
-	    stuecklisteMenu.addItem("Stückliste anlegen", createStueckliste);
+	    stuecklisteMenu.addItem("StÃ¼ckliste anlegen", createStueckliste);
 	    stuecklisteMenu.addItem("Alle Anzeigen", allStuecklisten);
 
-	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
+	    //Alle UntermenÃ¼s werden hier dem HauptmenÃ¼ zugeordnet
 	    MenuBar mainMenu = new MenuBar();
 	    mainMenu.setWidth("100%"); 
 	    mainMenu.addItem("Bauteile", bauteilMenu);
 	    mainMenu.addItem("Baugruppen", baugruppeMenu);
 	    mainMenu.addItem("Enderzeugnisse", enderzeugnisMenu);
-	    mainMenu.addItem("Stücklisten", stuecklisteMenu);
+	    mainMenu.addItem("StÃ¼cklisten", stuecklisteMenu);
 	    
 	    //Der Default-Text, der beim Aufruf der Applikation angezeigt wird
 	    
-	    //Das Begrüßungsbild der Applikation
+	    //Das BegrÃ¼ÃŸungsbild der Applikation
 		welcomeImage.setUrl("./img/Welcome.jpg");
 	    welcomeImage.setStyleName("initialPicture");
 		    
-	    //Hautpmenü schließlich dem RootPanel in den Menü-div Container zuordnen
+	    //HautpmenÃ¼ schlieÃŸlich dem RootPanel in den MenÃ¼-div Container zuordnen
 	    RootPanel.get("head_wrap_right").add(mainMenu);
 	    RootPanel.get("content_wrap").add(welcomeImage);
 	    RootPanel.get("content_wrap").add(welcomeText);
