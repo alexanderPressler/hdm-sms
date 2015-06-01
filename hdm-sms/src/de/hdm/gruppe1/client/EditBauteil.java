@@ -13,7 +13,7 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
 /**
- * Die Klasse EditBauteil erhält bei Aufruf ein zuvor ausgewähltes
+ * Die Klasse EditBauteil erhï¿½lt bei Aufruf ein zuvor ausgewï¿½hltes
  * Bauteil-Objekt. Dieses kann dann mithilfe dieser Klasse editiert werden.
  * 
  * @author Mario Theiler
@@ -22,11 +22,11 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 public class EditBauteil extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für EditBauteil initialisieren
+	 * GUI-Elemente fï¿½r EditBauteil initialisieren
 	 */
-	private final Label HeadlineLabel = new Label("Bauteil ändern");
+	private final Label HeadlineLabel = new Label("Bauteil Ã¤ndern");
 	private final Label SublineLabel = new Label(
-			"Um ein Bauteil zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
+			"Um ein Bauteil zu ï¿½ndern, fÃ¼llen Sie bitte alle Felder aus und bestÃ¤tigen mit dem <editieren>-Button ihre Eingabe.");
 	private final Label IdLabel = new Label("Id");
 	private final TextBox IdField = new TextBox();
 	private final Label NameFieldLabel = new Label("Bezeichnung");
@@ -36,7 +36,7 @@ public class EditBauteil extends VerticalPanel {
 	private final Label DescriptionFieldLabel = new Label(
 			"Textuelle Beschreibung");
 	private final TextBox DescriptionField = new TextBox();
-	private final Button EditBauteilButton = new Button("ändern");
+	private final Button EditBauteilButton = new Button("Ã¤ndern");
 
 	/**
 	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
@@ -64,7 +64,7 @@ public class EditBauteil extends VerticalPanel {
 		this.add(EditBauteilButton);
 
 		/**
-		 * Das Id-Textfeld darf nicht verändert werden und wird daher auf
+		 * Das Id-Textfeld darf nicht verï¿½ndert werden und wird daher auf
 		 * "ReadOnly" gesetzt.
 		 */
 		IdField.setReadOnly(true);
@@ -77,22 +77,22 @@ public class EditBauteil extends VerticalPanel {
 
 		/**
 		 * Der Editieren-Button ruft die RPC-Methode auf, welche das Editieren
-		 * eines Bauteils in der DB ermöglicht.
+		 * eines Bauteils in der DB ermï¿½glicht.
 		 */
 		EditBauteilButton.addClickHandler(new EditClickHandler());
 
 		/**
 		 * In ein Textfeld kann nur ein Text geladen werden, kein int. Daher ist
 		 * dieser Zwischenschritt notwendig: Zwischenspeichern des Werts
-		 * mithilfe Integer, da Integer die toString-Methode unterstützt, ein
+		 * mithilfe Integer, da Integer die toString-Methode unterstï¿½tzt, ein
 		 * einfacher int jedoch nicht.
 		 * 
 		 */
 		Integer iD = new Integer(editBauteil.getId());
 
 		/**
-		 * Mithilfe des an diese Klasse übergebenen Bauteil-Objektes werden die
-		 * Textfelder befüllt.
+		 * Mithilfe des an diese Klasse ï¿½bergebenen Bauteil-Objektes werden die
+		 * Textfelder befï¿½llt.
 		 */
 		IdField.setText(iD.toString());
 		NameField.setText(editBauteil.getName());
@@ -100,7 +100,7 @@ public class EditBauteil extends VerticalPanel {
 		DescriptionField.setText(editBauteil.getBauteilBeschreibung());
 
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 * Abschlieï¿½end wird alles dem RootPanel zugeordnet
 		 */
 		RootPanel.get("content_wrap").add(this);
 
@@ -113,9 +113,9 @@ public class EditBauteil extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die mithilfe eines
 	 * mitgeschickten Bauteil-Objektes das bestehende Bauteil-Objekt in der
-	 * Datenbank ändert. Hierbei ist wichtig, dass keine neue Id vergeben wird,
+	 * Datenbank ï¿½ndert. Hierbei ist wichtig, dass keine neue Id vergeben wird,
 	 * da es sich sonst um eine Neuanlage und nicht um einen Editier-Vorgang
-	 * handeln würde.
+	 * handeln wï¿½rde.
 	 * 
 	 * @author Mario
 	 * 
@@ -128,7 +128,7 @@ public class EditBauteil extends VerticalPanel {
 			/**
 			 * Aus einem Textfeld kann kein Integer-Wert ausgelesen werden,
 			 * daher ist dieser Zwischenschritt notwendig: Auslesen des Id-Werts
-			 * mithilfe Integer, da Integer die toString-Methode unterstützt.
+			 * mithilfe Integer, da Integer die toString-Methode unterstï¿½tzt.
 			 */
 			b.setId(Integer.parseInt(IdField.getText()));
 			b.setName(NameField.getText());
@@ -136,22 +136,22 @@ public class EditBauteil extends VerticalPanel {
 			b.setMaterialBeschreibung(MaterialField.getText());
 
 			/**
-			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle notwendigen Felder befüllt sind.
+			 * Vor dem Aufruf der RPC-Methode create wird geprï¿½ft, ob alle notwendigen Felder befï¿½llt sind.
 			 */
 			if (NameField.getText().isEmpty() != true
 					&& DescriptionField.getText().isEmpty() != true
 					&& MaterialField.getText().isEmpty() != true) {
 
 				/**
-				 * Die konkrete RPC-Methode für den editier-Befehl wird aufgerufen.
-				 * Hierbei wird das vorab befüllte Bauteil-Objekt mit den
-				 * gewünschten Werten mitgeschickt.
+				 * Die konkrete RPC-Methode fï¿½r den editier-Befehl wird aufgerufen.
+				 * Hierbei wird das vorab befï¿½llte Bauteil-Objekt mit den
+				 * gewï¿½nschten Werten mitgeschickt.
 				 */
 				stuecklistenVerwaltung.save(b, new SaveCallback());
 
 				/**
-				 * Nachdem der Editier-Vorgang durchgeführt wurde, soll die GUI
-				 * zurück zur Übersichtstabelle weiterleiten.
+				 * Nachdem der Editier-Vorgang durchgefï¿½hrt wurde, soll die GUI
+				 * zurï¿½ck zur ï¿½bersichtstabelle weiterleiten.
 				 */
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new BauteilGeneralView());
@@ -160,7 +160,7 @@ public class EditBauteil extends VerticalPanel {
 
 			else {
 
-				Window.alert("Bitte alle Felder ausfüllen.");
+				Window.alert("Bitte alle Felder ausfÃ¼llen.");
 
 			}
 

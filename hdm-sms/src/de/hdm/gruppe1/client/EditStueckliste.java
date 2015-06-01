@@ -13,15 +13,15 @@ import de.hdm.gruppe1.client.EditBauteil.SaveCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
-//Die Klasse EditStueckliste liefert alle benötigten Elemente, um eine bestehende Stückliste im System zu ändern.
+//Die Klasse EditStueckliste liefert alle benï¿½tigten Elemente, um eine bestehende Stï¿½ckliste im System zu ï¿½ndern.
 public class EditStueckliste extends VerticalPanel {
 	
-	//Elemente für EditStueckliste initialisieren
-	private final Label HeadlineLabel = new Label ("Stückliste ändern");
-	private final Label SublineLabel = new Label ("Um eine Stückliste zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
+	//Elemente fï¿½r EditStueckliste initialisieren
+	private final Label HeadlineLabel = new Label ("StÃ¼ckliste ï¿½ndern");
+	private final Label SublineLabel = new Label ("Um eine StÃ¼ckliste zu Ã¤ndern, fÃ¼llen Sie bitte alle Felder aus und bestÃ¼tigen mit dem <editieren>-Button ihre Eingabe.");
 	private final Label NameFieldLabel = new Label ("Bezeichnung");
 	private final TextBox NameField = new TextBox ();
-	private final Button EditStuecklisteButton = new Button ("ändern");
+	private final Button EditStuecklisteButton = new Button ("Ã¤ndern");
 			
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
@@ -50,7 +50,7 @@ public class EditStueckliste extends VerticalPanel {
 	 */
 	
 	/**
-	  * Das Ändern einer Stückliste ruft die Service-Methode "edit" auf.
+	  * Das ï¿½ndern einer Stï¿½ckliste ruft die Service-Methode "edit" auf.
 	  * 
 	  */
 	
@@ -78,12 +78,12 @@ public class EditStueckliste extends VerticalPanel {
 
 		 @Override
 		 public void onFailure(Throwable caught) {
-			 Window.alert("Die Stückliste wurde nicht editiert.");
+			 Window.alert("Die StÃ¼ckliste wurde nicht editiert.");
 			}
 
 			@Override
 			public void onSuccess(Void result) {
-				Window.alert("Die Stückliste wurde erfolgreich editiert.");
+				Window.alert("Die StÃ¼ckliste wurde erfolgreich editiert.");
 				
 				
 				

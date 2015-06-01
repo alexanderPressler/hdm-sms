@@ -23,7 +23,7 @@ public class EditBaugruppe extends VerticalPanel {
 	 * GUI-Elemente um EditBaugruppe initialisieren
 	 */
 		private final Label HeadlineLabel = new Label ("Baugruppe ändern");
-		private final Label SublineLabel = new Label ("Um ein Baugruppe zu ändern, fbüllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
+		private final Label SublineLabel = new Label ("Um ein Baugruppe zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
 		private final Label IdLabel = new Label("Id");
 		private final TextBox IdField = new TextBox();
 		private final Label NameFieldLabel = new Label ("Bezeichnung");
@@ -132,7 +132,7 @@ public class EditBaugruppe extends VerticalPanel {
 					 * Hierbei wird das vorab befüllte Baugruppen-Objekt mit den
 					 * gewünschten Werten mitgeschickt.
 					 */
-					stuecklistenVerwaltung.save(bg, new SaveCallback());
+					stuecklistenVerwaltung.saveBaugruppe(bg, new SaveCallback());
 
 					/**
 					 * Nachdem der Editier-Vorgang durchgeführt wurde, soll die GUI

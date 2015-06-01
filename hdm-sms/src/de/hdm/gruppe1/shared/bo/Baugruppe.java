@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.shared.bo;
 
+import java.util.Vector;
+
 public class Baugruppe extends Element{
 	
 	private static final long serialVersionUID = 1L;
@@ -8,13 +10,13 @@ public class Baugruppe extends Element{
 	 * die Baugruppe werden mitunter in den St�cklisten verwendet, dadurch werden
 	 * in die Klassen St�ckliste angelegt und gesetzt.
 	 **/
-	Stueckliste enthalteneElemente;
+	Vector<Baugruppe> enthalteneElemente;
 	
-	public Stueckliste getStueckliste(){
+	public Vector<Baugruppe> getBaugruppe(){
 		return this.enthalteneElemente;
 	}
-	public void setStueckliste(Stueckliste stueckliste){
-	this.enthalteneElemente = stueckliste;
+	public void setBaugruppe(Vector<Baugruppe> baugruppe){
+	this.enthalteneElemente = baugruppe;
 	}
 	
 	String name;

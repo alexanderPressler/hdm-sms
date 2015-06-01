@@ -321,12 +321,12 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * ABSCHNITT, Beginn: Methoden fuer Baugruppe-Objekte
 	   * ***************************************************************************
 	   */
-	public Baugruppe createBaugruppe(String name, Stueckliste stueckliste, User letzterAenderer)
+	public Baugruppe createBaugruppe(String name, Vector<Baugruppe> Baugruppe, User letzterAenderer)
 		      throws IllegalArgumentException{
 			   
 			    Baugruppe baugruppe= new Baugruppe();
-			    baugruppe.setStueckliste(stueckliste);
 			    baugruppe.setName(name);
+			    baugruppe.setBaugruppe(Baugruppe);
 				baugruppe.setId(10);
 			
 			    // Objekt in der DB speichern.
@@ -335,12 +335,12 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 
 	}
 	@Override
-	  public void save (Baugruppe bg) throws IllegalArgumentException {
+	  public void saveBaugruppe(Baugruppe bg) throws IllegalArgumentException {
 			baugruppenMapper.update(bg);
 	}
 
 	@Override
-	public void delete(Baugruppe baugruppe) throws IllegalArgumentException{}
+	public void deleteBaugruppe(Baugruppe bg) throws IllegalArgumentException{}
 
 
 public Vector<Baugruppe> getBaugruppeByName(String name)
@@ -359,12 +359,15 @@ public Vector<Baugruppe> getBaugruppeByName(String name)
 		
 }
 
+
+
 	@Override
-	public Baugruppe createBaugruppe(String name, Stueckliste stueckliste)
-			throws IllegalArgumentException {
+	public Baugruppe createBaugruppe(String name, Vector<Baugruppe> Baugruppe) {
 		// TODO Auto-generated method stub
 		return null;
 	}}
+
+
 	  /*
 	   * ***************************************************************************
    * ABSCHNITT, Ende: Methoden für Bugruppe-Objekte

@@ -39,7 +39,7 @@ public class BaugruppenMapper {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("INSERT INTO 'Baugruppe'('name',"
 					+ "'stueckliste','bearbeitet_Von','datum') VALUES('"+baugruppe.getName()+"','"
-					+ baugruppe.getStueckliste());
+					+ baugruppe.getBaugruppe());
 			if(rs.next()){
 				baugruppe.setId(rs.getInt("bg_ID"));
 			}
@@ -58,10 +58,12 @@ public class BaugruppenMapper {
 		try{
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("UPDATE 'Baugruppe' SET 'name'='"
-					+baugruppe.getName()+"','stueckliste'='"+baugruppe.getStueckliste().getId()
+					+baugruppe.getName()+"','baugruppe'='"
 					+"','bearbeitet_Von'='"
 					+"','datum'='"
 					+"' WHERE 'bg_ID'='"+baugruppe.getId()+"';");
+			
+			
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -75,7 +77,7 @@ public class BaugruppenMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies ï¿½ber eine Instanz der Klasse Integer geschehen
 	      Integer baugruppeID = new Integer(baugruppe.getId());
 	      
 	      
@@ -99,19 +101,18 @@ public class BaugruppenMapper {
 	Baugruppe baugruppe = null;
 		try{
 			Statement stmt = con.createStatement();
-			//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+			//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies ï¿½ber eine Instanz der Klasse Integer geschehen
 		    Integer baugruppeID = new Integer(id);
 	    
 	    ResultSet rs = stmt.executeQuery("SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID' WHERE 'bg_ID'='"
 	    		+baugruppeID.toString()+"';");
-		    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+		    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthï¿½lt
 		    if(rs.next()){
 		    	baugruppe = new Baugruppe();
 		    	baugruppe.setId(rs.getInt("bg_ID"));
 		    	baugruppe.setName(rs.getString("name"));
-		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
-	    	StuecklisteMapper slm = StuecklisteMapper.stuecklisteMapper();
-	    	baugruppe.setStueckliste(slm.findById(rs.getInt("stueckliste")));
+		    	//Da wir die Stueckliste der Baugruppe auflï¿½sen mï¿½ssen brauchen wir einen StuecklistenMapper
+	    
 		    	
 		  
 			
@@ -131,17 +132,15 @@ public class BaugruppenMapper {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON "
 					+ "'Baugruppe.bearbeitet_Von'='User.userID' WHERE 'Baugruppe.name' LIKE '%"
 				+name+"%';");
-			//Da es viele Baugruppen geben kann, die diesen Namen haben müssen wir eine Schleife benutzen
+			//Da es viele Baugruppen geben kann, die diesen Namen haben mï¿½ssen wir eine Schleife benutzen
 			while(rs.next()){
 				//Neue Baugruppe erzeugen
 				Baugruppe baugruppe = new Baugruppe();
 		    	baugruppe.setId(rs.getInt("bg_ID"));
 		    	baugruppe.setName(rs.getString("name"));
-		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
-		    	StuecklisteMapper slm = StuecklisteMapper.stuecklisteMapper();
-		    	baugruppe.setStueckliste(slm.findById(rs.getInt("stueckliste")));
-		    
-				//Baugruppe der ArrayList hinzufügen
+		    	//Da wir die Stueckliste der Baugruppe auflï¿½sen mï¿½ssen brauchen wir einen StuecklistenMapper
+		
+				//Baugruppe der ArrayList hinzufï¿½gen
 				vBaugruppe.addElement(baugruppe);
 			}
 		}

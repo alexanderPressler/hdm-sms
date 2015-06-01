@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -16,48 +17,53 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import de.hdm.gruppe1.client.BauteilGeneralView.DeleteBauteilCallback;
 import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /*
- * Die Klasse StuecklisteGeneralView liefert eine Übersicht mit allen vorhandenen Stücklisten im System
- * und bietet Möglichkeiten, diese zu editieren oder löschen.
+ * Die Klasse StuecklisteGeneralView liefert eine Ãœbersicht mit allen vorhandenen StÃ¼cklisten im System
+ * und bietet MÃ¶glichkeiten, diese zu editieren oder lÃ¶schen.
  */
 public class StuecklisteGeneralView extends VerticalPanel {
 
-	//Elemente für Stücklisten initialisieren
-	private final Label HeadlineLabel = new Label ("Stücklistenübersicht");
+	//Elemente fÃ¼r StÃ¼cklisten initialisieren
+	private final Label HeadlineLabel = new Label ("StÃ¼cklistenÃ¼bersicht");
 	
-	//Buttons sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird ein "vertikales Zwischen-Panel" benötigt
+	//Buttons sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird ein "vertikales Zwischen-Panel" benÃ¶tigt
 	private HorizontalPanel editButtonPanel = new HorizontalPanel();
 	private HorizontalPanel deleteButtonPanel = new HorizontalPanel();
 	
-	//Den Buttons wird jeweils ein erklärender Text hinzugefügt
-	private final Label editLabel = new Label("Wählen Sie in der Übersicht eine Stückliste aus, um sie mithilfe dieses Buttons zu editieren: ");
-	private final Label deleteLabel = new Label("Wählen Sie in der Übersicht mindestens eine Stückliste aus, um sie mithilfe dieses Buttons zu löschen: ");
+	//Den Buttons wird jeweils ein erklÃ¤render Text hinzugefÃ¼gt
+	private final Label editLabel = new Label("WÃ¤hlen Sie in der Ãœbersicht eine StÃ¼ckliste aus, um sie mithilfe dieses Buttons zu editieren: ");
+	private final Label deleteLabel = new Label("WÃ¤hlen Sie in der Ãœbersicht mindestens eine StÃ¼ckliste aus, um sie mithilfe dieses Buttons zu lÃ¶schen: ");
 		
 	//Neu: Single-Button Editieren
 	private final Button editBtn = new Button("");
-	//Neu: Single-Button Löschen
+	//Neu: Single-Button LÃ¶schen
 	private final Button deleteBtn = new Button("");
 	
 	private final FlexTable table = new FlexTable();
 	
-	//TODO imlementieren
-	//Stückliste, die editiert werden soll
-//	Stueckliste editStueckliste = null;
+	//StÃ¼ckliste, die editiert werden soll
+	Stueckliste editStueckliste = null;
 		
 	//TODO implementieren
-	//Vektor wird mit allen Bauteilen aus der DB befüllt
-//	Vector<Stueckliste> allStuecklisten = new Vector<Stueckliste>();
+	//Vektor wird mit allen Bauteilen aus der DB befÃ¼llt
+	Vector<Stueckliste> allStuecklisten = new Vector<Stueckliste>();
+	
+	//Vektor wird temporÃ¤r mit zu lÃ¶schenden StÃ¼cklisten befÃ¼llt, wenn CheckBoxen aus- bzw. abgewÃ¤hlt werden
+	Vector<Stueckliste> deleteStuecklisten = new Vector<Stueckliste>();
 		
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
 	public StuecklisteGeneralView() {
 		
-		//Damit die edit und delete Buttons horizontal angeordnet werden, müssen diese dem ButtonPanel zugeordnet werden
+		//Damit die edit und delete Buttons horizontal angeordnet werden, mÃ¼ssen diese dem ButtonPanel zugeordnet werden
 		editButtonPanel.add(editLabel);
 		editButtonPanel.add(editBtn);
 				
@@ -67,24 +73,20 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
 		HeadlineLabel.setStyleName("headline");
-		table.setStyleName("BauteilTable");
-				
-		//Applikationsschicht liefert <Stueckliste>-Vector.
-		//Diesen mithilfe for-Schleife durchlaufen und angemessen darstellen.
+		table.setStyleName("tableBody");
+			
+		stuecklistenVerwaltung.getAllStuecklisten(new GetAllStuecklistenCallback());
 
-		//TODO implementieren
-//		stuecklistenVerwaltung.getAllBauteile(new GetAllStuecklistenCallback());
-
-		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
+		//Die erste Reihe der Tabelle wird mit Ãœberschriften vordefiniert
 		table.setText(0, 0, "ID");
 		table.setText(0, 1, "Name");
 		table.setText(0, 2, "Erstellungsdatum");
-		table.setText(0, 3, "Letzter Änderer");
-		table.setText(0, 4, "Letztes Änderungsdatum");
+		table.setText(0, 3, "Letzter Ã„nderer");
+		table.setText(0, 4, "Letztes Ã„nderungsdatum");
 		table.setText(0, 5, "Editieren");
-		table.setText(0, 6, "Löschen");
+		table.setText(0, 6, "LÃ¶schen");
 			    
-		//Das FlexTable Widget unterstützt keine Headlines. Daher wird die erste Reihe über folgenden Umweg formatiert
+		//Das FlexTable Widget unterstÃ¼tzt keine Headlines. Daher wird die erste Reihe Ã¼ber folgenden Umweg formatiert
 		table.getCellFormatter().addStyleName(0, 0, "tableHead");
 		table.getCellFormatter().addStyleName(0, 1, "tableHead");
 		table.getCellFormatter().addStyleName(0, 2, "tableHead");
@@ -106,102 +108,146 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * Click Handlers.
 	 */
 	
-	/**
-	  * Das Löschen einer Stückliste wird mithilfe der mitgelieferten Objekt-ID über die Applikationsschicht
-	  * an den Server geschickt. Der User erhält eine entsprechende Hinweismeldung angezeigt und die
-	  * Tabelle wird neu geladen.
-	  * 
-	  */
-	 private class DeleteClickHandler implements ClickHandler {
-	  @Override
-	  public void onClick(ClickEvent event) {
-//	   if (customerToDisplay != null) {
+	 class GetAllStuecklistenCallback implements AsyncCallback<Vector<Stueckliste>> {
 
-			RootPanel.get("content_wrap").clear();
-			Window.alert("Stückliste wurde vielleicht gelöscht");
-			RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
-		   
-//	   } else {
-//	    Window.alert("kein Kunde ausgewählt");
-//	   }
-	  }
-	 }
-	 
-	 //TODO implementieren
-//	 class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				Window.alert("Bauteile konnten nicht geladen werden");
-//			}
-//
-//			@Override
-//			public void onSuccess(Vector<Stueckliste> alleStuecklisten) {
-//
-//				allStuecklisten = alleStuecklisten;
-//				
-//				for (int row = 1; row <= allStuecklisten.size(); row++) {
-////				      for (int col = 0; col < numColumns; col++) {
-//
-//				    	//Da die erste Reihe der Tabelle als Überschriften der Spalten dient, wird eine neue Variable benötigt,
-//				    	//die den Index 0 des Vectors auslesen kann.
-//				    	final int i = row-1;
-//				    	
-//				        RadioButton radioButton = new RadioButton("editRadioGroup", "");
-//				        CheckBox checkBox = new CheckBox("");
-//
-//				        deleteBtn.addClickHandler(new DeleteClickHandler());
-//				    	
-//				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
-//				        table.setText(row, 0, ""+allStuecklisten.get(i).getId());
-//				        table.setText(row, 1, allStuecklisten.get(i).getName());
-//				        table.setText(row, 4, "Mario");
-//				        table.setText(row, 5, "02.05.2015, 18 Uhr");
-//				        
-//				        //RadioButton Widget für Single editieren-Button
-//				        table.setWidget(row, 6, radioButton);
-//				        
-//				        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefügt
-//						radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-//				            @Override
-//				            public void onValueChange(ValueChangeEvent<Boolean> e) {
-//				                if(e.getValue() == true)
-//				                {
-//				                    editStueckliste = allStuecklisten.get(i);
-//				                }
-//				            }
-//				        }); 
-//				        
-//				        table.setWidget(row, 7, checkBox);
-//				        
-//				        table.setStyleName("StuecklisteTable");
-//				        
-//				    }
-//				
-//				//ClickHandler für Aufruf der Klasse editBauteil
-//		        editBtn.addClickHandler(new ClickHandler(){
-//					public void onClick(ClickEvent event) {
-//						
-//						if(editStueckliste==null){
-//							Window.alert("Bitte wählen Sie eine Stückliste zum editieren aus.");
-//						} else {
-//							RootPanel.get("content_wrap").clear();
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("StÃ¼cklisten konnten nicht geladen werden");
+			}
+
+			@Override
+			public void onSuccess(Vector<Stueckliste> result) {
+
+				allStuecklisten = result;
+				
+				if (allStuecklisten.isEmpty() == true){
+					
+					table.getFlexCellFormatter().setColSpan(1, 0, 6);
+
+					table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
+					
+				}
+				
+				else {
+				
+				for (int row = 1; row <= allStuecklisten.size(); row++) {
+//				      for (int col = 0; col < numColumns; col++) {
+
+				    	//Da die erste Reihe der Tabelle als Ãœberschriften der Spalten dient, wird eine neue Variable benÃ¶tigt,
+				    	//die den Index 0 des Vectors auslesen kann.
+				    	final int i = row-1;
+				    	
+				        RadioButton radioButton = new RadioButton("editRadioGroup", "");
+				        CheckBox checkBox = new CheckBox("");
+
+				        deleteBtn.addClickHandler(new deleteClickHandler());
+				    	
+				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
+				        table.setText(row, 0, ""+allStuecklisten.get(i).getId());
+				        table.setText(row, 1, allStuecklisten.get(i).getName());
+				        table.setText(row, 2, "01.01.2015, 11 Uhr");
+				        table.setText(row, 3, "Mario");
+				        table.setText(row, 4, "02.05.2015, 18 Uhr");
+				        
+				        //RadioButton Widget fÃ¼r Single editieren-Button
+				        table.setWidget(row, 5, radioButton);
+				        
+				        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefÃ¼gt
+						radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+				            @Override
+				            public void onValueChange(ValueChangeEvent<Boolean> e) {
+				                if(e.getValue() == true)
+				                {
+				                    editStueckliste = allStuecklisten.get(i);
+				                }
+				            }
+				        }); 
+				        
+				        table.setWidget(row, 6, checkBox);
+				        
+						checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+							@Override
+							public void onValueChange(
+									ValueChangeEvent<Boolean> e) {
+								if (e.getValue() == true) {
+									Stueckliste deleteStueckliste = allStuecklisten.get(i);
+									deleteStuecklisten.add(deleteStueckliste);
+								} else if (e.getValue() == false) {
+									Stueckliste removeStueckliste = allStuecklisten.get(i);
+									deleteStuecklisten.remove(removeStueckliste);
+								}
+							}
+						});
+				        
+				        table.setStyleName("tableBody");
+				        
+				    }
+				
+				}
+				
+				//ClickHandler fÃ¼r Aufruf der Klasse editBauteil
+		        editBtn.addClickHandler(new ClickHandler(){
+					public void onClick(ClickEvent event) {
+						
+						if(editStueckliste==null){
+							Window.alert("Bitte wÃ¤hlen Sie eine StÃ¼ckliste zum editieren aus.");
+						} else {
+							RootPanel.get("content_wrap").clear();
+							//TODO implementieren
 //							RootPanel.get("content_wrap").add(new EditStueckliste(editStueckliste));
-//						}
-//
-//					}
-//
-//				});
-//				
-//				
-//				//TODO: Klären ob das catvm gebraucht wird 
-//				// if (bauteil != null) {
-//				// Das erfolgreiche Hinzufügen eines Kunden wird an den
-//				// Kunden- und
-//				// Kontenbaum propagiert.
-//				// catvm.addCustomer(customer);
-//				// }
-//			}
-//		}
-//	
+						}
+
+					}
+
+				});
+				
+			}
+
+		}
+	 /**
+		 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt lÃ¶scht
+		 * 
+		 * @author Mario Alex
+		 * 
+		 */
+		private class deleteClickHandler implements ClickHandler {
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				if (deleteStuecklisten.isEmpty() == true){
+					Window.alert("Es wurde kein Bauteil zum LÃ¶schen ausgewÃ¤hlt.");
+				}
+				
+				else {
+				for (int i=0;i<=deleteStuecklisten.size();i++) {
+				Stueckliste s = new Stueckliste();
+				s = deleteStuecklisten.get(i);
+					/**
+					 * Die konkrete RPC-Methode fÃ¼r den create-Befehl wird
+					 * aufgerufen. Hierbei werden die gewÃ¼nschten Werte
+					 * mitgeschickt.
+					 */
+					stuecklistenVerwaltung.deleteStueckliste(s,new DeleteStuecklisteCallback());
+					RootPanel.get("content_wrap").clear();
+					RootPanel.get("content_wrap").add(
+							new StuecklisteGeneralView());
+					}
+				}
+			}
+		}
+
+		class DeleteStuecklisteCallback implements AsyncCallback<Void> {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Das Loeschen der Stueckliste ist fehlgeschlagen!");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+
+				Window.alert("Die Stueckliste wurde erfolgreich geloescht.");
+			}
+		}
+	
 }

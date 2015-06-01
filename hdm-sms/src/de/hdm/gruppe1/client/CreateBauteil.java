@@ -15,7 +15,7 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
 /**
- * Mithilfe der Klasse CreateBauteil wird dem User der Applikation ermöglicht,
+ * Mithilfe der Klasse CreateBauteil wird dem User der Applikation ermï¿½glicht,
  * ein Bauteil-Objekt in der Datenbank anzulegen.
  * 
  * @author Mario Theiler
@@ -24,11 +24,11 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 public class CreateBauteil extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für CreateBauteil initialisieren
+	 * GUI-Elemente fï¿½r CreateBauteil initialisieren
 	 */
 	private final Label HeadlineLabel = new Label("Bauteil anlegen");
 	private final Label SublineLabel = new Label(
-			"Um ein Bauteil anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
+			"Um ein Bauteil anzulegen, fï¿½llen Sie bitte alle Felder aus und bestï¿½tigen mit dem <anlegen>-Button ihre Eingabe.");
 	private final Label NameFieldLabel = new Label("Name");
 	private final TextBox NameField = new TextBox();
 	private final Label MaterialFieldLabel = new Label("Materialbezeichnung");
@@ -71,12 +71,12 @@ public class CreateBauteil extends VerticalPanel {
 
 		/**
 		 * Der Create-Button ruft die RPC-Methode auf, welche das Erstellen
-		 * eines Bauteils in der DB ermöglicht.
+		 * eines Bauteils in der DB ermï¿½glicht.
 		 */
 		CreateBauteilButton.addClickHandler(new CreateClickHandler());
 
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 * Abschlieï¿½end wird alles dem RootPanel zugeordnet
 		 */
 		RootPanel.get("content_wrap").add(this);
 
@@ -102,24 +102,24 @@ public class CreateBauteil extends VerticalPanel {
 			String materialBeschreibung = MaterialField.getText();
 
 			/**
-			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
-			 * notwendigen Felder befüllt sind.
+			 * Vor dem Aufruf der RPC-Methode create wird geprï¿½ft, ob alle
+			 * notwendigen Felder befï¿½llt sind.
 			 */
 			if (NameField.getText().isEmpty() != true
 					&& DescriptionField.getText().isEmpty() != true
 					&& MaterialField.getText().isEmpty() != true) {
 
 				/**
-				 * Die konkrete RPC-Methode für den create-Befehl wird
-				 * aufgerufen. Hierbei werden die gewünschten Werte
+				 * Die konkrete RPC-Methode fï¿½r den create-Befehl wird
+				 * aufgerufen. Hierbei werden die gewï¿½nschten Werte
 				 * mitgeschickt.
 				 */
 				stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
 						materialBeschreibung, new CreateBauteilCallback());
 
 				/**
-				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
-				 * zurück zur Übersichtstabelle weiterleiten.
+				 * Nachdem der Create-Vorgang durchgefï¿½hrt wurde, soll die GUI
+				 * zurï¿½ck zur ï¿½bersichtstabelle weiterleiten.
 				 */
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new BauteilGeneralView());
@@ -128,7 +128,7 @@ public class CreateBauteil extends VerticalPanel {
 
 			else {
 
-				Window.alert("Bitte alle Felder ausfüllen.");
+				Window.alert("Bitte alle Felder ausfÃ¼llen.");
 
 			}
 

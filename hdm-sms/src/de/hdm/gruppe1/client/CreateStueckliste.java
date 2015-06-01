@@ -24,34 +24,34 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
 /**
- * Die Klasse CreateStueckliste ermöglicht dem User, Objekte von Stückliste in der Datenbank anzulegen.
+ * Die Klasse CreateStueckliste ermï¿½glicht dem User, Objekte von Stï¿½ckliste in der Datenbank anzulegen.
  * 
  * @author Mario Theiler
  * @version 1.0
  */
 public class CreateStueckliste extends VerticalPanel {
 
-	//Elemente für CreateStückliste initialisieren
-	private final Label HeadlineLabel = new Label ("Stückliste anlegen");
-	private final Label SublineLabel = new Label ("Um eine Stückliste anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
-	private final Label bauteilLabel = new Label("Bauteile für Stückliste");
-	private final Label baugruppeLabel = new Label("Baugruppen für Stückliste");
+	//Elemente fï¿½r CreateStï¿½ckliste initialisieren
+	private final Label HeadlineLabel = new Label ("StÃ¼ckliste anlegen");
+	private final Label SublineLabel = new Label ("Um eine StÃ¼ckliste anzulegen, fï¿½llen Sie bitte alle Felder aus und bestï¿½tigen mit dem <anlegen>-Button ihre Eingabe.");
+	private final Label bauteilLabel = new Label("Bauteile fÃ¼r StÃ¼ckliste");
+	private final Label baugruppeLabel = new Label("Baugruppen fÃ¼r StÃ¼ckliste");
 	private final TextBox NameField = new TextBox ();
-	private final Label BauteilLabel = new Label ("Gewünschte Anzahl von Bauteilen hinzufügen");
-	private final Label BaugruppeLabel = new Label ("Gewünschte Anzahl von Baugruppen hinzufügen");
+	private final Label BauteilLabel = new Label ("GewÃ¼nschte Anzahl von Bauteilen hinzufÃ¼gen");
+	private final Label BaugruppeLabel = new Label ("GewÃ¼nschte Anzahl von Baugruppen hinzufÃ¼gen");
 	private final TextBox amountBauteile = new TextBox();
 	ListBox listBoxBauteile = new ListBox();
-	private final Button collectBtButton = new Button("hinzufügen");
+	private final Button collectBtButton = new Button("hinzufÃ¼gen");
 	private final TextBox amountBaugruppen = new TextBox();
 	ListBox listBoxBaugruppen = new ListBox();
-	private final Button collectBgButton = new Button("hinzufügen");
-	private final Button CreateStuecklisteButton = new Button ("Stückliste anlegen");
+	private final Button collectBgButton = new Button("hinzufÃ¼gen");
+	private final Button CreateStuecklisteButton = new Button ("Stckliste anlegen");
 	private final Label deleteBauteilLabel = new Label("Markierte Bauteile entfernen: ");
 	private final Label deleteBaugruppeLabel = new Label("Markierte Baugruppen entfernen: ");
 	private final Button deleteBauteilButton = new Button("entfernen");
 	private final Button deleteBaugruppeButton = new Button("entfernen");
 	
-	//Panels, um die hinzufügen-Buttons neben den Dropdowns zu platzieren
+	//Panels, um die hinzufï¿½gen-Buttons neben den Dropdowns zu platzieren
 	HorizontalPanel btPanel = new HorizontalPanel();
 	HorizontalPanel bgPanel = new HorizontalPanel();
 	
@@ -60,21 +60,21 @@ public class CreateStueckliste extends VerticalPanel {
 	HorizontalPanel deleteBaugruppePanel = new HorizontalPanel();
 	
 	//TODO implementieren
-	//Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
+	//Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befï¿½llt
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 //	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
 	//TODO implementieren
-	//Ein Bauteil und eine Baugruppe, die der zugehörigen Übersichtstabelle hinzugefügt werden
+	//Ein Bauteil und eine Baugruppe, die der zugehï¿½rigen ï¿½bersichtstabelle hinzugefï¿½gt werden
 	Bauteil bT = new Bauteil();
 //	Baugruppe bG = new Baugruppe();
 	
 	//TODO implementieren
-	//Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu sammeln, bevor die Stückliste gespeichert wird
+	//Vektoren, um die hinzugefï¿½gten Bauteile/Baugruppen in einer ï¿½bersicht zu sammeln, bevor die Stï¿½ckliste gespeichert wird
 	Vector<Bauteil> collectBauteile = new Vector<Bauteil>();
 //	Vector<Baugruppe> collectBaugruppen = new Vector<Baugruppe>();
 	
-	//Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die Stückliste gespeichert wird
+	//Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die Stï¿½ckliste gespeichert wird
 	FlexTable bauteilCollection = new FlexTable();
 	FlexTable baugruppeCollection = new FlexTable();
 	
@@ -89,11 +89,11 @@ public class CreateStueckliste extends VerticalPanel {
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
 		amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
 		
-		//Bauteil vorübergehend statisch befüllt
+		//Bauteil vorï¿½bergehend statisch befï¿½llt
 		bT.setId(1);
 		bT.setName("Schraube");
 		
-		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
+		//Die erste Reihe der Tabelle wird mit ï¿½berschriften vordefiniert
 		bauteilCollection.setText(0, 0, "ID");
 		bauteilCollection.setText(0, 1, "Anzahl");
 		bauteilCollection.setText(0, 2, "Name");
@@ -104,11 +104,11 @@ public class CreateStueckliste extends VerticalPanel {
 		baugruppeCollection.setText(0, 2, "Name");
 		baugruppeCollection.setText(0, 3, "Entfernen");
 		
-		//css für Tabelle definieren
+		//css fï¿½r Tabelle definieren
 		bauteilCollection.setStyleName("tableBody");
 		baugruppeCollection.setStyleName("tableBody");
 	    
-	    //Das FlexTable Widget unterstützt keine Headlines. Daher wird die erste Reihe über folgenden Umweg formatiert
+	    //Das FlexTable Widget unterstï¿½tzt keine Headlines. Daher wird die erste Reihe ï¿½ber folgenden Umweg formatiert
 		bauteilCollection.getCellFormatter().addStyleName(0, 0, "tableHead");
 		bauteilCollection.getCellFormatter().addStyleName(0, 1, "tableHead");
 		bauteilCollection.getCellFormatter().addStyleName(0, 2, "tableHead");
@@ -133,11 +133,11 @@ public class CreateStueckliste extends VerticalPanel {
 				bauteilCollection.setText(index+1, 2, allBauteile.get(index).getName());
 				bauteilCollection.setWidget(index+1, 3, removeBtCheckBox);
 				
-				//ListBox-Element, das hinzugefügt wurde, wird für doppeltes Hinzufügen gesperrt
+				//ListBox-Element, das hinzugefï¿½gt wurde, wird fï¿½r doppeltes Hinzufï¿½gen gesperrt
 				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
 				
 				//TODO fehlerhaft!
-				//Dem globalen Remove-Button wird ein ClickHandler hinzugefügt, der alle markierten Bauteile entfernt
+				//Dem globalen Remove-Button wird ein ClickHandler hinzugefï¿½gt, der alle markierten Bauteile entfernt
 				deleteBauteilButton.addClickHandler(new ClickHandler(){
 					public void onClick(ClickEvent event) {
 						
@@ -145,7 +145,7 @@ public class CreateStueckliste extends VerticalPanel {
 							if (removeBtCheckBox.getValue() == true){
 								bauteilCollection.removeRow(i+1);
 								
-								//ListBox-Element, das entfernt wurde, wird für erneutes Hinzufügen wieder angezeigt
+								//ListBox-Element, das entfernt wurde, wird fï¿½r erneutes Hinzufï¿½gen wieder angezeigt
 								listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("enabled", "enabled");
 								
 							} else {
@@ -158,7 +158,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 				});
 				
-		        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefügt
+		        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefï¿½gt
 //				removeBtBtn.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 //		            @Override
 //		            public void onValueChange(ValueChangeEvent<Boolean> e) {
@@ -188,7 +188,7 @@ public class CreateStueckliste extends VerticalPanel {
 		bgPanel.add(listBoxBaugruppen);
 		bgPanel.add(collectBgButton);
 		
-		//Damit die edit und delete Buttons horizontal angeordnet werden, müssen diese folgenden Panels zugeordnet werden
+		//Damit die edit und delete Buttons horizontal angeordnet werden, mï¿½ssen diese folgenden Panels zugeordnet werden
 		deleteBauteilPanel.add(deleteBauteilLabel);
 		deleteBauteilPanel.add(deleteBauteilButton);
 		
@@ -225,7 +225,7 @@ public class CreateStueckliste extends VerticalPanel {
 	 */
 	
 	/**
-	 * Die Anlage einer Stückliste. 
+	 * Die Anlage einer Stï¿½ckliste. 
 	 * Es erfolgt der Aufruf der Service-Methode "create".
 	 */
 	private class CreateClickHandler implements ClickHandler {
@@ -239,10 +239,10 @@ public class CreateStueckliste extends VerticalPanel {
 				//TODO callback implementieren
 //				stuecklistenVerwaltung.createStueckliste(name, new StuecklisteCallback());
 				
-				//Vector wird erstellt und an die Applikationsschicht übergeben, inkl. dem Namen
+				//Vector wird erstellt und an die Applikationsschicht ï¿½bergeben, inkl. dem Namen
 				Vector<Bauteil> createBauteile = new Vector<Bauteil>();
-				//TODO implementieren, sobald Tabelle aus globalem collection-Vector befüllt wird
-				//bisher noch nicht möglich, da die Tabelle nicht mit einem Vector befüllt wird
+				//TODO implementieren, sobald Tabelle aus globalem collection-Vector befï¿½llt wird
+				//bisher noch nicht mï¿½glich, da die Tabelle nicht mit einem Vector befï¿½llt wird
 //				for(int i = 0; i<bauteilCollection.getRowCount(); i++){
 //					createBauteile.addElement(bauteilCollection.getElement());
 //				}
@@ -254,7 +254,7 @@ public class CreateStueckliste extends VerticalPanel {
 				
 			else {
 					
-				Window.alert("Bitte alle Felder ausfüllen.");
+				Window.alert("Bitte alle Felder ausfï¿½llen.");
 					
 			}
 				
@@ -265,16 +265,16 @@ public class CreateStueckliste extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen der Stückliste ist fehlgeschlagen!");
+			Window.alert("Das Anlegen der StÃ¼ckliste ist fehlgeschlagen!");
 		}
 
 		@Override
 		public void onSuccess(Bauteil bauteil) {
 
-			Window.alert("Die Stückliste wurde erfolgreich angelegt.");
-			//TODO: Klären ob das catvm gebraucht wird 
+			Window.alert("Die StÃ¼ckliste wurde erfolgreich angelegt.");
+			//TODO: Klï¿½ren ob das catvm gebraucht wird 
 			// if (bauteil != null) {
-			// Das erfolgreiche Hinzufügen eines Kunden wird an den
+			// Das erfolgreiche Hinzufï¿½gen eines Kunden wird an den
 			// Kunden- und
 			// Kontenbaum propagiert.
 			// catvm.addCustomer(customer);
@@ -292,13 +292,13 @@ public class CreateStueckliste extends VerticalPanel {
 		@Override
 		public void onSuccess(Vector<Bauteil> alleBauteile) {
 
-			//Befüllung des noch leeren Klassen-Vektors mit Bauteil-Vektor aus RPC-Callback
+			//Befï¿½llung des noch leeren Klassen-Vektors mit Bauteil-Vektor aus RPC-Callback
 			allBauteile = alleBauteile;
 			
-			//Schleife durchläuft kompletten Vektor
+			//Schleife durchlï¿½uft kompletten Vektor
 			for(int c = 0; c <=allBauteile.size(); c++){
 				
-				//Dropdown listBoxBauteile wird mit Bauteil-Objekten (nur Name) befüllt
+				//Dropdown listBoxBauteile wird mit Bauteil-Objekten (nur Name) befï¿½llt
 				listBoxBauteile.addItem(allBauteile.get(c).getName());
 				
 			}
