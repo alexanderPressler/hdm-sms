@@ -80,7 +80,8 @@ public class CreateStueckliste extends VerticalPanel {
 	// geladen werden.
 	public CreateStueckliste() {
 
-		//TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald die TextBox vom User fokussiert wird
+		// TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
+		// die TextBox vom User fokussiert wird
 		NameField.getElement().setPropertyString("placeholder",
 				"Hier bitte Namen eintragen");
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
@@ -141,15 +142,9 @@ public class CreateStueckliste extends VerticalPanel {
 				bauteilPaar.setAnzahl(anzahl);
 				bauteilPaar.setElement(allBauteile.get(index));
 
-				Window.alert("Vor Hinzufügen zum Vektor: "
-						+ collectBauteile.capacity());
-
 				// Dem Vektor aller Bauteile der Stückliste wird das soeben
 				// erstellte ElementPaar hinzugefügt
 				collectBauteile.add(bauteilPaar);
-
-				Window.alert("Nach Hinzufügen zum Vektor: "
-						+ collectBauteile.capacity());
 
 				// ListBox-Element, das hinzugefügt wurde, wird für doppeltes
 				// Hinzufügen gesperrt
@@ -201,17 +196,21 @@ public class CreateStueckliste extends VerticalPanel {
 
 							// Zum einen wird die entsprechende Reihe aus der
 							// FlexTable entfernt.
-							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+							int rowIndex = bauteilCollection.getCellForEvent(
+									event).getRowIndex();
 							bauteilCollection.removeRow(rowIndex);
-							
+
 							// Zum anderen wird das ElementPaar von Bauteil aus
 							// dem collectBauteile Vektor entfernt
-							int x = a-1;
+							int x = a - 1;
 							collectBauteile.remove(x);
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							 listBoxBauteile.getElement().getElementsByTagName("option").getItem(rowIndex).setAttribute("enabled", "enabled");
+							listBoxBauteile.getElement()
+									.getElementsByTagName("option")
+									.getItem(rowIndex)
+									.setAttribute("enabled", "enabled");
 
 						}
 					});
@@ -271,15 +270,9 @@ public class CreateStueckliste extends VerticalPanel {
 				baugruppePaar.setAnzahl(anzahl);
 				baugruppePaar.setElement(allBaugruppen.get(index));
 
-				Window.alert("Vor Hinzufügen zum Vektor: "
-						+ collectBaugruppen.capacity());
-
 				// Dem Vektor aller Baugruppen der Stückliste wird das soeben
 				// erstellte ElementPaar hinzugefügt
 				collectBaugruppen.add(baugruppePaar);
-
-				Window.alert("Nach Hinzufügen zum Vektor: "
-						+ collectBaugruppen.capacity());
 
 				// ListBox-Element, das hinzugefügt wurde, wird für doppeltes
 				// Hinzufügen gesperrt
@@ -332,22 +325,26 @@ public class CreateStueckliste extends VerticalPanel {
 
 							// Zum einen wird die entsprechende Reihe aus der
 							// FlexTable entfernt.
-							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+							int rowIndex = baugruppeCollection.getCellForEvent(
+									event).getRowIndex();
 							baugruppeCollection.removeRow(rowIndex);
-							
+
 							// Zum anderen wird das ElementPaar von Baugruppe
 							// aus dem collectBaugruppen Vektor entfernt
-							int x = b-1;
+							int x = b - 1;
 							collectBauteile.remove(x);
-							
+
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-//							 listBoxBaugruppen.getElement().setAttribute("enabled", "enabled");
-								
-							 listBoxBaugruppen.getElement().getElementsByTagName("option")
-								.getItem(rowIndex).setAttribute("disabled", "disabled");
-							
+							// listBoxBaugruppen.getElement().setAttribute("enabled",
+							// "enabled");
+
+							listBoxBaugruppen.getElement()
+									.getElementsByTagName("option")
+									.getItem(rowIndex)
+									.setAttribute("disabled", "disabled");
+
 						}
 
 					});
@@ -445,7 +442,8 @@ public class CreateStueckliste extends VerticalPanel {
 				for (int c = 0; c <= allBauteile.size(); c++) {
 
 					/**
-					 * Das DropDown wird mithilfe dieser for-Schleife für jedes Bauteil mit dessen Namen befüllt.
+					 * Das DropDown wird mithilfe dieser for-Schleife für jedes
+					 * Bauteil mit dessen Namen befüllt.
 					 */
 					listBoxBauteile.addItem(allBauteile.get(c).getName());
 
@@ -456,32 +454,38 @@ public class CreateStueckliste extends VerticalPanel {
 		}
 	}
 
-	//Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint eine Hinweismeldung.
-	//Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse FieldVerifier geprüft,
-	//ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint ebenfalls eine Hinweismeldung.
+	// Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
+	// eine Hinweismeldung.
+	// Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
+	// FieldVerifier geprüft,
+	// ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
+	// ebenfalls eine Hinweismeldung.
 	private class numericBtHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
 
 			if (amountBauteile.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if(FieldVerifier.istZhal(amountBauteile.getText()) == false){
+			} else if (FieldVerifier.istZhal(amountBauteile.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
 		}
 	}
-	
-	//Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint eine Hinweismeldung.
-	//Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse FieldVerifier geprüft,
-	//ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint ebenfalls eine Hinweismeldung.
+
+	// Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
+	// eine Hinweismeldung.
+	// Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
+	// FieldVerifier geprüft,
+	// ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
+	// ebenfalls eine Hinweismeldung.
 	private class numericBgHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
 
 			if (amountBaugruppen.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if(FieldVerifier.istZhal(amountBaugruppen.getText()) == false){
+			} else if (FieldVerifier.istZhal(amountBaugruppen.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
@@ -489,8 +493,8 @@ public class CreateStueckliste extends VerticalPanel {
 	}
 
 	/**
-	 * Hiermit wird die RPC-Methode aufgerufen, die ein Stücklisten-Objekt in der
-	 * Datenbank anlegt.
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Stücklisten-Objekt in
+	 * der Datenbank anlegt.
 	 * 
 	 * @author Mario
 	 * 
@@ -514,19 +518,6 @@ public class CreateStueckliste extends VerticalPanel {
 				stuecklistenVerwaltung.createStueckliste(nameStueckliste,
 						collectBauteile, collectBaugruppen,
 						new CreateStuecklisteCallback());
-				
-				//Testweise Ausgeben von erstellter Stückliste
-				System.out.println("Name der Stückliste: "+nameStueckliste);
-				System.out.println("Bauteile und Anzahl: ");
-				for(int i = 0; i<collectBauteile.size(); i++){
-					System.out.println(collectBauteile.get(i).getAnzahl()+" ");
-					System.out.println(collectBauteile.get(i).getElement().getName()+", ");
-				}
-				System.out.println("Baugruppen und Anzahl: ");
-				for(int i = 0; i<collectBaugruppen.size(); i++){
-					System.out.println(collectBaugruppen.get(i).getAnzahl()+" ");
-					System.out.println(collectBaugruppen.get(i).getElement().getName()+", ");
-				}
 
 				/**
 				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI

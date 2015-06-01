@@ -73,6 +73,10 @@ public class BauteilGeneralView extends VerticalPanel {
 	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 
+	/**
+	 * Vektor, der alle zu löschenden Bauteile zwischenspeichert. Im Anschluss werden diese Bauteile nacheinander aus
+	 * der DB gelöscht.
+	 */
 	Vector<Bauteil> deleteBauteile = new Vector<Bauteil>();
 
 	/**
@@ -95,6 +99,9 @@ public class BauteilGeneralView extends VerticalPanel {
 		deleteButtonPanel.add(deleteLabel);
 		deleteButtonPanel.add(deleteBtn);
 
+		/**
+		 * Diverse css-Formatierungen
+		 */
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
 		HeadlineLabel.setStyleName("headline");
