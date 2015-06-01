@@ -12,82 +12,163 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.client.EditBauteil.SaveCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
-//Die Klasse EditStueckliste liefert alle benötigten Elemente, um eine bestehende Stückliste im System zu ändern.
+/**
+ * Die Klasse EditStueckliste erhält bei Aufruf ein zuvor ausgewähltes
+ * Stücklisten-Objekt. Dieses kann dann mithilfe dieser Klasse editiert werden.
+ * 
+ * @author Mario Theiler
+ * @version 1.0
+ */
 public class EditStueckliste extends VerticalPanel {
-	
-	//Elemente für EditStueckliste initialisieren
-	private final Label HeadlineLabel = new Label ("Stückliste ändern");
-	private final Label SublineLabel = new Label ("Um eine Stückliste zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
-	private final Label NameFieldLabel = new Label ("Bezeichnung");
-	private final TextBox NameField = new TextBox ();
-	private final Button EditStuecklisteButton = new Button ("ändern");
-			
-	// Remote Service via ClientsideSettings
+
+	/**
+	 * GUI-Elemente für EditStueckliste initialisieren
+	 */
+	private final Label HeadlineLabel = new Label("Stückliste ändern");
+	private final Label SublineLabel = new Label(
+			"Um eine Stückliste zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
+	private final Label IdLabel = new Label("Id");
+	private final TextBox IdField = new TextBox();
+	private final Label NameFieldLabel = new Label("Bezeichnung");
+	private final TextBox NameField = new TextBox();
+	private final Button EditStuecklisteButton = new Button("ändern");
+
+	/**
+	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
+	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
+	 * werden.
+	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
-	
-	//TODO implementieren
-//	public EditStueckliste (Stueckliste editStueckliste) {
-//		
-//		this.add(HeadlineLabel);
-//		this.add(SublineLabel);
-//		this.add(NameFieldLabel);
-//		this.add(NameField);
-//		this.add(EditStuecklisteButton);
-//		
-//		EditStuecklisteButton.setStyleName("Button");
-//		
-//		EditStuecklisteButton.addClickHandler(new EditClickHandler());
-//		
-//		NameField.setText(editStueckliste.getName());
-//		
-//		RootPanel.get("content_wrap").add(this);
-//		
-//	}
-//	
+
+	public EditStueckliste(Stueckliste editStueckliste) {
+
+		/**
+		 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
+		 * zugeordnet, da diese Klasse von VerticalPanel erbt.
+		 */
+		this.add(HeadlineLabel);
+		this.add(SublineLabel);
+		this.add(IdLabel);
+		this.add(IdField);
+		this.add(NameFieldLabel);
+		this.add(NameField);
+		this.add(EditStuecklisteButton);
+
+		/**
+		 * Das Id-Textfeld darf nicht verändert werden und wird daher auf
+		 * "ReadOnly" gesetzt.
+		 */
+		IdField.setReadOnly(true);
+
+		/**
+		 * Diverse css-Formatierungen
+		 */
+		EditStuecklisteButton.setStyleName("Button");
+
+		/**
+		 * Der Editieren-Button ruft die RPC-Methode auf, welche das Editieren
+		 * einer Stückliste in der DB ermöglicht.
+		 */
+		EditStuecklisteButton.addClickHandler(new EditClickHandler());
+
+		/**
+		 * In ein Textfeld kann nur ein Text geladen werden, kein int. Daher ist
+		 * dieser Zwischenschritt notwendig: Zwischenspeichern des Werts
+		 * mithilfe Integer, da Integer die toString-Methode unterstützt, ein
+		 * einfacher int jedoch nicht.
+		 * 
+		 */
+		Integer iD = new Integer(editStueckliste.getId());
+
+		/**
+		 * Mithilfe des an diese Klasse übergebenen Stücklisten-Objektes werden
+		 * die Textfelder befüllt.
+		 */
+		IdField.setText(iD.toString());
+		NameField.setText(editStueckliste.getName());
+
+		/**
+		 * Abschließend wird alles dem RootPanel zugeordnet
+		 */
+		RootPanel.get("content_wrap").add(this);
+
+	}
+
 	/*
 	 * Click Handlers.
 	 */
-	
+
 	/**
-	  * Das Ändern einer Stückliste ruft die Service-Methode "edit" auf.
-	  * 
-	  */
-	
-	//TODO implementieren
-//	 private class EditClickHandler implements ClickHandler {
-//	  @Override
-//	  public void onClick(ClickEvent event) {
-//
-////		  if(){
-////			  
-////		  }
-//		  
-//		  Stueckliste s = new Stueckliste();
-//		  s.setName(NameField.getText());
-//		  
-//		  stuecklistenVerwaltung.save(s, new SaveCallback());
-//			
-//		  RootPanel.get("content_wrap").clear();
-//		  RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
-//		   
-//	  }
-//	 }
-//	 
-	 class SaveCallback implements AsyncCallback<Void> {
+	 * Hiermit wird die RPC-Methode aufgerufen, die mithilfe eines
+	 * mitgeschickten Stücklisten-Objektes das bestehende Stücklisten-Objekt in
+	 * der Datenbank ändert. Hierbei ist wichtig, dass keine neue Id vergeben
+	 * wird, da es sich sonst um eine Neuanlage und nicht um einen
+	 * Editier-Vorgang handeln würde.
+	 * 
+	 * @author Mario
+	 * 
+	 */
+	private class EditClickHandler implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
 
-		 @Override
-		 public void onFailure(Throwable caught) {
-			 Window.alert("Die Stückliste wurde nicht editiert.");
+			Stueckliste s = new Stueckliste();
+			/**
+			 * Aus einem Textfeld kann kein Integer-Wert ausgelesen werden,
+			 * daher ist dieser Zwischenschritt notwendig: Auslesen des Id-Werts
+			 * mithilfe Integer, da Integer die toString-Methode unterstützt.
+			 */
+			s.setId(Integer.parseInt(IdField.getText()));
+			s.setName(NameField.getText());
+
+			/**
+			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
+			 * notwendigen Felder befüllt sind.
+			 */
+			if (NameField.getText().isEmpty() != true) {
+				/**
+				 * Die konkrete RPC-Methode für den editier-Befehl wird
+				 * aufgerufen. Hierbei wird das vorab befüllte Bauteil-Objekt
+				 * mit den gewünschten Werten mitgeschickt.
+				 */
+				stuecklistenVerwaltung.saveStueckliste(s, new SaveCallback());
+
+				/**
+				 * Nachdem der Editier-Vorgang durchgeführt wurde, soll die GUI
+				 * zurück zur Übersichtstabelle weiterleiten.
+				 */
+				RootPanel.get("content_wrap").clear();
+				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
 			}
 
-			@Override
-			public void onSuccess(Void result) {
-				Window.alert("Die Stückliste wurde erfolgreich editiert.");
-				
-				
-				
+			else {
+				Window.alert("Bitte alle Felder ausfüllen.");
 			}
+
 		}
+	}
+
+	/**
+	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
+	 * Update-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
+	 * 
+	 * @author Mario
+	 * 
+	 */
+	class SaveCallback implements AsyncCallback<Void> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Die Stückliste wurde nicht editiert.");
+		}
+
+		@Override
+		public void onSuccess(Void result) {
+			Window.alert("Die Stückliste wurde erfolgreich editiert.");
+
+		}
+	}
 
 }

@@ -208,7 +208,7 @@ public class CreateStueckliste extends VerticalPanel {
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							 listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).setAttribute("enabled", "enabled");
+							 listBoxBauteile.getElement().getElementsByTagName("option").getItem(rowIndex).setAttribute("enabled", "enabled");
 
 						}
 					});

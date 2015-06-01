@@ -193,8 +193,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 							Window.alert("Bitte wählen Sie eine Stückliste zum editieren aus.");
 						} else {
 							RootPanel.get("content_wrap").clear();
-							//TODO implementieren
-//							RootPanel.get("content_wrap").add(new EditStueckliste(editStueckliste));
+							RootPanel.get("content_wrap").add(new EditStueckliste(editStueckliste));
 						}
 
 					}
