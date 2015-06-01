@@ -32,7 +32,9 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
  */
 public class CreateStueckliste extends VerticalPanel {
 
-	// Elemente für CreateStückliste initialisieren
+	/**
+	 * GUI-Elemente für CreateStueckliste initialisieren
+	 */
 	private final Label HeadlineLabel = new Label("Stückliste anlegen");
 	private final Label SublineLabel = new Label(
 			"Um eine Stückliste anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
@@ -78,6 +80,7 @@ public class CreateStueckliste extends VerticalPanel {
 	// geladen werden.
 	public CreateStueckliste() {
 
+		//TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald die TextBox vom User fokussiert wird
 		NameField.getElement().setPropertyString("placeholder",
 				"Hier bitte Namen eintragen");
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
