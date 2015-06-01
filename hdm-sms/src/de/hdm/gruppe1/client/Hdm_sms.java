@@ -11,8 +11,9 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class Hdm_sms implements EntryPoint {
+public class Hdm_sms extends VerticalPanel implements EntryPoint {
 
 	Image welcomeImage = new Image();
 	HTML welcomeText = new HTML("<h1>Wilkommen!</h1><br/><h2>Melden Sie sich mit Ihrem Google-Account im System an,<br/>um Zugriff zum gesamten Funktionsumfang der Applikation<br/>zu bekommen.</h2>");

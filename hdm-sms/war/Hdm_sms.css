@@ -10,6 +10,22 @@
 	opacity: 0.3;
 }
 
+ /*Content Impressum*/
+#Impressum{
+	width:80px;
+	
+	} 
+	
+  .impressumBtn{
+  font-size:11px;
+  background:none;
+  padding:0px;
+  color:#279ad0;
+  text-decoration:underline;
+  border:none;
+  
+  }
+
 /** Tabellenüberschriften */
 .tableHead{
 	font-weight: bold;
