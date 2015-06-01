@@ -85,7 +85,8 @@ public class CreateStueckliste extends VerticalPanel {
 				.setPropertyString("placeholder", "Anzahl");
 
 		// ClickHandler um zu prüfen, ob die Texteingabe numerisch ist
-		collectBtButton.addClickHandler(new numericHandler());
+		collectBtButton.addClickHandler(new numericBtHandler());
+		collectBgButton.addClickHandler(new numericBgHandler());
 
 		// Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 		bauteilCollection.setText(0, 0, "ID");
@@ -339,7 +340,10 @@ public class CreateStueckliste extends VerticalPanel {
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							 listBoxBaugruppen.getElement().getElementsByTagName("option").getItem(x).setAttribute("enabled", "enabled");
+//							 listBoxBaugruppen.getElement().setAttribute("enabled", "enabled");
+								
+							 listBoxBaugruppen.getElement().getElementsByTagName("option")
+								.getItem(rowIndex).setAttribute("disabled", "disabled");
 							
 						}
 
@@ -449,11 +453,32 @@ public class CreateStueckliste extends VerticalPanel {
 		}
 	}
 
-	private class numericHandler implements ClickHandler {
+	//Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint eine Hinweismeldung.
+	//Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse FieldVerifier geprüft,
+	//ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint ebenfalls eine Hinweismeldung.
+	private class numericBtHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
 
-			if (FieldVerifier.istZhal(amountBauteile.getText()) == false) {
+			if (amountBauteile.getText().isEmpty() == true) {
+				Window.alert("Bitte die gewünschte Anzahl eintragen.");
+			} else if(FieldVerifier.istZhal(amountBauteile.getText()) == false){
+				Window.alert("Bitte nur Zahlen eintragen.");
+			}
+
+		}
+	}
+	
+	//Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint eine Hinweismeldung.
+	//Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse FieldVerifier geprüft,
+	//ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint ebenfalls eine Hinweismeldung.
+	private class numericBgHandler implements ClickHandler {
+		@Override
+		public void onClick(ClickEvent event) {
+
+			if (amountBaugruppen.getText().isEmpty() == true) {
+				Window.alert("Bitte die gewünschte Anzahl eintragen.");
+			} else if(FieldVerifier.istZhal(amountBaugruppen.getText()) == false){
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
