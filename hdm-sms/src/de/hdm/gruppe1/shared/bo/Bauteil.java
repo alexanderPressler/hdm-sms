@@ -29,7 +29,7 @@ public class Bauteil extends Element {
 	/**
 	   * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.
 	   * Diese besteht aus dem Text, der durch die <code>toString()</code>-Methode
-	   * der Superklasse erzeugt wird, ergänzt durch den Name  und Teilbeschreibung des 
+	   * der Superklasse erzeugt wird, ergï¿½nzt durch den Name  und Teilbeschreibung des 
 	   * jeweiligen Bauteils.
 	   */
 	@Override
@@ -37,4 +37,5 @@ public class Bauteil extends Element {
 	    return super.toString() + " Teilbeschreibung: " + this.bauteilBeschreibung
 	    		+"Materialbeschreibung"+this.materialBeschreibung;
 	  }
-}
+	
+	}

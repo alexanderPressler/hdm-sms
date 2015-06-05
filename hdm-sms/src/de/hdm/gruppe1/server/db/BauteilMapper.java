@@ -87,6 +87,7 @@ public class BauteilMapper {
 	    	  bauteil.setId(rs.getInt("maxid") + 1);
 
 	        stmt = con.createStatement();
+
 	        stmt.executeUpdate("INSERT INTO Bauteile VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getMaterialBeschreibung() +"', '1', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '2015-05-18 12:12:12');");
 	      
 	      }

@@ -173,7 +173,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
         this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
-//	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
+        this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
 
 	  }
 	  /*
@@ -321,13 +321,19 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * ABSCHNITT, Beginn: Methoden fuer Baugruppe-Objekte
 	   * ***************************************************************************
 	   */
-	public Baugruppe createBaugruppe(String name, Vector<Baugruppe> Baugruppe, User letzterAenderer)
+	public Baugruppe createBaugruppe(String name, Vector<Baugruppe> Baugruppe, Vector<Bauteil> Bauteil )
 		      throws IllegalArgumentException{
 			   
 			    Baugruppe baugruppe= new Baugruppe();
 			    baugruppe.setName(name);
 			    baugruppe.setBaugruppe(Baugruppe);
-				baugruppe.setId(10);
+			
+			
+				System.out.println("Name:" +  baugruppe.getName());	
+			    System.out.println("Baugruppen:" +  baugruppe.getBaugruppe());
+			
+			    // Objekt in der DB speichern.
+			    
 			
 			    // Objekt in der DB speichern.
 			    return this.baugruppenMapper.insert(baugruppe);
@@ -343,35 +349,33 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	public void deleteBaugruppe(Baugruppe bg) throws IllegalArgumentException{}
 
 
-public Vector<Baugruppe> getBaugruppeByName(String name)
-	throws IllegalArgumentException {
-	return this.baugruppenMapper.findByName(name);
+	public Vector<Baugruppe> getBaugruppeByName(String name)
+			throws IllegalArgumentException {
+		return this.baugruppenMapper.findByName(name);
 }
+	 
 
 	@Override
-	public Baugruppe getBaugruppeById(int id) throws IllegalArgumentException {
+	public Baugruppe getBaugruppeById(int id) 
+			throws IllegalArgumentException{
 	    return this.baugruppenMapper.findById(id);
 	}
 
 	@Override
-	public Vector<Baugruppe> getAllBaugruppen()	throws IllegalArgumentException {
+	public Vector<Baugruppe> getAllBaugruppen()	
+			throws IllegalArgumentException {
 		return this.baugruppenMapper.getAll();
 		
 }
 
-
-
 	@Override
-	public Baugruppe createBaugruppe(String name, Vector<Baugruppe> Baugruppe) {
+	public Baugruppe createBaugruppe(String name, Vector<Baugruppe> Baugruppe)
+			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
-	}}
+	}
+}
 
 
-	  /*
-	   * ***************************************************************************
-   * ABSCHNITT, Ende: Methoden für Bugruppe-Objekte
-	   * ***************************************************************************
-   */
 
 

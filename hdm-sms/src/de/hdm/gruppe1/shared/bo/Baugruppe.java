@@ -20,6 +20,8 @@ public class Baugruppe extends Element{
 	}
 	
 	String name;
+
+	private String bauteil;
 	
 	public String getName(){
 		return this.name;
@@ -27,11 +29,9 @@ public class Baugruppe extends Element{
 		public void setName(String name){
 		this.name = name;
 	}
-		public void add(Baugruppe deleteBaugruppe) {
-			// TODO Auto-generated method stub
 			
-		}
-		
+	
+	
 		
 	  /**
 	   * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.

@@ -24,7 +24,6 @@ public class ClientsideSettings extends CommonSettings {
 
 	private static SmsAsync stuecklistenVerwaltung = null;
 	private static SmsAsync baugruppenVerwaltung = null;
-
 	/**
 	 * Name des Client-seitigen Loggers.
 	 */

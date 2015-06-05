@@ -8,9 +8,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 	/**
-	* Die Klasse Impressum ist notwendig, um nach TMG �5 den Betreiber der Website eindeutig identifizieren zu k�nnen.
+	* Die Klasse Impressum ist notwendig, um nach TMG §5 den Betreiber der Website eindeutig identifizieren zu können.
 	* Dieses Impressum ist mithilfe eines Buttons von jeder Unterseite der Anwendung aus zu erreichen.
-	* <p>Im Footer der html-Seite ist ein eigens angelegter Bereich f�r den Button vorhanden.
+	* <p>Im Footer der html-Seite ist ein eigens angelegter Bereich für den Button vorhanden.
 	* 
 	* @author Mario Theiler
 	* @version 1.0
@@ -20,11 +20,13 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 		public void onLoad(){
 	    
 	    	Button impressumBtn = new Button("Impressum");
-	    	impressumBtn.setStylePrimaryName("Button");
+	    	impressumBtn.setStylePrimaryName("impressumBtn");
+	    	
+	    	final Button goBackBtn = new Button("zurück");
 	        
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
-	        		"<h2>Angaben gemäß 5 TMG:</h2>"+
+	        		"<h2>Angaben gemäß § 5 TMG:</h2>"+
 	        		"<p>Mario Theiler<br />"+
 	        		"Nobelstraße 10<br />"+
 	        		"70569 Stuttgart"+
@@ -35,13 +37,21 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	        		"<td>0711 8923 10</td></tr>"+
 	        		"<tr><td>E-Mail:</td>"+
 	        		"<td>info@hdm-stuttgart.de</td>"+
-	        		"</tr></table>"
+	        		"</tr></table><p>"
 	        		);
 	        
 	        impressumBtn.addClickHandler(new ClickHandler() {
 	        	public void onClick(ClickEvent event) {     	
 	        		RootPanel.get("content_wrap").clear();
+	        		RootPanel.get("content_wrap").add(goBackBtn);
 	        		RootPanel.get("content_wrap").add(html);
+	        	}
+	        });
+	        
+	        goBackBtn.addClickHandler(new ClickHandler() {
+	        	public void onClick(ClickEvent event) {
+	        		RootPanel.get("content_wrap").clear();
+	        		RootPanel.get("content_warp").add(new Hdm_sms());
 	        	}
 	        });
 	        

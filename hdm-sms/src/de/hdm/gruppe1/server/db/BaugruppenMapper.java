@@ -3,12 +3,15 @@
  */
 package de.hdm.gruppe1.server.db;
 
-import java.sql.*;
+
 import java.util.Vector;
-
-import com.google.appengine.api.users.User;
-
 import de.hdm.gruppe1.shared.bo.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+
 
 /**
  * @author Andreas Herrmann
@@ -98,7 +101,7 @@ public class BaugruppenMapper {
 	
 	public Baugruppe findById (int id){
 		Connection con = DBConnection.connection();
-	Baugruppe baugruppe = null;
+		Baugruppe baugruppe = null;
 		try{
 			Statement stmt = con.createStatement();
 			//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies �ber eine Instanz der Klasse Integer geschehen
@@ -122,7 +125,8 @@ public class BaugruppenMapper {
 			e.printStackTrace();
 		}
 		return baugruppe;}
-	
+
+		
 	
 	public Vector<Baugruppe> findByName(String name){
 		Vector<Baugruppe> vBaugruppe = new Vector<Baugruppe>();

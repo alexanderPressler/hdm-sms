@@ -23,6 +23,7 @@ import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /*
  * Die Klasse StuecklisteGeneralView liefert eine Übersicht mit allen vorhandenen Stücklisten im System
@@ -56,7 +57,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
 	//Vektor wird temporär mit zu löschenden Stücklisten befüllt, wenn CheckBoxen aus- bzw. abgewählt werden
-	Vector<Baugruppe> deleteBaugruppe = new Vector<Baugruppe>();
+	Vector<Baugruppe> deleteBaugruppen = new Vector<Baugruppe>();
 		
 	// Remote Service via ClientsideSettings
 	SmsAsync baugruppenVerwaltung = ClientsideSettings.getSmsVerwaltung();
@@ -140,7 +141,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 				        RadioButton radioButton = new RadioButton("editRadioGroup", "");
 				        CheckBox checkBox = new CheckBox("");
 
-				        deleteBtn.addClickHandler(new deleteClickHandler());
+			//	        deleteBtn.addClickHandler(new deleteClickHandler());
 				    	
 				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
 				        table.setText(row, 0, ""+allBaugruppen.get(i).getId());
@@ -167,17 +168,18 @@ public class BaugruppeGeneralView extends VerticalPanel {
 				        
 						checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 							@Override
-							public void onValueChange(
-									ValueChangeEvent<Boolean> e) {
+							public void onValueChange(ValueChangeEvent<Boolean> e) {
 								if (e.getValue() == true) {
-									Baugruppe deleteBaugruppe = allBaugruppen.get(i);
-									deleteBaugruppe.add(deleteBaugruppe);
+								Baugruppe deleteBaugruppe = allBaugruppen
+											.get(i);
+								deleteBaugruppen.add(deleteBaugruppe);
 								} else if (e.getValue() == false) {
-									Baugruppe removeBaugruppe = allBaugruppen.get(i);
-									deleteBaugruppe.remove(removeBaugruppe);
+									Baugruppe removeBaugruppen = allBaugruppen.get(i);
+								deleteBaugruppen.remove(removeBaugruppen);
 								}
 							}
 						});
+
 				        
 				        table.setStyleName("tableBody");
 				        
@@ -210,44 +212,44 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		 * @author Mario Alex
 		 * 
 		 */
-		private class deleteClickHandler implements ClickHandler {
-			@Override
-			public void onClick(ClickEvent event) {
-				
-				if (deleteBaugruppe.isEmpty() == true){
-					Window.alert("Es wurde kein Bauteil zum Löschen ausgewählt.");
-				}
-				
-				else {
-				for (int i=0;i<=deleteBaugruppe.size();i++) {
-					Baugruppe bg= new Baugruppe();
-					bg = deleteBaugruppe.get(i);
-					/**
-					 * Die konkrete RPC-Methode für den create-Befehl wird
-					 * aufgerufen. Hierbei werden die gewünschten Werte
-					 * mitgeschickt.
-					 */
-					baugruppenVerwaltung.deleteBaugruppe(bg,new DeleteBaugruppeCallback());
-					RootPanel.get("content_wrap").clear();
-					RootPanel.get("content_wrap").add(
-							new BaugruppeGeneralView());
-					}
-				}
-			}
-		}
-
-		class DeleteBaugruppeCallback implements AsyncCallback<Void> {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Das Loeschen der Baugruppe ist fehlgeschlagen!");
-			}
-
-			@Override
-			public void onSuccess(Void result) {
-
-				Window.alert("Die Baugruppe wurde erfolgreich geloescht.");
-			}
-		}
+////		private class deleteClickHandler implements ClickHandler {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				
+//				if (deleteBaugruppe.isEmpty() == true){
+//					Window.alert("Es wurde kein Bauteil zum Löschen ausgewählt.");
+//				}
+//				
+//				else {
+//				for (int i=0;i<=deleteBaugruppe.size();i++) {
+//					Baugruppe bg= new Baugruppe();
+//					bg = deleteBaugruppe.get(i);
+//					/**
+//					 * Die konkrete RPC-Methode für den create-Befehl wird
+//					 * aufgerufen. Hierbei werden die gewünschten Werte
+//					 * mitgeschickt.
+//					 */
+//					baugruppenVerwaltung.deleteBaugruppe(bg,new DeleteBaugruppeCallback());
+//					RootPanel.get("content_wrap").clear();
+//					RootPanel.get("content_wrap").add(
+//							new BaugruppeGeneralView());
+//					}
+//				}
+//			}
+//		}
+//
+//		class DeleteBaugruppeCallback implements AsyncCallback<Void> {
+//
+//			@Override
+//			public void onFailure(Throwable caught) {
+//				Window.alert("Das Loeschen der Baugruppe ist fehlgeschlagen!");
+//			}
+//
+//			@Override
+//			public void onSuccess(Void result) {
+//
+//				Window.alert("Die Baugruppe wurde erfolgreich geloescht.");
+//			}
+//		}
 	
 }

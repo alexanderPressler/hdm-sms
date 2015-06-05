@@ -54,16 +54,17 @@ public interface SmsAsync {
 	 * Baugruppen Async
 	 */
 	
-	void createBaugruppe(String name, Vector<Baugruppe> Baugruppe,
+	void createBaugruppe(String name, 
+			Vector<Baugruppe> Baugruppe,
 			AsyncCallback<Baugruppe> callback);
+	
 	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
 	
 	void saveBaugruppe(Baugruppe bg, AsyncCallback<Void> callback);
 
 	void deleteBaugruppe(Baugruppe bg, AsyncCallback<Void> callback);
 
-	void getBaugruppeByName(String name,
-			AsyncCallback<Vector<Baugruppe>> callback);
+	void getBaugruppeByName(String name,AsyncCallback<Vector<Baugruppe>> callback);
 	
 	void getBaugruppeById(int id, AsyncCallback<Baugruppe> callback);
 	

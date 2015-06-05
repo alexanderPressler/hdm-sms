@@ -105,7 +105,9 @@ public interface Sms extends RemoteService {
 
   
 	
-	Baugruppe createBaugruppe(String name, Vector<Baugruppe> Baugruppe);
+	Baugruppe createBaugruppe(String name,
+			Vector<Baugruppe> Baugruppe)
+					throws IllegalArgumentException;
 	
 
 	public void saveBaugruppe (Baugruppe bg)
@@ -115,8 +117,7 @@ public interface Sms extends RemoteService {
 	
 	Vector<Baugruppe> getBaugruppeByName(String name);
 	
-	Baugruppe getBaugruppeById(int id)
-			 throws IllegalArgumentException;
+	Baugruppe getBaugruppeById(int id);
 	
 	Vector<Baugruppe> getAllBaugruppen();
 

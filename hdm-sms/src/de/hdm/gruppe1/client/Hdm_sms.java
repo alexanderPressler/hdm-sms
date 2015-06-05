@@ -11,8 +11,9 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class Hdm_sms implements EntryPoint {
+public class Hdm_sms extends VerticalPanel implements EntryPoint {
 
 	Image welcomeImage = new Image();
 	HTML welcomeText = new HTML("<h1>Wilkommen!</h1><br/><h2>Melden Sie sich mit Ihrem Google-Account im System an,<br/>um Zugriff zum gesamten Funktionsumfang der Applikation<br/>zu bekommen.</h2>");
@@ -37,6 +38,7 @@ public class Hdm_sms implements EntryPoint {
 		      }
 		};
 		
+		//Neu: MenuBar mit Commands (~ClickHandler)
 		Command createBaugruppe = new Command() {
 		      public void execute() {
 			        RootPanel.get("content_wrap").clear();
@@ -50,7 +52,6 @@ public class Hdm_sms implements EntryPoint {
 		        RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
 		      }
 		};
-
 		
 		Command createStueckliste = new Command() {
 		      public void execute() {
@@ -80,10 +81,10 @@ public class Hdm_sms implements EntryPoint {
 	    bauteilMenu.addItem("Bauteil anlegen", createBauteil);
 	    bauteilMenu.addItem("Alle anzeigen", allBauteile);
 
-	  //Das Menü von Baugruppen erhält folgende Mouse-Over Untermenüs
+	    //Das Menü von Baugruppen erhält folgende Mouse-Over Untermenüs
 	    MenuBar baugruppeMenu = new MenuBar(true);
-	    baugruppeMenu.addItem("Baugruppe anlegen", createBaugruppe);
-	    baugruppeMenu.addItem("Alle anzeigen", allBaugruppen);
+	    baugruppeMenu.addItem("Baugruppe anlegen", testCmd);
+	    baugruppeMenu.addItem("Alle anzeigen", testCmd);
 
 	    //Das Menü von Enderzeugnissen erhält folgende Mouse-Over Untermenüs
 	    MenuBar enderzeugnisMenu = new MenuBar(true);
