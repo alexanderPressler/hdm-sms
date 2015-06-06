@@ -59,6 +59,20 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 		      }
 		};
 		
+		Command report1 = new Command() {
+		      public void execute() {
+		    	  RootPanel.get("content_wrap").clear();
+		    	  RootPanel.get("content_wrap").add(new Strukturstuecklisten());
+		      }
+		};
+		
+		Command report2 = new Command() {
+		      public void execute() {
+		    	  RootPanel.get("content_wrap").clear();
+		    	  RootPanel.get("content_wrap").add(new Materialbedarf());
+		      }
+		};
+		
 		//Neu: MenuBar mit Mouse-Over Untermenüs
 		
 		//Das Menü von Bauteile erhält folgende Mouse-Over Untermenüs
@@ -80,6 +94,11 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 	    MenuBar stuecklisteMenu = new MenuBar(true);
 	    stuecklisteMenu.addItem("Stückliste anlegen", createStueckliste);
 	    stuecklisteMenu.addItem("Alle Anzeigen", allStuecklisten);
+	    
+	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
+	    MenuBar reportMenu = new MenuBar(true);
+	    reportMenu.addItem("Strukturstücklisten", report1);
+	    reportMenu.addItem("Materialbedarf", report2);
 
 	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
@@ -88,6 +107,7 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 	    mainMenu.addItem("Baugruppen", baugruppeMenu);
 	    mainMenu.addItem("Enderzeugnisse", enderzeugnisMenu);
 	    mainMenu.addItem("Stücklisten", stuecklisteMenu);
+	    mainMenu.addItem("Report", reportMenu);
 	    
 	    //Der Default-Text, der beim Aufruf der Applikation angezeigt wird
 	    
