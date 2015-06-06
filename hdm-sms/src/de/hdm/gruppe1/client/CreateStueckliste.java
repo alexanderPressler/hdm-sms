@@ -386,6 +386,8 @@ public class CreateStueckliste extends VerticalPanel {
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
+		amountBauteile.setStyleName("numericInput");
+		amountBaugruppen.setStyleName("numericInput");
 		CreateStuecklisteButton.setStyleName("Button");
 
 		/**

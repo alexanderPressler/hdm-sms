@@ -111,6 +111,7 @@ public class Materialbedarf extends VerticalPanel {
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
+		amountEnderzeugnisse.setStyleName("numericInput");
 		createMaterialbedarfButton.setStyleName("Button");
 		
 		/**

@@ -103,3 +103,7 @@ h1 {
 	height: 100px;
 	word-wrap: break-word;
 }
+
+.numericInput {
+	width: 50px;
+}
