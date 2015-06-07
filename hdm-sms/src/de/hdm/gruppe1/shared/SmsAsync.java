@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.User;
 
 /**
  * Das asynchrone Gegenstück des Interface {@link BankAdministration}. Es wird
@@ -40,4 +41,6 @@ public interface SmsAsync {
 	void deleteStueckliste(Stueckliste s, AsyncCallback<Void> callback);
 
 	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
+
+	void createUser(String googleID, String name, AsyncCallback<User> callback);
 }

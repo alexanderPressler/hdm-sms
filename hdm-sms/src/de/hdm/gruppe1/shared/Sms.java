@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.User;
 
 /**
  * <p>
@@ -89,4 +90,7 @@ public interface Sms extends RemoteService {
 	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
 
 	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	User createUser(String googleID, String name)
+			throws IllegalArgumentException;
 }

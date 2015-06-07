@@ -108,6 +108,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 */
 	private BauteilMapper bauteilMapper = null;
 	private StuecklisteMapper stuecklisteMapper = null;
+	private UserMapper userMapper = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -163,6 +164,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
 	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
+	    this.userMapper = UserMapper.userMapper();
 	  }
 	  /*
 	   * ***************************************************************************
@@ -300,6 +302,46 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+	   * ***************************************************************************
+	   */
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Beginn: Methoden für User-Objekte
+	   * ***************************************************************************
+	   */
+	  /**
+	   * <p>
+	   * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
+	   * neuen Bauteiles in der Datenbank.
+	   * </p>
+	   * 
+	   * <p>
+	   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
+	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
+	   * </p>
+	   * 
+	   * @see save(Bauteil b)
+	   */
+	  @Override
+	public User createUser(String googleID, String name)
+	      throws IllegalArgumentException {
+	    User u = new User();
+	    u.setGoogleID(googleID);
+	    u.setName(name);
+
+	    /*
+	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
+	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
+	     */
+//	    b.setId(10);
+
+	    // Objekt in der DB speichern.
+	    return this.userMapper.insert(u);
+	  }
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Ende: Methoden für User-Objekte
 	   * ***************************************************************************
 	   */
 	
