@@ -41,7 +41,7 @@ public class FieldVerifier {
 	}
 	
 	public static boolean istZhal(String boxinhalt) {
-		if (boxinhalt.matches("[0-9]")){
+		if (boxinhalt.matches("[0-9]+")){
 			return true;
 		}
 		else {

@@ -1,5 +1,8 @@
 package de.hdm.gruppe1.server;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe1.shared.FieldVerifier;
@@ -7,6 +10,7 @@ import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
 
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -108,6 +112,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 */
 	private BauteilMapper bauteilMapper = null;
 	private StuecklisteMapper stuecklisteMapper = null;
+	private UserMapper userMapper = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -163,6 +168,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	     */
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
 	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
+	    this.userMapper = UserMapper.userMapper();
 	  }
 	  /*
 	   * ***************************************************************************
@@ -195,15 +201,27 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    b.setName(name);
 	    b.setBauteilBeschreibung(bauteilBeschreibung);
 	    b.setMaterialBeschreibung(materialBeschreibung);
+	    
+	    // Erstellungsdatum wird generiert und dem Objekt angehängt
+	    Date date = new Date();
+	    b.setEditDate(date);
+	    
+	  //TODO dynamisch anpassen
+        User editUser = new User();
+        editUser.setName("statischer User");
+        editUser.setId(1);
+        editUser.setGoogleID("000000000000");
+        b.setEditUser(editUser);
 
 	    /*
 	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
 	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
 	     */
-//	    b.setId(10);
 
 	    // Objekt in der DB speichern.
-	    return this.bauteilMapper.insert(b);
+	    
+        
+        return this.bauteilMapper.insert(b);
 	  }
 	  
 
@@ -212,6 +230,19 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public void save(Bauteil b) throws IllegalArgumentException {
+		 
+		//TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+	        b.setEditUser(editUser);
+	    
+	        // Aenderungsdatum wird generiert und dem Objekt angehängt
+	        // Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+		    Date date = new Date();
+		    b.setEditDate(date);
+	        
 		  this.bauteilMapper.update(b);
 	  }
 	  
@@ -269,9 +300,18 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    s.setBauteilPaare(BauteilPaare);
 	    s.setBaugruppenPaare(BaugruppenPaare);
 	    
-	    System.out.println("Stueckliste:" + s.getName());	
-	    System.out.println("Baugruppen:" + s.getBaugruppenPaare());
-	    System.out.println("Bauteile:" + s.getBauteilPaare());
+	 // Erstellungsdatum wird generiert und dem Objekt angehängt
+	    Date date = new Date();
+	    s.setEditDate(date);
+	    
+	  //TODO dynamisch anpassen
+        User editUser = new User();
+        editUser.setName("statischer User");
+        editUser.setId(1);
+        editUser.setGoogleID("000000000000");
+        s.setEditUser(editUser);
+	    
+
 	    // Objekt in der DB speichern.
 	    return this.stuecklisteMapper.insert(s);
 	  }
@@ -288,6 +328,18 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+		
+		// Aenderungsdatum wird generiert und dem Objekt angehängt
+		    Date date = new Date();
+		    s.setEditDate(date);
+		  
+		  //TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+	        s.setEditUser(editUser);
+		  
 		  this.stuecklisteMapper.update(s);
 	  }
 	  /**
@@ -300,6 +352,46 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+	   * ***************************************************************************
+	   */
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Beginn: Methoden für User-Objekte
+	   * ***************************************************************************
+	   */
+	  /**
+	   * <p>
+	   * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
+	   * neuen Bauteiles in der Datenbank.
+	   * </p>
+	   * 
+	   * <p>
+	   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
+	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
+	   * </p>
+	   * 
+	   * @see save(Bauteil b)
+	   */
+	  @Override
+	public User createUser(String googleID, String name)
+	      throws IllegalArgumentException {
+	    User u = new User();
+	    u.setGoogleID(googleID);
+	    u.setName(name);
+
+	    /*
+	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
+	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
+	     */
+//	    b.setId(10);
+
+	    // Objekt in der DB speichern.
+	    return this.userMapper.insert(u);
+	  }
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Ende: Methoden für User-Objekte
 	   * ***************************************************************************
 	   */
 	

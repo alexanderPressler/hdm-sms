@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.shared.bo;
 
+import java.util.Date;
+
 
 public abstract class Element extends BusinessObject {
 	
@@ -9,6 +11,24 @@ public abstract class Element extends BusinessObject {
 	//TODO: Aenderungdatum und User einfuegen + getter/setter 
 	
 	String name = null;
+	User editUser = null;
+	Date editDate = null; 
+
+	public Date getEditDate() {
+		return editDate;
+	}
+
+	public void setEditDate(Date editDate) {
+		this.editDate = editDate;
+	}
+
+	public User getEditUser() {
+		return editUser;
+	}
+
+	public void setEditUser(User editUser) {
+		this.editUser = editUser;
+	}
 
 	public String getName() {
 		return this.name;
@@ -23,7 +43,7 @@ public abstract class Element extends BusinessObject {
 	   */
 	  @Override
 	public String toString() {
-	    return super.toString() + " Elementname: #" + this.name;
+	    return super.toString() + " Elementname:" + this.name;
 	  }
 
 	  /**
