@@ -11,11 +11,12 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class Hdm_sms implements EntryPoint {
+public class Hdm_sms extends VerticalPanel implements EntryPoint {
 
 	Image welcomeImage = new Image();
-	HTML welcomeText = new HTML("<h1>Wilkommen!</h1><br/><h1>Melden Sie sich mit Ihrem Google-Account im System an,<br/>um Zugriff zum gesamten Funktionsumfang der Applikation<br/>zu bekommen.</h1>");
+	HTML welcomeText = new HTML("<h1>Wilkommen!</h1><br/><h2>Melden Sie sich mit Ihrem Google-Account im System an,<br/>um Zugriff zum gesamten Funktionsumfang der Applikation<br/>zu bekommen.</h2>");
 
 	/**
 	 * This is the entry point method.
@@ -58,6 +59,20 @@ public class Hdm_sms implements EntryPoint {
 		      }
 		};
 		
+		Command report1 = new Command() {
+		      public void execute() {
+		    	  RootPanel.get("content_wrap").clear();
+		    	  RootPanel.get("content_wrap").add(new Strukturstuecklisten());
+		      }
+		};
+		
+		Command report2 = new Command() {
+		      public void execute() {
+		    	  RootPanel.get("content_wrap").clear();
+		    	  RootPanel.get("content_wrap").add(new Materialbedarf());
+		      }
+		};
+		
 		//Neu: MenuBar mit Mouse-Over Untermenüs
 		
 		//Das Menü von Bauteile erhält folgende Mouse-Over Untermenüs
@@ -79,6 +94,11 @@ public class Hdm_sms implements EntryPoint {
 	    MenuBar stuecklisteMenu = new MenuBar(true);
 	    stuecklisteMenu.addItem("Stückliste anlegen", createStueckliste);
 	    stuecklisteMenu.addItem("Alle Anzeigen", allStuecklisten);
+	    
+	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
+	    MenuBar reportMenu = new MenuBar(true);
+	    reportMenu.addItem("Strukturstücklisten", report1);
+	    reportMenu.addItem("Materialbedarf", report2);
 
 	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
@@ -87,6 +107,7 @@ public class Hdm_sms implements EntryPoint {
 	    mainMenu.addItem("Baugruppen", baugruppeMenu);
 	    mainMenu.addItem("Enderzeugnisse", enderzeugnisMenu);
 	    mainMenu.addItem("Stücklisten", stuecklisteMenu);
+	    mainMenu.addItem("Report", reportMenu);
 	    
 	    //Der Default-Text, der beim Aufruf der Applikation angezeigt wird
 	    

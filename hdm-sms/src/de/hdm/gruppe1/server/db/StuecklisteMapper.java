@@ -128,9 +128,7 @@ public class StuecklisteMapper {
 		try {
 			Statement stmt = con.createStatement();
 
-			stmt.executeUpdate("UPDATE `stuecklisten` SET `name`='"
-					+ stueckliste.getName() + "',`name`='"
-					+ stueckliste.getId() + ";");
+			stmt.executeUpdate("UPDATE `Stueckliste` SET `name`='" + stueckliste.getName()  + "' WHERE `sl_ID`='"+stueckliste.getId()+"';");
 
 		} catch (SQLException e2) {
 			e2.printStackTrace();
