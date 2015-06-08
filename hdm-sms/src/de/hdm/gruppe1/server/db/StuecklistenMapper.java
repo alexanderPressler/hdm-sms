@@ -41,25 +41,52 @@ public class StuecklistenMapper {
 			if(rs.next()){
 				stueckliste.setId(rs.getInt("sl_ID"));
 				//Wenn die Stueckliste eine ID bekommen hat, dann können die Elemente hinzugefügt werden
-				for(int i=0;i<stueckliste.size();i++){
+				//Bauteile hinzufügen
+				for(int i=0;i<stueckliste.getBauteilPaare.size;i++){
 					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
 					Integer stuecklistenID = new Integer(stueckliste.getId());
-					Integer anzahl = new Integer(stueckliste.get(i).getAnzahl());
-					Integer elementID = new Integer(stueckliste.get(i).getElement().getId());
-					
-					//Herausfinden, ob das Element im StuecklistenPaar von der Klasse Bauteil ist
-					if(stueckliste.get(i).getElement().getClass()==Bauteil.class){
-						//Bauteil hinzufügen
-						stmt.executeUpdate("INSERT INTO 'StuecklistenBauteile' ('stueckliste','anzahl','bauteil') VALUES ('"+stuecklistenID.toString()+"','"
-									+anzahl.toString()+"','"+elementID.toString()+"');");
-					}
-					//Oder, ob das Element im StuecklistenPaar von der Klasse Baugruppe ist
-					else if(stueckliste.get(i).getElement().getClass()==Baugruppe.class){
-						//Baugruppe hinzufügen
-						stmt.executeUpdate("INSERT INTO 'StuecklistenBaugruppe' ('stueckliste','anzahl','baugruppe') VALUES ('"+stuecklistenID.toString()+"','"
-									+anzahl.toString()+"','"+elementID.toString()+"');");
-					}
+					Integer anzahl = new Integer(stueckliste.getBauteilPaare.get(i).getAnzahl());
+					Integer elementID = new Integer(stueckliste.getBauteilPaare.get(i).getElement().getId());
+					//MaxID von StuecklistenBauteile abfragen
+					rs = stmt.executeQuery("SELECT MAX(sbt_ID) AS maxid "
+					          + "FROM StuecklistenBauteile;");
+
+					     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+					     if (rs.next()) {
+					        /*
+					         * a erhält den bisher maximalen, nun um 1 inkrementierten
+					         * Primärschlüssel.
+					         */
+					    	Integer sbt_ID = new Integer((rs.getInt("maxid")+1));
+					      }  
+					//Bauteil hinzufügen
+					stmt.executeUpdate("INSERT INTO 'StuecklistenBauteile' VALUES('"+sbt_ID.toString()+"','"+stuecklistenID.toString()+"','"
+							+anzahl.toString()+"','"+elementID.toString()+"');");
 				}
+				
+				//Baugruppen hinzufügen
+				for(int i=0;i<stueckliste.getBaugruppenPaare.size;i++){
+					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+					Integer stuecklistenID = new Integer(stueckliste.getId());
+					Integer anzahl = new Integer(stueckliste.getBaugruppenPaare.get(i).getAnzahl());
+					Integer elementID = new Integer(stueckliste.getBaugruppenPaare.get(i).getElement().getId());
+					//MaxID von StuecklistenBauteile abfragen
+					rs = stmt.executeQuery("SELECT MAX(sbg_ID) AS maxid "
+					          + "FROM StuecklistenBaugruppe;");
+
+					     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+					     if (rs.next()) {
+					        /*
+					         * a erhält den bisher maximalen, nun um 1 inkrementierten
+					         * Primärschlüssel.
+					         */
+					    	Integer sbg_ID = new Integer((rs.getInt("maxid")+1));
+					      }  
+					//Baugruppe hinzufügen
+					stmt.executeUpdate("INSERT INTO 'StuecklistenBugruppe' VALUES('"+sbg_ID.toString()+"','"+stuecklistenID.toString()+"','"
+							+anzahl.toString()+"','"+elementID.toString()+"');");
+				}
+					      
 			}
 		}
 		catch(SQLException e){
