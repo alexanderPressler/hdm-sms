@@ -105,50 +105,49 @@ public class StuecklistenMapper {
 			//Zuerst die Daten der Stueckliste ändern
 			stmt.executeUpdate("UPDATE 'Stueckliste' SET 'name'='"+stueckliste.getName()+"','ersteller'='"+erstellerID.toString()+"','datum'='"
 					+stueckliste.getAenderungsDatum().toString().substring(0,19)+"' WHERE 'sl_ID'="+stuecklistenID.toString()+"';");
-			//Dann ggf. neue Elemente hinzufügen
-			for(int i=0;i<stueckliste.size();i++){
-				Integer elementID = new Integer(stueckliste.get(i).getElement().getId());
-				//Herausfinden, ob das aktuelle Element schon Teil der Stueckliste ist
-				ResultSet rs = stmt.executeQuery("SELECT 'stueckliste','anzahl','bauteil' AS 'elementID' FROM 'StuecklistenBauteile' WHERE 'stueckliste'='"
-						+stuecklistenID.toString()+" AND 'elementID='"+elementID.toString()+"' UNION ALL SELECT 'stueckliste','anzahl','baugruppe' AS "
-						+"'elementID' FROM 'StuecklistenBaugruppe' WHERE stueckliste'='"+stuecklistenID.toString()+"' AND elementID='"+elementID.toString()+";");
-				//Wenn es schon ein Teil ist, dann herausfinden ob die Anzahl nicht übereinstimmt
-				if(rs.next() && stueckliste.get(i).getAnzahl!=rs.getInt("anzahl")){
-					//Wenn die Anzahl nicht übereinstimmt, dann ein Update vornehmen
-					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
-					Integer anzahl = new Integer(stueckliste.get(i).getAnzahl());
-					
-					//Herausfinden, ob das Element im StuecklistenPaar von der Klasse Bauteil ist
-					if(stueckliste.get(i).getElement().getClass()==Bauteil.class){
-						//Anzahl des Bauteils korrigieren
-						stmt.executeUpdate("UPDATE 'StuecklistenBauteile' SET 'anzahl'='"+anzahl.toString()+"' WHERE 'sbt_ID'='"+elementID.toString()+"';");
+			//Bauteile der STueckliste aus der DB Abfragen
+			ResultSet rs = stmt.executeQuery("SELECT * FROM StuecklistenBauteile WHERE 'stueckliste' = '"+stuecklistenID+"';");
+			while(rs.next()){
+				Boolean exists=false;
+				for(int i=0; i<stueckliste.getBauteilPaare().size();i++){
+					if(rs.getInt("bauteil")==stueckliste.getBauteilPaare.get(i).getElement().getId()){
+						exists=true;
+						break;
 					}
-					//Oder, ob das Element im StuecklistenPaar von der Klasse Baugruppe ist
-					else if(stueckliste.get(i).getElement().getClass()==Baugruppe.class){
-						//Anzahl des Bauteils korrigieren
-						stmt.executeUpdate("UPDATE 'StuecklistenBaugruppe' SET 'anzahl'='"+anzahl.toString()+"' WHERE 'sbg_ID'='"+elementID.toString()+"';");
-					}
-				}
-				//Wenn das Element noch kein Teil ist...
-				else{
-					//... es hinzufügen
-					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
-					Integer anzahl = new Integer(stueckliste.get(i).getAnzahl());
-					
-					//Herausfinden, ob das Element im StuecklistenPaar von der Klasse Bauteil ist
-					if(stueckliste.get(i).getElement().getClass()==Bauteil.class){
-						//Bauteil hinzufügen
-						stmt.executeUpdate("INSERT INTO 'StuecklistenBauteile' ('stueckliste','anzahl','bauteil') VALUES ('"+stuecklistenID.toString()+"','"
-									+anzahl.toString()+"','"+elementID.toString()+"');");
-					}
-					//Oder, ob das Element im StuecklistenPaar von der Klasse Baugruppe ist
-					else if(stueckliste.get(i).getElement().getClass()==Baugruppe.class){
-						//Baugruppe hinzufügen
-						stmt.executeUpdate("INSERT INTO 'StuecklistenBaugruppe' ('stueckliste','anzahl','baugruppe') VALUES ('"+stuecklistenID.toString()+"','"
-									+anzahl.toString()+"','"+elementID.toString()+"');");
+					if(exists==false){
+						stmt.executeUpdate("DELETE FROM StuecklisteBauteile WHERE 'sbt_ID'='"+rs.getInt("sbt_ID")+"';");
 					}
 				}
 			}
+			for(int i=0;i<stueckliste.getBauteilPaare().size();i++){
+				Boolean exists=false;
+				rs.beforeFirst();
+				while(rs.next()){
+					if(rs.getInt("bauteil")==stueckliste.getBauteilPaare().get(i).getElement().getId()){
+						exists=true;
+						break;
+					}
+					if(exists==false){
+						//MaxID von StuecklistenBauteile abfragen
+						ResultSet rs2 = stmt.executeQuery("SELECT MAX(sbt_ID) AS maxid "
+						          + "FROM StuecklistenBauteile;");
+
+						     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+						     if (rs2.next()) {
+						        /*
+						         * a erhält den bisher maximalen, nun um 1 inkrementierten
+						         * Primärschlüssel.
+						         */
+						    	Integer sbt_ID = new Integer((rs2.getInt("maxid")+1));
+						    	//Bauteil hinzufügen
+						    	stmt.executeUpdate("INSERT INTO StuecklistenBauteile VALUES('"+sbt_ID+"','"+stuecklistenID.toString()+"','"
+						    			+stueckliste.getBauteilPaare().get(i).getElement().getAnzahl()+"','"+stueckliste.getBauteilPaare().get(i).getElement().getId()+"');");
+						     }
+					}
+				}
+			}
+			
+			
 		}
 		catch(SQLException e){
 			e.printStackTrace();
