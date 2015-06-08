@@ -160,10 +160,10 @@ public class StuecklisteGeneralView extends VerticalPanel {
 					// geschrieben
 					table.setText(row, 0, "" + allStuecklisten.get(i).getId());
 					table.setText(row, 1, allStuecklisten.get(i).getName());
-					table.setText(row, 2, "01.01.2015, 11 Uhr");
-					table.setText(row, 3, "Mario");
-					table.setText(row, 4, "02.05.2015, 18 Uhr");
-
+					table.setText(row, 2, allStuecklisten.get(i).getCreationDate().toString());
+					table.setText(row, 3, allStuecklisten.get(i).getEditUser().getName());
+					table.setText(row, 4, allStuecklisten.get(i).getEditDate().toString());
+					
 					// RadioButton Widget für Single editieren-Button
 					table.setWidget(row, 5, radioButton);
 
