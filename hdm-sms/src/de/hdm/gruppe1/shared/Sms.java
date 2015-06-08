@@ -12,6 +12,7 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Element;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.User;
 /**
  * <p>
  * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Banken.
@@ -92,8 +93,18 @@ public interface Sms extends RemoteService {
 	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
 
 	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+
+	User createUser(String googleID, String name)
+			throws IllegalArgumentException;
 	
-	Baugruppe createBaugruppe(String name, Stueckliste stueckliste) throws IllegalArgumentException;
+
+	
+	// Baugruppe
+	
+	
+	
+	Vector<Baugruppe> getAllBaugruppen()
+			throws IllegalArgumentException;
 	
 	public void save (Baugruppe bg)
 			 throws IllegalArgumentException;
@@ -105,7 +116,11 @@ public interface Sms extends RemoteService {
 	
 	Baugruppe getBaugruppeById(int id)
 			 throws IllegalArgumentException;
+
+	Baugruppe createBaugruppe(String name, Stueckliste stueckliste)
+			throws IllegalArgumentException;
+
+
 	
-	Vector<Baugruppe> getAllBaugruppen()
-	throws IllegalArgumentException;
+	
 }

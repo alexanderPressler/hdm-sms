@@ -5,7 +5,6 @@ package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
 import java.util.Vector;
-import com.google.appengine.api.users.User;
 import de.hdm.gruppe1.shared.bo.*;
 
 /**
@@ -80,7 +79,7 @@ public class BaugruppenMapper {
 		       * Primärschlüsselwert ist.
 		       */
 			
-			  ResultSet rs = stmt.executeQuery("SELECT MAX(teilnummer) AS maxid "
+			  ResultSet rs = stmt.executeQuery("SELECT MAX(bg_ID) AS maxid "
 			          + "FROM Baugruppe ");
 			  
 			// Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
@@ -93,8 +92,8 @@ public class BaugruppenMapper {
 
 		        stmt = con.createStatement();
 
-		        stmt.executeUpdate("INSERT INTO Baugruppe VALUES ('"+ baugruppe.getId() +"', '1', '"+ baugruppe.getName() +"', '2015-05-18 12:12:12');");
-			      
+		        stmt.executeUpdate("INSERT INTO Baugruppe VALUES ('"+ baugruppe.getId() +"', '"+ baugruppe.getName() +"', '1', '1', '2015-05-18 12:12:12');");
+		        
 		      }
 		    }
 		    catch (SQLException e2) {
@@ -167,17 +166,30 @@ public class BaugruppenMapper {
 	      Statement stmt = con.createStatement();
 
 	      //Ergebnis soll anhand der Id sortiert werden
-	      ResultSet rs = stmt.executeQuery("SELECT * FROM `Baugruppe` ORDER BY `teilnummer`");
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON 'Baugruppe.bearbeitet_Von'='User.userID';");
+	 //     ResultSet rs = stmt.executeQuery("SELECT * FROM `Baugruppe` ORDER BY `bg_ID`");
 
 	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 	      // erstellt.
 	      while (rs.next()) {
-	        Baugruppe baugruppe = new Baugruppe();
-	        baugruppe.setId(rs.getInt("teilnummer"));
-	        baugruppe.setName(rs.getString("name"));
-
-	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
-	        result.addElement(baugruppe);
+	    	  Baugruppe baugruppe = new Baugruppe();
+		    	baugruppe.setId(rs.getInt("bg_ID"));
+		    	baugruppe.setName(rs.getString("name"));
+		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
+		    	StuecklisteMapper slm = StuecklisteMapper.stuecklisteMapper();
+		    	baugruppe.setStueckliste(slm.findById(rs.getInt("stueckliste")));
+		    	
+		    	//Neuen User erzeugen
+		    	User user = new User();
+		    	user.setId(rs.getInt("userID"));
+		    	user.setName(rs.getString("eMail"));
+		    	user.setGoogleID(rs.getString("googleID"));
+		    	baugruppe.setEditUser(user);
+		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
+				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
+				baugruppe.setEditDate(timestamp);
+				//Baugruppe der ArrayList hinzufügen
+				result.addElement(baugruppe);
 	        
 	      }
 	    }

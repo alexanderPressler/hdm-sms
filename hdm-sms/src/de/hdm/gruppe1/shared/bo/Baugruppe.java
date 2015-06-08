@@ -1,6 +1,10 @@
 package de.hdm.gruppe1.shared.bo;
 
+import java.util.Vector;
+
 public class Baugruppe extends Element{
+	
+
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -35,6 +39,10 @@ public class Baugruppe extends Element{
 	  public String toString() {
 	    return super.toString() + this.name;
 	  }
+	public void add(Baugruppe deleteBaugruppe) {
+		// TODO Auto-generated method stub
+		
+	}
 
 
 	}

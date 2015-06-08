@@ -1,9 +1,8 @@
 package de.hdm.gruppe1.server;
 
-
-
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe1.shared.FieldVerifier;
@@ -11,6 +10,7 @@ import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
 
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -107,6 +107,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	private Bauteil b = null;
 	private Baugruppe bg= null;
 	private Stueckliste s = null;
+	private Enderzeugnis e = null;
 
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte
@@ -115,6 +116,9 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	private BauteilMapper bauteilMapper = null;
 	private BaugruppenMapper baugruppenMapper = null;
 	private StuecklisteMapper stuecklisteMapper = null;
+	private EnderzeugnisMapper enderzeugnisMapper = null;
+	private UserMapper userMapper = null;
+
 
 
 
@@ -174,6 +178,8 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
         this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
         this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
+        this.enderzeugnisMapper = EnderzeugnisMapper.enderzeugnisMapper();
+        this.userMapper = UserMapper.userMapper();
 
 	  }
 	  /*
@@ -201,21 +207,33 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * @see createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
 	   */
 	  @Override
-	  public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
+		public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
 		      throws IllegalArgumentException {
 		    Bauteil b = new Bauteil();
 		    b.setName(name);
 		    b.setBauteilBeschreibung(bauteilBeschreibung);
 		    b.setMaterialBeschreibung(materialBeschreibung);
+		    
+		    // Erstellungsdatum wird generiert und dem Objekt angehängt
+		    Date date = new Date();
+		    b.setEditDate(date);
+		    
+		  //TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+	        b.setEditUser(editUser);
 
 		    /*
 		     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
 		     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
 		     */
-//		    b.setId(10);
 
 		    // Objekt in der DB speichern.
-		    return this.bauteilMapper.insert(b);
+		    
+	        
+	        return this.bauteilMapper.insert(b);
 		  }
 		  
 
@@ -224,6 +242,19 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		   */
 		  @Override
 		public void save(Bauteil b) throws IllegalArgumentException {
+			 
+			//TODO dynamisch anpassen
+		        User editUser = new User();
+		        editUser.setName("statischer User");
+		        editUser.setId(1);
+		        editUser.setGoogleID("000000000000");
+		        b.setEditUser(editUser);
+		    
+		        // Aenderungsdatum wird generiert und dem Objekt angehängt
+		        // Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+			    Date date = new Date();
+			    b.setEditDate(date);
+		        
 			  this.bauteilMapper.update(b);
 		  }
 		  
@@ -281,16 +312,25 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		    s.setBauteilPaare(BauteilPaare);
 		    s.setBaugruppenPaare(BaugruppenPaare);
 		    
-		    System.out.println("Stueckliste:" + s.getName());	
-		    System.out.println("Baugruppen:" + s.getBaugruppenPaare());
-		    System.out.println("Bauteile:" + s.getBauteilPaare());
+		 // Erstellungsdatum wird generiert und dem Objekt angehängt
+		    Date date = new Date();
+		    s.setEditDate(date);
+		    
+		  //TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+	        s.setEditUser(editUser);
+		    
+
 		    // Objekt in der DB speichern.
 		    return this.stuecklisteMapper.insert(s);
 		  }
 		  /**
 		   * Löschen einer Stueckliste 
 		   */
-	
+		  @Override
 		public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
 		 
 		    this.stuecklisteMapper.delete(s);
@@ -298,20 +338,72 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		  /**
 		   * Speichern eines Bauteils.
 		   */
-	
+		  @Override
 		public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+			
+			// Aenderungsdatum wird generiert und dem Objekt angehängt
+			    Date date = new Date();
+			    s.setEditDate(date);
+			  
+			  //TODO dynamisch anpassen
+		        User editUser = new User();
+		        editUser.setName("statischer User");
+		        editUser.setId(1);
+		        editUser.setGoogleID("000000000000");
+		        s.setEditUser(editUser);
+			  
 			  this.stuecklisteMapper.update(s);
 		  }
 		  /**
 		   * Auslesen aller Stuecklisten.
 		   */
-
+		  @Override
 		public Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException {
 		    return this.stuecklisteMapper.findAll();
 		  }
 		  /*
 		   * ***************************************************************************
 		   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+		   * ***************************************************************************
+		   */
+		  
+		  /*
+		   * ***************************************************************************
+		   * ABSCHNITT, Beginn: Methoden für User-Objekte
+		   * ***************************************************************************
+		   */
+		  /**
+		   * <p>
+		   * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
+		   * neuen Bauteiles in der Datenbank.
+		   * </p>
+		   * 
+		   * <p>
+		   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
+		   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
+		   * </p>
+		   * 
+		   * @see save(Bauteil b)
+		   */
+		  @Override
+		public User createUser(String googleID, String name)
+		      throws IllegalArgumentException {
+		    User u = new User();
+		    u.setGoogleID(googleID);
+		    u.setName(name);
+
+		    /*
+		     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
+		     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
+		     */
+//		    b.setId(10);
+
+		    // Objekt in der DB speichern.
+		    return this.userMapper.insert(u);
+		  }
+		  /*
+		   * ***************************************************************************
+		   * ABSCHNITT, Ende: Methoden für User-Objekte
 		   * ***************************************************************************
 		   */
 		
@@ -322,16 +414,18 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	   * ***************************************************************************
 	   */
 	
-	public Baugruppe createBaugruppe(String name, Stueckliste s, User letzterAenderer)
+		@Override
+	public Baugruppe createBaugruppe(String name, Stueckliste stueckliste)
 		      throws IllegalArgumentException{
 			   
 			    Baugruppe bg = new Baugruppe();
-			    bg.setStueckliste(s);
 			    bg.setName(name);
-				bg.setId(10);
+			    stueckliste = stuecklisteMapper.insert(stueckliste);
+				bg.setStueckliste(stueckliste);
 			
 			    // Objekt in der DB speichern.
 			    return this.baugruppenMapper.insert(bg);
+			    
 	
 
 	}
@@ -364,14 +458,71 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 		
 }
 
-	@Override
-	public Baugruppe createBaugruppe(String name, Stueckliste s)
-			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}}
+	
+	
 	  /*
 	   * ***************************************************************************
    * ABSCHNITT, Ende: Methoden fÃ¼r Bugruppe-Objekte
 	   * ***************************************************************************
    */
+
+/*
+ * ***************************************************************************
+ * ABSCHNITT, Beginn: Methoden fuer Enderzeugnis-Objekte
+ * ***************************************************************************
+ */
+
+//public Enderzeugnis createEnderzeugnis(String name, Stueckliste s, User letzterAenderer)
+//	      throws IllegalArgumentException{
+		   
+//		    Enderzeugnis e = new Enderzeugnis();
+//		    e.setStueckliste(s);
+//		    e.setName(name);
+//			e.setId(10);
+		
+		    // Objekt in der DB speichern.
+//		    return this.enderzeugnisMapper.insert(e);
+
+
+//}
+// @Override
+ public void save (Enderzeugnis e) throws IllegalArgumentException {
+//		enderzeugnisMapper.update(e);
+ }
+
+// @Override
+public void delete (Enderzeugnis e) throws IllegalArgumentException{
+//	this.enderzeugnisMapper.delete(e);
+
+}
+
+// @Override
+// public Vector<Enderzeugnis> getEnderzeugnisByName(String name)
+//		throws IllegalArgumentException {
+//		return this.enderzeugnisMapper.findByName(name);
+//	}
+
+
+// @Override
+// public Enderzeugnis getEnderzeugnisById(int id) throws IllegalArgumentException {
+ // return this.enderzeugnisMapper.findById(id);
+// }
+
+// @Override
+// public Vector<Enderezeugnisse> getAllEnderzeugnisse()	throws IllegalArgumentException {
+//	return this.enderzeugnisMapper.getAll();
+	
+// }
+
+// @Override
+public Enderzeugnis createEnderzeugnis (String name, Stueckliste s)
+		throws IllegalArgumentException {
+	return null;
+}}
+/*
+ * ***************************************************************************
+* ABSCHNITT, Ende: Methoden fÃ¼r Enderzeugnis-Objekte
+ * ***************************************************************************
+*/
+
+
