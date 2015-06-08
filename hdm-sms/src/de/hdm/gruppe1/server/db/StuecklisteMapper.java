@@ -77,6 +77,9 @@ public class StuecklisteMapper {
 	 */
 	public Stueckliste insert(Stueckliste stueckliste) {
 		Connection con = DBConnection.connection();
+		
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+		Integer erstellerID = new Integer(stueckliste.getEditUser().getId());
 
 		try {
 			Statement stmt = con.createStatement();
@@ -113,6 +116,57 @@ public class StuecklisteMapper {
 				//TODO Tabellenspalte "ersteller" aus DB löschen. Anschließend Statement hier anpassen (herauslöschen)
 				// Jetzt erst erfolgt die tatsächliche Einfügeoperation
 				stmt.executeUpdate("INSERT INTO `Stueckliste` VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '"+ stueckliste.getEditDate() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getCreationDate() +"');");
+			
+				//Bauteile hinzufügen
+				for(int i=0;i<stueckliste.getBauteilPaare().size();i++){
+					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+					Integer stuecklistenID = new Integer(stueckliste.getId());
+					Integer anzahl = new Integer(stueckliste.getBauteilPaare().get(i).getAnzahl());
+					Integer elementID = new Integer(stueckliste.getBauteilPaare().get(i).getElement().getId());
+					//MaxID von StuecklistenBauteile abfragen
+					rs = stmt.executeQuery("SELECT MAX(sbt_ID) AS maxid "
+					          + "FROM StuecklistenBauteile;");
+
+					     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+					     if (rs.next()) {
+					        /*
+					         * a erhält den bisher maximalen, nun um 1 inkrementierten
+					         * Primärschlüssel.
+					         */
+					    	 Integer sbt_ID = new Integer((rs.getInt("maxid")+1));
+					    	 
+						     //Bauteil hinzufügen
+						     stmt.executeUpdate("INSERT INTO StuecklistenBauteile VALUES('"+sbt_ID.toString()+"','"+stuecklistenID+"','"
+						    		 +anzahl+"','"+elementID+"');");
+					     }  
+
+				}
+				
+				//Baugruppen hinzufügen
+				for(int i=0;i<stueckliste.getBaugruppenPaare().size();i++){
+					//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+					Integer stuecklistenID = new Integer(stueckliste.getId());
+					Integer anzahl = new Integer(stueckliste.getBaugruppenPaare().get(i).getAnzahl());
+					Integer elementID = new Integer(stueckliste.getBaugruppenPaare().get(i).getElement().getId());
+					//MaxID von StuecklistenBauteile abfragen
+					rs = stmt.executeQuery("SELECT MAX(sbg_ID) AS maxid "
+					          + "FROM StuecklistenBaugruppe;");
+
+					     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+					     if (rs.next()) {
+					        /*
+					         * a erhält den bisher maximalen, nun um 1 inkrementierten
+					         * Primärschlüssel.
+					         */
+					    	Integer sbg_ID = new Integer((rs.getInt("maxid")+1));
+					    	
+							//Baugruppe hinzufügen
+							stmt.executeUpdate("INSERT INTO StuecklistenBaugruppe VALUES('"+sbg_ID+"','"+stuecklistenID+"','"
+									+anzahl+"','"+elementID+"');");
+					      }  
+
+				}
+				
 			}
 		} 
 		catch (SQLException e2) {
@@ -154,10 +208,60 @@ public class StuecklisteMapper {
 	     	  
 	     	 stueckliste.setEditDate(sqlDate);
 
-			stmt.executeUpdate("UPDATE `Stueckliste` SET `name`='" + stueckliste.getName()  +"',bearbeitet_Von='"+ stueckliste.getEditUser().getId() + "',datum='"+ stueckliste.getEditDate() +"' WHERE `sl_ID`='"+stueckliste.getId()+"';");
+			stmt.executeUpdate("UPDATE Stueckliste SET `name`='" + stueckliste.getName()  +"',bearbeitet_Von='"+ stueckliste.getEditUser().getId() + "',datum='"+ stueckliste.getEditDate() +"' WHERE `sl_ID`='"+stueckliste.getId()+"';");
 
+			//Bauteile der STueckliste aus der DB Abfragen
+			ResultSet rs = stmt.executeQuery("SELECT * FROM StuecklistenBauteile WHERE stueckliste = '"+stueckliste.getId()+"';");
+			System.out.println("Select 2");
+			while(rs.next()){
+				Boolean exists=false;
+				int bauteil = rs.getInt("bauteil");
+				//System.out.println("Schleife Inhalt: "+rs.getRow());
+				for(int i=0; i<stueckliste.getBauteilPaare().size();i++){
+					if(bauteil==stueckliste.getBauteilPaare().get(i).getElement().getId()){
+						exists=true;
+						break;
+					}
+					if(exists==false){
+						stmt.executeUpdate("DELETE FROM StuecklistenBauteile WHERE 'sbt_ID'='"+rs.getInt("sbt_ID")+"';");
+					}
+				}
+			}
+			rs = stmt.executeQuery("SELECT * FROM StuecklistenBauteile WHERE stueckliste = '"+stueckliste.getId()+"';");
+			for(int i=0;i<stueckliste.getBauteilPaare().size();i++){
+				System.out.println("Schleife 1:"+i);
+				Boolean exists= new Boolean(false);
+				while(rs.next()){
+					System.out.println("Schleife 2:"+rs.getRow());
+					if(rs.getInt("bauteil")==stueckliste.getBauteilPaare().get(i).getElement().getId()){
+						exists=true;
+					}
+				}
+					System.out.println("vor einsetzen");
+					if(exists==false){
+						System.out.println("Einsetzen");
+						//MaxID von StuecklistenBauteile abfragen
+						ResultSet rs2 = stmt.executeQuery("SELECT MAX(sbt_ID) AS maxid "
+						          + "FROM StuecklistenBauteile;");
+
+						     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+						     if (rs2.next()) {
+						        /*
+						         * a erhält den bisher maximalen, nun um 1 inkrementierten
+						         * Primärschlüssel.
+						         */
+						    	Integer sbt_ID = new Integer((rs2.getInt("maxid")+1));
+						    	//Bauteil hinzufügen
+						    	stmt.executeUpdate("INSERT INTO StuecklistenBauteile VALUES('"+sbt_ID+"','"+stueckliste.getId()+"','"
+						    			+stueckliste.getBauteilPaare().get(i).getAnzahl()+"','"+stueckliste.getBauteilPaare().get(i).getElement().getId()+"');");
+						     }
+					}
+				}
+
+			
 		} catch (SQLException e2) {
 			e2.printStackTrace();
+			System.out.println(e2);
 		}
 
 		// Um Analogie zu insert(Stueckliste a) zu wahren, geben wir a zurück
