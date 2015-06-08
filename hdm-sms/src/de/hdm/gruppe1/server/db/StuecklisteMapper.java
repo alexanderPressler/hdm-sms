@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.User;
 
 /**
  * Mapper-Klasse, die <code>Steuckliste</code>-Objekte auf eine relationale
@@ -91,14 +95,27 @@ public class StuecklisteMapper {
 				 * Primärschlüssel.
 				 */
 				stueckliste.setId(rs.getInt("maxid") + 1);
+				
+		     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	  // die Datenbank zu speichern 
+		     	  Date utilDate = stueckliste.getEditDate();
+		     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+		     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+		     	  df.format(sqlDate);
+		     	  
+		     	  
+		     	  stueckliste.setEditDate(sqlDate);
+		     	  stueckliste.setCreationDate(sqlDate);
+
 
 				stmt = con.createStatement();
 
+				//TODO Tabellenspalte "ersteller" aus DB löschen. Anschließend Statement hier anpassen (herauslöschen)
 				// Jetzt erst erfolgt die tatsächliche Einfügeoperation
-				stmt.executeUpdate("INSERT INTO Stueckliste VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '2015-05-18 12:12:12', '1');");
-
+				stmt.executeUpdate("INSERT INTO `Stueckliste` VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '"+ stueckliste.getEditDate() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getCreationDate() +"');");
 			}
-		} catch (SQLException e2) {
+		} 
+		catch (SQLException e2) {
 			e2.printStackTrace();
 		}
 
@@ -127,10 +144,17 @@ public class StuecklisteMapper {
 
 		try {
 			Statement stmt = con.createStatement();
+			
+			   // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	    	  // die Datenbank zu speichern 
+	     	  Date utilDate = stueckliste.getEditDate();
+	     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	     	  df.format(sqlDate);
+	     	  
+	     	 stueckliste.setEditDate(sqlDate);
 
-			stmt.executeUpdate("UPDATE `stuecklisten` SET `name`='"
-					+ stueckliste.getName() + "',`name`='"
-					+ stueckliste.getId() + ";");
+			stmt.executeUpdate("UPDATE `Stueckliste` SET `name`='" + stueckliste.getName()  +"',bearbeitet_Von='"+ stueckliste.getEditUser().getId() + "',datum='"+ stueckliste.getEditDate() +"' WHERE `sl_ID`='"+stueckliste.getId()+"';");
 
 		} catch (SQLException e2) {
 			e2.printStackTrace();
@@ -184,7 +208,31 @@ public class StuecklisteMapper {
 				Stueckliste stueckliste = new Stueckliste();
 				stueckliste.setId(rs.getInt("sl_ID"));
 				stueckliste.setName(rs.getString("name"));
+				
+				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	  // die Datenbank zu speichern 
+		     	  java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	  java.util.Date utilDate = new java.util.Date(sqlDate.getTime());  
+		     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+		     	  df.format(utilDate);  
+		     	  
+		     	  stueckliste.setEditDate(utilDate);
+		     	  
+					// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	  // die Datenbank zu speichern 
+		     	  java.sql.Timestamp sqlDateCD = rs.getTimestamp("datum");
+		     	  java.util.Date utilDateCD = new java.util.Date(sqlDateCD.getTime());  
+		     	  DateFormat dfCD = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+		     	  dfCD.format(utilDateCD);  
+		     	  
+		     	  stueckliste.setCreationDate(utilDateCD);
 			
+				//TODO dynamisch anpassen
+		        User editUser = new User();
+		        editUser.setName("statischer User");
+		        editUser.setId(1);
+		        editUser.setGoogleID("000000000000");
+		        stueckliste.setEditUser(editUser);
 
 				// Hinzufügen des neuen Objekts zum Ergebnisvektor
 				result.addElement(stueckliste);
@@ -234,6 +282,13 @@ public class StuecklisteMapper {
 				Stueckliste stueckliste = new Stueckliste();
 				stueckliste.setId(rs.getInt("id"));
 				stueckliste.setName(rs.getString("name"));
+				
+				//TODO dynamisch anpassen
+		        User editUser = new User();
+		        editUser.setName("statischer User");
+		        editUser.setId(1);
+		        editUser.setGoogleID("000000000000");
+		        stueckliste.setEditUser(editUser);
 
 				return stueckliste;
 			}

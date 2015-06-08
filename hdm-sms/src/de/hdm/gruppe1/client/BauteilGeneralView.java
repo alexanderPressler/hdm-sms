@@ -1,10 +1,12 @@
 package de.hdm.gruppe1.client;
 
+import java.util.Date;
 import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -72,9 +74,13 @@ public class BauteilGeneralView extends VerticalPanel {
 	 * Vektor, der mit allen Bauteilen aus der DB befüllt wird.
 	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
-	
+
+	/**
+	 * Vektor, der alle zu löschenden Bauteile zwischenspeichert. Im Anschluss werden diese Bauteile nacheinander aus
+	 * der DB gelöscht.
+	 */
 	Vector<Bauteil> deleteBauteile = new Vector<Bauteil>();
-	
+
 	/**
 	 * Remote Service via ClientsideSettings Wird an dieser Stelle einmalig in
 	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
@@ -95,6 +101,9 @@ public class BauteilGeneralView extends VerticalPanel {
 		deleteButtonPanel.add(deleteLabel);
 		deleteButtonPanel.add(deleteBtn);
 
+		/**
+		 * Diverse css-Formatierungen
+		 */
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
 		HeadlineLabel.setStyleName("headline");
@@ -177,100 +186,104 @@ public class BauteilGeneralView extends VerticalPanel {
 			 */
 			allBauteile = alleBauteile;
 
-			if (allBauteile.isEmpty() == true){
-				
+			/**
+			 * Abfangen eines leeren RPC-Vektors mithilfe eines Labels, das sich
+			 * über die komplette Reihe erstreckt.
+			 */
+			if (allBauteile.isEmpty() == true) {
+
 				table.getFlexCellFormatter().setColSpan(1, 0, 7);
 
 				table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
-				
+
 			}
-			
+
 			else {
-			/**
-			 * Die flexTable table wird mithilfe dieser for-Schleife Reihe um
-			 * Reihe für jedes Bauteil befüllt.
-			 */
-			for (int row = 1; row <= allBauteile.size(); row++) {
-
 				/**
-				 * Da die flexTable in Reihen-Index 0 bereits mit den
-				 * Tabellen-Überschriften belegt ist (Begründung siehe weiter
-				 * oben im Code), wird eine "Hilfs-Variable" benötigt, die den
-				 * Tabellen-Index für den Vektor-Index simuliert.
+				 * Die flexTable table wird mithilfe dieser for-Schleife Reihe
+				 * um Reihe für jedes Bauteil befüllt.
 				 */
-				final int i = row - 1;
+				for (int row = 1; row <= allBauteile.size(); row++) {
 
-				CheckBox checkBox = new CheckBox("");
-				RadioButton radioButton = new RadioButton("editRadioGroup", "");
+					/**
+					 * Da die flexTable in Reihen-Index 0 bereits mit den
+					 * Tabellen-Überschriften belegt ist (Begründung siehe
+					 * weiter oben im Code), wird eine "Hilfs-Variable"
+					 * benötigt, die den Tabellen-Index für den Vektor-Index
+					 * simuliert.
+					 */
+					final int i = row - 1;
 
-				/**
-				 * Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben.
-				 */
-				table.setText(row, 0, "" + allBauteile.get(i).getId());
-				table.setText(row, 1, allBauteile.get(i).getName());
-				table.setText(row, 2, allBauteile.get(i)
-						.getMaterialBeschreibung());
-				table.setText(row, 3, allBauteile.get(i)
-						.getBauteilBeschreibung());
-				table.setText(row, 4, "Mario");
-				table.setText(row, 5, "02.05.2015, 18 Uhr");
+					CheckBox checkBox = new CheckBox("");
+					RadioButton radioButton = new RadioButton("editRadioGroup",
+							"");
+					
+					/**
+					 * Pro Vektor-Index wird eine Reihe in die Tabelle
+					 * geschrieben.
+					 */
+					table.setText(row, 0, "" + allBauteile.get(i).getId());
+					table.setText(row, 1, allBauteile.get(i).getName());
+					table.setText(row, 2, allBauteile.get(i)
+							.getMaterialBeschreibung());
+					table.setText(row, 3, allBauteile.get(i)
+							.getBauteilBeschreibung());
+					table.setText(row, 4, allBauteile.get(i).getEditUser().getName());
+					table.setText(row, 5, allBauteile.get(i).getEditDate().toString());
 
-				/**
-				 * An dieser Stelle wird pro Schleifendurchlauf ein RadioButton
-				 * Widget hinzugefügt. Mithilfe der Eigenschaft von "RadioGroup"
-				 * kann jeweils nur ein RadioButton, nach vollständigem Befüllen
-				 * der Tabelle, ausgewählt werden.
-				 */
-				table.setWidget(row, 6, radioButton);
+					/**
+					 * An dieser Stelle wird pro Schleifendurchlauf ein
+					 * RadioButton Widget hinzugefügt. Mithilfe der Eigenschaft
+					 * von "RadioGroup" kann jeweils nur ein RadioButton, nach
+					 * vollständigem Befüllen der Tabelle, ausgewählt werden.
+					 */
+					table.setWidget(row, 6, radioButton);
 
-				/**
-				 * Dieser RadioButton wird pro Reihe mit einem
-				 * ValueChangeHandler erweitert. Dieser erkennt, welcher
-				 * RadioButton ausgewählt ist und befüllt das Klassen-Objekt
-				 * editBauteil von "Bauteil" mit dem Objekt der entsprechenden
-				 * Tabellen-Reihe.
-				 */
-				radioButton
-						.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-							@Override
-							public void onValueChange(
-									ValueChangeEvent<Boolean> e) {
-								if (e.getValue() == true) {
-									editBauteil = allBauteile.get(i);
+					/**
+					 * Dieser RadioButton wird pro Reihe mit einem
+					 * ValueChangeHandler erweitert. Dieser erkennt, welcher
+					 * RadioButton ausgewählt ist und befüllt das Klassen-Objekt
+					 * editBauteil von "Bauteil" mit dem Objekt der
+					 * entsprechenden Tabellen-Reihe.
+					 */
+					radioButton
+							.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+								@Override
+								public void onValueChange(
+										ValueChangeEvent<Boolean> e) {
+									if (e.getValue() == true) {
+										editBauteil = allBauteile.get(i);
+									}
 								}
+							});
+
+					/**
+					 * An dieser Stelle wird pro Schleifendurchlauf ein CheckBox
+					 * Widget hinzugefügt.
+					 */
+					table.setWidget(row, 7, checkBox);
+
+					checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+						@Override
+						public void onValueChange(ValueChangeEvent<Boolean> e) {
+							if (e.getValue() == true) {
+								Bauteil deleteBauteil = allBauteile.get(i);
+								deleteBauteile.add(deleteBauteil);
+							} else if (e.getValue() == false) {
+								Bauteil removeBauteil = allBauteile.get(i);
+								deleteBauteile.remove(removeBauteil);
 							}
-						});
-
-				/**
-				 * An dieser Stelle wird pro Schleifendurchlauf ein CheckBox
-				 * Widget hinzugefügt.
-				 */
-				table.setWidget(row, 7, checkBox);
-				
-				checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-					@Override
-					public void onValueChange(
-							ValueChangeEvent<Boolean> e) {
-						if (e.getValue() == true) {
-							Bauteil deleteBauteil = allBauteile.get(i);
-							deleteBauteile.add(deleteBauteil);
-							Window.alert("Inhalt Vektor: "+deleteBauteile.toString());
-						} else if (e.getValue() == false) {
-							Bauteil removeBauteil = allBauteile.get(i);
-							deleteBauteile.remove(removeBauteil);
-							Window.alert("Gelöscht: "+deleteBauteile.toString());
 						}
-					}
-				});
+					});
 
-				/**
-				 * Die Tabelle erhält ein css-Element für den Body, welches sich
-				 * vom css-Element für die Überschriften unterscheidet.
-				 */
-				table.setStyleName("tableBody");
+					/**
+					 * Die Tabelle erhält ein css-Element für den Body, welches
+					 * sich vom css-Element für die Überschriften unterscheidet.
+					 */
+					table.setStyleName("tableBody");
 
+				}
 			}
-		}
 
 			/**
 			 * ClickHandler für den Aufruf der Klasse editBauteil. Als Attribut
@@ -294,7 +307,7 @@ public class BauteilGeneralView extends VerticalPanel {
 
 		}
 	}
-	
+
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt löscht
 	 * 
@@ -304,21 +317,22 @@ public class BauteilGeneralView extends VerticalPanel {
 	private class deleteClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
-			
-			if (deleteBauteile.isEmpty() == true){
+
+			if (deleteBauteile.isEmpty() == true) {
 				Window.alert("Es wurde kein Bauteil zum Löschen ausgewählt.");
 			}
-			
+
 			else {
-			for (int i=0;i<=deleteBauteile.size();i++) {
-			Bauteil b = new Bauteil();
-			b = deleteBauteile.get(i);
-				/**
-				 * Die konkrete RPC-Methode für den create-Befehl wird
-				 * aufgerufen. Hierbei werden die gewünschten Werte
-				 * mitgeschickt.
-				 */
-				stuecklistenVerwaltung.delete(b,new DeleteBauteilCallback());
+				for (int i = 0; i <= deleteBauteile.size(); i++) {
+					Bauteil b = new Bauteil();
+					b = deleteBauteile.get(i);
+					/**
+					 * Die konkrete RPC-Methode für den create-Befehl wird
+					 * aufgerufen. Hierbei werden die gewünschten Werte
+					 * mitgeschickt.
+					 */
+					stuecklistenVerwaltung.delete(b,
+							new DeleteBauteilCallback());
 				}
 			}
 		}
