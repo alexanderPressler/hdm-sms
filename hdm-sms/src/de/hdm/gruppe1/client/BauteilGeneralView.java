@@ -1,10 +1,12 @@
 package de.hdm.gruppe1.client;
 
+import java.util.Date;
 import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -215,7 +217,7 @@ public class BauteilGeneralView extends VerticalPanel {
 					CheckBox checkBox = new CheckBox("");
 					RadioButton radioButton = new RadioButton("editRadioGroup",
 							"");
-
+					
 					/**
 					 * Pro Vektor-Index wird eine Reihe in die Tabelle
 					 * geschrieben.
@@ -226,8 +228,8 @@ public class BauteilGeneralView extends VerticalPanel {
 							.getMaterialBeschreibung());
 					table.setText(row, 3, allBauteile.get(i)
 							.getBauteilBeschreibung());
-					table.setText(row, 4, "Mario");
-					table.setText(row, 5, "02.05.2015, 18 Uhr");
+					table.setText(row, 4, allBauteile.get(i).getEditUser().getName());
+					table.setText(row, 5, allBauteile.get(i).getEditDate().toString());
 
 					/**
 					 * An dieser Stelle wird pro Schleifendurchlauf ein
@@ -267,13 +269,9 @@ public class BauteilGeneralView extends VerticalPanel {
 							if (e.getValue() == true) {
 								Bauteil deleteBauteil = allBauteile.get(i);
 								deleteBauteile.add(deleteBauteil);
-								Window.alert("Inhalt Vektor: "
-										+ deleteBauteile.toString());
 							} else if (e.getValue() == false) {
 								Bauteil removeBauteil = allBauteile.get(i);
 								deleteBauteile.remove(removeBauteil);
-								Window.alert("Gelöscht: "
-										+ deleteBauteile.toString());
 							}
 						}
 					});
