@@ -15,8 +15,8 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.hdm.gruppe1.client.EnderzeugnisGeneralView.DeleteClickHandler;
-import de.hdm.gruppe1.client.EnderzeugnisGeneralView.GetAllBaugruppenCallback;
+// import de.hdm.gruppe1.client.EnderzeugnisGeneralView.DeleteClickHandler;
+// import de.hdm.gruppe1.client.EnderzeugnisGeneralView.GetAllBaugruppenCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
@@ -73,7 +73,7 @@ public class EnderzeugnisGeneralView extends VerticalPanel {
 				
 		
 
-				stuecklistenVerwaltung.getAllEnderzeugnisse(new GetAllEnderzeugnisseCallback());
+				// stuecklistenVerwaltung.getAllEnderzeugnisse(new GetAllEnderzeugnisseCallback());
 
 				//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 			    table.setText(0, 0, "ID");
