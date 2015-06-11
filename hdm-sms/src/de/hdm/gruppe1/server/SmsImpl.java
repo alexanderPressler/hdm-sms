@@ -113,6 +113,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	private BauteilMapper bauteilMapper = null;
 	private StuecklisteMapper stuecklisteMapper = null;
 	private UserMapper userMapper = null;
+	private BaugruppenMapper baugruppenMapper = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -169,6 +170,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    this.bauteilMapper = BauteilMapper.bauteilMapper();
 	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
 	    this.userMapper = UserMapper.userMapper();
+	    this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
 	  }
 	  /*
 	   * ***************************************************************************
@@ -353,7 +355,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  }
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+	   * ABSCHNITT, Ende: Methoden für Stuecklisten-Objekte
 	   * ***************************************************************************
 	   */
 	  
@@ -394,6 +396,96 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Methoden für User-Objekte
+	   * ***************************************************************************
+	   */
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Methoden für Baugruppen-Objekte
+	   * ***************************************************************************
+	   */
+	  
+	  /**
+	   * <p>
+	   * Anlegen einer neuen Baugruppe . Dies führt implizit zu einem Speichern des
+	   * neuen Stuecklistes in der Datenbank.
+	   * @see createStueckliste(String name)
+	   */
+	  @Override
+	public Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare, 
+			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
+		
+		    
+		    
+		    
+			 
+		  //TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+
+	     // Erstellungsdatum wird generiert und dem Objekt angehäng
+		Date date = new Date();
+		
+		Stueckliste s = new Stueckliste();
+		s.setEditUser(editUser);
+		s.setName(name+"_sl");
+	    s.setBauteilPaare(BauteilPaare);
+	    s.setBaugruppenPaare(BaugruppenPaare);
+	    s.setEditDate(date);
+	    s = this.stuecklisteMapper.insert(s);
+	
+	   
+	    Baugruppe b = new Baugruppe();
+	    b.setEditDate(date);
+	    b.setName(name);
+	    b.setStueckliste(s);
+	      
+	    // Objekt in der DB speichern.
+	    return this.baugruppenMapper.insert(b);
+	  }
+	 
+	  
+	  /**
+	   * Löschen einer Stueckliste 
+	   */
+	  @Override
+	public void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException {
+	 
+	    this.baugruppenMapper.delete(b);
+	  }
+	  /**
+	   * Speichern eines Bauteils.
+	   */
+	  @Override
+	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException {
+		
+		// Aenderungsdatum wird generiert und dem Objekt angehängt
+		    Date date = new Date();
+		    b.setEditDate(date);
+		  
+		  //TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+	        b.setEditUser(editUser);
+		  
+	        this.baugruppenMapper.update(b);
+	  }
+	  /**
+	   * Auslesen aller Stuecklisten.
+	   */
+	  @Override
+	public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
+	    return this.baugruppenMapper.findAll();
+	  }
+	  
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT Ende : Methoden für Baugruppen-Objekte
 	   * ***************************************************************************
 	   */
 	

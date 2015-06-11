@@ -5,6 +5,7 @@ import java.util.Vector;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
@@ -93,4 +94,14 @@ public interface Sms extends RemoteService {
 
 	User createUser(String googleID, String name)
 			throws IllegalArgumentException;
+
+	Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare,
+			Vector<ElementPaar> BaugruppenPaare)
+			throws IllegalArgumentException;
+
+	void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException;
+
+	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException;
+
+	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 }
