@@ -266,7 +266,7 @@ public class StuecklistenMapper {
 	public Vector<Stueckliste> findByName(String name){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
-		Vector<Stueckliste> vStueckliste = new ArrayList<Stueckliste>();
+		<Stueckliste> alStueckliste = new ArrayList<Stueckliste>();
 		try{
 			//Zuerst die Daten der Stuecklisten abfragen
 			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Stueckliste JOIN 'User' ON 'Stueckliste.ersteller'='User.userID' WHERE 'name' LIKE '%"
@@ -340,13 +340,13 @@ public class StuecklistenMapper {
 					stueckliste.add(baugruppe);
 				}
 				//Stueckliste dem Ergebnis hinzufügen
-				vStueckliste.add(stueckliste);
+				alStueckliste.add(stueckliste);
 			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return vStueckliste;
+		return alStueckliste;
 	}
 	
 	public Vector<Stueckliste> getAll(){
