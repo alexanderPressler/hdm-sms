@@ -391,7 +391,7 @@ public class StuecklisteMapper {
 		     	  
 					// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
 		    	  // die Datenbank zu speichern 
-		     	  java.sql.Timestamp sqlDateCD = rs.getTimestamp("datum");
+		     	  java.sql.Timestamp sqlDateCD = rs.getTimestamp("creationDate");
 		     	  java.util.Date utilDateCD = new java.util.Date(sqlDateCD.getTime());  
 		     	  DateFormat dfCD = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
 		     	  dfCD.format(utilDateCD);  
