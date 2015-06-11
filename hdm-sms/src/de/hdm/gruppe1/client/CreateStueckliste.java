@@ -236,7 +236,7 @@ public class CreateStueckliste extends VerticalPanel {
 		a.setName("Name1");
 		b.setName("Name2");
 		c.setName("Name3");
-
+		
 		allBaugruppen.add(a);
 		allBaugruppen.add(b);
 		allBaugruppen.add(c);
@@ -386,6 +386,8 @@ public class CreateStueckliste extends VerticalPanel {
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
+		amountBauteile.setStyleName("numericInput");
+		amountBaugruppen.setStyleName("numericInput");
 		CreateStuecklisteButton.setStyleName("Button");
 
 		/**
@@ -466,7 +468,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 			if (amountBauteile.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZhal(amountBauteile.getText()) == false) {
+			} else if (FieldVerifier.istZahl(amountBauteile.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
@@ -485,7 +487,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 			if (amountBaugruppen.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZhal(amountBaugruppen.getText()) == false) {
+			} else if (FieldVerifier.istZahl(amountBaugruppen.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 

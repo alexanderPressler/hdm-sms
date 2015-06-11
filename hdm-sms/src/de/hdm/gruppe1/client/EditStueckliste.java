@@ -330,7 +330,7 @@ public class EditStueckliste extends VerticalPanel {
 							// Zum anderen wird das ElementPaar von Baugruppe
 							// aus dem collectBaugruppen Vektor entfernt
 							int x = b - 1;
-							collectBauteile.remove(x);
+							collectBaugruppen.remove(x);
 
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
@@ -450,6 +450,8 @@ public class EditStueckliste extends VerticalPanel {
 			 */
 			s.setId(Integer.parseInt(IdField.getText()));
 			s.setName(NameField.getText());
+			s.setBauteilPaare(collectBauteile);
+			s.setBaugruppenPaare(collectBaugruppen);
 
 			/**
 			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
@@ -560,7 +562,7 @@ public class EditStueckliste extends VerticalPanel {
 
 			if (amountBauteile.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZhal(amountBauteile.getText()) == false) {
+			} else if (FieldVerifier.istZahl(amountBauteile.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
@@ -579,7 +581,7 @@ public class EditStueckliste extends VerticalPanel {
 
 			if (amountBaugruppen.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZhal(amountBaugruppen.getText()) == false) {
+			} else if (FieldVerifier.istZahl(amountBaugruppen.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 

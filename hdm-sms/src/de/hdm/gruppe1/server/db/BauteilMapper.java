@@ -209,13 +209,10 @@ public class BauteilMapper {
 	        bauteil.setMaterialBeschreibung(rs.getString("material"));
 	        
 	        // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
-	    	  // die Datenbank zu speichern 
-	     	  java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
-	     	  java.util.Date utilDate = new java.util.Date(sqlDate.getTime());  
-	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
-	     	  df.format(utilDate);  
+	    	 // die Datenbank zu speichern 
+	     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+	     	 bauteil.setEditDate(sqlDate);  
 	     	  
-	     	  bauteil.setEditDate(utilDate);
 	     	  
 
 	        
@@ -280,6 +277,11 @@ public class BauteilMapper {
 			        editUser.setId(rs.getInt("userID"));
 			        editUser.setGoogleID(rs.getString("googleID"));
 			        bauteil.setEditUser(editUser);
+			        
+			        // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			    	 // die Datenbank zu speichern 
+			     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+			     	 bauteil.setEditDate(sqlDate);  
 					
 					return bauteil;
 				}
