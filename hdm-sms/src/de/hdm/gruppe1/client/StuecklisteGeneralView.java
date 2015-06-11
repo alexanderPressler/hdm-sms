@@ -211,6 +211,9 @@ public class StuecklisteGeneralView extends VerticalPanel {
 					if (editStueckliste == null) {
 						Window.alert("Bitte wählen Sie eine Stückliste zum editieren aus.");
 					} else {
+						
+						Window.alert("Name editStueckliste: "+editStueckliste.getName()+ " Vektor Bauteile: "+ editStueckliste.getBauteilPaare().capacity()+ " Vektor Baugruppen: "+editStueckliste.getBaugruppenPaare().capacity());
+						
 						RootPanel.get("content_wrap").clear();
 						RootPanel.get("content_wrap").add(
 								new EditStueckliste(editStueckliste));

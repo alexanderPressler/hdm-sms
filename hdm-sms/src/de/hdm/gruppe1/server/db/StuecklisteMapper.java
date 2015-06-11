@@ -371,7 +371,7 @@ public class StuecklisteMapper {
 			Statement stmt = con.createStatement();
 
 			ResultSet rs = stmt
-					.executeQuery("SELECT * FROM `Stueckliste` ORDER BY `sl_ID`");
+					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.ersteller=User.userID ORDER BY sl_ID");
 
 			// Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 			// erstellt.
@@ -383,33 +383,91 @@ public class StuecklisteMapper {
 				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
 		    	  // die Datenbank zu speichern 
 		     	  java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
-		     	  java.util.Date utilDate = new java.util.Date(sqlDate.getTime());  
-		     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
-		     	  df.format(utilDate);  
-		     	  
-		     	  stueckliste.setEditDate(utilDate);
+		     	  stueckliste.setEditDate(sqlDate);
 		     	  
 					// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
 		    	  // die Datenbank zu speichern 
 		     	  java.sql.Timestamp sqlDateCD = rs.getTimestamp("creationDate");
-		     	  java.util.Date utilDateCD = new java.util.Date(sqlDateCD.getTime());  
-		     	  DateFormat dfCD = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
-		     	  dfCD.format(utilDateCD);  
-		     	  
-		     	  stueckliste.setCreationDate(utilDateCD);
+		     	  stueckliste.setCreationDate(sqlDateCD);
 			
 				//TODO dynamisch anpassen
 		        User editUser = new User();
-		        editUser.setName("statischer User");
-		        editUser.setId(1);
-		        editUser.setGoogleID("000000000000");
+		        editUser.setName(rs.getString("eMail"));
+		        editUser.setId(rs.getInt("userID"));
+		        editUser.setGoogleID(rs.getString("googleID"));
 		        stueckliste.setEditUser(editUser);
+		        
+			      //Bauteile der Stueckliste abfragen
+		        	Statement stmt2=con.createStatement();
+					ResultSet rs2 = stmt2.executeQuery("SELECT * FROM Bauteile JOIN User ON "
+							+ "Bauteile.bearbeitet_Von=User.userID "
+							+ "JOIN StuecklistenBauteile "
+							+ "ON StuecklistenBauteile.bauteil=Bauteile.teilnummer "
+							+ "WHERE StuecklistenBauteile.stueckliste='"+stueckliste.getId()+"';");
+					
+					while(rs2.next()){
+						//Letzter Aenderer anlegen
+						User user = new User();
+						user.setId(rs2.getInt("userID"));
+						user.setName(rs2.getString("eMail"));
+						user.setGoogleID(rs2.getString("googleID"));
+						//Bauteil anlegen
+						Bauteil bauteil = new Bauteil();
+						bauteil.setId(rs2.getInt("teilnummer"));
+						bauteil.setName(rs2.getString("name"));
+						bauteil.setMaterialBeschreibung(rs2.getString("material"));
+						bauteil.setBauteilBeschreibung(rs2.getString("beschreibung"));
+						//User Objekt in bauteil einfügen
+						bauteil.setEditUser(user);
+						//Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
+						Timestamp timestamp = Timestamp.valueOf(rs2.getString("datum"));
+						bauteil.setEditDate(timestamp);
+						//StuecklistenPaar erstellen und bauteil hinzufügen
+						ElementPaar bauteilPaar = new ElementPaar();
+						bauteilPaar.setAnzahl(rs2.getInt("anzahl"));
+						bauteilPaar.setElement(bauteil);
+						//stuecklistenPaar der Stueckliste hinzufügen
+						stueckliste.getBauteilPaare().add(bauteilPaar);
+					}
+					
+					//Baugruppen der Stueckliste Abfragen
+					Statement stmt3=con.createStatement();
+					ResultSet rs3 = stmt3.executeQuery("SELECT * FROM Baugruppe JOIN User ON "
+							+ "Baugruppe.bearbeitet_Von=User.userID "
+							+ "JOIN StuecklistenBaugruppe "
+							+ "ON StuecklistenBaugruppe.baugruppe=Baugruppe.bg_ID "
+							+ "WHERE StuecklistenBaugruppe.stueckliste='"+stueckliste.getId()+"';");
+					while(rs3.next()){
+						//Letzter Aenderer anlegen
+						User user = new User();
+						user.setId(rs3.getInt("userID"));
+						user.setName(rs3.getString("eMail"));
+						user.setGoogleID(rs3.getString("googleID"));
+						//Baugruppe anlegen
+						Baugruppe baugruppe = new Baugruppe();
+						baugruppe.setId(rs3.getInt("bg_ID"));
+						baugruppe.setName(rs3.getString("name"));
+						//User Objekt in baugruppe einfügen
+						baugruppe.setEditUser(user);
+						//Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
+						Timestamp timestamp = Timestamp.valueOf(rs3.getString("datum"));
+						baugruppe.setEditDate(timestamp);
+						//Stueckliste der Baugruppe abfragen und einfügen
+						baugruppe.setStueckliste(findById(rs3.getInt("stueckliste")));
+						//StuecklistenPaar erstellen und bauteil hinzufügen
+						ElementPaar baugruppenPaar = new ElementPaar();
+						baugruppenPaar.setAnzahl(rs3.getInt("anzahl"));
+						baugruppenPaar.setElement(baugruppe);
+						//Baugruppe der stueckliste hinzufügen
+						stueckliste.getBaugruppenPaare().add(baugruppenPaar);
+					}
 
 				// Hinzufügen des neuen Objekts zum Ergebnisvektor
 				result.addElement(stueckliste);
 
 			}
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
 			e.printStackTrace();
 		}
 
