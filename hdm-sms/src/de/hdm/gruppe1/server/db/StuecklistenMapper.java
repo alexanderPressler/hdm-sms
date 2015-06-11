@@ -263,10 +263,10 @@ public class StuecklistenMapper {
 		return stueckliste;
 	}
 	
-	public ArrayList<Stueckliste> findByName(String name){
+	public Vector<Stueckliste> findByName(String name){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
-		ArrayList<Stueckliste> alStueckliste = new ArrayList<Stueckliste>();
+		Vector<Stueckliste> vStueckliste = new ArrayList<Stueckliste>();
 		try{
 			//Zuerst die Daten der Stuecklisten abfragen
 			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Stueckliste JOIN 'User' ON 'Stueckliste.ersteller'='User.userID' WHERE 'name' LIKE '%"
@@ -340,19 +340,19 @@ public class StuecklistenMapper {
 					stueckliste.add(baugruppe);
 				}
 				//Stueckliste dem Ergebnis hinzufügen
-				alStueckliste.add(stueckliste);
+				vStueckliste.add(stueckliste);
 			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return alStueckliste;
+		return vStueckliste;
 	}
 	
-	public ArrayList<Stueckliste> getAll(){
+	public Vector<Stueckliste> getAll(){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
-		ArrayList<Stueckliste> alStueckliste = new ArrayList<Stueckliste>();
+		Vector<Stueckliste> vStueckliste = new Vector<Stueckliste>();
 		try{
 			//Zuerst die Daten der Stuecklisten abfragen
 			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Stueckliste JOIN 'User' ON 'Stueckliste.ersteller'='User.userID';");
@@ -425,13 +425,13 @@ public class StuecklistenMapper {
 					stueckliste.add(baugruppe);
 				}
 				//Stueckliste dem Ergebnis hinzufügen
-				alStueckliste.add(stueckliste);
+				vStueckliste.add(stueckliste);
 			}
 		}
 		catch(SQLException e){
 			e.printStackTrace();
 		}
-		return alStueckliste;
+		return vStueckliste;
 	}
 	public Vector<Stueckliste> findByBauteil (Bauteil bauteil){
 		Vector<Stueckliste> vStueckliste = new Vector<Stueckliste>();
