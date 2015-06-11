@@ -95,14 +95,29 @@ public class EnderzeugnisMapper {
 		Enderzeugnis enderzeugnis = new Enderzeugnis();
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 		Integer enderzeugnisID = new Integer(id);
-		BaugruppenMapper bMapper = BaugruppenMapper.baugruppenMapper();
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'ee_ID'="+enderzeugnisID+"';");
 			if(rs.next()){
 				enderzeugnis.setId(rs.getInt("ee_ID"));
 				enderzeugnis.setName(rs.getString("name"));
-				enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+				
+				// Add User to Enderzeugnis
+				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				UserMapper um = UserMapper.userMapper(); 
+				User zugehörigerUser = um.findByID(zugehörigeUserID);
+				enderzeugnis.setEditUser(zugehörigerUser);
+				
+				// Add Baugruppe to Enderzeugnis
+				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper(); 
+				Baugruppe zugehörigeBaugruppe = bm.findByID(zugehörigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				
+				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	 enderzeugnis.setEditDate(sqlDate);
 			}
 		}
 		catch(SQLException e){
@@ -111,26 +126,26 @@ public class EnderzeugnisMapper {
 		return enderzeugnis;
 	}
 	
-	public Vector<Enderzeugnis> findByName(String name){
-		Connection con = DBConnection.connection();
-		BaugruppenMapper bMapper = BaugruppenMapper.baugruppenMapper();
-		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
-		try{
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'name' LIKE '%"+name+"%';");
-			while(rs.next()){
-				Enderzeugnis enderzeugnis = new Enderzeugnis();
-				enderzeugnis.setId(rs.getInt("ee_ID"));
-				enderzeugnis.setName(rs.getString("name"));
-				enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
-				vEnderzeugnis.addElement(enderzeugnis);
-			}	
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
-		return vEnderzeugnis;
-	}
+//	public Vector<Enderzeugnis> findByName(String name){
+//		Connection con = DBConnection.connection();
+//		BaugruppenMapper bMapper = BaugruppenMapper.baugruppenMapper();
+//		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
+//		try{
+//			Statement stmt = con.createStatement();
+//			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'name' LIKE '%"+name+"%';");
+//			while(rs.next()){
+//				Enderzeugnis enderzeugnis = new Enderzeugnis();
+//				enderzeugnis.setId(rs.getInt("ee_ID"));
+//				enderzeugnis.setName(rs.getString("name"));
+//				enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+//				vEnderzeugnis.addElement(enderzeugnis);
+//			}	
+//		}
+//		catch(SQLException e){
+//			e.printStackTrace();
+//		}
+//		return vEnderzeugnis;
+//	}
 	
 	public Vector<Enderzeugnis> findAll(){
 		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
@@ -146,27 +161,26 @@ public class EnderzeugnisMapper {
 				enderzeugnis.setId(rs.getInt("ee_ID"));
 				enderzeugnis.setName(rs.getString("name"));
 				
+				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	 enderzeugnis.setEditDate(sqlDate);
+				
+				// Add User to Enderzeugnis
+				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				UserMapper um = UserMapper.userMapper(); 
+				User zugehörigerUser = um.findByID(zugehörigeUserID);
+				enderzeugnis.setEditUser(zugehörigerUser);
+				
 				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
 				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper(); 
 				Baugruppe zugehörigeBaugruppe = bm.findByID(zugehörigeBaugruppeID);
-				
 				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
-		    	
 				
-//				//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
-//		    	StuecklisteMapper slm = StuecklisteMapper.stuecklisteMapper();
-//		    	baugruppe.setStueckliste(slm.findById(rs.getInt("stueckliste")));
-//		    	//Neuen User erzeugen
-//		    	User user = new User();
-//		    	user.setId(rs.getInt("userID"));
-//		    	user.setName(rs.getString("eMail"));
-//		    	user.setGoogleID(rs.getString("googleID"));
-//		    	baugruppe.setEditUser(user);
-//		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
-//				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
-//				baugruppe.setEditDate(timestamp);
-//				//Baugruppe der ArrayList hinzufügen
-//				vEnderzeugnis.addElement(enderzeugnis);
+				vEnderzeugnis.addElement(enderzeugnis);
+				
+
+				
 			}
 		}
 		catch(SQLException e){

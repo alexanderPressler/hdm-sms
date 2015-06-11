@@ -105,9 +105,10 @@ public class BaugruppenMapper {
 		    	user.setName(rs.getString("eMail"));
 		    	user.setGoogleID(rs.getString("googleID"));
 		    	baugruppe.setEditUser(user);
-		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
-				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
-				baugruppe.setEditDate(timestamp);
+		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	baugruppe.setEditDate(sqlDate);
 		    }
 		}
 		catch(SQLException e){
@@ -172,9 +173,10 @@ public class BaugruppenMapper {
 		    	user.setName(rs.getString("eMail"));
 		    	user.setGoogleID(rs.getString("googleID"));
 		    	baugruppe.setEditUser(user);
-		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
-				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
-				baugruppe.setEditDate(timestamp);
+		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	baugruppe.setEditDate(sqlDate);
 				//Baugruppe der ArrayList hinzufügen
 				vBaugruppe.addElement(baugruppe);
 			}
