@@ -98,6 +98,7 @@ public class StuecklistenMapper {
 	public Stueckliste update(Stueckliste stueckliste){
 		Connection con = DBConnection.connection();
 		Statement stmt = con.createStatement();
+		Stueckliste dBStueckliste = new Stueckliste();
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
 		Integer stuecklistenID = new Integer(stueckliste.getId());
 		Integer erstellerID = new Integer(stueckliste.getAenderer());
@@ -105,48 +106,52 @@ public class StuecklistenMapper {
 			//Zuerst die Daten der Stueckliste ändern
 			stmt.executeUpdate("UPDATE 'Stueckliste' SET 'name'='"+stueckliste.getName()+"','ersteller'='"+erstellerID.toString()+"','datum'='"
 					+stueckliste.getAenderungsDatum().toString().substring(0,19)+"' WHERE 'sl_ID'="+stuecklistenID.toString()+"';");
-			//Bauteile der STueckliste aus der DB Abfragen
-			ResultSet rs = stmt.executeQuery("SELECT * FROM StuecklistenBauteile WHERE 'stueckliste' = '"+stuecklistenID+"';");
-			while(rs.next()){
+			//Stueckliste aus der DB abfragen
+			dBStueckliste=this.findByID(stueckliste.getId());
+			//Zuerst schauen, ob Bauteile in der DB gelöscht werden müssen
+			for(int i=0; i<dBStueckliste.getBauteilPaare().size();i++){
 				Boolean exists=false;
-				for(int i=0; i<stueckliste.getBauteilPaare().size();i++){
-					if(rs.getInt("bauteil")==stueckliste.getBauteilPaare.get(i).getElement().getId()){
+				//Für jedes Paar in der DB schauen, ob es in der neuen Stueckliste existiert
+				for(int j=0;j<stueckliste.getBauteilPaare().size();j++){
+					if(stueckliste.getBauteilPaare().get(j).getElement().equals(dBStueckliste.getBauteilPaare().get(i).getElement())){
 						exists=true;
-						break;
-					}
-					if(exists==false){
-						stmt.executeUpdate("DELETE FROM StuecklisteBauteile WHERE 'sbt_ID'='"+rs.getInt("sbt_ID")+"';");
 					}
 				}
+				//Wenn das Bauteil in der DB existiert, aber nicht in der neuen Stueckliste, dann aus der DB löschen
+				if(!exists){
+					stmt.executeUpdate("DELETE FROM StuecklistenBauteile WHERE stueckliste='"+stueckliste.getId()+"' AND bauteil='"
+							+dBStueckliste.getBauteilPaare().get(i).getElement().getId()+"';");
+				}
 			}
-			for(int i=0;i<stueckliste.getBauteilPaare().size();i++){
+			//Dann schauen, ob Bauteile der Datenbank hinzugefügt werden müssen
+			for(int i=0; i<stueckliste.getBauteilPaare().size();i++){
 				Boolean exists=false;
-				rs.beforeFirst();
-				while(rs.next()){
-					if(rs.getInt("bauteil")==stueckliste.getBauteilPaare().get(i).getElement().getId()){
+				//Für jedes Paar in der neuen Stueckliste schauen, ob es in der DB existiert
+				for(int j=0; j<dBStueckliste.getBauteilPaare().size();j++){
+					if(dBStueckliste.getBauteilPaare().get(j).getElement().equals(stueckliste.getBauteilPaare().get(i).getElement())){
 						exists=true;
-						break;
 					}
-					if(exists==false){
-						//MaxID von StuecklistenBauteile abfragen
-						ResultSet rs2 = stmt.executeQuery("SELECT MAX(sbt_ID) AS maxid "
-						          + "FROM StuecklistenBauteile;");
+				}
+				//Wenn das Bauteil in der neuen Stueckliste ist, aber nicht in der DB, dann in die DB schreiben
+				if(!exists){
+					//MaxID von StuecklistenBauteile abfragen
+					ResultSet rs = stmt.executeQuery("SELECT MAX(sbt_ID) AS maxid "
+					          + "FROM StuecklistenBauteile;");
 
-						     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
-						     if (rs2.next()) {
-						        /*
-						         * a erhält den bisher maximalen, nun um 1 inkrementierten
-						         * Primärschlüssel.
-						         */
-						    	Integer sbt_ID = new Integer((rs2.getInt("maxid")+1));
-						    	//Bauteil hinzufügen
-						    	stmt.executeUpdate("INSERT INTO StuecklistenBauteile VALUES('"+sbt_ID+"','"+stuecklistenID.toString()+"','"
-						    			+stueckliste.getBauteilPaare().get(i).getElement().getAnzahl()+"','"+stueckliste.getBauteilPaare().get(i).getElement().getId()+"');");
-						     }
-					}
+					     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+					     if (rs.next()) {
+					        /*
+					         * a erhält den bisher maximalen, nun um 1 inkrementierten
+					         * Primärschlüssel.
+					         */
+					    	Integer sbt_ID = new Integer((rs.getInt("maxid")+1));
+					    	//Bauteil hinzufügen
+							stmt.executeUpdate("INSERT INTO 'StuecklistenBauteile' VALUES('"+sbt_ID.toString()+"','"+stuecklistenID.toString()+"','"
+									+stueckliste.getBauteilPaare().get(i).getAnzahl()+"','"+stueckliste.getBauteilPaare().get(i).getElement().getId()+"');");
+					      }  
+					
 				}
 			}
-			
 			
 		}
 		catch(SQLException e){
@@ -225,7 +230,7 @@ public class StuecklistenMapper {
 					stuecklistenPaar.setAnzahl(rs.getInt("StuecklistenBauteile.anzahl"));
 					stuecklistenPaar.setElement(bauteil);
 					//stuecklistenPaar der Stueckliste hinzufügen
-					stueckliste.add(stuecklistenPaar);
+					stueckliste.getBauteilPaare().add(stuecklistenPaar);
 				}
 				//Baugruppen der Stueckliste Abfragen
 				rs = stmt.executeQuery("SELECT * FROM 'StuecklistenBaugruppe' JOIN (SELECT * FROM 'Baugruppe' JOIN 'User' ON 'Baugruppe.bearbeitet_Von'='User.userID')"
@@ -248,7 +253,7 @@ public class StuecklistenMapper {
 					//Stueckliste der Baugruppe abfragen und einfügen
 					baugruppe.setStueckliste(findByID(rs.getInt("Baugruppe.stueckliste")));
 					//Baugruppe der stueckliste hinzufügen
-					stueckliste.add(baugruppe);
+					stueckliste.getBaugruppenPaare().add(baugruppe);
 				}
 			}
 		}
