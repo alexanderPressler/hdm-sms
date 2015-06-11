@@ -236,7 +236,7 @@ public class CreateStueckliste extends VerticalPanel {
 		a.setName("Name1");
 		b.setName("Name2");
 		c.setName("Name3");
-
+		
 		allBaugruppen.add(a);
 		allBaugruppen.add(b);
 		allBaugruppen.add(c);

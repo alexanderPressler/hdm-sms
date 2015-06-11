@@ -211,10 +211,12 @@ public class StuecklisteMapper {
    	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
    	  df.format(sqlDate);
    	  
-   	  stueckliste.setEditDate(sqlDate);
-		
 		try{
 			Statement stmt = con.createStatement();
+			
+			//Das edit-Datum wird erst gesetzt, wenn der UPDATE-Vorgang beginnt
+			stueckliste.setEditDate(sqlDate);
+			
 			//Zuerst die Daten der Stueckliste ändern
 			stmt.executeUpdate("UPDATE Stueckliste SET name='"+stueckliste.getName()+"' ,datum='"
 					+stueckliste.getEditDate().toString().substring(0,19)+"',ersteller='"+erstellerID.toString()+"',bearbeitet_Von='"
@@ -268,6 +270,58 @@ public class StuecklisteMapper {
 					    	//Bauteil hinzufügen
 							stmt.executeUpdate("INSERT INTO StuecklistenBauteile VALUES('"+sbt_ID.toString()+"','"+stuecklistenID.toString()+"','"
 									+stueckliste.getBauteilPaare().get(i).getAnzahl()+"','"+stueckliste.getBauteilPaare().get(i).getElement().getId()+"');");
+					      }  
+					
+				}
+			}
+			
+			//Zuerst schauen, ob Baugruppen in der DB gelöscht werden müssen
+			for(int i=0; i<dBStueckliste.getBaugruppenPaare().size();i++){
+				Boolean exists=false;
+				//Für jedes Paar in der DB schauen, ob es in der neuen Stueckliste existiert
+				for(int j=0;j<stueckliste.getBaugruppenPaare().size();j++){
+					if(stueckliste.getBaugruppenPaare().get(j).getElement().equals(dBStueckliste.getBaugruppenPaare().get(i).getElement())){
+						exists=true;
+					}
+				}
+				//Wenn die Baugruppe in der DB existiert, aber nicht in der neuen Stueckliste, dann aus der DB löschen
+				if(!exists){
+					stmt.executeUpdate("DELETE FROM StuecklistenBaugruppe WHERE stueckliste='"+stueckliste.getId()+"' AND baugruppe='"
+							+dBStueckliste.getBaugruppenPaare().get(i).getElement().getId()+"';");
+				}
+			}
+			//Dann schauen, ob Baugruppen in der Datenbank hinzugefügt werden müssen
+			for(int i=0; i<stueckliste.getBaugruppenPaare().size();i++){
+				Boolean exists=false;
+				//Für jedes Paar in der neuen Stueckliste schauen, ob es in der DB existiert
+				for(int j=0; j<dBStueckliste.getBaugruppenPaare().size();j++){
+					if(dBStueckliste.getBaugruppenPaare().get(j).getElement().equals(stueckliste.getBaugruppenPaare().get(i).getElement())){
+						//Überprüfen, ob die Anzahl übereinstimmt
+						if(dBStueckliste.getBaugruppenPaare().get(j).getAnzahl()!=stueckliste.getBaugruppenPaare().get(i).getAnzahl()){
+							//Wenn nicht, dann Anzahl ändern
+							stmt.executeUpdate("UPDATE StuecklistenBaugruppe SET anzahl='"+stueckliste.getBaugruppenPaare().get(i).getAnzahl()
+									+"' WHERE stueckliste='"+stueckliste.getId()
+									+"' AND baugruppe='"+stueckliste.getBaugruppenPaare().get(i).getElement().getId()+"';");
+						}
+						exists=true;
+					}
+				}
+				//Wenn die Baugruppe in der neuen Stueckliste ist, aber nicht in der DB, dann in die DB schreiben
+				if(!exists){
+					//MaxID von StuecklistenBaugruppe abfragen
+					ResultSet rs = stmt.executeQuery("SELECT MAX(sbt_ID) AS maxid "
+					          + "FROM StuecklistenBaugruppe;");
+
+					     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+					     if (rs.next()) {
+					        /*
+					         * a erhält den bisher maximalen, nun um 1 inkrementierten
+					         * Primärschlüssel.
+					         */
+					    	Integer sbt_ID = new Integer((rs.getInt("maxid")+1));
+					    	//Baugruppe hinzufügen
+							stmt.executeUpdate("INSERT INTO StuecklistenBaugruppe VALUES('"+sbt_ID.toString()+"','"+stuecklistenID.toString()+"','"
+									+stueckliste.getBaugruppenPaare().get(i).getAnzahl()+"','"+stueckliste.getBaugruppenPaare().get(i).getElement().getId()+"');");
 					      }  
 					
 				}
@@ -444,26 +498,30 @@ public class StuecklisteMapper {
 						+ "JOIN StuecklistenBaugruppe "
 						+ "ON StuecklistenBaugruppe.baugruppe=Baugruppe.bg_ID "
 						+ "WHERE StuecklistenBaugruppe.stueckliste='"+stueckliste.getId()+"';");
-//				while(rs.next()){
-//					//Letzter Aenderer anlegen
-//					User user = new User();
-//					user.setId(rs.getInt("userID"));
-//					user.setName(rs.getString("eMail"));
-//					user.setGoogleID(rs.getString("googleID"));
-//					//Baugruppe anlegen
-//					Baugruppe baugruppe = new Baugruppe();
-//					baugruppe.setId(rs.getInt("bg_ID"));
-//					baugruppe.setName(rs.getString("name"));
-//					//User Objekt in baugruppe einfügen
-//					baugruppe.setEditUser(user);
-//					//Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
-//					Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
-//					baugruppe.setEditDate(timestamp);
-//					//Stueckliste der Baugruppe abfragen und einfügen
-//					baugruppe.setStueckliste(findById(rs.getInt("stueckliste")));
-//					//Baugruppe der stueckliste hinzufügen
-//					stueckliste.getBaugruppenPaare().add(baugruppe);
-//				}
+				while(rs.next()){
+					//Letzter Aenderer anlegen
+					User user = new User();
+					user.setId(rs.getInt("userID"));
+					user.setName(rs.getString("eMail"));
+					user.setGoogleID(rs.getString("googleID"));
+					//Baugruppe anlegen
+					Baugruppe baugruppe = new Baugruppe();
+					baugruppe.setId(rs.getInt("bg_ID"));
+					baugruppe.setName(rs.getString("name"));
+					//User Objekt in baugruppe einfügen
+					baugruppe.setEditUser(user);
+					//Timestamp Objekt aus Datumsstring erzeugen, um es in bauteil einzufügen
+					Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
+					baugruppe.setEditDate(timestamp);
+					//Stueckliste der Baugruppe abfragen und einfügen
+					baugruppe.setStueckliste(findById(rs.getInt("stueckliste")));
+					//StuecklistenPaar erstellen und bauteil hinzufügen
+					ElementPaar baugruppenPaar = new ElementPaar();
+					baugruppenPaar.setAnzahl(rs.getInt("anzahl"));
+					baugruppenPaar.setElement(baugruppe);
+					//Baugruppe der stueckliste hinzufügen
+					stueckliste.getBaugruppenPaare().add(baugruppenPaar);
+				}
 
 				return stueckliste;
 			}
