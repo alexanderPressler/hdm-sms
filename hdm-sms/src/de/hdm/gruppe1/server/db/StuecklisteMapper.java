@@ -82,9 +82,6 @@ public class StuecklisteMapper {
 	public Stueckliste insert(Stueckliste stueckliste) {
 		Connection con = DBConnection.connection();
 		
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
-		Integer erstellerID = new Integer(stueckliste.getEditUser().getId());
-
 		try {
 			Statement stmt = con.createStatement();
 

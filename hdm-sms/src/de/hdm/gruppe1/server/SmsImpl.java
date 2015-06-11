@@ -88,7 +88,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @see BankAdministration
  * @see BankAdministrationAsync
  * @see RemoteServiceServlet
- * @author Thies
+ * @author Alexander Pressler & Thies
  */
 @SuppressWarnings("serial")
 public class SmsImpl extends RemoteServiceServlet implements
@@ -114,6 +114,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	private StuecklisteMapper stuecklisteMapper = null;
 	private UserMapper userMapper = null;
 	private BaugruppenMapper baugruppenMapper = null;
+	private EnderzeugnisMapper enderzeugnisMapper = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -171,6 +172,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    this.stuecklisteMapper = StuecklisteMapper.stuecklisteMapper();
 	    this.userMapper = UserMapper.userMapper();
 	    this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
+	    this.enderzeugnisMapper = EnderzeugnisMapper.enderzeugnisMapper();
 	  }
 	  /*
 	   * ***************************************************************************
@@ -448,7 +450,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 
 	  
 	  /**
-	   * Löschen einer Stueckliste 
+	   * Löschen einer Baugruppe 
 	   */
 	  @Override
 	public void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException {
@@ -456,7 +458,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    this.baugruppenMapper.delete(b);
 	  }
 	  /**
-	   * Speichern eines Bauteils.
+	   * Speichern eines Baugruppe.
 	   */
 	  @Override
 	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException {
@@ -475,18 +477,91 @@ public class SmsImpl extends RemoteServiceServlet implements
 	        this.baugruppenMapper.update(b);
 	  }
 	  /**
-	   * Auslesen aller Stuecklisten.
+	   * Auslesen aller Baugruppen.
 	   */
 	  @Override
 	public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
 	    return this.baugruppenMapper.findAll();
-	  }
-	  
-	  
+	  }  
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT Ende : Methoden für Baugruppen-Objekte
 	   * ***************************************************************************
 	   */
-	
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT: Methoden für Enderzeugnis-Objekte
+	   * ***************************************************************************
+	   */
+	  
+	  /**
+	   * <p>
+	   * Anlegen einer neuen Baugruppe . Dies führt implizit zu einem Speichern des
+	   * neuen Stuecklistes in der Datenbank.
+	   * @see createStueckliste(String name)
+	   */
+	  @Override
+	public Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe ) throws IllegalArgumentException {
+		
+		     
+		  //TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+
+	     // Erstellungsdatum wird generiert und dem Objekt angehäng
+		Date date = new Date();
+	    
+	    Enderzeugnis e = new Enderzeugnis();
+	    e.setEditDate(date);
+	    e.setName(name);
+	    e.setBaugruppe(baugruppe);
+	      
+	    // Objekt in der DB speichern.
+	    return this.enderzeugnisMapper.insert(e);
+	  }
+	 
+	  
+	  /**
+	   * Löschen einer Baugruppe 
+	   */
+	  @Override
+	public void deleteEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException {
+	 
+	    this.enderzeugnisMapper.delete(e);
+	  }
+	  /**
+	   * Speichern eines Baugruppe.
+	   */
+	  @Override
+	public void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException {
+		
+		// Aenderungsdatum wird generiert und dem Objekt angehängt
+		    Date date = new Date();
+		    b.setEditDate(date);
+		  
+		  //TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+	        b.setEditUser(editUser);
+		  
+	        this.enderzeugnisMapper.update(e);
+	  }
+	  /**
+	   * Auslesen aller Baugruppen.
+	   */
+	  @Override
+	public Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException {
+	    return this.enderzeugnisMapper.findAll();
+	  }
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT Ende : Methoden für Enderzeugnis-Objekte
+	   * ***************************************************************************
+	   */
 }

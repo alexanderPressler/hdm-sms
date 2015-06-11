@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
+import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.bo.User;
 
@@ -38,7 +39,7 @@ import de.hdm.gruppe1.shared.bo.User;
  * Servlets an.
  * </p>
  * 
- * @author Thies
+ * @author  Alexander Pressler & Thies
  */
 // TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
 @RemoteServiceRelativePath("sms")
@@ -104,4 +105,13 @@ public interface Sms extends RemoteService {
 	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException;
 
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
+
+	Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe)
+			throws IllegalArgumentException;
+
+	void deleteEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException;
+
+	void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException;
+
+	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
 }
