@@ -33,7 +33,7 @@ public class BaugruppenMapper {
 		Integer aendererID = new Integer(baugruppe.getAenderer().getId());
 		Integer stuecklistenID = new Integer(baugruppe.getStueckliste().getId());
 		try{
-			ResultSet rs = stmt.executeQuery("INSERT INTO 'Baugruppe'('name','stueckliste','bearbeitet_Von','datum') VALUES('"+baugruppe.getName()+"','"
+			ResultSet rs = stmt.executeQuery("INSERT INTO 'Baugruppe' VALUES('"+baugruppe.getName()+"','"
 					+stuecklistenID.toString()+"','"+aendererID.toString()+"','"+baugruppe.getAenderungsDatum().toString().substring(0,19)+"');");
 			if(rs.next()){
 				baugruppe.setId(rs.getInt("bg_ID"));
@@ -172,12 +172,12 @@ public class BaugruppenMapper {
 		    	//Neuen User erzeugen
 		    	User user = new User();
 		    	user.setID(rs.getInt("userID"));
-		    	user.setEmail(rs.getString("eMail"));
+		    	user.setName(rs.getString("eMail"));
 		    	user.setGoogleId(rs.getString("googleID"));
-		    	baugruppe.setAenderer(user);
+		    	baugruppe.setEditUser(user);
 		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
 				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
-				baugruppe.setAenderungsDatum(timestamp);
+				baugruppe.setEditDate(timestamp);
 				//Baugruppe der ArrayList hinzufügen
 				vBaugruppe.addElement(baugruppe);
 			}
