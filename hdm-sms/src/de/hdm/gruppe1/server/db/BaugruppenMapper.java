@@ -186,4 +186,19 @@ public class BaugruppenMapper {
 		}
 		return vBaugruppe;
 	}
+	public Baugruppe findBaugruppeByStueckliste(Stueckliste stueckliste){
+		Connection con = DBConnection.connection();
+		Baugruppe baugruppe= null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe WHERE stueckliste='"+stueckliste.getId()+"';");
+			if(rs.next()){
+				baugruppe=this.findByID(rs.getInt("bg_ID"));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return baugruppe;
+	}
 }

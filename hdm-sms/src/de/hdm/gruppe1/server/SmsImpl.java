@@ -1,7 +1,5 @@
 package de.hdm.gruppe1.server;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
 
@@ -10,8 +8,6 @@ import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
 
-import com.google.gwt.i18n.shared.DateTimeFormat;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -326,8 +322,23 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
-	 
-	    this.stuecklisteMapper.delete(s);
+	 	  
+		  BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper();
+		  Baugruppe b = bm.findBaugruppeByStueckliste(s);
+		  
+		  if (b==null){
+			  this.stuecklisteMapper.delete(s);  
+		  }
+		  
+		  //TODO Exception
+		  else {
+			  
+			  System.out.println("Stueckliste kann nicht gelöscht werden: ");
+			  System.out.println("Stueckliste wird verwendet in: "+ b.getName());
+			 
+		  }
+		  
+		  
 	  }
 	  /**
 	   * Speichern eines Bauteils.
