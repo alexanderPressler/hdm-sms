@@ -209,13 +209,10 @@ public class BauteilMapper {
 	        bauteil.setMaterialBeschreibung(rs.getString("material"));
 	        
 	        // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
-	    	  // die Datenbank zu speichern 
-	     	  java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
-	     	  java.util.Date utilDate = new java.util.Date(sqlDate.getTime());  
-	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
-	     	  df.format(utilDate);  
+	    	 // die Datenbank zu speichern 
+	     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+	     	 bauteil.setEditDate(sqlDate);  
 	     	  
-	     	  bauteil.setEditDate(utilDate);
 	     	  
 
 	        
@@ -259,11 +256,8 @@ public class BauteilMapper {
 				// Statement ausfüllen und als Query an die DB schicken
 				// TODO: SQL Statement anpassen 
 				ResultSet rs = stmt
-						.executeQuery("SELECT id, name, bauteilBeschreibung, materialBeschreibung"
-								+ "  FROM bauteile "
-								+ "WHERE id="
-								+ id
-								+ " ORDER BY name");
+						.executeQuery("SELECT * FROM Bauteile JOIN User ON Bauteile.bearbeitet_Von=User.userID WHERE teilnummer="
+								+ id + ";");
 				// "SELECT * FROM `bauteile` ORDER BY `name`"
 
 				/*
@@ -278,12 +272,16 @@ public class BauteilMapper {
 					bauteil.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
 					bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
 					
-					//TODO dynamisch anpassen
-			        User editUser = new User();
-			        editUser.setName("statischer User");
-			        editUser.setId(1);
-			        editUser.setGoogleID("000000000000");
+					User editUser = new User();
+					editUser.setName(rs.getString("User.eMail"));
+			        editUser.setId(rs.getInt("userID"));
+			        editUser.setGoogleID(rs.getString("googleID"));
 			        bauteil.setEditUser(editUser);
+			        
+			        // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			    	 // die Datenbank zu speichern 
+			     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+			     	 bauteil.setEditDate(sqlDate);  
 					
 					return bauteil;
 				}

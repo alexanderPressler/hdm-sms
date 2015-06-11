@@ -105,9 +105,10 @@ public class BaugruppenMapper {
 		    	user.setName(rs.getString("eMail"));
 		    	user.setGoogleID(rs.getString("googleID"));
 		    	baugruppe.setEditUser(user);
-		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
-				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
-				baugruppe.setEditDate(timestamp);
+		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	baugruppe.setEditDate(sqlDate);
 		    }
 		}
 		catch(SQLException e){
@@ -151,7 +152,7 @@ public class BaugruppenMapper {
 //		return vBaugruppe;
 //	}
 	
-	public Vector<Baugruppe> getAll(){
+	public Vector<Baugruppe> findAll(){
 		Vector<Baugruppe> vBaugruppe = new Vector<Baugruppe>();
 		Connection con = DBConnection.connection();
 		try{
@@ -172,9 +173,10 @@ public class BaugruppenMapper {
 		    	user.setName(rs.getString("eMail"));
 		    	user.setGoogleID(rs.getString("googleID"));
 		    	baugruppe.setEditUser(user);
-		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
-				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
-				baugruppe.setEditDate(timestamp);
+		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	baugruppe.setEditDate(sqlDate);
 				//Baugruppe der ArrayList hinzufügen
 				vBaugruppe.addElement(baugruppe);
 			}
@@ -183,5 +185,20 @@ public class BaugruppenMapper {
 			e.printStackTrace();
 		}
 		return vBaugruppe;
+	}
+	public Baugruppe findBaugruppeByStueckliste(Stueckliste stueckliste){
+		Connection con = DBConnection.connection();
+		Baugruppe baugruppe= null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe WHERE stueckliste='"+stueckliste.getId()+"';");
+			if(rs.next()){
+				baugruppe=this.findByID(rs.getInt("bg_ID"));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return baugruppe;
 	}
 }

@@ -347,7 +347,14 @@ public class StuecklisteMapper {
 		try {
 			Statement stmt = con.createStatement();
 
-			stmt.executeUpdate("DELETE FROM Stueckliste WHERE sl_ID ='"+ stueckliste.getId()+"'");
+			//Zuerst die Elementzuordnungen der Stueckliste löschen
+			//Bauteile
+			stmt.executeUpdate("DELETE FROM StuecklistenBauteile WHERE stueckliste='"+stueckliste.getId()+"';");
+			//Baugruppen
+			stmt.executeUpdate("DELETE FROM StuecklistenBaugruppe WHERE stueckliste='"+stueckliste.getId()+"';");
+			//Dann die Stueckliste löschen
+			stmt.executeUpdate("DELETE FROM Stueckliste WHERE sl_ID='"+stueckliste.getId()+"';");
+			
 			
 
 		} catch (SQLException e2) {
@@ -590,5 +597,36 @@ public class StuecklisteMapper {
 
 		return null;
 	}
+	
+	public Vector<Stueckliste> findByBauteil (Bauteil bauteil){
+		Vector<Stueckliste> vStueckliste = new Vector<Stueckliste>();
+		Connection con = DBConnection.connection();
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM StuecklistenBauteile WHERE bauteil='"+bauteil.getId()+"';");
+			while(rs.next()){
+				vStueckliste.add(this.findById(rs.getInt("stueckliste")));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return vStueckliste;
+	}
+	public Vector<Stueckliste> findByBaugruppe (Baugruppe baugruppe){
+		Vector<Stueckliste> vStueckliste = new Vector<Stueckliste>();
+		Connection con = DBConnection.connection();
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM StuecklistenBaugruppe WHERE baugruppe='"+baugruppe.getId()+"';");
+			while(rs.next()){
+				vStueckliste.add(this.findById(rs.getInt("stueckliste")));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return vStueckliste;
+ 	}
 	
 }

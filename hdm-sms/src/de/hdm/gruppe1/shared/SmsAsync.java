@@ -4,8 +4,10 @@ import java.util.Vector;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
+import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.bo.User;
 
@@ -15,7 +17,7 @@ import de.hdm.gruppe1.shared.bo.User;
  * hier keine weitere Dokumentation. Für weitere Informationen siehe das
  * synchrone Interface {@link BankAdministration}.
  * 
- * @author thies
+ * @author Alexander Pressler &  thies
  */
 public interface SmsAsync {
 	
@@ -43,4 +45,23 @@ public interface SmsAsync {
 	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
 
 	void createUser(String googleID, String name, AsyncCallback<User> callback);
+
+	void createBaugruppe(String name, Vector<ElementPaar> BauteilPaare,
+			Vector<ElementPaar> BaugruppenPaare,
+			AsyncCallback<Baugruppe> callback);
+
+	void deleteBaugruppe(Baugruppe b, AsyncCallback<Void> callback);
+
+	void saveBaugruppe(Baugruppe b, AsyncCallback<Void> callback);
+
+	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
+
+	void createEnderzeugnis(String name, Baugruppe baugruppe,
+			AsyncCallback<Enderzeugnis> callback);
+
+	void deleteEnderzeugnis(Enderzeugnis e, AsyncCallback<Void> callback);
+
+	void saveEnderzeugnis(Enderzeugnis e, AsyncCallback<Void> callback);
+
+	void getAllEnderzeugnis(AsyncCallback<Vector<Enderzeugnis>> callback);
 }
