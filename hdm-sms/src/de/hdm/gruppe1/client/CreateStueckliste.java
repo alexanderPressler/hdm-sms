@@ -468,7 +468,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 			if (amountBauteile.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZhal(amountBauteile.getText()) == false) {
+			} else if (FieldVerifier.istZahl(amountBauteile.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
@@ -487,7 +487,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 			if (amountBaugruppen.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZhal(amountBaugruppen.getText()) == false) {
+			} else if (FieldVerifier.istZahl(amountBaugruppen.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 

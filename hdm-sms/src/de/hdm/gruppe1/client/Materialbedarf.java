@@ -192,7 +192,7 @@ public class Materialbedarf extends VerticalPanel {
 
 				if (amountEnderzeugnisse.getText().isEmpty() == true) {
 					Window.alert("Bitte die gewünschte Anzahl eintragen.");
-				} else if (FieldVerifier.istZhal(amountEnderzeugnisse.getText()) == false) {
+				} else if (FieldVerifier.istZahl(amountEnderzeugnisse.getText()) == false) {
 					Window.alert("Bitte nur Zahlen eintragen.");
 				}
 
