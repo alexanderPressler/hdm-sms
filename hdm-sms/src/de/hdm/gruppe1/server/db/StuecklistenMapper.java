@@ -433,4 +433,34 @@ public class StuecklistenMapper {
 		}
 		return alStueckliste;
 	}
+	public Vector<Stueckliste> findByBauteil (Bauteil bauteil){
+		Vector<Stueckliste> vStueckliste = new Vector<Stueckliste>();
+		Connection con = DBConnection.connection();
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM StuecklistenBauteile WHERE bauteil='"+bauteil.getId()+"';");
+			while(rs.next()){
+				vStueckliste.add(this.findByID(rs.getInt("stueckliste")));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return vStueckliste;
+	}
+	public Vector<Stueckliste> findByBaugruppe (Baugruppe baugruppe){
+		Vector<Stueckliste> vStueckliste = new Vector<Stueckliste>;
+		Connection con = DBConnection.connection();
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM StuecklistenBaugruppe WHERE baugruppe='"+baugruppe.getId()+"';");
+			while(rs.next()){
+				vStueckliste.add(this.findByID(rs.getInt("stueckliste")));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return vStueckliste;
+ 	}
 }
