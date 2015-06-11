@@ -138,4 +138,19 @@ public class EnderzeugnisMapper {
 			
 		}
 	}
+	public Vector<Enderzeugnis> findByBaugruppe(Baugruppe baugruppe){
+		Connection con=DBConnection.connection();
+		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet eeResult = stmt.executeQuery("SELECT * FROM Enderzegnis WHERE baugruppe='"+baugruppe.getId()+"';");
+			while(eeResult.next()){
+				vEnderzeugnis.add(this.findByID(eeResult.getInt("ee_ID")));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return vEnderzeugnis;
+	}
 }
