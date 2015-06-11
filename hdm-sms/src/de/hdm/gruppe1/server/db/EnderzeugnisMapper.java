@@ -29,14 +29,24 @@ public class EnderzeugnisMapper {
 	
 	public Enderzeugnis insert(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
-		Statement stmt = con.createStatement();
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
 		try{
-			ResultSet rs = stmt.executeQuery("INSERT INTO 'Enderzeugnis' ('name','baugruppe') VALUES ('"+enderzeugnis.getName()+"','"+baugruppenID.toString()+"');");
-			if(rs.next()){
-				enderzeugnis.setId(rs.getInt("ee_ID"));
-			}
+			//MaxID von StuecklistenBauteile abfragen
+			ResultSet rs = stmt.executeQuery("SELECT MAX(ee_ID) AS maxid "
+			          + "FROM Enderzeugnis;");
+
+			     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+			     if (rs.next()) {
+			        /*
+			         * a erhält den bisher maximalen, nun um 1 inkrementierten
+			         * Primärschlüssel.
+			         */
+			    	enderzeugnis.setId(rs.getInt("maxid")+1);
+			    	Statement stmt = con.createStatement();
+					stmt.executeUpdate("INSERT INTO Enderzeugnis VALUES ('"
+			    	+enderzeugnis.getId()+"','"+enderzeugnis.getName()+"','"+baugruppenID.toString()+"');");
+			      }
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -51,7 +61,7 @@ public class EnderzeugnisMapper {
 		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
 	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
 		try{
-			stmt.executeUpdate("UPDATE 'Enderzeugnis' SET 'name'='"+enderzeugnis.getName()+"','baugruppe'='"+baugruppenID.toString()+"' WHERE 'ee_ID'='"
+			stmt.executeUpdate("UPDATE Enderzeugnis SET name='"+enderzeugnis.getName()+"',baugruppe='"+baugruppenID.toString()+"' WHERE ee_ID='"
 				+enderzeugnisID.toString()+"';");
 		}
 		catch(SQLException e){
@@ -66,7 +76,7 @@ public class EnderzeugnisMapper {
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
 		try{
-			if(stmt.executeUpdate("DELETE FROM 'Enderzeugnis' WHERE 'ee_ID'='"+enderzeugnisID.toString()+"';")==0){
+			if(stmt.executeUpdate("DELETE FROM Enderzeugnis WHERE 'ee_ID='"+enderzeugnisID.toString()+"';")==0){
 				return false;
 			}
 			else{
@@ -123,6 +133,9 @@ public class EnderzeugnisMapper {
 	}
 	
 	public Vector<Enderzeugnis> getAll(){
-		
+		Connection con = DBConnection.connection();
+		try{
+			
+		}
 	}
 }
