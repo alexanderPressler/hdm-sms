@@ -10,7 +10,7 @@ public class Stueckliste extends Element {
 	Date creationDate = null;
 
 	public Date getCreationDate() {
-		return creationDate;
+		return this.creationDate;
 	}
 
 	public void setCreationDate(Date creationDate) {
@@ -18,11 +18,11 @@ public class Stueckliste extends Element {
 	}
 
 	public Vector<ElementPaar> getBauteilPaare() {
-		return BauteilPaare;
+		return this.BauteilPaare;
 	}
 
 	public void setBauteilPaare(Vector<ElementPaar> bauteilPaare) {
-		BauteilPaare = bauteilPaare;
+		this.BauteilPaare = bauteilPaare;
 	}
 
 

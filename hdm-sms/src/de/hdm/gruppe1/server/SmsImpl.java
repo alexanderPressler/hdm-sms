@@ -256,6 +256,8 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public void delete(Bauteil b) throws IllegalArgumentException {
 	 
+		//TODO Bauteile die bereits verwendet werden sollen nicht 
+		  // gelöscht werden können
 	    this.bauteilMapper.delete(b);
 	  }
 	  
