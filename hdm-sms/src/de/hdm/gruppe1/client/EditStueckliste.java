@@ -116,6 +116,124 @@ public class EditStueckliste extends VerticalPanel {
 		baugruppeCollection.getCellFormatter().addStyleName(0, 1, "tableHead");
 		baugruppeCollection.getCellFormatter().addStyleName(0, 2, "tableHead");
 		baugruppeCollection.getCellFormatter().addStyleName(0, 3, "tableHead");
+		
+		for(int i = 0; i<editStueckliste.getBauteilPaare().size(); i++) {
+			
+			// Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
+			// welches in den folgenden Zeilen befüllt wird
+			ElementPaar bauteilPaar = new ElementPaar();
+			bauteilPaar.setAnzahl(editStueckliste.getBauteilPaare().get(i).getAnzahl());
+			bauteilPaar.setElement(editStueckliste.getBauteilPaare().get(i).getElement());
+
+			// Dem Vektor aller Bauteile der Stückliste wird das soeben
+			// erstellte ElementPaar hinzugefügt
+			collectBauteile.add(bauteilPaar);
+			
+			// Button, um in der BauteilCollection-Tabelle und
+			// gleichzeitig dem Vektor ein Bauteil wieder zu entfernen
+			final Button removeBtButton = new Button("x");
+			
+			bauteilCollection.setText(i+1, 0, ""+ editStueckliste.getBauteilPaare().get(i).getElement().getId());
+			bauteilCollection.setText(i+1, 1, ""+ editStueckliste.getBauteilPaare().get(i).getAnzahl());
+			bauteilCollection.setText(i+1, 2, editStueckliste.getBauteilPaare().get(i).getElement().getName());
+			bauteilCollection.setWidget(i+1, 3, removeBtButton);
+			
+			// Der Wert von i muss final sein, damit sie im
+			// nachfolgenden ClickHandler verwendet werden kann.
+			// Daher wird sie mithilfe von int a finalisiert.
+			final int a = i;
+			
+			// In jeder Reihe wird ein Entfernen-Button platziert, damit
+			// der User schnell und unkompliziert
+			// jederzeit ein ElementPaar von Bauteil wieder entfernen
+			// kann. Es ist ihm lediglich möglich,
+			// gesamte ElementPaare von Bauteilen zu entfernen. Dies
+			// muss er ebenfalls durchführen, wenn er
+			// lediglich die Anzahl ändern möchte. Das Bauteil mit der
+			// gewünschten neuen Anzahl kann er
+			// schnell erneutaus dem Dropdown hinzufügen.
+			removeBtButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+
+					// Zum einen wird die entsprechende Reihe aus der
+					// FlexTable entfernt.
+					int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+					bauteilCollection.removeRow(rowIndex);
+
+					// Zum anderen wird das ElementPaar von Bauteil aus
+					// dem collectBauteile Vektor entfernt
+//					int x = a - 1;
+					Window.alert("Gelöscht wird: "+collectBauteile.get(a).getElement().getName());
+					collectBauteile.remove(a);
+					// TODO implementieren
+					// ListBox-Element, das hinzugefügt wurde, wird für
+					// doppeltes Hinzufügen gesperrt
+					listBoxBauteile.getElement().getElementsByTagName("option").getItem(rowIndex).setAttribute("enabled", "enabled");
+
+				}
+			});
+			
+		}
+		
+		for(int i = 0; i<editStueckliste.getBaugruppenPaare().size(); i++) {
+			
+			// Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
+			// welches in den folgenden Zeilen befüllt wird
+			ElementPaar baugruppenPaar = new ElementPaar();
+			baugruppenPaar.setAnzahl(editStueckliste.getBaugruppenPaare().get(i).getAnzahl());
+			baugruppenPaar.setElement(editStueckliste.getBaugruppenPaare().get(i).getElement());
+
+			// Dem Vektor aller Bauteile der Stückliste wird das soeben
+			// erstellte ElementPaar hinzugefügt
+			collectBauteile.add(baugruppenPaar);
+			
+			// Button, um in der BauteilCollection-Tabelle und
+			// gleichzeitig dem Vektor ein Bauteil wieder zu entfernen
+			final Button removeBgButton = new Button("x");
+			
+			baugruppeCollection.setText(i+1, 0, ""+ editStueckliste.getBaugruppenPaare().get(i).getElement().getId());
+			baugruppeCollection.setText(i+1, 1, ""+ editStueckliste.getBaugruppenPaare().get(i).getAnzahl());
+			baugruppeCollection.setText(i+1, 2, editStueckliste.getBaugruppenPaare().get(i).getElement().getName());
+			baugruppeCollection.setWidget(i+1, 3, removeBgButton);
+			
+			// Der Wert von i muss final sein, damit sie im
+			// nachfolgenden ClickHandler verwendet werden kann.
+			// Daher wird sie mithilfe von int a finalisiert.
+			final int a = i;
+			
+			// In jeder Reihe wird ein Entfernen-Button platziert, damit
+			// der User schnell und unkompliziert
+			// jederzeit ein ElementPaar von Bauteil wieder entfernen
+			// kann. Es ist ihm lediglich möglich,
+			// gesamte ElementPaare von Bauteilen zu entfernen. Dies
+			// muss er ebenfalls durchführen, wenn er
+			// lediglich die Anzahl ändern möchte. Das Bauteil mit der
+			// gewünschten neuen Anzahl kann er
+			// schnell erneutaus dem Dropdown hinzufügen.
+			removeBgButton.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+
+					// Zum einen wird die entsprechende Reihe aus der
+					// FlexTable entfernt.
+					int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+					baugruppeCollection.removeRow(rowIndex);
+
+					// Zum anderen wird das ElementPaar von Bauteil aus
+					// dem collectBauteile Vektor entfernt
+//					int x = a - 1;
+					Window.alert("Gelöscht wird: "+collectBaugruppen.get(a).getElement().getName());
+					collectBaugruppen.remove(a);
+					// TODO implementieren
+					// ListBox-Element, das hinzugefügt wurde, wird für
+					// doppeltes Hinzufügen gesperrt
+					listBoxBaugruppen.getElement().getElementsByTagName("option").getItem(rowIndex).setAttribute("enabled", "enabled");
+
+				}
+			});
+			
+		}
 
 		// Um das Dropdown mit Bauteilen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
@@ -146,8 +264,7 @@ public class EditStueckliste extends VerticalPanel {
 
 				// ListBox-Element, das hinzugefügt wurde, wird für doppeltes
 				// Hinzufügen gesperrt
-				listBoxBauteile.getElement().getElementsByTagName("option")
-						.getItem(index).setAttribute("disabled", "disabled");
+				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
 
 				// Die Übersichtstabelle, welche für den User eine hilfreiche
 				// Übersicht aller hinzugefügten Bauteile
@@ -169,14 +286,9 @@ public class EditStueckliste extends VerticalPanel {
 
 					// Die Tabelle befüllt sich aus allen Elementen, die im
 					// collectBauteile-Vektor vorhanden sind.
-					bauteilCollection.setText(a, 0,
-							""
-									+ collectBauteile.get(i - 1).getElement()
-											.getId());
-					bauteilCollection.setText(a, 1,
-							"" + collectBauteile.get(i - 1).getAnzahl());
-					bauteilCollection.setText(a, 2, collectBauteile.get(i - 1)
-							.getElement().getName());
+					bauteilCollection.setText(a, 0, ""+ collectBauteile.get(i - 1).getElement().getId());
+					bauteilCollection.setText(a, 1, "" + collectBauteile.get(i - 1).getAnzahl());
+					bauteilCollection.setText(a, 2, collectBauteile.get(i - 1).getElement().getName());
 					bauteilCollection.setWidget(a, 3, removeBtButton);
 
 					// In jeder Reihe wird ein Entfernen-Button platziert, damit
@@ -194,8 +306,7 @@ public class EditStueckliste extends VerticalPanel {
 
 							// Zum einen wird die entsprechende Reihe aus der
 							// FlexTable entfernt.
-							int rowIndex = bauteilCollection.getCellForEvent(
-									event).getRowIndex();
+							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
 							bauteilCollection.removeRow(rowIndex);
 
 							// Zum anderen wird das ElementPaar von Bauteil aus
