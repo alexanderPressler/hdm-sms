@@ -1,6 +1,8 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -74,7 +76,9 @@ public class CreateStueckliste extends VerticalPanel {
 
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
-
+	
+	int c = 0;
+	
 	// Konstruktor der Klasse CreateStueckliste. Gibt vor, dass bei jeder
 	// Instantiierung die entsprechenden GUI-Elemente
 	// geladen werden.
@@ -82,11 +86,9 @@ public class CreateStueckliste extends VerticalPanel {
 
 		// TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
 		// die TextBox vom User fokussiert wird
-		NameField.getElement().setPropertyString("placeholder",
-				"Hier bitte Namen eintragen");
+		NameField.getElement().setPropertyString("placeholder", "Name");
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
-		amountBaugruppen.getElement()
-				.setPropertyString("placeholder", "Anzahl");
+		amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
 
 		// ClickHandler um zu prüfen, ob die Texteingabe numerisch ist
 		collectBtButton.addClickHandler(new numericBtHandler());
@@ -130,8 +132,8 @@ public class CreateStueckliste extends VerticalPanel {
 
 				// Der index dient dazu, herauszufinden, welches Element im
 				// DropDown ausgewählt wurde
-				int index = listBoxBauteile.getSelectedIndex();
-
+				final int index = listBoxBauteile.getSelectedIndex();
+				
 				// amountBauteile ist eine TextBox. Diese wird hiermit in einen
 				// int-Wert umgewandelt
 				Integer anzahl = Integer.parseInt(amountBauteile.getText());
@@ -141,6 +143,8 @@ public class CreateStueckliste extends VerticalPanel {
 				ElementPaar bauteilPaar = new ElementPaar();
 				bauteilPaar.setAnzahl(anzahl);
 				bauteilPaar.setElement(allBauteile.get(index));
+				
+				int c = allBauteile.get(index).getId();
 
 				// Dem Vektor aller Bauteile der Stückliste wird das soeben
 				// erstellte ElementPaar hinzugefügt
@@ -148,8 +152,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 				// ListBox-Element, das hinzugefügt wurde, wird für doppeltes
 				// Hinzufügen gesperrt
-				listBoxBauteile.getElement().getElementsByTagName("option")
-						.getItem(index).setAttribute("disabled", "disabled");
+				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
 
 				// Die Übersichtstabelle, welche für den User eine hilfreiche
 				// Übersicht aller hinzugefügten Bauteile
@@ -171,14 +174,9 @@ public class CreateStueckliste extends VerticalPanel {
 
 					// Die Tabelle befüllt sich aus allen Elementen, die im
 					// collectBauteile-Vektor vorhanden sind.
-					bauteilCollection.setText(a, 0,
-							""
-									+ collectBauteile.get(i - 1).getElement()
-											.getId());
-					bauteilCollection.setText(a, 1,
-							"" + collectBauteile.get(i - 1).getAnzahl());
-					bauteilCollection.setText(a, 2, collectBauteile.get(i - 1)
-							.getElement().getName());
+					bauteilCollection.setText(a, 0, ""+ collectBauteile.get(i - 1).getElement().getId());
+					bauteilCollection.setText(a, 1, "" + collectBauteile.get(i - 1).getAnzahl());
+					bauteilCollection.setText(a, 2, collectBauteile.get(i - 1).getElement().getName());
 					bauteilCollection.setWidget(a, 3, removeBtButton);
 
 					// In jeder Reihe wird ein Entfernen-Button platziert, damit
@@ -196,22 +194,20 @@ public class CreateStueckliste extends VerticalPanel {
 
 							// Zum einen wird die entsprechende Reihe aus der
 							// FlexTable entfernt.
-							int rowIndex = bauteilCollection.getCellForEvent(
-									event).getRowIndex();
+							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
 							bauteilCollection.removeRow(rowIndex);
 
 							// Zum anderen wird das ElementPaar von Bauteil aus
 							// dem collectBauteile Vektor entfernt
 							int x = a - 1;
-							collectBauteile.remove(x);
+							
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement()
-									.getElementsByTagName("option")
-									.getItem(rowIndex)
-									.setAttribute("enabled", "enabled");
-
+							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+							
+							collectBauteile.remove(x);
+							
 						}
 					});
 				}
@@ -332,19 +328,14 @@ public class CreateStueckliste extends VerticalPanel {
 							// Zum anderen wird das ElementPaar von Baugruppe
 							// aus dem collectBaugruppen Vektor entfernt
 							int x = b - 1;
-							collectBauteile.remove(x);
 
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							// listBoxBaugruppen.getElement().setAttribute("enabled",
-							// "enabled");
-
-							listBoxBaugruppen.getElement()
-									.getElementsByTagName("option")
-									.getItem(rowIndex)
-									.setAttribute("disabled", "disabled");
-
+							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+							
+							collectBauteile.remove(x);
+							
 						}
 
 					});

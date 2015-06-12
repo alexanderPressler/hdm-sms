@@ -21,17 +21,19 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.client.BauteilGeneralView.DeleteBauteilCallback;
 import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /*
- * Die Klasse StuecklisteGeneralView liefert eine Übersicht mit allen vorhandenen Stücklisten im System
+ * Die Klasse EnderzeugnisGeneralView liefert eine Übersicht mit allen vorhandenen Enderzeugnissen im System
  * und bietet Möglichkeiten, diese zu editieren oder löschen.
  */
-public class StuecklisteGeneralView extends VerticalPanel {
+public class EnderzeugnisGeneralView extends VerticalPanel {
 
-	// Elemente für Stücklisten initialisieren
-	private final Label HeadlineLabel = new Label("Stücklistenübersicht");
+	// Elemente für Enderzeugnis initialisieren
+	private final Label HeadlineLabel = new Label("Enderzeugnisübersicht");
 
 	// Buttons sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
 	// ein "vertikales Zwischen-Panel" benötigt
@@ -40,9 +42,9 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 	// Den Buttons wird jeweils ein erklärender Text hinzugefügt
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht eine Stückliste aus, um sie mithilfe dieses Buttons zu editieren: ");
+			"Wählen Sie in der Übersicht ein Enderzeugnis aus, um sie mithilfe dieses Buttons zu editieren: ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens eine Stückliste aus, um sie mithilfe dieses Buttons zu löschen: ");
+			"Wählen Sie in der Übersicht mindestens ein Enderzeugnis aus, um sie mithilfe dieses Buttons zu löschen: ");
 
 	// Neu: Single-Button Editieren
 	private final Button editBtn = new Button("");
@@ -51,20 +53,20 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 	private final FlexTable table = new FlexTable();
 
-	// Stückliste, die editiert werden soll
-	Stueckliste editStueckliste = null;
+	// Enderzeugnis, das editiert werden soll
+	Enderzeugnis editEnderzeugnis = null;
 
-	// Vektor wird mit allen Stücklisten aus der DB befüllt
-	Vector<Stueckliste> allStuecklisten = new Vector<Stueckliste>();
+	// Vektor wird mit allen Enderzeugnissen aus der DB befüllt
+	Vector<Enderzeugnis> allEnderzeugnisse = new Vector<Enderzeugnis>();
 
-	// Vektor wird temporär mit zu löschenden Stücklisten befüllt, wenn
+	// Vektor wird temporär mit zu löschenden Enderzeugnissen befüllt, wenn
 	// CheckBoxen aus- bzw. abgewählt werden
-	Vector<Stueckliste> deleteStuecklisten = new Vector<Stueckliste>();
+	Vector<Enderzeugnis> deleteEnderzeugnisse = new Vector<Enderzeugnis>();
 
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 
-	public StuecklisteGeneralView() {
+	public EnderzeugnisGeneralView() {
 
 		// Damit die edit und delete Buttons horizontal angeordnet werden,
 		// müssen diese dem ButtonPanel zugeordnet werden
@@ -79,17 +81,15 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		HeadlineLabel.setStyleName("headline");
 		table.setStyleName("tableBody");
 
-		stuecklistenVerwaltung
-				.getAllStuecklisten(new GetAllStuecklistenCallback());
+		stuecklistenVerwaltung.getAllEnderzeugnis(new GetAllEnderzeugnisseCallback());
 
 		// Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 		table.setText(0, 0, "ID");
 		table.setText(0, 1, "Name");
-		table.setText(0, 2, "Erstellungsdatum");
-		table.setText(0, 3, "Letzter Änderer");
-		table.setText(0, 4, "Letztes Änderungsdatum");
-		table.setText(0, 5, "Editieren");
-		table.setText(0, 6, "Löschen");
+		table.setText(0, 2, "Letzter Änderer");
+		table.setText(0, 3, "Letztes Änderungsdatum");
+		table.setText(0, 4, "Editieren");
+		table.setText(0, 5, "Löschen");
 
 		// Das FlexTable Widget unterstützt keine Headlines. Daher wird die
 		// erste Reihe über folgenden Umweg formatiert
@@ -99,7 +99,6 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		table.getCellFormatter().addStyleName(0, 3, "tableHead");
 		table.getCellFormatter().addStyleName(0, 4, "tableHead");
 		table.getCellFormatter().addStyleName(0, 5, "tableHead");
-		table.getCellFormatter().addStyleName(0, 6, "tableHead");
 
 		this.add(HeadlineLabel);
 		this.add(editButtonPanel);
@@ -114,34 +113,30 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * Click Handlers.
 	 */
 
-	class GetAllStuecklistenCallback implements
-			AsyncCallback<Vector<Stueckliste>> {
+	class GetAllEnderzeugnisseCallback implements
+			AsyncCallback<Vector<Enderzeugnis>> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Stücklisten konnten nicht geladen werden");
+			Window.alert("Enderzeugnisse konnten nicht geladen werden");
 		}
 
 		@Override
-		public void onSuccess(Vector<Stueckliste> result) {
+		public void onSuccess(Vector<Enderzeugnis> result) {
 
-			allStuecklisten = result;
+			allEnderzeugnisse = result;
 
-			if (allStuecklisten.isEmpty() == true) {
+			if (allEnderzeugnisse.isEmpty() == true) {
 
 				table.getFlexCellFormatter().setColSpan(1, 0, 6);
 
-				table.setWidget(
-						1,
-						0,
-						new Label(
-								"Es sind leider keine Daten in der Datenbank vorhanden."));
+				table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
 
 			}
 
 			else {
 
-				for (int row = 1; row <= allStuecklisten.size(); row++) {
+				for (int row = 1; row <= allEnderzeugnisse.size(); row++) {
 					// for (int col = 0; col < numColumns; col++) {
 
 					// Da die erste Reihe der Tabelle als Überschriften der
@@ -157,42 +152,36 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 					// Pro Vektor-Index wird eine Reihe in die Tabelle
 					// geschrieben
-					table.setText(row, 0, "" + allStuecklisten.get(i).getId());
-					table.setText(row, 1, allStuecklisten.get(i).getName());
-					table.setText(row, 2, allStuecklisten.get(i).getCreationDate().toString());
-					table.setText(row, 3, allStuecklisten.get(i).getEditUser().getName());
-					table.setText(row, 4, allStuecklisten.get(i).getEditDate().toString());
+					table.setText(row, 0, "" + allEnderzeugnisse.get(i).getId());
+					table.setText(row, 1, allEnderzeugnisse.get(i).getName());
+					table.setText(row, 2, allEnderzeugnisse.get(i).getEditUser().getName());
+					table.setText(row, 3, allEnderzeugnisse.get(i).getEditDate().toString());
 					
 					// RadioButton Widget für Single editieren-Button
-					table.setWidget(row, 5, radioButton);
+					table.setWidget(row, 4, radioButton);
 
 					// Pro Reihe wird dem radioButton ein ValueChangeHandler
 					// hinzugefügt
-					radioButton
-							.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 								@Override
-								public void onValueChange(
-										ValueChangeEvent<Boolean> e) {
+								public void onValueChange(ValueChangeEvent<Boolean> e) {
 									if (e.getValue() == true) {
-										editStueckliste = allStuecklisten
-												.get(i);
+										editEnderzeugnis = allEnderzeugnisse.get(i);
 									}
 								}
 							});
 
-					table.setWidget(row, 6, checkBox);
+					table.setWidget(row, 5, checkBox);
 
 					checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 						@Override
 						public void onValueChange(ValueChangeEvent<Boolean> e) {
 							if (e.getValue() == true) {
-								Stueckliste deleteStueckliste = allStuecklisten
-										.get(i);
-								deleteStuecklisten.add(deleteStueckliste);
+								Enderzeugnis deleteEnderzeugnis = allEnderzeugnisse.get(i);
+								deleteEnderzeugnisse.add(deleteEnderzeugnis);
 							} else if (e.getValue() == false) {
-								Stueckliste removeStueckliste = allStuecklisten
-										.get(i);
-								deleteStuecklisten.remove(removeStueckliste);
+								Enderzeugnis removeEnderzeugnis = allEnderzeugnisse.get(i);
+								deleteEnderzeugnisse.remove(removeEnderzeugnis);
 							}
 						}
 					});
@@ -203,19 +192,18 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 			}
 
-			// ClickHandler für Aufruf der Klasse editStueckliste
+			// ClickHandler für Aufruf der Klasse editEnderzeugnis
 			editBtn.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 
-					if (editStueckliste == null) {
-						Window.alert("Bitte wählen Sie eine Stückliste zum editieren aus.");
+					if (editEnderzeugnis == null) {
+						Window.alert("Bitte wählen Sie ein Enderzeugnis zum editieren aus.");
 					} else {
 						
-						Window.alert("Name editStueckliste: "+editStueckliste.getName()+ " Vektor Bauteile: "+ editStueckliste.getBauteilPaare().capacity()+ " Vektor Baugruppen: "+editStueckliste.getBaugruppenPaare().capacity());
+						Window.alert("Name editEnderzeugnis: "+editEnderzeugnis.getName()+ " Vektor Bauteile: "+ editEnderzeugnis.getBaugruppe().getStueckliste().getBauteilPaare().capacity()+ " Vektor Baugruppen: "+editEnderzeugnis.getBaugruppe().getStueckliste().getBaugruppenPaare().capacity());
 						
 						RootPanel.get("content_wrap").clear();
-						RootPanel.get("content_wrap").add(
-								new EditStueckliste(editStueckliste));
+						RootPanel.get("content_wrap").add(new EditStueckliste(editEnderzeugnis.getBaugruppe().getStueckliste()));
 					}
 
 				}
@@ -227,7 +215,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	}
 
 	/**
-	 * Hiermit wird die RPC-Methode aufgerufen, die ein Stuecklisten-Objekt löscht
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Enderzeugnis-Objekt löscht
 	 * 
 	 * @author Mario Alex
 	 * 
@@ -236,38 +224,38 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		@Override
 		public void onClick(ClickEvent event) {
 
-			if (deleteStuecklisten.isEmpty() == true) {
-				Window.alert("Es wurde keine Stückliste zum Löschen ausgewählt.");
+			if (deleteEnderzeugnisse.isEmpty() == true) {
+				Window.alert("Es wurde kein Enderzeugnis zum Löschen ausgewählt.");
 			}
 
 			else {
-				for (int i = 0; i <= deleteStuecklisten.size(); i++) {
-					Stueckliste s = new Stueckliste();
-					s = deleteStuecklisten.get(i);
+				for (int i = 0; i <= deleteEnderzeugnisse.size(); i++) {
+					Enderzeugnis e = new Enderzeugnis();
+					e = deleteEnderzeugnisse.get(i);
 					/**
 					 * Die konkrete RPC-Methode für den create-Befehl wird
 					 * aufgerufen. Hierbei werden die gewünschten Werte
 					 * mitgeschickt.
 					 */
-					stuecklistenVerwaltung.deleteStueckliste(s, new DeleteStuecklisteCallback());
+					stuecklistenVerwaltung.deleteEnderzeugnis(e, new DeleteEnderzeugnisCallback());
 					RootPanel.get("content_wrap").clear();
-					RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+					RootPanel.get("content_wrap").add(new EnderzeugnisGeneralView());
 				}
 			}
 		}
 	}
 
-	class DeleteStuecklisteCallback implements AsyncCallback<Void> {
+	class DeleteEnderzeugnisCallback implements AsyncCallback<Void> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Löschen der Stueckliste ist fehlgeschlagen!");
+			Window.alert("Das Löschen des Enderzeugnisses ist fehlgeschlagen!");
 		}
 
 		@Override
 		public void onSuccess(Void result) {
 
-			Window.alert("Die Stueckliste wurde erfolgreich gelöscht.");
+			Window.alert("Das Enderzeugnis wurde erfolgreich gelöscht.");
 		}
 	}
 

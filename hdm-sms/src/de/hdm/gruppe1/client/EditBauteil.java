@@ -72,6 +72,8 @@ public class EditBauteil extends VerticalPanel {
 		/**
 		 * Diverse css-Formatierungen
 		 */
+		HeadlineLabel.setStyleName("headline");
+		SublineLabel.setStyleName("subline");
 		DescriptionField.setStyleName("DescriptionFieldText");
 		EditBauteilButton.setStyleName("Button");
 

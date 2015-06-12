@@ -66,7 +66,7 @@ public class BaugruppenMapper {
 	      Integer baugruppeID = new Integer(baugruppe.getId());
 	      
 	      
-	      if(stmt.executeUpdate("DELETE FROM Baugruppe WHERE bg_ID ="+baugruppeID.toString()+"';")==0){
+	      if(stmt.executeUpdate("DELETE FROM Baugruppe WHERE bg_ID ='"+baugruppeID.toString()+"';")==0){
 	    	  return false;
 	      }
 	      else{

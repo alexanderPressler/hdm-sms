@@ -48,6 +48,14 @@ public class CreateBauteil extends VerticalPanel {
 	public CreateBauteil() {
 
 		/**
+		 * TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
+		 * die TextBox vom User fokussiert wird
+		 */
+		NameField.getElement().setPropertyString("placeholder", "Name");
+		MaterialField.getElement().setPropertyString("placeholder", "Material");
+		DescriptionField.getElement().setPropertyString("placeholder", "Beschreibung");
+		
+		/**
 		 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
 		 * zugeordnet, da diese Klasse von VerticalPanel erbt.
 		 */
@@ -60,7 +68,7 @@ public class CreateBauteil extends VerticalPanel {
 		this.add(DescriptionFieldLabel);
 		this.add(DescriptionField);
 		this.add(CreateBauteilButton);
-
+		
 		/**
 		 * Diverse css-Formatierungen
 		 */
