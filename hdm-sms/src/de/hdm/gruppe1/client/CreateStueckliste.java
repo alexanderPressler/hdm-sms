@@ -216,36 +216,9 @@ public class CreateStueckliste extends VerticalPanel {
 
 		});
 
-		// Übergangsweise, bevor Merge mit Galina und Katja erfolgt ist,
-		// erstelle ich mir an dieser Stelle eigene Objekte
-		// von Baugruppen. An dieser Stelle muss nach dem Merge ein Vektor mit
-		// allen Baugruppen aus der DB mithilfe eines
-		// RPC angefragt werden.
-		Baugruppe a = new Baugruppe();
-		Baugruppe b = new Baugruppe();
-		Baugruppe c = new Baugruppe();
-
-		a.setId(1);
-		b.setId(2);
-		c.setId(3);
-
-		a.setName("Name1");
-		b.setName("Name2");
-		c.setName("Name3");
-		
-		allBaugruppen.add(a);
-		allBaugruppen.add(b);
-		allBaugruppen.add(c);
-
-		listBoxBaugruppen.addItem(a.getName());
-		listBoxBaugruppen.addItem(b.getName());
-		listBoxBaugruppen.addItem(c.getName());
-
-		// TODO implementieren
 		// Um das Dropdown mit Bauteilen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
-		// stuecklistenVerwaltung.getAllBaugruppen(new
-		// GetAllBaugruppenCallback());
+		 stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 
 		// Mithilfe des Hinzufügen-Buttons wird die BauteilCollection Tabelle
 		// befüllt
@@ -439,6 +412,55 @@ public class CreateStueckliste extends VerticalPanel {
 					 * Bauteil mit dessen Namen befüllt.
 					 */
 					listBoxBauteile.addItem(allBauteile.get(c).getName());
+
+				}
+
+			}
+
+		}
+	}
+	
+	/**
+	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
+	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
+	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
+	 * zuzugreifen.
+	 * 
+	 * @author Mario
+	 * 
+	 */
+	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Baugruppen konnten nicht geladen werden");
+		}
+
+		@Override
+		public void onSuccess(Vector<Baugruppe> alleBaugruppen) {
+
+			/**
+			 * Der Baugruppen-Vektor allBaugruppen wird mit dem Ergebnis dieses RPC´s
+			 * befüllt.
+			 */
+			allBaugruppen = alleBaugruppen;
+
+			if (allBaugruppen.isEmpty() == true) {
+
+				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
+
+			} else {
+
+				/**
+				 * Die Schleife durchläuft den kompletten Ergebnis-Vektor.
+				 */
+				for (int c = 0; c <= allBaugruppen.size(); c++) {
+
+					/**
+					 * Das DropDown wird mithilfe dieser for-Schleife für jede
+					 * Baugruppe mit dessen Namen befüllt.
+					 */
+					listBoxBaugruppen.addItem(allBaugruppen.get(c).getName());
 
 				}
 
