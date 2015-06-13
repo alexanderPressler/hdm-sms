@@ -27,7 +27,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 */
 	private final Label HeadlineLabel = new Label("Strukturstückliste anzeigen");
 	private final Label SublineLabel = new Label("Um eine Strukturstückliste zu generieren, wählen Sie zunächst eine Baugruppe im Dropdown aus.");
-	private final Label baugruppeLabel = new Label("Vorhandene Baugruppen");
+	private final Label baugruppeLabel = new Label("Gewünschte Baugruppen auswählen");
 	ListBox listBoxBaugruppen = new ListBox();
 	private final Button CreateStrukturstuecklisteButton = new Button("erstellen");
 	
@@ -41,36 +41,9 @@ public class Strukturstuecklisten extends VerticalPanel {
 	// Instantiierung die entsprechenden GUI-Elemente geladen werden.
 	public Strukturstuecklisten() {
 		
-		//TODO implementieren
 		// Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
-//		stuecklistenVerwaltung.getAllEnderzeugnisse(new GetAllEnderzeugnisseCallback());
-		
-		// Übergangsweise, bevor Merge mit Galina und Katja erfolgt ist,
-		// erstelle ich mir an dieser Stelle eigene Objekte
-		// von Baugruppen. An dieser Stelle muss nach dem Merge ein Vektor mit
-		// allen Baugruppen aus der DB mithilfe eines
-		// RPC angefragt werden.
-		Baugruppe a = new Baugruppe();
-		Baugruppe b = new Baugruppe();
-		Baugruppe c = new Baugruppe();
-		
-		a.setId(1);
-		b.setId(2);
-		c.setId(3);
-		
-		a.setName("Name1");
-		b.setName("Name2");
-		c.setName("Name3");
-		
-		listBoxBaugruppen.addItem(a.getName());
-		listBoxBaugruppen.addItem(b.getName());
-		listBoxBaugruppen.addItem(c.getName());
-		
-		// TODO implementieren
-		// Um das Dropdown mit Baugruppen aus der DB zu befüllen, wird dieser
-		// RPC-Aufruf gestartet
-		// stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
+		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 		
 		/**
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
@@ -108,7 +81,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
-	 * der DB vorhandenen Bauteilen liefert. Die Klasse ist eine nested-class
+	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
