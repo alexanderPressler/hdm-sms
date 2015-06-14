@@ -1,7 +1,14 @@
 package de.hdm.gruppe1.server.db;
 
+
 import java.sql.*;
+import java.text.DateFormat;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
+
+import com.google.gwt.i18n.shared.DateTimeFormat;
+
 import de.hdm.gruppe1.shared.bo.*;
 
 /**
@@ -11,8 +18,7 @@ import de.hdm.gruppe1.shared.bo.*;
  * gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
- * @see CustomerMapper, TransactionMapper
- * @author Thies
+ * @author Thies & Herrmann
  */
 public class BauteilMapper {
 
@@ -86,9 +92,17 @@ public class BauteilMapper {
 	         */
 	    	  bauteil.setId(rs.getInt("maxid") + 1);
 
+	     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	    	  // die Datenbank zu speichern 
+	     	  Date utilDate = bauteil.getEditDate();
+	     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	     	  df.format(sqlDate);
+	     	  
+	     	  bauteil.setEditDate(sqlDate);
+	    	  
 	        stmt = con.createStatement();
-
-	        stmt.executeUpdate("INSERT INTO Bauteile VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getMaterialBeschreibung() +"', '1', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '2015-05-18 12:12:12');");
+	        stmt.executeUpdate("INSERT INTO Bauteile VALUES ('"+ bauteil.getId() +"', '"+ bauteil.getMaterialBeschreibung() +"', '"+bauteil.getEditUser().getId()+"', '"+ bauteil.getName() +"', '"+ bauteil.getBauteilBeschreibung() +"', '"+ bauteil.getEditDate() +"');");
 	      
 	      }
 	    }
@@ -121,8 +135,23 @@ public class BauteilMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
-
-	      stmt.executeUpdate("UPDATE Bauteile SET name='"+ bauteil.getName() +"',beschreibung='"+ bauteil.getBauteilBeschreibung() +"',material='"+ bauteil.getMaterialBeschreibung() +"' WHERE teilnummer='"+bId.toString()+"';");
+	      
+	   // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+    	  // die Datenbank zu speichern 
+     	  Date utilDate = bauteil.getEditDate();
+     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+     	  df.format(sqlDate);
+     	  
+     	  bauteil.setEditDate(sqlDate);
+     	  
+	      stmt.executeUpdate("UPDATE Bauteile SET "
+	      		+"name='"+ bauteil.getName() 
+	      		+"',beschreibung='"+ bauteil.getBauteilBeschreibung() 
+	      		+"',material='"+ bauteil.getMaterialBeschreibung() 
+	      		+"',bearbeitet_Von='"+ bauteil.getEditUser().getId()
+	      		+"',datum='"+ bauteil.getEditDate() 
+	      		+"' WHERE teilnummer='"+bId.toString()+"';");
 
 	    }
 	    catch (SQLException e2) {
@@ -178,6 +207,24 @@ public class BauteilMapper {
 	        bauteil.setName(rs.getString("name"));
 	        bauteil.setBauteilBeschreibung(rs.getString("beschreibung"));
 	        bauteil.setMaterialBeschreibung(rs.getString("material"));
+	        
+	        // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	    	  // die Datenbank zu speichern 
+	     	  java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+	     	  java.util.Date utilDate = new java.util.Date(sqlDate.getTime());  
+	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	     	  df.format(utilDate);  
+	     	  
+	     	  bauteil.setEditDate(utilDate);
+	     	  
+
+	        
+	        //TODO dynamisch anpassen
+	        User editUser = new User();
+	        editUser.setName("statischer User");
+	        editUser.setId(1);
+	        editUser.setGoogleID("000000000000");
+	        bauteil.setEditUser(editUser);
 
 	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
 	        result.addElement(bauteil);
@@ -212,11 +259,8 @@ public class BauteilMapper {
 				// Statement ausfüllen und als Query an die DB schicken
 				// TODO: SQL Statement anpassen 
 				ResultSet rs = stmt
-						.executeQuery("SELECT id, name, bauteilBeschreibung, materialBeschreibung"
-								+ "  FROM bauteile "
-								+ "WHERE id="
-								+ id
-								+ " ORDER BY name");
+						.executeQuery("SELECT * FROM Bauteile JOIN User ON Bauteile.bearbeitet_Von=User.userID WHERE teilnummer="
+								+ id + ";");
 				// "SELECT * FROM `bauteile` ORDER BY `name`"
 
 				/*
@@ -230,7 +274,19 @@ public class BauteilMapper {
 					bauteil.setName(rs.getString("name"));
 					bauteil.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
 					bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
-
+					
+					//TODO dynamisch anpassen
+			        User editUser = new User();
+			        editUser.setName("statischer User");
+			        editUser.setId(1);
+			        editUser.setGoogleID("000000000000");
+			        bauteil.setEditUser(editUser);
+					
+			        // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			    	 // die Datenbank zu speichern 
+			     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+			     	 bauteil.setEditDate(sqlDate);  
+					
 					return bauteil;
 				}
 			} catch (SQLException e) {
