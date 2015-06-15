@@ -3,6 +3,7 @@ package de.hdm.gruppe1.client;
 
 import java.util.Vector;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -20,14 +21,13 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.hdm.gruppe1.client.BauteilGeneralView.GetAllBauteileCallback;
-import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
-//import de.hdm.gruppe1.client.BaugruppeGeneralView.DeleteBaugruppeCallback;
+
 
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
+import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
@@ -44,7 +44,8 @@ public class CreateBaugruppe extends VerticalPanel {
 	
 	//Elemente f�r Create Baugruppe  initialisieren
 		private final Label HeadlineLabel = new Label ("Baugruppe anlegen");
-		private final Label SublineLabel = new Label ("Um eine Baugruppe anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
+		private final Label SublineLabel = new Label ("Um eine Baugruppe anzulegen,"
+				+ " füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
 		private final Label bauteilLabel = new Label("Bauteile für Baugruppe");
 		private final Label baugruppeLabel = new Label("bestehende Baugruppen für neue Baugruppe");
 		private final TextBox NameField = new TextBox ();
@@ -56,35 +57,23 @@ public class CreateBaugruppe extends VerticalPanel {
 		private final TextBox amountBaugruppen = new TextBox();
 			ListBox listBoxBaugruppen = new ListBox();
 		private final Button collectBgButton = new Button("hinzufügen");
-		
-		private final Button CreateBaugruppeButton = new Button ("Baugruppe anlegen");
+		private final Button CreateBaugruppeButton = new Button(
+				"Baugruppe anlegen");
 
-		private final Label deleteBauteilLabel = new Label("Markierte Bauteile entfernen: ");
-		private final Label deleteBaugruppeLabel = new Label("Markierte Baugruppen entfernen: ");
-		private final Button deleteBauteilButton = new Button("entfernen");
-		private final Button deleteBaugruppeButton = new Button("entfernen");
+		
+
 		
 	
 	
-	//Panels, um die hinzuf�gen-Buttons neben den Dropdowns zu platzieren
+		//Panels, um die hinzuf�gen-Buttons neben den Dropdowns zu platzieren
 		HorizontalPanel btPanel = new HorizontalPanel();
 		HorizontalPanel bgPanel = new HorizontalPanel();
 		
-		//Panels, um den entfernen-Button neben dem Text anzuzeigen
-		HorizontalPanel deleteBauteilPanel = new HorizontalPanel();
-		HorizontalPanel deleteBaugruppePanel = new HorizontalPanel();
-		
-		//TODO implementieren
+
 		//Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB bef�llt
 		Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 		Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
-		
-		//TODO implementieren
-		//Ein Bauteil und eine Baugruppe, die der zugeh�rigen �bersichtstabelle hinzugef�gt werden
-		Bauteil bT = new Bauteil();
-		Baugruppe bG = new Baugruppe();
-		
-		//TODO implementieren
+	
 		//Vektoren, um die hinzugef�gten Bauteile/Baugruppen in einer �bersicht zu sammeln, bevor die St�ckliste gespeichert wird
 		Vector<Bauteil> collectBauteile = new Vector<Bauteil>();
 		Vector<Baugruppe> collectBaugruppen = new Vector<Baugruppe>();
@@ -94,8 +83,10 @@ public class CreateBaugruppe extends VerticalPanel {
 		FlexTable baugruppeCollection = new FlexTable();
 		
 		// Remote Service via ClientsideSettings
-		SmsAsync baugruppenVerwaltung= ClientsideSettings.getSmsVerwaltung();
+		SmsAsync stuecklistenVerwaltung= ClientsideSettings.getSmsVerwaltung();
 
+		int c = 0;
+		
 	public CreateBaugruppe(){
 	
 
@@ -103,9 +94,9 @@ public class CreateBaugruppe extends VerticalPanel {
 			amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
 			amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
 			
-			//Bauteil vor�bergehend statisch bef�llt
-			bT.setId(1);
-			bT.setName("Schraube");
+			// ClickHandler um zu prüfen, ob die Texteingabe numerisch ist
+			collectBtButton.addClickHandler(new numericBtHandler());
+			collectBgButton.addClickHandler(new numericBgHandler());
 			
 			//Die erste Reihe der Tabelle wird mit �berschriften vordefiniert
 			bauteilCollection.setText(0, 0, "ID");
@@ -133,14 +124,31 @@ public class CreateBaugruppe extends VerticalPanel {
 			baugruppeCollection.getCellFormatter().addStyleName(0, 2, "tableHead");
 			baugruppeCollection.getCellFormatter().addStyleName(0, 3, "tableHead");
 			
-			baugruppenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
+			// Um das Dropdown mit Bauteilen aus der DB zu befüllen, wird dieser
+			// RPC-Aufruf gestartet
+			stuecklistenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
+			stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 			
+			// Mithilfe des Hinzufügen-Buttons wird die BauteilCollection Tabelle
+			// befüllt
 			collectBtButton.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 
 					// Der index dient dazu, herauszufinden, welches Element im
 					// DropDown ausgewählt wurde
 					int index = listBoxBauteile.getSelectedIndex();
+
+					// Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
+					// welches in den folgenden Zeilen befüllt wird
+					ElementPaar bauteilPaar = new ElementPaar();
+					bauteilPaar.setAnzahl(anzahl);
+					bauteilPaar.setElement(allBauteile.get(index));
+					
+					int c = allBauteile.get(index).getId();
+
+					// Dem Vektor aller Bauteile der Baugruppe wird das soeben
+					// erstellte ElementPaar hinzugefügt
+					collectBauteile.add(bauteilPaar);
 
 					// amountBauteile ist eine TextBox. Diese wird hiermit in einen
 					// int-Wert umgewandelt
