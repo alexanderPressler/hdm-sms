@@ -227,7 +227,7 @@ public class BauteilGeneralView extends VerticalPanel {
 					table.setText(row, 2, allBauteile.get(i).getMaterialBeschreibung());
 					table.setText(row, 3, allBauteile.get(i).getBauteilBeschreibung());
 					table.setText(row, 4, allBauteile.get(i).getEditUser().getName());
-					table.setText(row, 5, allBauteile.get(i).getEditDate().toString());
+					table.setText(row, 5, allBauteile.get(i).getEditDate().toString().substring(0, 19));
 
 					/**
 					 * An dieser Stelle wird pro Schleifendurchlauf ein

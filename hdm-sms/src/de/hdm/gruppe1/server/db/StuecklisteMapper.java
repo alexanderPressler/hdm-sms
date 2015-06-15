@@ -375,7 +375,7 @@ public class StuecklisteMapper {
 			Statement stmt = con.createStatement();
 
 			ResultSet rs = stmt
-					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.ersteller=User.userID ORDER BY sl_ID");
+					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.bearbeitet_Von=User.userID ORDER BY sl_ID");
 
 			// Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 			// erstellt.
@@ -495,12 +495,10 @@ public class StuecklisteMapper {
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
-
 			// Statement ausfüllen und als Query an die DB schicken
-			// TODO: SQL Statement anpassen 
 			ResultSet rs = stmt
-					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.ersteller=User.userID WHERE sl_ID="
-							+ id + ";");
+					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.bearbeitet_Von=User.userID WHERE sl_ID='"
+							+ id + "';");
 			
 			// "SELECT * FROM `stuecklisten` ORDER BY `name`"
 

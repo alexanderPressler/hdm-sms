@@ -87,7 +87,7 @@ public class BaugruppenMapper {
 			
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("UPDATE Baugruppe SET name='"+baugruppe.getName()+"',stueckliste='"+baugruppe.getStueckliste().getId()
-					+"', bearbeitet_Von='"+baugruppe.getEditUser().getId()+"', datum ='"+baugruppe.getEditDate().toString().substring(0,19)
+					+"', bearbeitet_Von='"+baugruppe.getEditUser().getId()+"', datum ='"+baugruppe.getEditDate()
 					+"' WHERE bg_ID ='"+baugruppe.getId()+"';");
 		}
 		catch(SQLException e){

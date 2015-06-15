@@ -514,6 +514,8 @@ public class SmsImpl extends RemoteServiceServlet implements
 	        b.setEditUser(editUser);
 	        
 	       Stueckliste s = b.getStueckliste();
+	       s.setEditDate(date);
+	       s.setEditUser(editUser);
 	       
 	       this.stuecklisteMapper.update(s);
 		  
@@ -585,21 +587,21 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    this.enderzeugnisMapper.delete(e);
 	  }
 	  /**
-	   * Speichern eines Baugruppe.
+	   * Speichern eines Enderzeugnisses.
 	   */
 	  @Override
 	public void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException {
 		
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
-		    b.setEditDate(date);
+		    e.setEditDate(date);
 		  
 		  //TODO dynamisch anpassen
 	        User editUser = new User();
 	        editUser.setName("statischer User");
 	        editUser.setId(1);
 	        editUser.setGoogleID("000000000000");
-	        b.setEditUser(editUser);
+	        e.setEditUser(editUser);
 		  
 	        this.enderzeugnisMapper.update(e);
 	  }

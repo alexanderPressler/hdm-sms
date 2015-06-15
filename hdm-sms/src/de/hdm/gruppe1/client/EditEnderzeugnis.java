@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.client.CreateStueckliste.CreateStuecklisteCallback;
+import de.hdm.gruppe1.client.EditBaugruppe.SaveCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
@@ -88,7 +89,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
 		EditEnderzeugnisButton.setStyleName("Button");
-		BgIdField.setStyleName("numericInput");
+		BgIdField.setWidth("50px");
 		
 		/**
 		 * Der Create-Button ruft die RPC-Methode auf, welche das Editieren
@@ -159,20 +160,16 @@ public class EditEnderzeugnis extends VerticalPanel {
 				b.setId(Integer.parseInt(BgIdField.getText()));
 				b.setName(BgNameField.getText());
 				
+				e.setBaugruppe(b);
+				
 					/**
-					 * Die konkrete RPC-Methode für den create-Befehl wird
-					 * aufgerufen. Hierbei werden die gewünschten Werte
+					 * Die konkrete RPC-Methode für den Update-Befehl wird
+					 * aufgerufen. Hierbei wird das gewünschte Objekt
 					 * mitgeschickt.
 					 */
-					// Der index dient dazu, herauszufinden, welches Element im
-					// DropDown ausgewählt wurde
-					
-					// Dem Enderzeugnis wird ein Objekt von Baugruppe hinzugefügt,
-					// welches in den folgenden Zeilen mit einer Stückliste befüllt wird
-					
 					
 					//TODO implementieren
-//					stuecklistenVerwaltung.editEnderzeugnis(e.getName(), b, new EditEnderzeugnisCallback());
+					stuecklistenVerwaltung.saveEnderzeugnis(e, new SaveCallback());
 					
 					/**
 					 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
@@ -200,7 +197,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 	 * @author Mario
 	 * 
 	 */
-	class EditEnderzeugnisCallback implements AsyncCallback<Enderzeugnis> {
+	class SaveCallback implements AsyncCallback<Void> {
 
 		@Override
 		public void onFailure(Throwable caught) {
@@ -208,7 +205,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 		}
 
 		@Override
-		public void onSuccess(Enderzeugnis enderzeugnis) {
+		public void onSuccess(Void result) {
 
 			Window.alert("Das Enderzeugnis wurde erfolgreich editiert.");
 		}

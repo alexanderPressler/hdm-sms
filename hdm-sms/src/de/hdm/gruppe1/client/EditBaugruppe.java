@@ -39,6 +39,9 @@ public class EditBaugruppe extends VerticalPanel {
 	private final Label baugruppeLabel = new Label("Baugruppen für Baugruppe");
 	private final Label IdLabel = new Label("Id");
 	private final TextBox IdField = new TextBox();
+	private final Label sIdLabel = new Label("Zugehörige Stückliste");
+	private final TextBox sIdField = new TextBox();
+	private final TextBox sNameField = new TextBox();
 	private final Label NameFieldLabel = new Label("Bezeichnung");
 	private final TextBox NameField = new TextBox();
 	private final Label BauteilLabel = new Label(
@@ -56,6 +59,7 @@ public class EditBaugruppe extends VerticalPanel {
 	// Panels, um die hinzufügen-Buttons neben den Dropdowns zu platzieren
 	HorizontalPanel btPanel = new HorizontalPanel();
 	HorizontalPanel bgPanel = new HorizontalPanel();
+	HorizontalPanel stuecklistePanel = new HorizontalPanel();
 
 	// Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
@@ -433,6 +437,10 @@ public class EditBaugruppe extends VerticalPanel {
 
 		});
 
+		//Horizontales Anordnen von zugehörigen Stücklisten-Widgets
+		stuecklistePanel.add(sIdField);
+		stuecklistePanel.add(sNameField);
+		
 		// Horizontales Anordnen von zugehörigen Bauteil-Widgets
 		btPanel.add(amountBauteile);
 		btPanel.add(listBoxBauteile);
@@ -451,6 +459,8 @@ public class EditBaugruppe extends VerticalPanel {
 		this.add(SublineLabel);
 		this.add(IdLabel);
 		this.add(IdField);
+		this.add(sIdLabel);
+		this.add(stuecklistePanel);
 		this.add(NameFieldLabel);
 		this.add(NameField);
 		this.add(BauteilLabel);
@@ -468,12 +478,15 @@ public class EditBaugruppe extends VerticalPanel {
 		 * "ReadOnly" gesetzt.
 		 */
 		IdField.setReadOnly(true);
+		sIdField.setReadOnly(true);
+		sNameField.setReadOnly(true);
 
 		/**
 		 * Diverse css-Formatierungen
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
+		sIdField.setStyleName("numericInput");
 		amountBauteile.setStyleName("numericInput");
 		amountBaugruppen.setStyleName("numericInput");
 		EditBaugruppeButton.setStyleName("Button");
@@ -492,6 +505,7 @@ public class EditBaugruppe extends VerticalPanel {
 		 * 
 		 */
 		Integer iD = new Integer(editBaugruppe.getId());
+		Integer sId = new Integer(editBaugruppe.getStueckliste().getId());
 
 		/**
 		 * Mithilfe des an diese Klasse übergebenen Baugruppen-Objektes werden
@@ -499,6 +513,8 @@ public class EditBaugruppe extends VerticalPanel {
 		 */
 		IdField.setText(iD.toString());
 		NameField.setText(editBaugruppe.getName());
+		sIdField.setText(sId.toString());
+		sNameField.setText(editBaugruppe.getStueckliste().getName());
 
 		/**
 		 * Abschließend wird alles dem RootPanel zugeordnet
@@ -534,6 +550,8 @@ public class EditBaugruppe extends VerticalPanel {
 			 */
 			b.setId(Integer.parseInt(IdField.getText()));
 			b.setName(NameField.getText());
+			s.setId(Integer.parseInt(sIdField.getText()));
+			s.setName(sNameField.getText());
 			s.setBauteilPaare(collectBauteile);
 			s.setBaugruppenPaare(collectBaugruppen);
 			b.setStueckliste(s);

@@ -442,7 +442,7 @@ public class EditStueckliste extends VerticalPanel {
 		btPanel.add(amountBauteile);
 		btPanel.add(listBoxBauteile);
 		btPanel.add(collectBtButton);
-
+		
 		// Horizontales Anordnen von zugehörigen Baugruppe-Widgets
 		bgPanel.add(amountBaugruppen);
 		bgPanel.add(listBoxBaugruppen);
@@ -540,6 +540,8 @@ public class EditStueckliste extends VerticalPanel {
 			s.setName(NameField.getText());
 			s.setBauteilPaare(collectBauteile);
 			s.setBaugruppenPaare(collectBaugruppen);
+			
+			System.out.println("Inhalt stücklisten-id: "+s.getId());
 
 			/**
 			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle

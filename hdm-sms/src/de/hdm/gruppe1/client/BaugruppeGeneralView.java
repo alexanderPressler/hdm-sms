@@ -222,7 +222,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 					table.setText(row, 0, "" + allBaugruppen.get(i).getId());
 					table.setText(row, 1, allBaugruppen.get(i).getName());
 					table.setText(row, 2, allBaugruppen.get(i).getEditUser().getName());
-					table.setText(row, 3, allBaugruppen.get(i).getEditDate().toString());
+					table.setText(row, 3, allBaugruppen.get(i).getEditDate().toString().substring(0, 19));
 					
 					/**
 					 * An dieser Stelle wird pro Schleifendurchlauf ein

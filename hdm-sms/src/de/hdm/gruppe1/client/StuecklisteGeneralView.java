@@ -223,9 +223,9 @@ public class StuecklisteGeneralView extends VerticalPanel {
 					 */
 					table.setText(row, 0, "" + allStuecklisten.get(i).getId());
 					table.setText(row, 1, allStuecklisten.get(i).getName());
-					table.setText(row, 2, allStuecklisten.get(i).getCreationDate().toString());
+					table.setText(row, 2, allStuecklisten.get(i).getCreationDate().toString().substring(0, 19));
 					table.setText(row, 3, allStuecklisten.get(i).getEditUser().getName());
-					table.setText(row, 4, allStuecklisten.get(i).getEditDate().toString());
+					table.setText(row, 4, allStuecklisten.get(i).getEditDate().toString().substring(0, 19));
 					
 					/**
 					 * An dieser Stelle wird pro Schleifendurchlauf ein

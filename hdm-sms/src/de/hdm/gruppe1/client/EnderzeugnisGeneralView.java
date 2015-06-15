@@ -222,7 +222,7 @@ public class EnderzeugnisGeneralView extends VerticalPanel {
 					table.setText(row, 0, "" + allEnderzeugnisse.get(i).getId());
 					table.setText(row, 1, allEnderzeugnisse.get(i).getName());
 					table.setText(row, 2, allEnderzeugnisse.get(i).getEditUser().getName());
-					table.setText(row, 3, allEnderzeugnisse.get(i).getEditDate().toString());
+					table.setText(row, 3, allEnderzeugnisse.get(i).getEditDate().toString().substring(0, 19));
 					
 					/**
 					 * An dieser Stelle wird pro Schleifendurchlauf ein

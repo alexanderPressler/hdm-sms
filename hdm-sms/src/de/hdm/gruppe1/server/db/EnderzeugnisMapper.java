@@ -68,8 +68,19 @@ public class EnderzeugnisMapper {
 		Connection con = DBConnection.connection();
 		
 		try{
+			
+	     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	    	  // die Datenbank zu speichern 
+	     	  Date utilDate = enderzeugnis.getEditDate();
+	     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	     	  df.format(sqlDate);
+	     	  
+	     	  
+	     	 enderzeugnis.setEditDate(sqlDate);
+			
 			Statement stmt = con.createStatement();
-			stmt.executeUpdate("UPDATE Enderzeugnis SET name='"+enderzeugnis.getName()+"' WHERE ee_ID='"
+			stmt.executeUpdate("UPDATE Enderzeugnis SET name='"+enderzeugnis.getName()+"', bearbeitet_Von='"+enderzeugnis.getEditUser().getId()+"', datum='"+enderzeugnis.getEditDate()+"' WHERE ee_ID='"
 				+enderzeugnis.getId()+"';");
 		}
 		catch(SQLException e){
@@ -83,7 +94,7 @@ public class EnderzeugnisMapper {
 		
 		try{
 			Statement stmt = con.createStatement();
-			stmt.executeUpdate("DELETE FROM Enderzeugnis WHERE 'ee_ID='"+enderzeugnis.getId()+"';");
+			stmt.executeUpdate("DELETE FROM Enderzeugnis WHERE ee_ID='"+enderzeugnis.getId()+"';");
 		}
 		catch(SQLException e){
 			e.printStackTrace();
