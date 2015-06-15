@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.shared.SmsAsync;
-import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 
 /**
  * Die Klasse BaugruppeGeneralView liefert eine Übersicht mit allen vorhandenen
@@ -26,17 +26,17 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
  * @author Mario Theiler
  * @version 1.0
  */
-public class StuecklisteGeneralView extends VerticalPanel {
+public class BaugruppeGeneralView extends VerticalPanel {
 
 	/**
 	 * Überschrift, um dem User eine Orientierung zu geben, in welchem Bereich
 	 * der Applikation er sich befindet.
 	 */
-	private final Label HeadlineLabel = new Label("Stücklistenübersicht");
+	private final Label HeadlineLabel = new Label("Baugruppenübersicht");
 
 	/**
 	 * Einige GUI-Elemente sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
-	 * ein "vertikales Zwischen-Panel" benötigt.
+	 * ein "horizontales Zwischen-Panel" benötigt.
 	 */
 	private HorizontalPanel editButtonPanel = new HorizontalPanel();
 	private HorizontalPanel deleteButtonPanel = new HorizontalPanel();
@@ -45,9 +45,9 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
 	 */
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht eine Stückliste aus, um sie mithilfe dieses Buttons zu editieren: ");
+			"Wählen Sie in der Übersicht eine Baugruppe aus, um sie mithilfe dieses Buttons zu editieren: ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens eine Stückliste aus, um sie mithilfe dieses Buttons zu löschen: ");
+			"Wählen Sie in der Übersicht mindestens eine Baugruppe aus, um sie mithilfe dieses Buttons zu löschen: ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-
@@ -58,26 +58,26 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	private final Button deleteBtn = new Button("");
 
 	/**
-	 * Tabelle, in der jegliche Stücklisten inkl. edit- & delete-Buttons angezeigt
+	 * Tabelle, in der jegliche Baugruppen inkl. edit- & delete-Buttons angezeigt
 	 * werden.
 	 */
 	private final FlexTable table = new FlexTable();
 
 	/**
-	 * Stückliste, welche editiert werden soll.
+	 * Baugruppe, welche editiert werden soll.
 	 */
-	Stueckliste editStueckliste = null;
+	Baugruppe editBaugruppe = null;
 
 	/**
-	 * Vektor, der mit allen Stücklisten aus der DB befüllt wird.
+	 * Vektor, der mit allen Baugruppen aus der DB befüllt wird.
 	 */
-	Vector<Stueckliste> allStuecklisten = new Vector<Stueckliste>();
+	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 
 	/**
-	 * Vektor, der alle zu löschenden Stücklisten zwischenspeichert. Dies erfolgt mithilfe von Aus- bzw. Abwählen
-	 * der CheckBoxen. Im Anschluss werden diese Stücklisten nacheinander aus der DB gelöscht.
+	 * Vektor, der alle zu löschenden Baugruppen zwischenspeichert. Dies erfolgt mithilfe von Aus- bzw. Abwählen
+	 * der CheckBoxen. Im Anschluss werden diese Baugruppen nacheinander aus der DB gelöscht.
 	 */
-	Vector<Stueckliste> deleteStuecklisten = new Vector<Stueckliste>();
+	Vector<Baugruppe> deleteBaugruppen = new Vector<Baugruppe>();
 
 	/**
 	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
@@ -86,7 +86,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 
-	public StuecklisteGeneralView() {
+	public BaugruppeGeneralView() {
 
 		/**
 		 * Damit die edit und delete Buttons horizontal angeordnet werden,
@@ -106,22 +106,21 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		table.setStyleName("tableBody");
 
 		/**
-		 * RPC-Methode ausführen, die alle Stücklisten-Objekte aus der Datenbank in
+		 * RPC-Methode ausführen, die alle Baugruppen-Objekte aus der Datenbank in
 		 * einem Vektor zurückliefert. Dadurch wird der Klassen-Vektor
-		 * "allStücklisten" befüllt.
+		 * "allBaugruppen" befüllt.
 		 */
-		stuecklistenVerwaltung.getAllStuecklisten(new GetAllStuecklistenCallback());
+		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 
 		/**
 		 * Die erste Reihe der Tabelle wird mit Überschriften vordefiniert.
 		 */
 		table.setText(0, 0, "ID");
 		table.setText(0, 1, "Name");
-		table.setText(0, 2, "Erstellungsdatum");
-		table.setText(0, 3, "Letzter Änderer");
-		table.setText(0, 4, "Letztes Änderungsdatum");
-		table.setText(0, 5, "Editieren");
-		table.setText(0, 6, "Löschen");
+		table.setText(0, 2, "Letzter Änderer");
+		table.setText(0, 3, "Letztes Änderungsdatum");
+		table.setText(0, 4, "Editieren");
+		table.setText(0, 5, "Löschen");
 
 		/**
 		 * Das FlexTable Widget unterstützt keine Headlines. Daher wird die
@@ -133,7 +132,6 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		table.getCellFormatter().addStyleName(0, 3, "tableHead");
 		table.getCellFormatter().addStyleName(0, 4, "tableHead");
 		table.getCellFormatter().addStyleName(0, 5, "tableHead");
-		table.getCellFormatter().addStyleName(0, 6, "tableHead");
 
 		/**
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
@@ -157,36 +155,36 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
-	 * der DB vorhandenen Stücklisten liefert. Die Klasse ist eine nested-class
+	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
 	 * @author Mario Alex
 	 * 
 	 */
-	class GetAllStuecklistenCallback implements AsyncCallback<Vector<Stueckliste>> {
+	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Stücklisten konnten nicht geladen werden.");
+			Window.alert("Baugruppen konnten nicht geladen werden.");
 		}
 
 		@Override
-		public void onSuccess(Vector<Stueckliste> alleStuecklisten) {
+		public void onSuccess(Vector<Baugruppe> alleBaugruppen) {
 
 			/**
-			 * Der Stücklisten-Vektor allStuecklisten wird mit dem Ergebnis dieses RPC´s
+			 * Der Baugruppen-Vektor allBaugruppen wird mit dem Ergebnis dieses RPC´s
 			 * befüllt.
 			 */
-			allStuecklisten = alleStuecklisten;
+			allBaugruppen = alleBaugruppen;
 
 			/**
 			 * Abfangen eines leeren RPC-Vektors mithilfe eines Labels, das sich
 			 * über die komplette Reihe erstreckt.
 			 */
-			if (allStuecklisten.isEmpty() == true) {
+			if (allBaugruppen.isEmpty() == true) {
 
-				table.getFlexCellFormatter().setColSpan(1, 0, 6);
+				table.getFlexCellFormatter().setColSpan(1, 0, 5);
 
 				table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
 
@@ -196,10 +194,10 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 				/**
 				 * Die flexTable table wird mithilfe dieser for-Schleife Reihe
-				 * um Reihe für jede Stückliste befüllt.
+				 * um Reihe für jede Baugruppe befüllt.
 				 */
-				for (int row = 1; row <= allStuecklisten.size(); row++) {
-
+				for (int row = 1; row <= allBaugruppen.size(); row++) {
+					
 					/**
 					 * Da die flexTable in Reihen-Index 0 bereits mit den
 					 * Tabellen-Überschriften belegt ist (Begründung siehe
@@ -221,11 +219,10 @@ public class StuecklisteGeneralView extends VerticalPanel {
 					 * Pro Vektor-Index wird eine Reihe in die Tabelle
 					 * geschrieben.
 					 */
-					table.setText(row, 0, "" + allStuecklisten.get(i).getId());
-					table.setText(row, 1, allStuecklisten.get(i).getName());
-					table.setText(row, 2, allStuecklisten.get(i).getCreationDate().toString().substring(0, 19));
-					table.setText(row, 3, allStuecklisten.get(i).getEditUser().getName());
-					table.setText(row, 4, allStuecklisten.get(i).getEditDate().toString().substring(0, 19));
+					table.setText(row, 0, "" + allBaugruppen.get(i).getId());
+					table.setText(row, 1, allBaugruppen.get(i).getName());
+					table.setText(row, 2, allBaugruppen.get(i).getEditUser().getName());
+					table.setText(row, 3, allBaugruppen.get(i).getEditDate().toString().substring(0, 19));
 					
 					/**
 					 * An dieser Stelle wird pro Schleifendurchlauf ein
@@ -233,22 +230,20 @@ public class StuecklisteGeneralView extends VerticalPanel {
 					 * von "RadioGroup" kann jeweils nur ein RadioButton, nach
 					 * vollständigem Befüllen der Tabelle, ausgewählt werden.
 					 */
-					table.setWidget(row, 5, radioButton);
+					table.setWidget(row, 4, radioButton);
 
 					/**
 					 * Dieser RadioButton wird pro Reihe mit einem
 					 * ValueChangeHandler erweitert. Dieser erkennt, welcher
 					 * RadioButton ausgewählt ist und befüllt das Klassen-Objekt
-					 * editStueckliste von "Stueckliste" mit dem Objekt der
+					 * editBaugruppe von "Baugruppe" mit dem Objekt der
 					 * entsprechenden Tabellen-Reihe.
 					 */
 					radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 								@Override
-								public void onValueChange(
-										ValueChangeEvent<Boolean> e) {
+								public void onValueChange(ValueChangeEvent<Boolean> e) {
 									if (e.getValue() == true) {
-										editStueckliste = allStuecklisten
-												.get(i);
+										editBaugruppe = allBaugruppen.get(i);
 									}
 								}
 							});
@@ -257,7 +252,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 					 * An dieser Stelle wird pro Schleifendurchlauf ein CheckBox
 					 * Widget hinzugefügt.
 					 */
-					table.setWidget(row, 6, checkBox);
+					table.setWidget(row, 5, checkBox);
 
 					/**
 					 * Basierende darauf, ob der ValueChangeHandler eine Aus- bzw. Abwahl der betroffenen
@@ -268,13 +263,11 @@ public class StuecklisteGeneralView extends VerticalPanel {
 						@Override
 						public void onValueChange(ValueChangeEvent<Boolean> e) {
 							if (e.getValue() == true) {
-								Stueckliste deleteStueckliste = allStuecklisten
-										.get(i);
-								deleteStuecklisten.add(deleteStueckliste);
+								Baugruppe deleteBaugruppe = allBaugruppen.get(i);
+								deleteBaugruppen.add(deleteBaugruppe);
 							} else if (e.getValue() == false) {
-								Stueckliste removeStueckliste = allStuecklisten
-										.get(i);
-								deleteStuecklisten.remove(removeStueckliste);
+								Baugruppe removeBaugruppe = allBaugruppen.get(i);
+								deleteBaugruppen.remove(removeBaugruppe);
 							}
 						}
 					});
@@ -290,18 +283,18 @@ public class StuecklisteGeneralView extends VerticalPanel {
 			}
 
 			/**
-			 * ClickHandler für den Aufruf der Klasse editStueckliste. Als Attribut
-			 * wird das Stücklisten-Objekt aus der entsprechenden Tabellen-Reihe
+			 * ClickHandler für den Aufruf der Klasse editBaugruppe. Als Attribut
+			 * wird das Baugruppen-Objekt aus der entsprechenden Tabellen-Reihe
 			 * mitgeschickt.
 			 */
 			editBtn.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 
-					if (editStueckliste == null) {
-						Window.alert("Bitte wählen Sie eine Stückliste zum editieren aus.");
+					if (editBaugruppe == null) {
+						Window.alert("Bitte wählen Sie eine Baugruppe zum editieren aus.");
 					} else {
 						RootPanel.get("content_wrap").clear();
-						RootPanel.get("content_wrap").add(new EditStueckliste(editStueckliste));
+						RootPanel.get("content_wrap").add(new EditBaugruppe(editBaugruppe));
 					}
 
 				}
@@ -313,7 +306,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	}
 
 	/**
-	 * Hiermit wird die RPC-Methode aufgerufen, die ein Stuecklisten-Objekt löscht.
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Baugruppen-Objekt löscht.
 	 * 
 	 * @author Mario Alex
 	 * 
@@ -322,22 +315,22 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		@Override
 		public void onClick(ClickEvent event) {
 
-			if (deleteStuecklisten.isEmpty() == true) {
-				Window.alert("Es wurde keine Stückliste zum Löschen ausgewählt.");
+			if (deleteBaugruppen.isEmpty() == true) {
+				Window.alert("Es wurde keine Baugruppe zum Löschen ausgewählt.");
 			}
 
 			else {
-				for (int i = 0; i <= deleteStuecklisten.size(); i++) {
-					Stueckliste s = new Stueckliste();
-					s = deleteStuecklisten.get(i);
+				for (int i = 0; i <= deleteBaugruppen.size(); i++) {
+					Baugruppe b = new Baugruppe();
+					b = deleteBaugruppen.get(i);
 					/**
 					 * Die konkrete RPC-Methode für den create-Befehl wird
 					 * aufgerufen. Hierbei werden die gewünschten Werte
 					 * mitgeschickt.
 					 */
-					stuecklistenVerwaltung.deleteStueckliste(s, new DeleteStuecklisteCallback());
+					stuecklistenVerwaltung.deleteBaugruppe(b, new DeleteBaugruppeCallback());
 					RootPanel.get("content_wrap").clear();
-					RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+					RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
 				}
 			}
 		}
@@ -350,17 +343,19 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * @author Mario Alex
 	 *
 	 */
-	class DeleteStuecklisteCallback implements AsyncCallback<Void> {
+	class DeleteBaugruppeCallback implements AsyncCallback<Void> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Löschen der Stueckliste ist fehlgeschlagen!");
+			Window.alert("Das Löschen der Baugruppe ist fehlgeschlagen!");
 		}
 
 		@Override
 		public void onSuccess(Void result) {
 
-			Window.alert("Die Stueckliste wurde erfolgreich gelöscht.");
+			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
+			//Wenn nicht, dann zeige diesen Window Alert an.
+			Window.alert("Die Baugruppe wurde erfolgreich gelöscht, wenn sie nirgendwo referenziert ist.");
 		}
 	}
 

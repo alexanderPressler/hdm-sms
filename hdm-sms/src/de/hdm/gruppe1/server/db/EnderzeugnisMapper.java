@@ -4,6 +4,9 @@
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.*;
@@ -29,8 +32,7 @@ public class EnderzeugnisMapper {
 	
 	public Enderzeugnis insert(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
-	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
+		
 		try{
 			Statement stmt = con.createStatement();
 			//MaxID von StuecklistenBauteile abfragen
@@ -44,8 +46,16 @@ public class EnderzeugnisMapper {
 			         * Primärschlüssel.
 			         */
 			    	enderzeugnis.setId(rs.getInt("maxid")+1);
-					stmt.executeUpdate("INSERT INTO Enderzeugnis VALUES ('"
-			    	+enderzeugnis.getId()+"','"+enderzeugnis.getName()+"','"+baugruppenID+"');");
+			    	
+			     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			    	  // die Datenbank zu speichern 
+			     	  Date utilDate = enderzeugnis.getEditDate();
+			     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+			     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+			     	  df.format(sqlDate);
+			     	  
+			     	 enderzeugnis.setEditDate(sqlDate);
+					stmt.executeUpdate("INSERT INTO Enderzeugnis VALUES ('"+enderzeugnis.getId()+"','"+enderzeugnis.getName()+"','"+enderzeugnis.getBaugruppe().getId()+"','"+enderzeugnis.getEditUser().getId()+"','"+enderzeugnis.getEditDate()+"');");
 			      }
 		}
 		catch(SQLException e){
@@ -56,13 +66,22 @@ public class EnderzeugnisMapper {
 	
 	public Enderzeugnis update(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
-		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
-	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
+		
 		try{
+			
+	     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	    	  // die Datenbank zu speichern 
+	     	  Date utilDate = enderzeugnis.getEditDate();
+	     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	     	  df.format(sqlDate);
+	     	  
+	     	  
+	     	 enderzeugnis.setEditDate(sqlDate);
+			
 			Statement stmt = con.createStatement();
-			stmt.executeUpdate("UPDATE Enderzeugnis SET name='"+enderzeugnis.getName()+"',baugruppe='"+baugruppenID+"' WHERE ee_ID='"
-				+enderzeugnisID.toString()+"';");
+			stmt.executeUpdate("UPDATE Enderzeugnis SET name='"+enderzeugnis.getName()+"', bearbeitet_Von='"+enderzeugnis.getEditUser().getId()+"', datum='"+enderzeugnis.getEditDate()+"' WHERE ee_ID='"
+				+enderzeugnis.getId()+"';");
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -70,22 +89,15 @@ public class EnderzeugnisMapper {
 		return enderzeugnis;
 	}
 	
-	public boolean delete(Enderzeugnis enderzeugnis){
+	public void delete(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
-		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
+		
 		try{
 			Statement stmt = con.createStatement();
-			if(stmt.executeUpdate("DELETE FROM Enderzeugnis WHERE 'ee_ID='"+enderzeugnisID+"';")==0){
-				return false;
-			}
-			else{
-				return true;
-			}
+			stmt.executeUpdate("DELETE FROM Enderzeugnis WHERE ee_ID='"+enderzeugnis.getId()+"';");
 		}
 		catch(SQLException e){
 			e.printStackTrace();
-			return false;
 		}
 	}
 	
@@ -94,10 +106,9 @@ public class EnderzeugnisMapper {
 		
 		Enderzeugnis enderzeugnis = new Enderzeugnis();
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
-		Integer enderzeugnisID = new Integer(id);
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'ee_ID'="+enderzeugnisID+"';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis WHERE ee_ID='"+id+"';");
 			if(rs.next()){
 				enderzeugnis.setId(rs.getInt("ee_ID"));
 				enderzeugnis.setName(rs.getString("name"));
@@ -188,4 +199,20 @@ public class EnderzeugnisMapper {
 		}
 		return vEnderzeugnis;
 	}
+
+	public Vector<Enderzeugnis> findByBaugruppe (Baugruppe baugruppe){
+		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
+		Connection con = DBConnection.connection();
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis WHERE baugruppe='"+baugruppe.getId()+"';");
+			while(rs.next()){
+				vEnderzeugnis.add(this.findByID(rs.getInt("ee_ID")));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return vEnderzeugnis;
+ 	}
 }

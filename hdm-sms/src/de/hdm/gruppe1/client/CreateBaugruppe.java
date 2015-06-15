@@ -18,7 +18,6 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
-import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
  * Die Klasse CreateStueckliste ermöglicht dem User, Objekte von Stückliste in
@@ -27,16 +26,16 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
  * @author Mario Theiler
  * @version 1.0
  */
-public class CreateStueckliste extends VerticalPanel {
+public class CreateBaugruppe extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für CreateStueckliste initialisieren.
+	 * GUI-Elemente für CreateBauruppe initialisieren.
 	 */
-	private final Label HeadlineLabel = new Label("Stückliste anlegen");
+	private final Label HeadlineLabel = new Label("Baugruppe anlegen");
 	private final Label SublineLabel = new Label(
-			"Um eine Stückliste anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
-	private final Label bauteilLabel = new Label("Bauteile für Stückliste");
-	private final Label baugruppeLabel = new Label("Baugruppen für Stückliste");
+			"Um eine Baugruppe anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
+	private final Label bauteilLabel = new Label("Bauteile für Baugruppe");
+	private final Label baugruppeLabel = new Label("Baugruppen für Baugruppe");
 	private final TextBox NameField = new TextBox();
 	private final Label BauteilLabel = new Label(
 			"Gewünschte Anzahl von Bauteilen hinzufügen");
@@ -48,8 +47,8 @@ public class CreateStueckliste extends VerticalPanel {
 	private final TextBox amountBaugruppen = new TextBox();
 	ListBox listBoxBaugruppen = new ListBox();
 	private final Button collectBgButton = new Button("hinzufügen");
-	private final Button CreateStuecklisteButton = new Button(
-			"Stückliste anlegen");
+	private final Button CreateBaugruppeButton = new Button(
+			"Baugruppe anlegen");
 
 	/**
 	 * Einige GUI-Elemente sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
@@ -87,7 +86,7 @@ public class CreateStueckliste extends VerticalPanel {
 	
 	int c = 0;
 	
-	public CreateStueckliste() {
+	public CreateBaugruppe() {
 
 		/**
 		 * TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
@@ -137,11 +136,12 @@ public class CreateStueckliste extends VerticalPanel {
 		baugruppeCollection.getCellFormatter().addStyleName(0, 3, "tableHead");
 
 		/**
-		 * RPC-Methode ausführen, die alle Bauteil-Objekte aus der Datenbank in
+		 * RPC-Methode ausführen, die alle Bauteil- bzw. Baugruppen-Objekte aus der Datenbank in
 		 * einem Vektor zurückliefert. Dadurch wird der Klassen-Vektor
-		 * "allBauteile" befüllt.
+		 * "allBauteile" & "allBaugruppen" befüllt.
 		 */
 		stuecklistenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
+		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 
 		/**
 		 *  Mithilfe des Hinzufügen-Buttons wird die BauteilCollection Tabelle befüllt.
@@ -170,7 +170,7 @@ public class CreateStueckliste extends VerticalPanel {
 				int c = allBauteile.get(index).getId();
 
 				/**
-				 *  Dem Vektor aller Bauteile der Stückliste wird das soeben erstellte ElementPaar hinzugefügt.
+				 *  Dem Vektor aller Bauteile der Baugruppe wird das soeben erstellte ElementPaar hinzugefügt.
 				 */
 				collectBauteile.add(bauteilPaar);
 
@@ -249,15 +249,8 @@ public class CreateStueckliste extends VerticalPanel {
 		});
 
 		/**
-		 * RPC-Methode ausführen, die alle Baugruppen-Objekte aus der Datenbank in
-		 * einem Vektor zurückliefert. Dadurch wird der Klassen-Vektor
-		 * "allBaugruppen" befüllt.
+		 *  Mithilfe des Hinzufügen-Buttons wird die BaugruppenCollection Tabelle befüllt.
 		 */
-		 stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
-
-			/**
-			 *  Mithilfe des Hinzufügen-Buttons wird die BaugruppenCollection Tabelle befüllt.
-			 */
 		collectBgButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
@@ -272,7 +265,7 @@ public class CreateStueckliste extends VerticalPanel {
 				Integer anzahl = Integer.parseInt(amountBaugruppen.getText());
 
 				/**
-				 *  Der Vektor collectBauteile wird ein Objekt von ElementPaar hinzugefügt,
+				 *  Der Vektor collectBaugruppen wird ein Objekt von ElementPaar hinzugefügt,
 				 *  welches in den folgenden Zeilen befüllt wird.
 				 */
 				ElementPaar baugruppePaar = new ElementPaar();
@@ -280,7 +273,7 @@ public class CreateStueckliste extends VerticalPanel {
 				baugruppePaar.setElement(allBaugruppen.get(index));
 
 				/**
-				 *  Dem Vektor aller Baugruppen der Stückliste wird das soeben erstellte ElementPaar hinzugefügt.
+				 *  Dem Vektor aller Baugruppen der Baugruppe wird das soeben erstellte ElementPaar hinzugefügt.
 				 */
 				collectBaugruppen.add(baugruppePaar);
 
@@ -292,7 +285,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 				/**
 				 *  Die Übersichtstabelle, welche für den User eine hilfreiche
-				 *  Übersicht aller hinzugefügten Bauteile
+				 *  Übersicht aller hinzugefügten Baugruppen
 				 *  bereitstellt, wird mithilfe dieser for-Schleife aufgebaut.
 				 *  Die Schleife startet bei i = 1, da die
 				 *  erste Reihe der Tabelle bereits mit den Überschriften befüllt
@@ -315,7 +308,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 					/**
 					 *  Die Tabelle befüllt sich aus allen Elementen, die im
-					 *  collectBaugruppen-Vektor vorhanden sind.
+					 *  collectBaugruppenVektor vorhanden sind.
 					 */
 					baugruppeCollection.setText(b, 0, ""+ collectBaugruppen.get(i - 1).getElement().getId());
 					baugruppeCollection.setText(b, 1, ""+ collectBaugruppen.get(i - 1).getAnzahl());
@@ -335,7 +328,8 @@ public class CreateStueckliste extends VerticalPanel {
 							/**
 							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
 							 */
-							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+							int rowIndex = baugruppeCollection.getCellForEvent(
+									event).getRowIndex();
 							baugruppeCollection.removeRow(rowIndex);
 
 							/**
@@ -384,7 +378,7 @@ public class CreateStueckliste extends VerticalPanel {
 		this.add(bauteilCollection);
 		this.add(baugruppeLabel);
 		this.add(baugruppeCollection);
-		this.add(CreateStuecklisteButton);
+		this.add(CreateBaugruppeButton);
 
 		/**
 		 * Diverse css-Formatierungen
@@ -393,13 +387,13 @@ public class CreateStueckliste extends VerticalPanel {
 		SublineLabel.setStyleName("subline");
 		amountBauteile.setStyleName("numericInput");
 		amountBaugruppen.setStyleName("numericInput");
-		CreateStuecklisteButton.setStyleName("Button");
+		CreateBaugruppeButton.setStyleName("Button");
 
 		/**
 		 * Der Create-Button ruft die RPC-Methode auf, welche das Erstellen
-		 * einer Stückliste in der DB ermöglicht.
+		 * einer Baugruppe in der DB ermöglicht.
 		 */
-		CreateStuecklisteButton.addClickHandler(new CreateClickHandler());
+		CreateBaugruppeButton.addClickHandler(new CreateClickHandler());
 
 		/**
 		 * Abschließend wird alles dem RootPanel zugeordnet
@@ -474,7 +468,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Baugruppen konnten nicht geladen werden");
+			Window.alert("Bauteile konnten nicht geladen werden");
 		}
 
 		@Override
@@ -549,7 +543,7 @@ public class CreateStueckliste extends VerticalPanel {
 	}
 
 	/**
-	 * Hiermit wird die RPC-Methode aufgerufen, die ein Stücklisten-Objekt in
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Baugruppen-Objekt in
 	 * der Datenbank anlegt.
 	 * 
 	 * @author Mario
@@ -571,16 +565,16 @@ public class CreateStueckliste extends VerticalPanel {
 				 * mitgeschickt.
 				 */
 				String nameStueckliste = NameField.getText();
-				stuecklistenVerwaltung.createStueckliste(nameStueckliste,
+				stuecklistenVerwaltung.createBaugruppe(nameStueckliste,
 						collectBauteile, collectBaugruppen,
-						new CreateStuecklisteCallback());
+						new CreateBaugruppeCallback());
 
 				/**
 				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
 				 * zurück zur Übersichtstabelle weiterleiten.
 				 */
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+				RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
 
 			}
 
@@ -600,17 +594,17 @@ public class CreateStueckliste extends VerticalPanel {
 	 * @author Mario
 	 * 
 	 */
-	class CreateStuecklisteCallback implements AsyncCallback<Stueckliste> {
+	class CreateBaugruppeCallback implements AsyncCallback<Baugruppe> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen der Stueckliste ist fehlgeschlagen!");
+			Window.alert("Das Anlegen der Baugruppe ist fehlgeschlagen!");
 		}
 
 		@Override
-		public void onSuccess(Stueckliste stueckliste) {
+		public void onSuccess(Baugruppe baugruppe) {
 
-			Window.alert("Die Stueckliste wurde erfolgreich angelegt.");
+			Window.alert("Die Baugruppe wurde erfolgreich angelegt.");
 		}
 	}
 

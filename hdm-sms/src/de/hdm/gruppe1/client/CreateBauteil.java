@@ -15,8 +15,8 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
 /**
- * Mithilfe der Klasse CreateBauteil wird dem User der Applikation ermöglicht,
- * ein Bauteil-Objekt in der Datenbank anzulegen.
+ * Die Klasse CreateBauteil ermöglicht dem User, Objekte von Bauteil in
+ * der Datenbank anzulegen.
  * 
  * @author Mario Theiler
  * @version 1.0
@@ -24,7 +24,7 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 public class CreateBauteil extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für CreateBauteil initialisieren
+	 * GUI-Elemente für CreateBauteil initialisieren.
 	 */
 	private final Label HeadlineLabel = new Label("Bauteil anlegen");
 	private final Label SublineLabel = new Label(
@@ -48,6 +48,14 @@ public class CreateBauteil extends VerticalPanel {
 	public CreateBauteil() {
 
 		/**
+		 * TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
+		 * die TextBox vom User fokussiert wird.
+		 */
+		NameField.getElement().setPropertyString("placeholder", "Name");
+		MaterialField.getElement().setPropertyString("placeholder", "Material");
+		DescriptionField.getElement().setPropertyString("placeholder", "Beschreibung");
+		
+		/**
 		 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
 		 * zugeordnet, da diese Klasse von VerticalPanel erbt.
 		 */
@@ -60,7 +68,7 @@ public class CreateBauteil extends VerticalPanel {
 		this.add(DescriptionFieldLabel);
 		this.add(DescriptionField);
 		this.add(CreateBauteilButton);
-
+		
 		/**
 		 * Diverse css-Formatierungen
 		 */

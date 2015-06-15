@@ -197,7 +197,7 @@ public class BauteilMapper {
 	      Statement stmt = con.createStatement();
 
 	      //Ergebnis soll anhand der Id sortiert werden
-	      ResultSet rs = stmt.executeQuery("SELECT * FROM `Bauteile` ORDER BY `teilnummer`");
+	      ResultSet rs = stmt.executeQuery("SELECT * FROM Bauteile JOIN User ON Bauteile.bearbeitet_Von=User.userID ORDER BY teilnummer");
 
 	      // Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 	      // erstellt.
@@ -212,17 +212,13 @@ public class BauteilMapper {
 	    	 // die Datenbank zu speichern 
 	     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
 	     	 bauteil.setEditDate(sqlDate);  
-	     	  
-	     	  
 
-	        
-	        //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        bauteil.setEditUser(editUser);
-
+				User editUser = new User();
+				editUser.setName(rs.getString("User.eMail"));
+		        editUser.setId(rs.getInt("userID"));
+		        editUser.setGoogleID(rs.getString("googleID"));
+		        bauteil.setEditUser(editUser);
+	     	 
 	        // Hinzufügen des neuen Objekts zum Ergebnisvektor
 	        result.addElement(bauteil);
 	        
@@ -254,7 +250,6 @@ public class BauteilMapper {
 				Statement stmt = con.createStatement();
 
 				// Statement ausfüllen und als Query an die DB schicken
-				// TODO: SQL Statement anpassen 
 				ResultSet rs = stmt
 						.executeQuery("SELECT * FROM Bauteile JOIN User ON Bauteile.bearbeitet_Von=User.userID WHERE teilnummer="
 								+ id + ";");
@@ -273,7 +268,7 @@ public class BauteilMapper {
 					bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
 					
 					User editUser = new User();
-					editUser.setName(rs.getString("User.eMail"));
+					editUser.setName(rs.getString("eMail"));
 			        editUser.setId(rs.getInt("userID"));
 			        editUser.setGoogleID(rs.getString("googleID"));
 			        bauteil.setEditUser(editUser);

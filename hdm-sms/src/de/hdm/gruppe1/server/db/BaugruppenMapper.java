@@ -1,6 +1,9 @@
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 import de.hdm.gruppe1.shared.bo.*;
 
@@ -25,14 +28,40 @@ public class BaugruppenMapper {
 	
 	public Baugruppe insert(Baugruppe baugruppe){
 		Connection con = DBConnection.connection();
-		Integer aendererID = new Integer(baugruppe.getEditUser().getId());
-		Integer stuecklistenID = new Integer(baugruppe.getStueckliste().getId());
 		try{
+			
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("INSERT INTO Baugruppe VALUES('"+baugruppe.getName()+"','"
-					+stuecklistenID.toString()+"','"+aendererID.toString()+"','"+baugruppe.getEditDate().toString().substring(0,19)+"');");
+
+			/*
+			 * Zunächst schauen wir nach, welches der momentan höchste
+			 * Primärschlüsselwert ist.
+			 */
+			ResultSet rs = stmt.executeQuery("SELECT MAX(bg_ID) AS maxid "
+					+ "FROM Baugruppe ");
+			
+			
 			if(rs.next()){
-				baugruppe.setId(rs.getInt("bg_ID"));
+				
+				/*
+				 * a erhält den bisher maximalen, nun um 1 inkrementierten
+				 * Primärschlüssel.
+				 */
+				baugruppe.setId(rs.getInt("maxid") + 1);
+				
+		     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	  // die Datenbank zu speichern 
+		     	  Date utilDate = baugruppe.getEditDate();
+		     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+		     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+		     	  df.format(sqlDate);
+		     	  
+		     	  
+		     	 baugruppe.setEditDate(sqlDate);
+				
+				stmt = con.createStatement();
+				
+				stmt.executeUpdate("INSERT INTO Baugruppe VALUES('"+ baugruppe.getId() +"','"+baugruppe.getName()+"','"
+						+baugruppe.getStueckliste().getId()+"','"+baugruppe.getEditUser().getId()+"','"+ baugruppe.getEditDate() +"');");
 			}
 		}
 		catch(SQLException e){
@@ -45,9 +74,20 @@ public class BaugruppenMapper {
 	public Baugruppe update(Baugruppe baugruppe){
 		Connection con = DBConnection.connection();
 		try{
+			
+	     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	    	  // die Datenbank zu speichern 
+	     	  Date utilDate = baugruppe.getEditDate();
+	     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	     	  df.format(sqlDate);
+	     	  
+	     	  
+	     	 baugruppe.setEditDate(sqlDate);
+			
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("UPDATE Baugruppe SET name='"+baugruppe.getName()+"',stueckliste='"+baugruppe.getStueckliste().getId()
-					+"', bearbeitet_Von='"+baugruppe.getEditUser().getId()+"', datum ='"+baugruppe.getEditDate().toString().substring(0,19)
+					+"', bearbeitet_Von='"+baugruppe.getEditUser().getId()+"', datum ='"+baugruppe.getEditDate()
 					+"' WHERE bg_ID ='"+baugruppe.getId()+"';");
 		}
 		catch(SQLException e){
@@ -66,7 +106,7 @@ public class BaugruppenMapper {
 	      Integer baugruppeID = new Integer(baugruppe.getId());
 	      
 	      
-	      if(stmt.executeUpdate("DELETE FROM Baugruppe WHERE bg_ID ="+baugruppeID.toString()+"';")==0){
+	      if(stmt.executeUpdate("DELETE FROM Baugruppe WHERE bg_ID ='"+baugruppeID.toString()+"';")==0){
 	    	  return false;
 	      }
 	      else{

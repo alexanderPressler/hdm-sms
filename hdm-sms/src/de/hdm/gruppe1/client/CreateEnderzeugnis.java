@@ -1,7 +1,6 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -10,26 +9,38 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import de.hdm.gruppe1.client.CreateStueckliste.CreateStuecklisteCallback;
-import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
-import de.hdm.gruppe1.shared.bo.Bauteil;
-import de.hdm.gruppe1.shared.bo.ElementPaar;
-import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 
-public class Strukturstuecklisten extends VerticalPanel {
-
+/**
+ * Die Klasse CreateEnderzeugnis ermöglicht dem User, Objekte von Baugruppen in
+ * der Datenbank als Enderzeugnisse mit entsprechender Referenz zueinander abzuspeichern.
+ * 
+ * @author Mario Theiler
+ * @version 1.0
+ */
+public class CreateEnderzeugnis extends VerticalPanel {
+	
 	/**
-	 * GUI-Elemente für Strukturstuecklisten initialisieren
+	 * GUI-Elemente für CreateEnderzeugnis initialisieren.
 	 */
-	private final Label HeadlineLabel = new Label("Strukturstückliste anzeigen");
-	private final Label SublineLabel = new Label("Um eine Strukturstückliste zu generieren, wählen Sie zunächst eine Baugruppe im Dropdown aus.");
-	private final Label baugruppeLabel = new Label("Gewünschte Baugruppe auswählen");
+	private final Label HeadlineLabel = new Label("Enderzeugnis anlegen");
+	private final Label SublineLabel = new Label(
+			"Um ein Enderzeugnis anzulegen, wählen Sie bitte eine zugehörige Baugruppe aus. Außerdem müssen Sie " +
+			"dem Enderzeugnis einen Namen vergeben.");
+	private final Label nameLabel = new Label("Name eintragen");
+	private final TextBox NameField = new TextBox();
+	private final Label BaugruppeLabel = new Label("Gewünschte Baugruppe hinzufügen");
 	ListBox listBoxBaugruppen = new ListBox();
-	private final Button CreateStrukturstuecklisteButton = new Button("erstellen");
+	private final Button CreateEnderzeugnisButton = new Button("Enderzeugnis anlegen");
+	
+	/**
+	 *  Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt.
+	 */
+	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
 	/**
 	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
@@ -38,15 +49,19 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
-	// Vektor wird mit allen Baugruppen aus der DB befüllt
-	Vector<Baugruppe> allBaugruppe = new Vector<Baugruppe>();
-	
-	// Konstruktor der Klasse Strukturstuecklisten. Gibt vor, dass bei jeder
-	// Instantiierung die entsprechenden GUI-Elemente geladen werden.
-	public Strukturstuecklisten() {
+	public CreateEnderzeugnis() {
 		
-		// Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser
-		// RPC-Aufruf gestartet
+		/**
+		 * TextBox wird mit Text vorbefüllt, der ausgeblendet wird, sobald
+		 * die TextBox vom User fokussiert wird.
+		 */
+		NameField.getElement().setPropertyString("placeholder", "Name");
+		
+		/**
+		 * RPC-Methode ausführen, die alle Baugruppen-Objekte aus der Datenbank in
+		 * einem Vektor zurückliefert. Dadurch wird der Klassen-Vektor
+		 * "allBaugruppen" befüllt.
+		 */
 		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 		
 		/**
@@ -55,22 +70,24 @@ public class Strukturstuecklisten extends VerticalPanel {
 		 */
 		this.add(HeadlineLabel);
 		this.add(SublineLabel);
-		this.add(baugruppeLabel);
+		this.add(nameLabel);
+		this.add(NameField);
+		this.add(BaugruppeLabel);
 		this.add(listBoxBaugruppen);
-		this.add(CreateStrukturstuecklisteButton);
+		this.add(CreateEnderzeugnisButton);
 		
 		/**
 		 * Diverse css-Formatierungen
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
-		CreateStrukturstuecklisteButton.setStyleName("Button");
+		CreateEnderzeugnisButton.setStyleName("Button");
 		
 		/**
 		 * Der Create-Button ruft die RPC-Methode auf, welche das Erstellen
-		 * einer Strukturstückliste ermöglicht.
+		 * eines Enderzeugnisses in der DB ermöglicht.
 		 */
-		CreateStrukturstuecklisteButton.addClickHandler(new CreateClickHandler());
+		CreateEnderzeugnisButton.addClickHandler(new CreateClickHandler());
 		
 		/**
 		 * Abschließend wird alles dem RootPanel zugeordnet
@@ -106,9 +123,9 @@ public class Strukturstuecklisten extends VerticalPanel {
 			 * Der Baugruppen-Vektor allBaugruppen wird mit dem Ergebnis dieses RPC´s
 			 * befüllt.
 			 */
-			allBaugruppe = alleBaugruppen;
+			allBaugruppen = alleBaugruppen;
 
-			if (allBaugruppe.isEmpty() == true) {
+			if (allBaugruppen.isEmpty() == true) {
 
 				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
 
@@ -117,13 +134,13 @@ public class Strukturstuecklisten extends VerticalPanel {
 				/**
 				 * Die Schleife durchläuft den kompletten Ergebnis-Vektor.
 				 */
-				for (int c = 0; c <= allBaugruppe.size(); c++) {
+				for (int c = 0; c <= allBaugruppen.size(); c++) {
 
 					/**
 					 * Das DropDown wird mithilfe dieser for-Schleife für jede
 					 * Baugruppe mit dessen Namen befüllt.
 					 */
-					listBoxBaugruppen.addItem(allBaugruppe.get(c).getName());
+					listBoxBaugruppen.addItem(allBaugruppen.get(c).getName());
 
 				}
 
@@ -133,7 +150,8 @@ public class Strukturstuecklisten extends VerticalPanel {
 	}
 	
 	/**
-	 * Hiermit wird die RPC-Methode aufgerufen, die eine Strukturstückliste erstellt.
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Enderzeugnis-Objekt in
+	 * der Datenbank anlegt.
 	 * 
 	 * @author Mario
 	 * 
@@ -142,20 +160,44 @@ public class Strukturstuecklisten extends VerticalPanel {
 		@Override
 		public void onClick(ClickEvent event) {
 
+			/**
+			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
+			 * notwendigen Felder befüllt sind.
+			 */
+			if (NameField.getText().isEmpty() != true) {
+
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-//				stuecklistenVerwaltung.createStrukturstueckliste(baugruppe, new CreateStrukturstuecklisteCallback());
+				String nameEnderzeugnis = NameField.getText();
+				
+				// Der index dient dazu, herauszufinden, welches Element im
+				// DropDown ausgewählt wurde
+				final int index = listBoxBaugruppen.getSelectedIndex();
+				
+				// Dem Enderzeugnis wird ein Objekt von Baugruppe hinzugefügt,
+				// welches in den folgenden Zeilen mit einer Stückliste befüllt wird
+				Baugruppe b = new Baugruppe();
+				b.setId(allBaugruppen.get(index).getId());
+
+				stuecklistenVerwaltung.createEnderzeugnis(nameEnderzeugnis, b, new CreateEnderzeugnisCallback());
 
 				/**
 				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
 				 * zurück zur Übersichtstabelle weiterleiten.
 				 */
 				RootPanel.get("content_wrap").clear();
-				Window.alert("Report 1 (Strukturstückliste) wird hiermit erstellt.");
-//				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+				RootPanel.get("content_wrap").add(new EnderzeugnisGeneralView());
+
+			}
+
+			else {
+
+				Window.alert("Bitte Namensfeld ausfüllen.");
+
+			}
 
 		}
 	}
@@ -167,17 +209,18 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * @author Mario
 	 * 
 	 */
-	class CreateStrukturstuecklisteCallback implements AsyncCallback<Baugruppe> {
+	class CreateEnderzeugnisCallback implements AsyncCallback<Enderzeugnis> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Erstellen der Strukturstückliste ist fehlgeschlagen!");
+			Window.alert("Das Anlegen des Enderzeugnisses ist fehlgeschlagen!");
 		}
 
 		@Override
-		public void onSuccess(Baugruppe baugruppe) {
-			Window.alert("Das Erstellen der Strukturstückliste war erfolgreich!");
+		public void onSuccess(Enderzeugnis enderzeugnis) {
+
+			Window.alert("Das Enderzeugnis wurde erfolgreich angelegt.");
 		}
 	}
-	
+
 }

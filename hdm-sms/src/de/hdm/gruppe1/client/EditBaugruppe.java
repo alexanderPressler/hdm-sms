@@ -21,24 +21,27 @@ import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
- * Die Klasse EditStueckliste erhält bei Aufruf ein zuvor ausgewähltes
- * Stücklisten-Objekt. Dieses kann dann mithilfe dieser Klasse editiert werden.
+ * Die Klasse EditBaugruppe erhält bei Aufruf ein zuvor ausgewähltes
+ * Baugruppen-Objekt. Dieses kann dann mithilfe dieser Klasse editiert werden.
  * 
  * @author Mario Theiler
  * @version 1.0
  */
-public class EditStueckliste extends VerticalPanel {
+public class EditBaugruppe extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für EditStueckliste initialisieren
+	 * GUI-Elemente für EditBaugruppe initialisieren
 	 */
-	private final Label HeadlineLabel = new Label("Stückliste ändern");
+	private final Label HeadlineLabel = new Label("Baugruppe ändern");
 	private final Label SublineLabel = new Label(
-			"Um eine Stückliste zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
-	private final Label bauteilLabel = new Label("Bauteile für Stückliste");
-	private final Label baugruppeLabel = new Label("Baugruppen für Stückliste");
+			"Um eine Baugruppe zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
+	private final Label bauteilLabel = new Label("Bauteile für Baugruppe");
+	private final Label baugruppeLabel = new Label("Baugruppen für Baugruppe");
 	private final Label IdLabel = new Label("Id");
 	private final TextBox IdField = new TextBox();
+	private final Label sIdLabel = new Label("Zugehörige Stückliste");
+	private final TextBox sIdField = new TextBox();
+	private final TextBox sNameField = new TextBox();
 	private final Label NameFieldLabel = new Label("Bezeichnung");
 	private final TextBox NameField = new TextBox();
 	private final Label BauteilLabel = new Label(
@@ -51,28 +54,24 @@ public class EditStueckliste extends VerticalPanel {
 	private final TextBox amountBaugruppen = new TextBox();
 	ListBox listBoxBaugruppen = new ListBox();
 	private final Button collectBgButton = new Button("hinzufügen");
-	private final Button EditStuecklisteButton = new Button("ändern");
+	private final Button EditBaugruppeButton = new Button("ändern");
 
-	/**
-	 * Einige GUI-Elemente sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
-	 * ein "horizontales Zwischen-Panel" benötigt.
-	 */
+	// Panels, um die hinzufügen-Buttons neben den Dropdowns zu platzieren
 	HorizontalPanel btPanel = new HorizontalPanel();
 	HorizontalPanel bgPanel = new HorizontalPanel();
+	HorizontalPanel stuecklistePanel = new HorizontalPanel();
 
-	/**
-	 *  Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt.
-	 */
+	// Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 
 	// Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu
-	// sammeln, bevor die Stückliste gespeichert wird
+	// sammeln, bevor die Baugruppe gespeichert wird
 	Vector<ElementPaar> collectBauteile = new Vector<ElementPaar>();
 	Vector<ElementPaar> collectBaugruppen = new Vector<ElementPaar>();
 
 	// Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die
-	// Stückliste gespeichert wird
+	// Baugruppe gespeichert wird
 	FlexTable bauteilCollection = new FlexTable();
 	FlexTable baugruppeCollection = new FlexTable();
 
@@ -83,7 +82,7 @@ public class EditStueckliste extends VerticalPanel {
 	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 
-	public EditStueckliste(Stueckliste editStueckliste) {
+	public EditBaugruppe(Baugruppe editBaugruppe) {
 
 		// TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
 		// die TextBox vom User fokussiert wird
@@ -121,13 +120,13 @@ public class EditStueckliste extends VerticalPanel {
 		baugruppeCollection.getCellFormatter().addStyleName(0, 2, "tableHead");
 		baugruppeCollection.getCellFormatter().addStyleName(0, 3, "tableHead");
 		
-		for(int i = 0; i<editStueckliste.getBauteilPaare().size(); i++) {
+		for(int i = 0; i<editBaugruppe.getStueckliste().getBauteilPaare().size(); i++) {
 			
 			// Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
 			// welches in den folgenden Zeilen befüllt wird
 			ElementPaar bauteilPaar = new ElementPaar();
-			bauteilPaar.setAnzahl(editStueckliste.getBauteilPaare().get(i).getAnzahl());
-			bauteilPaar.setElement(editStueckliste.getBauteilPaare().get(i).getElement());
+			bauteilPaar.setAnzahl(editBaugruppe.getStueckliste().getBauteilPaare().get(i).getAnzahl());
+			bauteilPaar.setElement(editBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement());
 
 			// Dem Vektor aller Bauteile der Stückliste wird das soeben
 			// erstellte ElementPaar hinzugefügt
@@ -137,9 +136,9 @@ public class EditStueckliste extends VerticalPanel {
 			// gleichzeitig dem Vektor ein Bauteil wieder zu entfernen
 			final Button removeBtButton = new Button("x");
 			
-			bauteilCollection.setText(i+1, 0, ""+ editStueckliste.getBauteilPaare().get(i).getElement().getId());
-			bauteilCollection.setText(i+1, 1, ""+ editStueckliste.getBauteilPaare().get(i).getAnzahl());
-			bauteilCollection.setText(i+1, 2, editStueckliste.getBauteilPaare().get(i).getElement().getName());
+			bauteilCollection.setText(i+1, 0, ""+ editBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement().getId());
+			bauteilCollection.setText(i+1, 1, ""+ editBaugruppe.getStueckliste().getBauteilPaare().get(i).getAnzahl());
+			bauteilCollection.setText(i+1, 2, editBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement().getName());
 			bauteilCollection.setWidget(i+1, 3, removeBtButton);
 			
 			// Der Wert von i muss final sein, damit sie im
@@ -167,13 +166,13 @@ public class EditStueckliste extends VerticalPanel {
 
 					// Zum anderen wird das ElementPaar von Bauteil aus
 					// dem collectBauteile Vektor entfernt
-//					int x = a - 1;
+					int x = a - 1;
 					Window.alert("Gelöscht wird: "+collectBauteile.get(a).getElement().getName());
 
 					// TODO implementieren
 					// ListBox-Element, das hinzugefügt wurde, wird für
 					// doppeltes Hinzufügen gesperrt
-					listBoxBauteile.getElement().getElementsByTagName("option").getItem(a).removeAttribute("disabled");
+					listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
 					
 					collectBauteile.remove(a);
 					
@@ -182,25 +181,25 @@ public class EditStueckliste extends VerticalPanel {
 			
 		}
 		
-		for(int i = 0; i<editStueckliste.getBaugruppenPaare().size(); i++) {
+		for(int i = 0; i<editBaugruppe.getStueckliste().getBaugruppenPaare().size(); i++) {
 			
 			// Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
 			// welches in den folgenden Zeilen befüllt wird
 			ElementPaar baugruppenPaar = new ElementPaar();
-			baugruppenPaar.setAnzahl(editStueckliste.getBaugruppenPaare().get(i).getAnzahl());
-			baugruppenPaar.setElement(editStueckliste.getBaugruppenPaare().get(i).getElement());
+			baugruppenPaar.setAnzahl(editBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getAnzahl());
+			baugruppenPaar.setElement(editBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement());
 
-			// Dem Vektor aller Bauteile der Stückliste wird das soeben
+			// Dem Vektor aller Bauteile der Baugruppe wird das soeben
 			// erstellte ElementPaar hinzugefügt
-			collectBaugruppen.add(baugruppenPaar);
+			collectBauteile.add(baugruppenPaar);
 			
 			// Button, um in der BauteilCollection-Tabelle und
 			// gleichzeitig dem Vektor ein Bauteil wieder zu entfernen
 			final Button removeBgButton = new Button("x");
 			
-			baugruppeCollection.setText(i+1, 0, ""+ editStueckliste.getBaugruppenPaare().get(i).getElement().getId());
-			baugruppeCollection.setText(i+1, 1, ""+ editStueckliste.getBaugruppenPaare().get(i).getAnzahl());
-			baugruppeCollection.setText(i+1, 2, editStueckliste.getBaugruppenPaare().get(i).getElement().getName());
+			baugruppeCollection.setText(i+1, 0, ""+ editBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement().getId());
+			baugruppeCollection.setText(i+1, 1, ""+ editBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getAnzahl());
+			baugruppeCollection.setText(i+1, 2, editBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement().getName());
 			baugruppeCollection.setWidget(i+1, 3, removeBgButton);
 			
 			// Der Wert von i muss final sein, damit sie im
@@ -228,13 +227,13 @@ public class EditStueckliste extends VerticalPanel {
 
 					// Zum anderen wird das ElementPaar von Bauteil aus
 					// dem collectBauteile Vektor entfernt
-//					int x = a - 1;
+					int x = a - 1;
 					Window.alert("Gelöscht wird: "+collectBaugruppen.get(a).getElement().getName());
 
 					// TODO implementieren
 					// ListBox-Element, das hinzugefügt wurde, wird für
 					// doppeltes Hinzufügen gesperrt
-					listBoxBauteile.getElement().getElementsByTagName("option").getItem(a).removeAttribute("disabled");
+					listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
 					
 					collectBaugruppen.remove(a);
 					
@@ -266,7 +265,7 @@ public class EditStueckliste extends VerticalPanel {
 				bauteilPaar.setAnzahl(anzahl);
 				bauteilPaar.setElement(allBauteile.get(index));
 
-				// Dem Vektor aller Bauteile der Stückliste wird das soeben
+				// Dem Vektor aller Bauteile der Baugruppe wird das soeben
 				// erstellte ElementPaar hinzugefügt
 				collectBauteile.add(bauteilPaar);
 
@@ -336,7 +335,7 @@ public class EditStueckliste extends VerticalPanel {
 
 		});
 
-		// Um das Dropdown mit Baugruppen aus der DB zu befüllen, wird dieser
+		// Um das Dropdown mit Bauteilen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
 		 stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 
@@ -359,7 +358,7 @@ public class EditStueckliste extends VerticalPanel {
 				baugruppePaar.setAnzahl(anzahl);
 				baugruppePaar.setElement(allBaugruppen.get(index));
 
-				// Dem Vektor aller Baugruppen der Stückliste wird das soeben
+				// Dem Vektor aller Baugruppen der Baugruppe wird das soeben
 				// erstellte ElementPaar hinzugefügt
 				collectBaugruppen.add(baugruppePaar);
 
@@ -438,11 +437,15 @@ public class EditStueckliste extends VerticalPanel {
 
 		});
 
+		//Horizontales Anordnen von zugehörigen Stücklisten-Widgets
+		stuecklistePanel.add(sIdField);
+		stuecklistePanel.add(sNameField);
+		
 		// Horizontales Anordnen von zugehörigen Bauteil-Widgets
 		btPanel.add(amountBauteile);
 		btPanel.add(listBoxBauteile);
 		btPanel.add(collectBtButton);
-		
+
 		// Horizontales Anordnen von zugehörigen Baugruppe-Widgets
 		bgPanel.add(amountBaugruppen);
 		bgPanel.add(listBoxBaugruppen);
@@ -456,6 +459,8 @@ public class EditStueckliste extends VerticalPanel {
 		this.add(SublineLabel);
 		this.add(IdLabel);
 		this.add(IdField);
+		this.add(sIdLabel);
+		this.add(stuecklistePanel);
 		this.add(NameFieldLabel);
 		this.add(NameField);
 		this.add(BauteilLabel);
@@ -466,28 +471,31 @@ public class EditStueckliste extends VerticalPanel {
 		this.add(bauteilCollection);
 		this.add(baugruppeLabel);
 		this.add(baugruppeCollection);
-		this.add(EditStuecklisteButton);
+		this.add(EditBaugruppeButton);
 		
 		/**
 		 * Das Id-Textfeld darf nicht verändert werden und wird daher auf
 		 * "ReadOnly" gesetzt.
 		 */
 		IdField.setReadOnly(true);
+		sIdField.setReadOnly(true);
+		sNameField.setReadOnly(true);
 
 		/**
 		 * Diverse css-Formatierungen
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
+		sIdField.setStyleName("numericInput");
 		amountBauteile.setStyleName("numericInput");
 		amountBaugruppen.setStyleName("numericInput");
-		EditStuecklisteButton.setStyleName("Button");
+		EditBaugruppeButton.setStyleName("Button");
 
 		/**
 		 * Der Editieren-Button ruft die RPC-Methode auf, welche das Editieren
-		 * einer Stückliste in der DB ermöglicht.
+		 * einer Baugruppe in der DB ermöglicht.
 		 */
-		EditStuecklisteButton.addClickHandler(new EditClickHandler());
+		EditBaugruppeButton.addClickHandler(new EditClickHandler());
 
 		/**
 		 * In ein Textfeld kann nur ein Text geladen werden, kein int. Daher ist
@@ -496,14 +504,17 @@ public class EditStueckliste extends VerticalPanel {
 		 * einfacher int jedoch nicht.
 		 * 
 		 */
-		Integer iD = new Integer(editStueckliste.getId());
+		Integer iD = new Integer(editBaugruppe.getId());
+		Integer sId = new Integer(editBaugruppe.getStueckliste().getId());
 
 		/**
-		 * Mithilfe des an diese Klasse übergebenen Stücklisten-Objektes werden
+		 * Mithilfe des an diese Klasse übergebenen Baugruppen-Objektes werden
 		 * die Textfelder befüllt.
 		 */
 		IdField.setText(iD.toString());
-		NameField.setText(editStueckliste.getName());
+		NameField.setText(editBaugruppe.getName());
+		sIdField.setText(sId.toString());
+		sNameField.setText(editBaugruppe.getStueckliste().getName());
 
 		/**
 		 * Abschließend wird alles dem RootPanel zugeordnet
@@ -518,7 +529,7 @@ public class EditStueckliste extends VerticalPanel {
 
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die mithilfe eines
-	 * mitgeschickten Stücklisten-Objektes das bestehende Stücklisten-Objekt in
+	 * mitgeschickten Baugruppen-Objektes das bestehende Baugruppen-Objekt in
 	 * der Datenbank ändert. Hierbei ist wichtig, dass keine neue Id vergeben
 	 * wird, da es sich sonst um eine Neuanlage und nicht um einen
 	 * Editier-Vorgang handeln würde.
@@ -530,37 +541,39 @@ public class EditStueckliste extends VerticalPanel {
 		@Override
 		public void onClick(ClickEvent event) {
 
+			Baugruppe b = new Baugruppe();
 			Stueckliste s = new Stueckliste();
 			/**
 			 * Aus einem Textfeld kann kein Integer-Wert ausgelesen werden,
 			 * daher ist dieser Zwischenschritt notwendig: Auslesen des Id-Werts
 			 * mithilfe Integer, da Integer die toString-Methode unterstützt.
 			 */
-			s.setId(Integer.parseInt(IdField.getText()));
-			s.setName(NameField.getText());
+			b.setId(Integer.parseInt(IdField.getText()));
+			b.setName(NameField.getText());
+			s.setId(Integer.parseInt(sIdField.getText()));
+			s.setName(sNameField.getText());
 			s.setBauteilPaare(collectBauteile);
 			s.setBaugruppenPaare(collectBaugruppen);
+			b.setStueckliste(s);
 			
-			System.out.println("Inhalt stücklisten-id: "+s.getId());
-
 			/**
 			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
 			 * notwendigen Felder befüllt sind.
 			 */
-			if (NameField.getText().isEmpty() != true) {
+			if (NameField.getText().isEmpty() == false) {
 				/**
 				 * Die konkrete RPC-Methode für den editier-Befehl wird
-				 * aufgerufen. Hierbei wird das vorab befüllte Stuecklisten-Objekt
+				 * aufgerufen. Hierbei wird das vorab befüllte Baugruppen-Objekt
 				 * mit den gewünschten Werten mitgeschickt.
 				 */
-				stuecklistenVerwaltung.saveStueckliste(s, new SaveCallback());
+				stuecklistenVerwaltung.saveBaugruppe(b, new SaveCallback());
 
 				/**
 				 * Nachdem der Editier-Vorgang durchgeführt wurde, soll die GUI
 				 * zurück zur Übersichtstabelle weiterleiten.
 				 */
 				RootPanel.get("content_wrap").clear();
-				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+				RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
 			}
 
 			else {
@@ -581,12 +594,12 @@ public class EditStueckliste extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Die Stückliste wurde nicht editiert.");
+			Window.alert("Die Baugruppe wurde nicht editiert.");
 		}
 
 		@Override
 		public void onSuccess(Void result) {
-			Window.alert("Die Stückliste wurde erfolgreich editiert.");
+			Window.alert("Die Baugruppe wurde erfolgreich editiert.");
 
 		}
 	}
