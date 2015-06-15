@@ -60,7 +60,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	Vector<Baugruppe> deleteBaugruppen = new Vector<Baugruppe>();
 		
 	// Remote Service via ClientsideSettings
-	SmsAsync baugruppenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
 	public BaugruppeGeneralView() {
 		
@@ -76,7 +76,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		HeadlineLabel.setStyleName("headline");
 		table.setStyleName("tableBody");
 			
-		baugruppenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
+		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 
 		//Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
 		table.setText(0, 0, "ID");
@@ -132,26 +132,26 @@ public class BaugruppeGeneralView extends VerticalPanel {
 				else {
 				
 				for (int row = 1; row <= allBaugruppen.size(); row++) {
-//				      for (int col = 0; col < numColumns; col++) {
+						//for (int col = 0; col < numColumns; col++) {
 
 				    	//Da die erste Reihe der Tabelle als Überschriften der Spalten dient, wird eine neue Variable benötigt,
 				    	//die den Index 0 des Vectors auslesen kann.
-				    	final int i = row-1;
+				    	final int i = row - 1;
 				    	
 				        RadioButton radioButton = new RadioButton("editRadioGroup", "");
 				        CheckBox checkBox = new CheckBox("");
 
-			//	        deleteBtn.addClickHandler(new deleteClickHandler());
+				        deleteBtn.addClickHandler(new deleteClickHandler());
 				    	
 				        //Pro Vektor-Index wird eine Reihe in die Tabelle geschrieben
 				        table.setText(row, 0, ""+allBaugruppen.get(i).getId());
 				        table.setText(row, 1, allBaugruppen.get(i).getName());
 				        table.setText(row, 2, "01.01.2015, 11 Uhr");
-				        table.setText(row, 3, "Galina");
-				        table.setText(row, 4, "02.05.2015, 18 Uhr");
+				        table.setText(row, 2, allBaugruppen.get(i).getEditUser().getName());
+						table.setText(row, 3, allBaugruppen.get(i).getEditDate().toString());
 				        
 				        //RadioButton Widget für Single editieren-Button
-				        table.setWidget(row, 5, radioButton);
+				        table.setWidget(row, 4, radioButton);
 				        
 				        //Pro Reihe wird dem radioButton ein ValueChangeHandler hinzugefügt
 						radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
@@ -164,18 +164,17 @@ public class BaugruppeGeneralView extends VerticalPanel {
 				            }
 				        }); 
 				        
-				        table.setWidget(row, 6, checkBox);
+				        table.setWidget(row, 5, checkBox);
 				        
 						checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 							@Override
 							public void onValueChange(ValueChangeEvent<Boolean> e) {
 								if (e.getValue() == true) {
-								Baugruppe deleteBaugruppe = allBaugruppen
-											.get(i);
-								deleteBaugruppen.add(deleteBaugruppe);
+								Baugruppe deleteBaugruppe = allBaugruppen.get(i);
+									deleteBaugruppen.add(deleteBaugruppe);
 								} else if (e.getValue() == false) {
 									Baugruppe removeBaugruppen = allBaugruppen.get(i);
-								deleteBaugruppen.remove(removeBaugruppen);
+									deleteBaugruppen.remove(removeBaugruppen);
 								}
 							}
 						});
@@ -188,21 +187,76 @@ public class BaugruppeGeneralView extends VerticalPanel {
 				}
 				
 				//ClickHandler für Aufruf der Klasse editBauteil
-		        editBtn.addClickHandler(new ClickHandler(){
+		        editBtn.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
 						
 						if(editBaugruppe==null){
 							Window.alert("Bitte wählen Sie eine Baugruppe zum editieren aus.");
 						} else {
+							Window.alert("Name editBaugruppe: "+ editBaugruppe.getName()
+									+ " Vektor Bauteile: "+ editBaugruppe.getStueckliste().getBauteilPaare().capacity()
+									+ " Vektor Baugruppen: "+ editBaugruppe.getStueckliste().getBaugruppenPaare().capacity());
+							
 							RootPanel.get("content_wrap").clear();
-							//TODO implementieren
-//							RootPanel.get("content_wrap").add(new EditStueckliste(editStueckliste));
+							RootPanel.get("content_wrap").add(new EditBaugruppe(editBaugruppe));
 						}
 
 					}
 
 				});
-				
+
+			}
+
+		
+
+		/**
+		 * Hiermit wird die RPC-Methode aufgerufen, die ein Baugruppen-Objekt löscht
+		 * 
+		 * @author Mario Alex
+		 * 
+		 */
+		private class deleteClickHandler implements ClickHandler {
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (deleteBaugruppen.isEmpty() == true) {
+					Window.alert("Es wurde keine Baugruppe zum Löschen ausgewählt.");
+				}
+
+				else {
+					for (int i = 0; i <= deleteBaugruppen.size(); i++) {
+						Baugruppe b = new Baugruppe();
+						b = deleteBaugruppen.get(i);
+						/**
+						 * Die konkrete RPC-Methode für den create-Befehl wird
+						 * aufgerufen. Hierbei werden die gewünschten Werte
+						 * mitgeschickt.
+						 */
+						stuecklistenVerwaltung.deleteBaugruppe(b, new DeleteBaugruppeCallback());
+						RootPanel.get("content_wrap").clear();
+						RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
+					}
+				}
+			}
+		}
+
+		class DeleteBaugruppeCallback implements AsyncCallback<Void> {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Das Löschen der Baugruppe ist fehlgeschlagen!");
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+
+				Window.alert("Die Baugruppe wurde erfolgreich gelöscht.");
+			}
+		}
+
+	
+
+	
 			}
 
 		}
@@ -212,44 +266,3 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		 * @author Mario Alex
 		 * 
 		 */
-////		private class deleteClickHandler implements ClickHandler {
-//			@Override
-//			public void onClick(ClickEvent event) {
-//				
-//				if (deleteBaugruppe.isEmpty() == true){
-//					Window.alert("Es wurde kein Bauteil zum Löschen ausgewählt.");
-//				}
-//				
-//				else {
-//				for (int i=0;i<=deleteBaugruppe.size();i++) {
-//					Baugruppe bg= new Baugruppe();
-//					bg = deleteBaugruppe.get(i);
-//					/**
-//					 * Die konkrete RPC-Methode für den create-Befehl wird
-//					 * aufgerufen. Hierbei werden die gewünschten Werte
-//					 * mitgeschickt.
-//					 */
-//					baugruppenVerwaltung.deleteBaugruppe(bg,new DeleteBaugruppeCallback());
-//					RootPanel.get("content_wrap").clear();
-//					RootPanel.get("content_wrap").add(
-//							new BaugruppeGeneralView());
-//					}
-//				}
-//			}
-//		}
-//
-//		class DeleteBaugruppeCallback implements AsyncCallback<Void> {
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				Window.alert("Das Loeschen der Baugruppe ist fehlgeschlagen!");
-//			}
-//
-//			@Override
-//			public void onSuccess(Void result) {
-//
-//				Window.alert("Die Baugruppe wurde erfolgreich geloescht.");
-//			}
-//		}
-	
-}
