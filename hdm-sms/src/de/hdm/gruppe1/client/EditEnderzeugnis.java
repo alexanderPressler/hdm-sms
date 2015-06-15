@@ -36,10 +36,11 @@ public class EditEnderzeugnis extends VerticalPanel {
 			"Um ein Enderzeugnis zu ändern, ändern Sie bitte den Namen und bestätigen mit dem <editieren>-Button ihre Eingabe. Den Inhalt des Enderzeugnisses <p>müssen Sie innerhalb der zugehörigen Baugruppe ändern.");
 	private final Label IdLabel = new Label("Id");
 	private final TextBox IdField = new TextBox();
+	private final Label BgId = new Label("Baugruppen-Id");
+	private final TextBox BgIdField = new TextBox();
 	private final Label nameLabel = new Label("Name eintragen");
 	private final TextBox NameField = new TextBox();
 	private final Label BaugruppeLabel = new Label("Gewünschte Baugruppe ändern");
-	ListBox listBoxBaugruppen = new ListBox();
 	private final Button EditEnderzeugnisButton = new Button("ändern");
 	
 	// Vektor wird mit allen Baugruppen aus der DB befüllt
@@ -48,11 +49,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
-	public EditEnderzeugnis() {
-		
-		// Um das Dropdown mit Baugruppen aus der DB zu befüllen, wird dieser
-		// RPC-Aufruf gestartet
-		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
+	public EditEnderzeugnis(Enderzeugnis editEnderzeugnis) {
 		
 		/**
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
@@ -62,10 +59,11 @@ public class EditEnderzeugnis extends VerticalPanel {
 		this.add(SublineLabel);
 		this.add(IdLabel);
 		this.add(IdField);
+		this.add(BgId);
+		this.add(BgIdField);
 		this.add(nameLabel);
 		this.add(NameField);
 		this.add(BaugruppeLabel);
-		this.add(listBoxBaugruppen);
 		this.add(EditEnderzeugnisButton);
 		
 		/**
@@ -73,6 +71,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 		 * "ReadOnly" gesetzt.
 		 */
 		IdField.setReadOnly(true);
+		BgIdField.setReadOnly(true);
 		
 		/**
 		 * Diverse css-Formatierungen
@@ -88,6 +87,24 @@ public class EditEnderzeugnis extends VerticalPanel {
 		EditEnderzeugnisButton.addClickHandler(new EditClickHandler());
 		
 		/**
+		 * In ein Textfeld kann nur ein Text geladen werden, kein int. Daher ist
+		 * dieser Zwischenschritt notwendig: Zwischenspeichern des Werts
+		 * mithilfe Integer, da Integer die toString-Methode unterstützt, ein
+		 * einfacher int jedoch nicht.
+		 * 
+		 */
+		Integer iD = new Integer(editEnderzeugnis.getId());
+		Integer bGiD = new Integer(editEnderzeugnis.getBaugruppe().getId());
+
+		/**
+		 * Mithilfe des an diese Klasse übergebenen Stücklisten-Objektes werden
+		 * die Textfelder befüllt.
+		 */
+		IdField.setText(iD.toString());
+		NameField.setText(editEnderzeugnis.getName());
+		BgIdField.setText(bGiD.toString());
+		
+		/**
 		 * Abschließend wird alles dem RootPanel zugeordnet
 		 */
 		RootPanel.get("content_wrap").add(this);
@@ -97,55 +114,6 @@ public class EditEnderzeugnis extends VerticalPanel {
 	/*
 	 * Click Handlers.
 	 */
-	
-	/**
-	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
-	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
-	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
-	 * zuzugreifen.
-	 * 
-	 * @author Mario
-	 * 
-	 */
-	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert("Baugruppen konnten nicht geladen werden");
-		}
-
-		@Override
-		public void onSuccess(Vector<Baugruppe> alleBaugruppen) {
-
-			/**
-			 * Der Baugruppen-Vektor allBaugruppen wird mit dem Ergebnis dieses RPC´s
-			 * befüllt.
-			 */
-			allBaugruppen = alleBaugruppen;
-
-			if (allBaugruppen.isEmpty() == true) {
-
-				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
-
-			} else {
-
-				/**
-				 * Die Schleife durchläuft den kompletten Ergebnis-Vektor.
-				 */
-				for (int c = 0; c <= allBaugruppen.size(); c++) {
-
-					/**
-					 * Das DropDown wird mithilfe dieser for-Schleife für jede
-					 * Baugruppe mit dessen Namen befüllt.
-					 */
-					listBoxBaugruppen.addItem(allBaugruppen.get(c).getName());
-
-				}
-
-			}
-
-		}
-	}
 	
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die mithilfe eines
@@ -176,12 +144,9 @@ public class EditEnderzeugnis extends VerticalPanel {
 				e.setId(Integer.parseInt(IdField.getText()));
 				e.setName(NameField.getText());
 				
-				/**
-				 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
-				 * notwendigen Felder befüllt sind.
-				 */
-				if (NameField.getText().isEmpty() != true) {
-					
+				Baugruppe b = new Baugruppe();
+//				b.setId();
+				
 					/**
 					 * Die konkrete RPC-Methode für den create-Befehl wird
 					 * aufgerufen. Hierbei werden die gewünschten Werte
@@ -191,12 +156,10 @@ public class EditEnderzeugnis extends VerticalPanel {
 					
 					// Der index dient dazu, herauszufinden, welches Element im
 					// DropDown ausgewählt wurde
-					final int index = listBoxBaugruppen.getSelectedIndex();
 					
 					// Dem Enderzeugnis wird ein Objekt von Baugruppe hinzugefügt,
 					// welches in den folgenden Zeilen mit einer Stückliste befüllt wird
-					Baugruppe b = new Baugruppe();
-					b.setStueckliste(allBaugruppen.get(index).getStueckliste());
+					
 					
 					//TODO implementieren
 //					stuecklistenVerwaltung.editEnderzeugnis(nameEnderzeugnis, b, new EditEnderzeugnisCallback());
@@ -208,7 +171,6 @@ public class EditEnderzeugnis extends VerticalPanel {
 					RootPanel.get("content_wrap").clear();
 					RootPanel.get("content_wrap").add(new EnderzeugnisGeneralView());
 					
-				}
 				
 			}
 

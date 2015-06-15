@@ -526,6 +526,7 @@ public class EditBaugruppe extends VerticalPanel {
 		public void onClick(ClickEvent event) {
 
 			Baugruppe b = new Baugruppe();
+			Stueckliste s = new Stueckliste();
 			/**
 			 * Aus einem Textfeld kann kein Integer-Wert ausgelesen werden,
 			 * daher ist dieser Zwischenschritt notwendig: Auslesen des Id-Werts
@@ -533,14 +534,15 @@ public class EditBaugruppe extends VerticalPanel {
 			 */
 			b.setId(Integer.parseInt(IdField.getText()));
 			b.setName(NameField.getText());
-			b.getStueckliste().setBauteilPaare(collectBauteile);
-			b.getStueckliste().setBaugruppenPaare(collectBaugruppen);
-
+			s.setBauteilPaare(collectBauteile);
+			s.setBaugruppenPaare(collectBaugruppen);
+			b.setStueckliste(s);
+			
 			/**
 			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
 			 * notwendigen Felder befüllt sind.
 			 */
-			if (NameField.getText().isEmpty() != true) {
+			if (NameField.getText().isEmpty() == false) {
 				/**
 				 * Die konkrete RPC-Methode für den editier-Befehl wird
 				 * aufgerufen. Hierbei wird das vorab befüllte Baugruppen-Objekt

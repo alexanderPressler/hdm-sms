@@ -1,7 +1,6 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -12,14 +11,9 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import de.hdm.gruppe1.client.CreateStueckliste.CreateStuecklisteCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
-import de.hdm.gruppe1.shared.bo.Bauteil;
-import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
-import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
  * Die Klasse CreateEnderzeugnis ermöglicht dem User, Objekte von Baugruppen in
@@ -31,7 +25,7 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
 public class CreateEnderzeugnis extends VerticalPanel {
 	
 	/**
-	 * GUI-Elemente für CreateStueckliste initialisieren
+	 * GUI-Elemente für CreateEnderzeugnis initialisieren.
 	 */
 	private final Label HeadlineLabel = new Label("Enderzeugnis anlegen");
 	private final Label SublineLabel = new Label(
@@ -43,20 +37,31 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	ListBox listBoxBaugruppen = new ListBox();
 	private final Button CreateEnderzeugnisButton = new Button("Enderzeugnis anlegen");
 	
-	// Vektor wird mit allen Baugruppen aus der DB befüllt
+	/**
+	 *  Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt.
+	 */
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
-	// Remote Service via ClientsideSettings
+	/**
+	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
+	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
+	 * werden.
+	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
 	public CreateEnderzeugnis() {
 		
-		// TextBox für Name wird mit Text vorbefüllt, der ausgeblendet wird, sobald
-		// die TextBox vom User fokussiert wird
+		/**
+		 * TextBox wird mit Text vorbefüllt, der ausgeblendet wird, sobald
+		 * die TextBox vom User fokussiert wird.
+		 */
 		NameField.getElement().setPropertyString("placeholder", "Name");
 		
-		// Um das Dropdown mit Baugruppen aus der DB zu befüllen, wird dieser
-		// RPC-Aufruf gestartet
+		/**
+		 * RPC-Methode ausführen, die alle Baugruppen-Objekte aus der Datenbank in
+		 * einem Vektor zurückliefert. Dadurch wird der Klassen-Vektor
+		 * "allBaugruppen" befüllt.
+		 */
 		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 		
 		/**
@@ -175,7 +180,7 @@ public class CreateEnderzeugnis extends VerticalPanel {
 				// Dem Enderzeugnis wird ein Objekt von Baugruppe hinzugefügt,
 				// welches in den folgenden Zeilen mit einer Stückliste befüllt wird
 				Baugruppe b = new Baugruppe();
-				b.setStueckliste(allBaugruppen.get(index).getStueckliste());
+				b.setId(allBaugruppen.get(index).getId());
 
 				stuecklistenVerwaltung.createEnderzeugnis(nameEnderzeugnis, b, new CreateEnderzeugnisCallback());
 

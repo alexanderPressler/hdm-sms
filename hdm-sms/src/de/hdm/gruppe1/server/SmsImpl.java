@@ -256,9 +256,17 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public void delete(Bauteil b) throws IllegalArgumentException {
 	 
-		//TODO Bauteile die bereits verwendet werden sollen nicht 
-		  // gelöscht werden können
-	    this.bauteilMapper.delete(b);
+		  Vector<Stueckliste> vStueckliste = this.stuecklisteMapper.findByBauteil(b);
+		
+		  //Abgleich mit Stücklisten
+		  if(vStueckliste.isEmpty()==true){
+			  this.bauteilMapper.delete(b);
+		  } else {
+			  //TODO Exception schreiben
+			  System.out.println("Bauteil wird in Stückliste verwendet: ");
+			  
+		  }
+	    
 	  }
 	  
 	  /**
@@ -427,10 +435,6 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare, 
 			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
-		
-		    
-		    
-		    
 			 
 		  //TODO dynamisch anpassen
 	        User editUser = new User();
@@ -452,6 +456,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   
 	    Baugruppe b = new Baugruppe();
 	    b.setEditDate(date);
+	    b.setEditUser(editUser);
 	    b.setName(name);
 	    b.setStueckliste(s);
 	      
@@ -466,8 +471,31 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException {
 	 
-	    this.baugruppenMapper.delete(b);
-	  }
+		  Vector<Stueckliste> vStueckliste = this.stuecklisteMapper.findByBaugruppe(b);
+		  Vector<Enderzeugnis> vEnderzeugnis = this.enderzeugnisMapper.findByBaugruppe(b);
+			
+		  //Abgleich mit Stücklisten
+		  if(vStueckliste.isEmpty()==true && vEnderzeugnis.isEmpty()==true){
+			 
+			  this.baugruppenMapper.delete(b);
+			  this.stuecklisteMapper.delete(b.getStueckliste());
+			  
+		  }
+		  
+		  else {
+			  if(vStueckliste.isEmpty()==false){
+				  //TODO Exception schreiben
+				  System.out.println("Baugruppe wird in Stückliste verwendet.");
+			  }
+			  
+			  if(vEnderzeugnis.isEmpty()==false){
+				  //TODO Exception schreiben
+				  System.out.println("Baugruppe wird in Enderzeugnis verwendet: ");
+			  }
+			  
+		  }
+			  
+		  }
 	  /**
 	   * Speichern eines Baugruppe.
 	   */
@@ -484,6 +512,10 @@ public class SmsImpl extends RemoteServiceServlet implements
 	        editUser.setId(1);
 	        editUser.setGoogleID("000000000000");
 	        b.setEditUser(editUser);
+	        
+	       Stueckliste s = b.getStueckliste();
+	       
+	       this.stuecklisteMapper.update(s);
 		  
 	        this.baugruppenMapper.update(b);
 	  }
@@ -494,6 +526,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
 	    return this.baugruppenMapper.findAll();
 	  }  
+	  
+	  /**
+	   * Auslesen einer Baugruppe anhand seiner Id.
+	   */
+	  @Override
+	public Baugruppe getBaugruppeById(int id) throws IllegalArgumentException {
+	    return this.baugruppenMapper.findByID(id);
+	  }
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT Ende : Methoden für Baugruppen-Objekte
@@ -529,6 +569,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    e.setEditDate(date);
 	    e.setName(name);
 	    e.setBaugruppe(baugruppe);
+	    e.setEditUser(editUser);
 	      
 	    // Objekt in der DB speichern.
 	    return this.enderzeugnisMapper.insert(e);

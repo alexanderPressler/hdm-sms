@@ -53,11 +53,16 @@ public class EditStueckliste extends VerticalPanel {
 	private final Button collectBgButton = new Button("hinzufügen");
 	private final Button EditStuecklisteButton = new Button("ändern");
 
-	// Panels, um die hinzufügen-Buttons neben den Dropdowns zu platzieren
+	/**
+	 * Einige GUI-Elemente sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
+	 * ein "horizontales Zwischen-Panel" benötigt.
+	 */
 	HorizontalPanel btPanel = new HorizontalPanel();
 	HorizontalPanel bgPanel = new HorizontalPanel();
 
-	// Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
+	/**
+	 *  Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt.
+	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 

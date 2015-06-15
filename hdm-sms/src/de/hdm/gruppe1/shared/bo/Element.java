@@ -8,8 +8,6 @@ public abstract class Element extends BusinessObject {
 	//Declaration fuer die Serializible Class
 	private static final long serialVersionUID = 1L;
 	
-	//TODO: Aenderungdatum und User einfuegen + getter/setter 
-	
 	String name = null;
 	User editUser = null;
 	Date editDate = null; 

@@ -27,11 +27,15 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 */
 	private final Label HeadlineLabel = new Label("Strukturstückliste anzeigen");
 	private final Label SublineLabel = new Label("Um eine Strukturstückliste zu generieren, wählen Sie zunächst eine Baugruppe im Dropdown aus.");
-	private final Label baugruppeLabel = new Label("Gewünschte Baugruppen auswählen");
+	private final Label baugruppeLabel = new Label("Gewünschte Baugruppe auswählen");
 	ListBox listBoxBaugruppen = new ListBox();
 	private final Button CreateStrukturstuecklisteButton = new Button("erstellen");
 	
-	// Remote Service via ClientsideSettings
+	/**
+	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
+	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
+	 * werden.
+	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
 	// Vektor wird mit allen Baugruppen aus der DB befüllt

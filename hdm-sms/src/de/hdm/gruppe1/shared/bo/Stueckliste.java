@@ -5,6 +5,8 @@ import java.util.Vector;
 
 public class Stueckliste extends Element {
 
+	private static final long serialVersionUID = 1L;
+	
 	Vector<ElementPaar> BauteilPaare = new Vector<ElementPaar>();
 	Vector<ElementPaar> BaugruppenPaare = new Vector<ElementPaar>();
 	Date creationDate = null;

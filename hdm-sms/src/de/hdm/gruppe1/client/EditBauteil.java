@@ -29,7 +29,7 @@ public class EditBauteil extends VerticalPanel {
 			"Um ein Bauteil zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
 	private final Label IdLabel = new Label("Id");
 	private final TextBox IdField = new TextBox();
-	private final Label NameFieldLabel = new Label("Bezeichnung");
+	private final Label NameFieldLabel = new Label("Name");
 	private final TextBox NameField = new TextBox();
 	private final Label MaterialFieldLabel = new Label("Materialbezeichnung");
 	private final TextBox MaterialField = new TextBox();
