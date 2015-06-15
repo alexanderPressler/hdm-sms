@@ -167,13 +167,13 @@ public class EditStueckliste extends VerticalPanel {
 
 					// Zum anderen wird das ElementPaar von Bauteil aus
 					// dem collectBauteile Vektor entfernt
-					int x = a - 1;
+//					int x = a - 1;
 					Window.alert("Gelöscht wird: "+collectBauteile.get(a).getElement().getName());
 
 					// TODO implementieren
 					// ListBox-Element, das hinzugefügt wurde, wird für
 					// doppeltes Hinzufügen gesperrt
-					listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+					listBoxBauteile.getElement().getElementsByTagName("option").getItem(a).removeAttribute("disabled");
 					
 					collectBauteile.remove(a);
 					
@@ -192,7 +192,7 @@ public class EditStueckliste extends VerticalPanel {
 
 			// Dem Vektor aller Bauteile der Stückliste wird das soeben
 			// erstellte ElementPaar hinzugefügt
-			collectBauteile.add(baugruppenPaar);
+			collectBaugruppen.add(baugruppenPaar);
 			
 			// Button, um in der BauteilCollection-Tabelle und
 			// gleichzeitig dem Vektor ein Bauteil wieder zu entfernen
@@ -228,13 +228,13 @@ public class EditStueckliste extends VerticalPanel {
 
 					// Zum anderen wird das ElementPaar von Bauteil aus
 					// dem collectBauteile Vektor entfernt
-					int x = a - 1;
+//					int x = a - 1;
 					Window.alert("Gelöscht wird: "+collectBaugruppen.get(a).getElement().getName());
 
 					// TODO implementieren
 					// ListBox-Element, das hinzugefügt wurde, wird für
 					// doppeltes Hinzufügen gesperrt
-					listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+					listBoxBauteile.getElement().getElementsByTagName("option").getItem(a).removeAttribute("disabled");
 					
 					collectBaugruppen.remove(a);
 					

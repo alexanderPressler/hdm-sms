@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -36,8 +37,9 @@ public class EditEnderzeugnis extends VerticalPanel {
 			"Um ein Enderzeugnis zu ändern, ändern Sie bitte den Namen und bestätigen mit dem <editieren>-Button ihre Eingabe. Den Inhalt des Enderzeugnisses <p>müssen Sie innerhalb der zugehörigen Baugruppe ändern.");
 	private final Label IdLabel = new Label("Id");
 	private final TextBox IdField = new TextBox();
-	private final Label BgId = new Label("Baugruppen-Id");
+	private final Label BgId = new Label("Zugehörige Baugruppe");
 	private final TextBox BgIdField = new TextBox();
+	private final TextBox BgNameField = new TextBox();
 	private final Label nameLabel = new Label("Name eintragen");
 	private final TextBox NameField = new TextBox();
 	private final Label BaugruppeLabel = new Label("Gewünschte Baugruppe ändern");
@@ -46,10 +48,16 @@ public class EditEnderzeugnis extends VerticalPanel {
 	// Vektor wird mit allen Baugruppen aus der DB befüllt
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
+	//Horizontales Anordnen der Bauteil-Id mit Bauteil-Name
+	HorizontalPanel baugruppePanel = new HorizontalPanel();
+	
 	// Remote Service via ClientsideSettings
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
 	public EditEnderzeugnis(Enderzeugnis editEnderzeugnis) {
+		
+		baugruppePanel.add(BgIdField);
+		baugruppePanel.add(BgNameField);
 		
 		/**
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
@@ -60,7 +68,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 		this.add(IdLabel);
 		this.add(IdField);
 		this.add(BgId);
-		this.add(BgIdField);
+		this.add(baugruppePanel);
 		this.add(nameLabel);
 		this.add(NameField);
 		this.add(BaugruppeLabel);
@@ -72,6 +80,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 		 */
 		IdField.setReadOnly(true);
 		BgIdField.setReadOnly(true);
+		BgNameField.setReadOnly(true);
 		
 		/**
 		 * Diverse css-Formatierungen
@@ -79,6 +88,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
 		EditEnderzeugnisButton.setStyleName("Button");
+		BgIdField.setStyleName("numericInput");
 		
 		/**
 		 * Der Create-Button ruft die RPC-Methode auf, welche das Editieren
@@ -103,6 +113,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 		IdField.setText(iD.toString());
 		NameField.setText(editEnderzeugnis.getName());
 		BgIdField.setText(bGiD.toString());
+		BgNameField.setText(editEnderzeugnis.getBaugruppe().getName());
 		
 		/**
 		 * Abschließend wird alles dem RootPanel zugeordnet
@@ -145,15 +156,14 @@ public class EditEnderzeugnis extends VerticalPanel {
 				e.setName(NameField.getText());
 				
 				Baugruppe b = new Baugruppe();
-//				b.setId();
+				b.setId(Integer.parseInt(BgIdField.getText()));
+				b.setName(BgNameField.getText());
 				
 					/**
 					 * Die konkrete RPC-Methode für den create-Befehl wird
 					 * aufgerufen. Hierbei werden die gewünschten Werte
 					 * mitgeschickt.
 					 */
-					String nameEnderzeugnis = NameField.getText();
-					
 					// Der index dient dazu, herauszufinden, welches Element im
 					// DropDown ausgewählt wurde
 					
@@ -162,7 +172,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 					
 					
 					//TODO implementieren
-//					stuecklistenVerwaltung.editEnderzeugnis(nameEnderzeugnis, b, new EditEnderzeugnisCallback());
+//					stuecklistenVerwaltung.editEnderzeugnis(e.getName(), b, new EditEnderzeugnisCallback());
 					
 					/**
 					 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
