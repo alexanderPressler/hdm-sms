@@ -14,7 +14,7 @@ public class LoopPrevention {
 				//Sich selbst aufrufen, um die Baugruppen der Stueckliste der hinzuzufügenden Baugruppe
 				//mit der Quelle zu vergleichen
 				//Wenn true zurück kommt, true zurück geben, ansonsten weiter mit nächster Baugruppe
-				if(this.checkForLoop(source, toAdd.getStueckliste().getBaugruppenPaare().get(i).getElement())){
+				if(this.checkForLoop(source, (Baugruppe) toAdd.getStueckliste().getBaugruppenPaare().get(i).getElement())){
 					return true;
 				}
 			}
