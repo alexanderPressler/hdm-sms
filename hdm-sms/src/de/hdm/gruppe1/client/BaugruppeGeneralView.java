@@ -137,7 +137,6 @@ public class BaugruppeGeneralView extends VerticalPanel {
 				    	//Da die erste Reihe der Tabelle als Überschriften der Spalten dient, wird eine neue Variable benötigt,
 				    	//die den Index 0 des Vectors auslesen kann.
 				    	final int i = row - 1;
-				    	
 				        RadioButton radioButton = new RadioButton("editRadioGroup", "");
 				        CheckBox checkBox = new CheckBox("");
 
