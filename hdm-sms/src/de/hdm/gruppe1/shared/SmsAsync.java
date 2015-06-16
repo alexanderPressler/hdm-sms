@@ -1,28 +1,25 @@
 package de.hdm.gruppe1.shared;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import de.hdm.gruppe1.shared.bo.User;
+
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
-import de.hdm.gruppe1.shared.bo.Element;
-import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
-
+import de.hdm.gruppe1.shared.bo.Enderzeugnis;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.bo.User;
 
 /**
- * Das asynchrone Gegenstueck des Interface {@link Sms}. Es wird
+ * Das asynchrone Gegenstück des Interface {@link BankAdministration}. Es wird
  * semiautomatisch durch das Google Plugin erstellt und gepflegt. Daher erfolgt
- * hier keine weitere Dokumentation. Fuer weitere Informationen siehe das
- * synchrone Interface {@link Sms}.
+ * hier keine weitere Dokumentation. Für weitere Informationen siehe das
+ * synchrone Interface {@link BankAdministration}.
  * 
- * @author thies& Schmidt
+ * @author Alexander Pressler &  thies
  */
 public interface SmsAsync {
-	void init(AsyncCallback<Void> callback);
-	
 	
 	void createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung, AsyncCallback<Bauteil> callback);
@@ -31,13 +28,11 @@ public interface SmsAsync {
 
 	void delete(Bauteil b, AsyncCallback<Void> callback);
 
-	void getBauteilById(int id, AsyncCallback<Bauteil> callback);
+	void init(AsyncCallback<Void> callback);
 
 	void getAllBauteile(AsyncCallback<Vector<Bauteil>> callback);
 
-	/*
-	 * Stuecklisten Async
-	 */
+	void getBauteilById(int id, AsyncCallback<Bauteil> callback);
 
 	void createStueckliste(String name, Vector<ElementPaar> BauteilPaare,
 			Vector<ElementPaar> BaugruppenPaare,
@@ -49,31 +44,25 @@ public interface SmsAsync {
 
 	void saveStueckliste(Stueckliste s, AsyncCallback<Void> callback);
 
-	
-	/*
-	 * Baugruppen Async
-	 */
-	
-	void createBaugruppe(String name, 
-			Vector<Baugruppe> Baugruppe,
+	void createUser(String googleID, String name, AsyncCallback<User> callback);
+
+	void createBaugruppe(String name, Vector<ElementPaar> collectBauteile,Vector<ElementPaar> collectBaugruppen,
 			AsyncCallback<Baugruppe> callback);
-	
+
+	void deleteBaugruppe(Baugruppe b, AsyncCallback<Void> callback);
+
+	void saveBaugruppe(Baugruppe b, AsyncCallback<Void> callback);
+
 	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
-	
-	void saveBaugruppe(Baugruppe bg, AsyncCallback<Void> callback);
 
-	void deleteBaugruppe(Baugruppe bg, AsyncCallback<Void> callback);
+	void createEnderzeugnis(String name, Baugruppe baugruppe,
+			AsyncCallback<Enderzeugnis> callback);
 
-	void getBaugruppeByName(String name,AsyncCallback<Vector<Baugruppe>> callback);
-	
+	void deleteEnderzeugnis(Enderzeugnis e, AsyncCallback<Void> callback);
+
+	void saveEnderzeugnis(Enderzeugnis e, AsyncCallback<Void> callback);
+
+	void getAllEnderzeugnis(AsyncCallback<Vector<Enderzeugnis>> callback);
+
 	void getBaugruppeById(int id, AsyncCallback<Baugruppe> callback);
-	
-
-	
-	
-
-
-
-	
-
 }
