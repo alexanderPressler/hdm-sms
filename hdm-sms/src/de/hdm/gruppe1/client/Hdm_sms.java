@@ -38,6 +38,34 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 		      }
 		};
 		
+		Command createBaugruppe = new Command() {
+		      public void execute() {
+			        RootPanel.get("content_wrap").clear();
+			        RootPanel.get("content_wrap").add(new CreateBaugruppe());
+		      }
+		};
+		
+		Command allBaugruppen = new Command() {
+		      public void execute() {
+		        RootPanel.get("content_wrap").clear();
+		        RootPanel.get("content_wrap").add(new BaugruppeGeneralView());
+		      }
+		};
+		
+		Command createEnderzeugnis = new Command() {
+		      public void execute() {
+			        RootPanel.get("content_wrap").clear();
+			        RootPanel.get("content_wrap").add(new CreateEnderzeugnis());
+		      }
+		};
+		
+		Command allEnderzeugnisse = new Command() {
+		      public void execute() {
+		        RootPanel.get("content_wrap").clear();
+		        RootPanel.get("content_wrap").add(new EnderzeugnisGeneralView());
+		      }
+		};
+		
 		Command createStueckliste = new Command() {
 		      public void execute() {
 		    	  RootPanel.get("content_wrap").clear();
@@ -49,13 +77,6 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 		      public void execute() {
 		    	  RootPanel.get("content_wrap").clear();
 		    	  RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
-		      }
-		};
-		
-		Command testCmd = new Command() {
-		      public void execute() {
-		    	  RootPanel.get("content_wrap").clear();
-		    	  Window.alert("Platzhalter");
 		      }
 		};
 		
@@ -89,13 +110,13 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 
 	    //Das Menü von Baugruppen erhält folgende Mouse-Over Untermenüs
 	    MenuBar baugruppeMenu = new MenuBar(true);
-	    baugruppeMenu.addItem("Baugruppe anlegen", testCmd);
-	    baugruppeMenu.addItem("Alle anzeigen", testCmd);
+	    baugruppeMenu.addItem("Baugruppe anlegen", createBaugruppe);
+	    baugruppeMenu.addItem("Alle anzeigen", allBaugruppen);
 
 	    //Das Menü von Enderzeugnissen erhält folgende Mouse-Over Untermenüs
 	    MenuBar enderzeugnisMenu = new MenuBar(true);
-	    enderzeugnisMenu.addItem("Enderzeugnis anlegen", testCmd);
-	    enderzeugnisMenu.addItem("Alle Anzeigen", testCmd);
+	    enderzeugnisMenu.addItem("Enderzeugnis anlegen", createEnderzeugnis);
+	    enderzeugnisMenu.addItem("Alle Anzeigen", allEnderzeugnisse);
 	    
 	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
 	    MenuBar stuecklisteMenu = new MenuBar(true);
