@@ -1,5 +1,6 @@
 package de.hdm.gruppe1.client;
 
+import java.util.Date;
 import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -17,6 +18,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
+
 
 /**
  * Die Klasse BauteilGeneralView liefert eine Übersicht mit allen vorhandenen
@@ -94,11 +96,13 @@ public class BauteilGeneralView extends VerticalPanel {
 		 */
 		editButtonPanel.add(editLabel);
 		editButtonPanel.add(editBtn);
-
-		deleteBtn.addClickHandler(new deleteClickHandler());
 		deleteButtonPanel.add(deleteLabel);
 		deleteButtonPanel.add(deleteBtn);
-
+		/**
+		 * Dem Delete-Button wird der am Ende dieser Klasse erstellte deleteClickHandler zugeordnet.
+		 */
+		deleteBtn.addClickHandler(new deleteClickHandler());
+		
 		/**
 		 * Diverse css-Formatierungen
 		 */
@@ -215,7 +219,7 @@ public class BauteilGeneralView extends VerticalPanel {
 					CheckBox checkBox = new CheckBox("");
 					RadioButton radioButton = new RadioButton("editRadioGroup",
 							"");
-
+					
 					/**
 					 * Pro Vektor-Index wird eine Reihe in die Tabelle
 					 * geschrieben.
@@ -226,8 +230,8 @@ public class BauteilGeneralView extends VerticalPanel {
 							.getMaterialBeschreibung());
 					table.setText(row, 3, allBauteile.get(i)
 							.getBauteilBeschreibung());
-					table.setText(row, 4, "Mario");
-					table.setText(row, 5, "02.05.2015, 18 Uhr");
+					table.setText(row, 4, allBauteile.get(i).getEditUser().getName());
+					table.setText(row, 5, allBauteile.get(i).getEditDate().toString().substring(0, 19));
 
 					/**
 					 * An dieser Stelle wird pro Schleifendurchlauf ein
@@ -244,8 +248,7 @@ public class BauteilGeneralView extends VerticalPanel {
 					 * editBauteil von "Bauteil" mit dem Objekt der
 					 * entsprechenden Tabellen-Reihe.
 					 */
-					radioButton
-							.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					radioButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 								@Override
 								public void onValueChange(
 										ValueChangeEvent<Boolean> e) {
@@ -265,16 +268,11 @@ public class BauteilGeneralView extends VerticalPanel {
 						@Override
 						public void onValueChange(ValueChangeEvent<Boolean> e) {
 							if (e.getValue() == true) {
-								
 								Bauteil deleteBauteil = allBauteile.get(i);
 								deleteBauteile.add(deleteBauteil);
-								Window.alert("Inhalt Vektor: "
-										+ deleteBauteile.toString());
 							} else if (e.getValue() == false) {
 								Bauteil removeBauteil = allBauteile.get(i);
 								deleteBauteile.remove(removeBauteil);
-								Window.alert("Gelöscht: "
-										+ deleteBauteile.toString());
 							}
 						}
 					});
@@ -300,8 +298,7 @@ public class BauteilGeneralView extends VerticalPanel {
 						Window.alert("Bitte wählen Sie ein Bauteil zum editieren aus.");
 					} else {
 						RootPanel.get("content_wrap").clear();
-						RootPanel.get("content_wrap").add(
-								new EditBauteil(editBauteil));
+						RootPanel.get("content_wrap").add(new EditBauteil(editBauteil));
 					}
 
 				}
@@ -334,13 +331,21 @@ public class BauteilGeneralView extends VerticalPanel {
 					 * aufgerufen. Hierbei werden die gewünschten Werte
 					 * mitgeschickt.
 					 */
-					stuecklistenVerwaltung.delete(b,
-							new DeleteBauteilCallback());
+					stuecklistenVerwaltung.delete(b,new DeleteBauteilCallback());
+					RootPanel.get("content_wrap").clear();
+					RootPanel.get("content_wrap").add(new BauteilGeneralView());
 				}
 			}
 		}
 	}
 
+	/**
+	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
+	 * Delete-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
+	 * 
+	 * @author Mario Alex
+	 *
+	 */
 	class DeleteBauteilCallback implements AsyncCallback<Void> {
 
 		@Override
@@ -351,7 +356,9 @@ public class BauteilGeneralView extends VerticalPanel {
 		@Override
 		public void onSuccess(Void result) {
 
-			Window.alert("Das Bauteil wurde erfolgreich geloescht.");
+			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
+			//Wenn nicht, dann zeige diesen Window Alert an.
+			Window.alert("Das Bauteil wurde erfolgreich geloescht, wenn es nirgendwo referenziert ist.");
 		}
 	}
 }
