@@ -80,13 +80,6 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 		      }
 		};
 		
-		Command testCmd = new Command() {
-		      public void execute() {
-		    	  RootPanel.get("content_wrap").clear();
-		    	  Window.alert("Platzhalter");
-		      }
-		};
-		
 		Command report1 = new Command() {
 		      public void execute() {
 		    	  RootPanel.get("content_wrap").clear();
@@ -115,7 +108,7 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 	    bauteilMenu.addItem("Bauteil anlegen", createBauteil);
 	    bauteilMenu.addItem("Alle anzeigen", allBauteile);
 
-	  //Das Menü von Baugruppen erhält folgende Mouse-Over Untermenüs
+	    //Das Menü von Baugruppen erhält folgende Mouse-Over Untermenüs
 	    MenuBar baugruppeMenu = new MenuBar(true);
 	    baugruppeMenu.addItem("Baugruppe anlegen", createBaugruppe);
 	    baugruppeMenu.addItem("Alle anzeigen", allBaugruppen);
@@ -129,7 +122,7 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 	    MenuBar stuecklisteMenu = new MenuBar(true);
 	    stuecklisteMenu.addItem("Stückliste anlegen", createStueckliste);
 	    stuecklisteMenu.addItem("Alle Anzeigen", allStuecklisten);
-
+	    
 	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
 	    MenuBar reportMenu = new MenuBar(true);
 	    reportMenu.addItem("Strukturstücklisten", report1);

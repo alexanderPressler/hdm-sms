@@ -3,12 +3,9 @@ package de.hdm.gruppe1.client;
 import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -33,7 +30,7 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
 public class CreateStueckliste extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für CreateStueckliste initialisieren
+	 * GUI-Elemente für CreateStueckliste initialisieren.
 	 */
 	private final Label HeadlineLabel = new Label("Stückliste anlegen");
 	private final Label SublineLabel = new Label(
@@ -54,45 +51,61 @@ public class CreateStueckliste extends VerticalPanel {
 	private final Button CreateStuecklisteButton = new Button(
 			"Stückliste anlegen");
 
-	// Panels, um die hinzufügen-Buttons neben den Dropdowns zu platzieren
+	/**
+	 * Einige GUI-Elemente sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
+	 * ein "horizontales Zwischen-Panel" benötigt.
+	 */
 	HorizontalPanel btPanel = new HorizontalPanel();
 	HorizontalPanel bgPanel = new HorizontalPanel();
 
-	// Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
+	/**
+	 *  Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt.
+	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 
-	// Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu
-	// sammeln, bevor die Stückliste gespeichert wird
+	/**
+	 *  Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu
+	 *  sammeln, bevor die Baugruppe gespeichert wird.
+	 */
 	Vector<ElementPaar> collectBauteile = new Vector<ElementPaar>();
 	Vector<ElementPaar> collectBaugruppen = new Vector<ElementPaar>();
 
-	// Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die
-	// Stückliste gespeichert wird
+	/**
+	 *  Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die
+	 *  Baugruppe gespeichert wird.
+	 */
 	FlexTable bauteilCollection = new FlexTable();
 	FlexTable baugruppeCollection = new FlexTable();
 
-	// Remote Service via ClientsideSettings
+	/**
+	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
+	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
+	 * werden.
+	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
-
-	// Konstruktor der Klasse CreateStueckliste. Gibt vor, dass bei jeder
-	// Instantiierung die entsprechenden GUI-Elemente
-	// geladen werden.
+	
+	int c = 0;
+	
 	public CreateStueckliste() {
 
-		// TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
-		// die TextBox vom User fokussiert wird
-		NameField.getElement().setPropertyString("placeholder",
-				"Hier bitte Namen eintragen");
+		/**
+		 * TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
+		 * die TextBox vom User fokussiert wird.
+		 */
+		NameField.getElement().setPropertyString("placeholder", "Name");
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
-		amountBaugruppen.getElement()
-				.setPropertyString("placeholder", "Anzahl");
+		amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
 
-		// ClickHandler um zu prüfen, ob die Texteingabe numerisch ist
+		/**
+		 *  ClickHandler um zu prüfen, ob die Texteingabe numerisch ist.
+		 */
 		collectBtButton.addClickHandler(new numericBtHandler());
 		collectBgButton.addClickHandler(new numericBgHandler());
 
-		// Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
+		/**
+		 * Die erste Reihe der Tabellen wird mit Überschriften vordefiniert.
+		 */
 		bauteilCollection.setText(0, 0, "ID");
 		bauteilCollection.setText(0, 1, "Anzahl");
 		bauteilCollection.setText(0, 2, "Name");
@@ -103,12 +116,16 @@ public class CreateStueckliste extends VerticalPanel {
 		baugruppeCollection.setText(0, 2, "Name");
 		baugruppeCollection.setText(0, 3, "Entfernen");
 
-		// css für Tabelle definieren
+		/**
+		 * Diverse css-Formatierungen für die Tabelle
+		 */
 		bauteilCollection.setStyleName("tableBody");
 		baugruppeCollection.setStyleName("tableBody");
 
-		// Das FlexTable Widget unterstützt keine Headlines. Daher wird die
-		// erste Reihe über folgenden Umweg formatiert
+		/**
+		 * Das FlexTable Widget unterstützt keine Headlines. Daher wird die
+		 * erste Reihe über folgenden Umweg formatiert.
+		 */
 		bauteilCollection.getCellFormatter().addStyleName(0, 0, "tableHead");
 		bauteilCollection.getCellFormatter().addStyleName(0, 1, "tableHead");
 		bauteilCollection.getCellFormatter().addStyleName(0, 2, "tableHead");
@@ -119,99 +136,110 @@ public class CreateStueckliste extends VerticalPanel {
 		baugruppeCollection.getCellFormatter().addStyleName(0, 2, "tableHead");
 		baugruppeCollection.getCellFormatter().addStyleName(0, 3, "tableHead");
 
-		// Um das Dropdown mit Bauteilen aus der DB zu befüllen, wird dieser
-		// RPC-Aufruf gestartet
+		/**
+		 * RPC-Methode ausführen, die alle Bauteil-Objekte aus der Datenbank in
+		 * einem Vektor zurückliefert. Dadurch wird der Klassen-Vektor
+		 * "allBauteile" befüllt.
+		 */
 		stuecklistenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
 
-		// Mithilfe des Hinzufügen-Buttons wird die BauteilCollection Tabelle
-		// befüllt
+		/**
+		 *  Mithilfe des Hinzufügen-Buttons wird die BauteilCollection Tabelle befüllt.
+		 */
 		collectBtButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
-				// Der index dient dazu, herauszufinden, welches Element im
-				// DropDown ausgewählt wurde
-				int index = listBoxBauteile.getSelectedIndex();
-
-				// amountBauteile ist eine TextBox. Diese wird hiermit in einen
-				// int-Wert umgewandelt
+				/**
+				 *  Der index dient dazu, herauszufinden, welches Element im DropDown ausgewählt wurde.
+				 */
+				final int index = listBoxBauteile.getSelectedIndex();
+				
+				/**
+				 *  amountBauteile ist eine TextBox. Diese wird hiermit in einen int-Wert umgewandelt.
+				 */
 				Integer anzahl = Integer.parseInt(amountBauteile.getText());
 
-				// Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
-				// welches in den folgenden Zeilen befüllt wird
+				/**
+				 *  Der Vektor collectBauteile wird ein Objekt von ElementPaar hinzugefügt,
+				 *  welches in den folgenden Zeilen befüllt wird.
+				 */
 				ElementPaar bauteilPaar = new ElementPaar();
 				bauteilPaar.setAnzahl(anzahl);
 				bauteilPaar.setElement(allBauteile.get(index));
+				
+				int c = allBauteile.get(index).getId();
 
-				// Dem Vektor aller Bauteile der Stückliste wird das soeben
-				// erstellte ElementPaar hinzugefügt
+				/**
+				 *  Dem Vektor aller Bauteile der Stückliste wird das soeben erstellte ElementPaar hinzugefügt.
+				 */
 				collectBauteile.add(bauteilPaar);
 
-				// ListBox-Element, das hinzugefügt wurde, wird für doppeltes
-				// Hinzufügen gesperrt
-				listBoxBauteile.getElement().getElementsByTagName("option")
-						.getItem(index).setAttribute("disabled", "disabled");
+				/**
+				 * Das ListBox-Element, welches hinzugefügt wurde, wird für doppeltes Hinzufügen ausgegraut.
+				 */
+				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
 
-				// Die Übersichtstabelle, welche für den User eine hilfreiche
-				// Übersicht aller hinzugefügten Bauteile
-				// bereitstellt, wird mithilfe dieser for-Schleife aufgebaut.
-				// Die Schleife startet bei i = 1, da die
-				// erste Reihe der Tabelle bereits mit den Überschriften befüllt
-				// ist und diese nicht überschrieben werden
-				// soll.
+				/**
+				 *  Die Übersichtstabelle, welche für den User eine hilfreiche
+				 *  Übersicht aller hinzugefügten Bauteile
+				 *  bereitstellt, wird mithilfe dieser for-Schleife aufgebaut.
+				 *  Die Schleife startet bei i = 1, da die
+				 *  erste Reihe der Tabelle bereits mit den Überschriften befüllt
+				 *  ist und diese nicht überschrieben werden soll.
+				 */
 				for (int i = 1; i <= collectBauteile.size(); i++) {
 
-					// Button, um in der BauteilCollection-Tabelle und
-					// gleichzeitig dem Vektor ein Bauteil wieder zu entfernen
+					/**
+					 *  Button, um in der BauteilCollection-Tabelle und
+					 *  gleichzeitig dem Vektor ein Bauteil wieder zu entfernen.
+					 */
 					final Button removeBtButton = new Button("x");
 
-					// Der Wert von i muss final sein, damit sie im
-					// nachfolgenden ClickHandler verwendet werden kann.
-					// Daher wird sie mithilfe von int a finalisiert.
+					/**
+					 *  Der Wert von i muss final sein, damit sie im
+					 *  nachfolgenden ClickHandler verwendet werden kann.
+					 *  Daher wird sie mithilfe von int a finalisiert.
+					 */
 					final int a = i;
 
-					// Die Tabelle befüllt sich aus allen Elementen, die im
-					// collectBauteile-Vektor vorhanden sind.
-					bauteilCollection.setText(a, 0,
-							""
-									+ collectBauteile.get(i - 1).getElement()
-											.getId());
-					bauteilCollection.setText(a, 1,
-							"" + collectBauteile.get(i - 1).getAnzahl());
-					bauteilCollection.setText(a, 2, collectBauteile.get(i - 1)
-							.getElement().getName());
+					/**
+					 *  Die Tabelle befüllt sich aus allen Elementen, die im
+					 *  collectBauteile-Vektor vorhanden sind.
+					 */
+					bauteilCollection.setText(a, 0, ""+ collectBauteile.get(i - 1).getElement().getId());
+					bauteilCollection.setText(a, 1, "" + collectBauteile.get(i - 1).getAnzahl());
+					bauteilCollection.setText(a, 2, collectBauteile.get(i - 1).getElement().getName());
 					bauteilCollection.setWidget(a, 3, removeBtButton);
 
-					// In jeder Reihe wird ein Entfernen-Button platziert, damit
-					// der User schnell und unkompliziert
-					// jederzeit ein ElementPaar von Bauteil wieder entfernen
-					// kann. Es ist ihm lediglich möglich,
-					// gesamte ElementPaare von Bauteilen zu entfernen. Dies
-					// muss er ebenfalls durchführen, wenn er
-					// lediglich die Anzahl ändern möchte. Das Bauteil mit der
-					// gewünschten neuen Anzahl kann er
-					// schnell erneutaus dem Dropdown hinzufügen.
+					/**
+					 *  In jeder Reihe wird ein Entfernen-Button platziert, damit der User schnell und unkompliziert
+					 *  jederzeit ein ElementPaar von Bauteil wieder entfernen kann. Es ist ihm lediglich möglich,
+					 *  gesamte ElementPaare von Bauteilen zu entfernen. Dies muss er ebenfalls durchführen, wenn er
+					 *  lediglich die Anzahl ändern möchte. Das Bauteil mit der gewünschten neuen Anzahl kann er
+					 *  schnell erneut aus dem Dropdown hinzufügen.
+					 */
 					removeBtButton.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 
-							// Zum einen wird die entsprechende Reihe aus der
-							// FlexTable entfernt.
-							int rowIndex = bauteilCollection.getCellForEvent(
-									event).getRowIndex();
+							/**
+							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
+							 */
+							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
 							bauteilCollection.removeRow(rowIndex);
 
-							// Zum anderen wird das ElementPaar von Bauteil aus
-							// dem collectBauteile Vektor entfernt
+							/**
+							 *  Zum anderen wird das ElementPaar von Bauteil aus dem collectBauteile Vektor entfernt.
+							 */
 							int x = a - 1;
-							collectBauteile.remove(x);
+							
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement()
-									.getElementsByTagName("option")
-									.getItem(rowIndex)
-									.setAttribute("enabled", "enabled");
-
+							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+							
+							collectBauteile.remove(x);
+							
 						}
 					});
 				}
@@ -220,131 +248,108 @@ public class CreateStueckliste extends VerticalPanel {
 
 		});
 
-		// Übergangsweise, bevor Merge mit Galina und Katja erfolgt ist,
-		// erstelle ich mir an dieser Stelle eigene Objekte
-		// von Baugruppen. An dieser Stelle muss nach dem Merge ein Vektor mit
-		// allen Baugruppen aus der DB mithilfe eines
-		// RPC angefragt werden.
-		Baugruppe a = new Baugruppe();
-		Baugruppe b = new Baugruppe();
-		Baugruppe c = new Baugruppe();
+		/**
+		 * RPC-Methode ausführen, die alle Baugruppen-Objekte aus der Datenbank in
+		 * einem Vektor zurückliefert. Dadurch wird der Klassen-Vektor
+		 * "allBaugruppen" befüllt.
+		 */
+		 stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 
-		a.setId(1);
-		b.setId(2);
-		c.setId(3);
-
-		a.setName("Name1");
-		b.setName("Name2");
-		c.setName("Name3");
-
-		allBaugruppen.add(a);
-		allBaugruppen.add(b);
-		allBaugruppen.add(c);
-
-		listBoxBaugruppen.addItem(a.getName());
-		listBoxBaugruppen.addItem(b.getName());
-		listBoxBaugruppen.addItem(c.getName());
-
-		// TODO implementieren
-		// Um das Dropdown mit Bauteilen aus der DB zu befüllen, wird dieser
-		// RPC-Aufruf gestartet
-		// stuecklistenVerwaltung.getAllBaugruppen(new
-		// GetAllBaugruppenCallback());
-
-		// Mithilfe des Hinzufügen-Buttons wird die BauteilCollection Tabelle
-		// befüllt
+			/**
+			 *  Mithilfe des Hinzufügen-Buttons wird die BaugruppenCollection Tabelle befüllt.
+			 */
 		collectBgButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
-				// Der index dient dazu, herauszufinden, welches Element im
-				// DropDown ausgewählt wurde
+				/**
+				 *  Der index dient dazu, herauszufinden, welches Element im DropDown ausgewählt wurde.
+				 */
 				int index = listBoxBaugruppen.getSelectedIndex();
 
-				// amountBauteile ist eine TextBox. Diese wird hiermit in einen
-				// int-Wert umgewandelt
+				/**
+				 *  amountBaugruppen ist eine TextBox. Diese wird hiermit in einen int-Wert umgewandelt.
+				 */
 				Integer anzahl = Integer.parseInt(amountBaugruppen.getText());
 
-				// Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
-				// welches in den folgenden Zeilen befüllt wird
+				/**
+				 *  Der Vektor collectBauteile wird ein Objekt von ElementPaar hinzugefügt,
+				 *  welches in den folgenden Zeilen befüllt wird.
+				 */
 				ElementPaar baugruppePaar = new ElementPaar();
 				baugruppePaar.setAnzahl(anzahl);
 				baugruppePaar.setElement(allBaugruppen.get(index));
 
-				// Dem Vektor aller Baugruppen der Stückliste wird das soeben
-				// erstellte ElementPaar hinzugefügt
+				/**
+				 *  Dem Vektor aller Baugruppen der Stückliste wird das soeben erstellte ElementPaar hinzugefügt.
+				 */
 				collectBaugruppen.add(baugruppePaar);
 
-				// ListBox-Element, das hinzugefügt wurde, wird für doppeltes
-				// Hinzufügen gesperrt
+				/**
+				 * Das ListBox-Element, welches hinzugefügt wurde, wird für doppeltes Hinzufügen ausgegraut.
+				 */
 				listBoxBaugruppen.getElement().getElementsByTagName("option")
 						.getItem(index).setAttribute("disabled", "disabled");
 
-				// Die Übersichtstabelle, welche für den User eine hilfreiche
-				// Übersicht aller hinzugefügten Baugruppen
-				// bereitstellt, wird mithilfe dieser for-Schleife aufgebaut.
-				// Die Schleife startet bei i = 1, da die
-				// erste Reihe der Tabelle bereits mit den Überschriften befüllt
-				// ist und diese nicht überschrieben werden
-				// soll.
+				/**
+				 *  Die Übersichtstabelle, welche für den User eine hilfreiche
+				 *  Übersicht aller hinzugefügten Bauteile
+				 *  bereitstellt, wird mithilfe dieser for-Schleife aufgebaut.
+				 *  Die Schleife startet bei i = 1, da die
+				 *  erste Reihe der Tabelle bereits mit den Überschriften befüllt
+				 *  ist und diese nicht überschrieben werden soll.
+				 */
 				for (int i = 1; i <= collectBaugruppen.size(); i++) {
 
-					// Button, um in der BaugruppeCollection-Tabelle und
-					// gleichzeitig dem Vektor eine Baugruppe
-					// wieder zu entfernen
+					/**
+					 *  Button, um in der BaugruppenCollection-Tabelle und
+					 *  gleichzeitig dem Vektor eine Baugruppe wieder zu entfernen.
+					 */
 					final Button removeBgButton = new Button("x");
 
-					// Der Wert von i muss final sein, damit sie im
-					// nachfolgenden ClickHandler verwendet werden kann.
-					// Daher wird sie mithilfe von int a finalisiert.
+					/**
+					 *  Der Wert von i muss final sein, damit sie im
+					 *  nachfolgenden ClickHandler verwendet werden kann.
+					 *  Daher wird sie mithilfe von int b finalisiert.
+					 */
 					final int b = i;
 
-					// Die Tabelle befüllt sich aus allen Elementen, die im
-					// collectBaugruppen-Vektor vorhanden sind.
-					baugruppeCollection
-							.setText(b, 0, ""
-									+ collectBaugruppen.get(i - 1).getElement()
-											.getId());
-					baugruppeCollection.setText(b, 1, ""
-							+ collectBaugruppen.get(i - 1).getAnzahl());
-					baugruppeCollection
-							.setText(b, 2, collectBaugruppen.get(i - 1)
-									.getElement().getName());
+					/**
+					 *  Die Tabelle befüllt sich aus allen Elementen, die im
+					 *  collectBaugruppen-Vektor vorhanden sind.
+					 */
+					baugruppeCollection.setText(b, 0, ""+ collectBaugruppen.get(i - 1).getElement().getId());
+					baugruppeCollection.setText(b, 1, ""+ collectBaugruppen.get(i - 1).getAnzahl());
+					baugruppeCollection.setText(b, 2, collectBaugruppen.get(i - 1).getElement().getName());
 					baugruppeCollection.setWidget(b, 3, removeBgButton);
 
-					// In jeder Reihe wird ein Entfernen-Button platziert, damit
-					// der User schnell und unkompliziert
-					// jederzeit ein ElementPaar von Baugruppe wieder entfernen
-					// kann. Es ist ihm lediglich möglich,
-					// gesamte ElementPaare von Baugruppen zu entfernen. Dies
-					// muss er ebenfalls durchführen, wenn er
-					// lediglich die Anzahl ändern möchte. Die Baugruppe mit der
-					// gewünschten neuen Anzahl kann er
-					// schnell erneutaus dem Dropdown hinzufügen.
+					/**
+					 *  In jeder Reihe wird ein Entfernen-Button platziert, damit der User schnell und unkompliziert
+					 *  jederzeit ein ElementPaar von Baugruppe wieder entfernen kann. Es ist ihm lediglich möglich,
+					 *  gesamte ElementPaare von Baugruppen zu entfernen. Dies muss er ebenfalls durchführen, wenn er
+					 *  lediglich die Anzahl ändern möchte. Die Baugruppe mit der gewünschten neuen Anzahl kann er
+					 *  schnell erneut aus dem Dropdown hinzufügen.
+					 */
 					removeBgButton.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
 
-							// Zum einen wird die entsprechende Reihe aus der
-							// FlexTable entfernt.
-							int rowIndex = baugruppeCollection.getCellForEvent(
-									event).getRowIndex();
+							/**
+							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
+							 */
+							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
 							baugruppeCollection.removeRow(rowIndex);
 
-							// Zum anderen wird das ElementPaar von Baugruppe
-							// aus dem collectBaugruppen Vektor entfernt
+							/**
+							 *  Zum anderen wird das ElementPaar von Baugruppe aus dem collectBaugruppen Vektor entfernt.
+							 */
 							int x = b - 1;
-							collectBauteile.remove(x);
 
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							// listBoxBaugruppen.getElement().setAttribute("enabled",
-							// "enabled");
-
-							listBoxBaugruppen.getElement()
-									.getElementsByTagName("option")
-									.getItem(rowIndex)
-									.setAttribute("disabled", "disabled");
-
+							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+							
+							collectBauteile.remove(x);
+							
 						}
 
 					});
@@ -455,6 +460,55 @@ public class CreateStueckliste extends VerticalPanel {
 
 		}
 	}
+	
+	/**
+	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
+	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
+	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
+	 * zuzugreifen.
+	 * 
+	 * @author Mario
+	 * 
+	 */
+	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Baugruppen konnten nicht geladen werden");
+		}
+
+		@Override
+		public void onSuccess(Vector<Baugruppe> alleBaugruppen) {
+
+			/**
+			 * Der Baugruppen-Vektor allBaugruppen wird mit dem Ergebnis dieses RPC´s
+			 * befüllt.
+			 */
+			allBaugruppen = alleBaugruppen;
+
+			if (allBaugruppen.isEmpty() == true) {
+
+				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
+
+			} else {
+
+				/**
+				 * Die Schleife durchläuft den kompletten Ergebnis-Vektor.
+				 */
+				for (int c = 0; c <= allBaugruppen.size(); c++) {
+
+					/**
+					 * Das DropDown wird mithilfe dieser for-Schleife für jede
+					 * Baugruppe mit dessen Namen befüllt.
+					 */
+					listBoxBaugruppen.addItem(allBaugruppen.get(c).getName());
+
+				}
+
+			}
+
+		}
+	}
 
 	// Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
 	// eine Hinweismeldung.
@@ -468,7 +522,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 			if (amountBauteile.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZhal(amountBauteile.getText()) == false) {
+			} else if (FieldVerifier.istZahl(amountBauteile.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
@@ -487,7 +541,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 			if (amountBaugruppen.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZhal(amountBaugruppen.getText()) == false) {
+			} else if (FieldVerifier.istZahl(amountBaugruppen.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 

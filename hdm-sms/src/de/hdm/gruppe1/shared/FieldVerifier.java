@@ -40,7 +40,7 @@ public class FieldVerifier {
 		return name.length() > 3;
 	}
 	
-	public static boolean istZhal(String boxinhalt) {
+	public static boolean istZahl(String boxinhalt) {
 		if (boxinhalt.matches("[0-9]+")){
 			return true;
 		}

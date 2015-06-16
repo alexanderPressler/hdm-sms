@@ -1,18 +1,17 @@
 package de.hdm.gruppe1.shared;
 
-
 import java.util.Vector;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.google.gwt.user.rebind.rpc.ServiceInterfaceProxyGenerator;
 
-import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
-import de.hdm.gruppe1.shared.bo.Element;
+import de.hdm.gruppe1.shared.bo.ElementPaar;
+import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.bo.User;
+
 /**
  * <p>
  * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Banken.
@@ -40,7 +39,7 @@ import de.hdm.gruppe1.shared.bo.User;
  * Servlets an.
  * </p>
  * 
- * @author Thies
+ * @author  Alexander Pressler & Thies
  */
 // TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
 @RemoteServiceRelativePath("sms")
@@ -96,31 +95,25 @@ public interface Sms extends RemoteService {
 
 	User createUser(String googleID, String name)
 			throws IllegalArgumentException;
-	
 
-	
-	// Baugruppe
-	
-	
-	
-	Vector<Baugruppe> getAllBaugruppen()
-			throws IllegalArgumentException;
-	
-	public void save (Baugruppe bg)
-			 throws IllegalArgumentException;
-	
-	void delete(Baugruppe bg)
-	throws IllegalArgumentException;
-	
-	Vector<Baugruppe> getBaugruppeByName(String name);
-	
-	Baugruppe getBaugruppeById(int id)
-			 throws IllegalArgumentException;
-
-	Baugruppe createBaugruppe(String name, Stueckliste stueckliste)
+	Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare,
+			Vector<ElementPaar> BaugruppenPaare)
 			throws IllegalArgumentException;
 
+	void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException;
 
-	
-	
+	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException;
+
+	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
+
+	Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe)
+			throws IllegalArgumentException;
+
+	void deleteEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException;
+
+	void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException;
+
+	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
+
+	Baugruppe getBaugruppeById(int id) throws IllegalArgumentException;
 }

@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Vector;
 
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.User;
 
@@ -112,4 +114,27 @@ public class UserMapper {
 	     */
 	    return user;
 	  }	
+	  
+	  public User findByID (int id){
+			Connection con = DBConnection.connection();
+			User user = null;
+			try{
+				Statement stmt = con.createStatement();
+			    
+			    ResultSet rs = stmt.executeQuery("SELECT * FROM User WHERE userID ='"
+			    		+id+"';");
+			    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+			    if(rs.next()){
+			    	user = new User();
+			    	user.setId(rs.getInt("userID"));
+			    	user.setName(rs.getString("eMail"));
+			    	user.setGoogleID(rs.getString("googleID"));
+			    	
+			    }
+			}
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+			return user;
+		}
 }

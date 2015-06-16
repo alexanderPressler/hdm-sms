@@ -20,7 +20,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 		public void onLoad(){
 	    
 	    	Button impressumBtn = new Button("Impressum");
-	    	impressumBtn.setStylePrimaryName("Button");
+	    	impressumBtn.setStylePrimaryName("impressumBtn");
+	    	
+	    	final Button goBackBtn = new Button("zurück");
 	        
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
@@ -35,13 +37,21 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	        		"<td>0711 8923 10</td></tr>"+
 	        		"<tr><td>E-Mail:</td>"+
 	        		"<td>info@hdm-stuttgart.de</td>"+
-	        		"</tr></table>"
+	        		"</tr></table><p>"
 	        		);
 	        
 	        impressumBtn.addClickHandler(new ClickHandler() {
 	        	public void onClick(ClickEvent event) {     	
 	        		RootPanel.get("content_wrap").clear();
+	        		RootPanel.get("content_wrap").add(goBackBtn);
 	        		RootPanel.get("content_wrap").add(html);
+	        	}
+	        });
+	        
+	        goBackBtn.addClickHandler(new ClickHandler() {
+	        	public void onClick(ClickEvent event) {
+	        		RootPanel.get("content_wrap").clear();
+	        		RootPanel.get("content_warp").add(new Hdm_sms());
 	        	}
 	        });
 	        
