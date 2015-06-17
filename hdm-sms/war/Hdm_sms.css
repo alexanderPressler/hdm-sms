@@ -10,12 +10,28 @@
 	opacity: 0.3;
 }
 
-/** Tabellenüberschriften */
+ /*Content Impressum*/
+#Impressum{
+	width:80px;
+	
+	} 
+	
+  .impressumBtn{
+  font-size:11px;
+  background:none;
+  padding:0px;
+  color:#279ad0;
+  text-decoration:underline;
+  border:none;
+  
+  }
+
+/** TabellenÃ¼berschriften */
 .tableHead{
 	font-weight: bold;
 }
 
-/** Tabelle für Overview-GUI's */
+/** Tabelle fÃ¼r Overview-GUI's */
 .tableBody{
     border: 1px solid black;
     background-color: #fff;
@@ -32,7 +48,7 @@
 	font-weight: bold;
 }
 
-/** Jedes GUI hat eine Subline, um dem User eine Erklärung zur darunterstehenden Software-Funktion zu geben */
+/** Jedes GUI hat eine Subline, um dem User eine ErklÃ¤rung zur darunterstehenden Software-Funktion zu geben */
 .subline{
 	padding-bottom: 20px;
 }
@@ -65,7 +81,7 @@ h1 {
   margin-bottom: 10px;
 }
 
-/** Individuelle Buttons für edit & delete */
+/** Individuelle Buttons fÃ¼r edit & delete */
 .editButton {
 	background:url(./img/EditButton.png) no-repeat;
     cursor:pointer;

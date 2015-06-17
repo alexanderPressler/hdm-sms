@@ -10,14 +10,13 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
 import de.hdm.gruppe1.client.ClientsideSettings;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
 /**
- * Mithilfe der Klasse CreateBauteil wird dem User der Applikation erm�glicht,
- * ein Bauteil-Objekt in der Datenbank anzulegen.
+ * Die Klasse CreateBauteil ermöglicht dem User, Objekte von Bauteil in
+ * der Datenbank anzulegen.
  * 
  * @author Mario Theiler
  * @version 1.0
@@ -25,11 +24,11 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 public class CreateBauteil extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente f�r CreateBauteil initialisieren
+	 * GUI-Elemente für CreateBauteil initialisieren.
 	 */
 	private final Label HeadlineLabel = new Label("Bauteil anlegen");
 	private final Label SublineLabel = new Label(
-			"Um ein Bauteil anzulegen, f�llen Sie bitte alle Felder aus und best�tigen mit dem <anlegen>-Button ihre Eingabe.");
+			"Um ein Bauteil anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
 	private final Label NameFieldLabel = new Label("Name");
 	private final TextBox NameField = new TextBox();
 	private final Label MaterialFieldLabel = new Label("Materialbezeichnung");
@@ -49,6 +48,14 @@ public class CreateBauteil extends VerticalPanel {
 	public CreateBauteil() {
 
 		/**
+		 * TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
+		 * die TextBox vom User fokussiert wird.
+		 */
+		NameField.getElement().setPropertyString("placeholder", "Name");
+		MaterialField.getElement().setPropertyString("placeholder", "Material");
+		DescriptionField.getElement().setPropertyString("placeholder", "Beschreibung");
+		
+		/**
 		 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
 		 * zugeordnet, da diese Klasse von VerticalPanel erbt.
 		 */
@@ -61,7 +68,7 @@ public class CreateBauteil extends VerticalPanel {
 		this.add(DescriptionFieldLabel);
 		this.add(DescriptionField);
 		this.add(CreateBauteilButton);
-
+		
 		/**
 		 * Diverse css-Formatierungen
 		 */
@@ -72,12 +79,12 @@ public class CreateBauteil extends VerticalPanel {
 
 		/**
 		 * Der Create-Button ruft die RPC-Methode auf, welche das Erstellen
-		 * eines Bauteils in der DB erm�glicht.
+		 * eines Bauteils in der DB ermöglicht.
 		 */
 		CreateBauteilButton.addClickHandler(new CreateClickHandler());
 
 		/**
-		 * Abschlie�end wird alles dem RootPanel zugeordnet
+		 * Abschließend wird alles dem RootPanel zugeordnet
 		 */
 		RootPanel.get("content_wrap").add(this);
 
@@ -103,24 +110,24 @@ public class CreateBauteil extends VerticalPanel {
 			String materialBeschreibung = MaterialField.getText();
 
 			/**
-			 * Vor dem Aufruf der RPC-Methode create wird gepr�ft, ob alle
-			 * notwendigen Felder bef�llt sind.
+			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
+			 * notwendigen Felder befüllt sind.
 			 */
 			if (NameField.getText().isEmpty() != true
 					&& DescriptionField.getText().isEmpty() != true
 					&& MaterialField.getText().isEmpty() != true) {
 
 				/**
-				 * Die konkrete RPC-Methode f�r den create-Befehl wird
-				 * aufgerufen. Hierbei werden die gew�nschten Werte
+				 * Die konkrete RPC-Methode für den create-Befehl wird
+				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
 				stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
 						materialBeschreibung, new CreateBauteilCallback());
 
 				/**
-				 * Nachdem der Create-Vorgang durchgef�hrt wurde, soll die GUI
-				 * zur�ck zur �bersichtstabelle weiterleiten.
+				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
+				 * zurück zur Übersichtstabelle weiterleiten.
 				 */
 				RootPanel.get("content_wrap").clear();
 				RootPanel.get("content_wrap").add(new BauteilGeneralView());

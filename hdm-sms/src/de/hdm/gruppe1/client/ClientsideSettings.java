@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.GWT;
 
 import de.hdm.gruppe1.shared.*;
-import de.hdm.gruppe1.shared.Sms;
+
 /**
  * Klasse mit Eigenschaften und Diensten, die f�r alle Client-seitigen Klassen
  * relevant sind.
@@ -23,7 +23,7 @@ public class ClientsideSettings extends CommonSettings {
 	 */
 
 	private static SmsAsync stuecklistenVerwaltung = null;
-	private static SmsAsync baugruppenVerwaltung = null;
+	
 	/**
 	 * Name des Client-seitigen Loggers.
 	 */

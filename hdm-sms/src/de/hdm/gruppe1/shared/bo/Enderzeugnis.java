@@ -1,19 +1,14 @@
+
 package de.hdm.gruppe1.shared.bo;
 
-import java.util.Vector;
+public class Enderzeugnis extends Element {
 
-public class Enderzeugnis extends Baugruppe {
- 
-	private Vector<Baugruppe> zugehoerigenBaugruppe ;
-	
-	public Baugruppe getBaugruppe(){
-	return this.zugehoerigenBaugruppe;
+	private static final long serialVersionUID = 1L;
+	Baugruppe baugruppe = new Baugruppe();
+	public Baugruppe getBaugruppe() {
+		return baugruppe;
 	}
-	
-	public void setEnderzeugnis(Vector<Baugruppe> baugruppe) {
-		this.zugehoerigenBaugruppe= baugruppe;
-		
+	public void setBaugruppe(Baugruppe baugruppe) {
+		this.baugruppe = baugruppe;
 	}
-	
-
 }

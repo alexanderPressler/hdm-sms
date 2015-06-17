@@ -1,28 +1,30 @@
 package de.hdm.gruppe1.shared.bo;
 
-import java.io.Serializable;
+import de.hdm.gruppe1.shared.bo.BusinessObject;
 
-public class User {
+/**
+ * Nutzerklasse, diese Klasse greift auf die Nutzerdaten
+ * über die Google Accounts API zu .
+ * 
+ * @author alex
+ * @version 1.0
+ */
+public class User extends BusinessObject {
 
+	private static final long serialVersionUID = 1L;
+	private String name = "";
+	private String googleID ="";
 	
-	private String googleId;
-	private String email;
-	
-	
-	
-	public String getEmail(){
-		return this.email;
+	public String getGoogleID() {
+		return googleID;
 	}
-	public void setEmail(String email){
-		this.email= email;
+	public void setGoogleID(String googleID) {
+		this.googleID = googleID;
 	}
-	
-	public String getId(){
-		return this.googleId;
+	public String getName() {
+		return name;
 	}
-	
-	public void setId(String googleId){
-		this.googleId = googleId;
+	public void setName(String name) {
+		this.name = name;
 	}
 }
-
