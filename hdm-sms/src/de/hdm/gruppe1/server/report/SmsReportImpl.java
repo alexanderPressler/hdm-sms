@@ -231,7 +231,7 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	         
 	        //TODO Override
 	        // Studienhalbjahr aufnehmen
-	        header.addSubParagraph(new SimpleParagraph(studienhalbjahr));
+	        header.addSubParagraph(new SimpleParagraph());
 	 
 	        // Hinzufügen der zusammengestellten Kopfdaten zu dem Report
 	        result.setHeaderData(header);
@@ -247,18 +247,6 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	         */
 	        Row headline = new Row();
 	 
-	        //TODO Override
-	        /*
-	         * Erzeugen einer StundenplanTabelle mit 7 Spalten, eine Leere, unter
-	         * diese die jeweiligen Zeiten kommen, und eine für jeden Wochentag.
-	         */
-	        headline.addColumn(new Column("      "));
-	        headline.addColumn(new Column("Montag"));
-	        headline.addColumn(new Column("Dienstag"));
-	        headline.addColumn(new Column("Mittwoch"));
-	        headline.addColumn(new Column("Donnerstag"));
-	        headline.addColumn(new Column("Freitag"));
-	        headline.addColumn(new Column("Samstag"));
 	 
 	        // Hinzufügen der Kopfzeile
 	        result.addRow(headline);
