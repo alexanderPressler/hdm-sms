@@ -20,22 +20,22 @@ package de.hdm.gruppe1.shared.report;
 	 */
 	public abstract class ReportWriter {
 	 
-	    /**
-	     * Übersetzen eines <code>MaterialBedarfReport</code> in das Zielformat.
+		   /**
+	     * Übersetzen eines <code>StundenplanDozentReport</code> in das Zielformat.
 	     * 
 	     * @param r
 	     *            der zu übersetzende Report
 	     */
-	    public abstract void process( MaterialBedarfReport r);
+	    public abstract void process(MaterialBedarfReport r);
 	 
 	    /**
-	     * Übersetzen eines <code>StuecklisteReport</code> in das Zielformat.
+	     * Übersetzen eines <code>StundenplanSemesterverbandReport</code> in das
+	     * Zielformat.
 	     * 
 	     * @param r
 	     *            der zu übersetzende Report
 	     */
-	    public abstract void process(StuecklisteReport r);
-	 
+	    public abstract void process(StrukturStuecklisteReport r);
 	 
 	}
 
