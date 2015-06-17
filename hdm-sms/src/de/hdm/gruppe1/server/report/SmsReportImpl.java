@@ -192,9 +192,9 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 
 	    
 	    public StuecklisteReport createStuecklisteReport(
-	            int dozentId, String studienhalbjahr) throws IllegalArgumentException {
+	            int baugruppeid) throws IllegalArgumentException {
 	 
-	      Baugruppe bg = impl.getBaugruppeById(int id);
+	      Baugruppe bg = impl.getBaugruppeById(baugruppeid);
 	 
 	        if (this.getSmsImpl() == null)
 	            return null;
@@ -252,6 +252,8 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	        result.addRow(headline);
 	 
 	        Row accountRow = new Row();
+	        
+			return result;
 	 
 	 
 	    
