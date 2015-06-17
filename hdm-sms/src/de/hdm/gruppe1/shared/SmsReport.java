@@ -41,7 +41,7 @@ public interface SmsReport extends RemoteService {
    * Initialisierung des Objekts. Diese Methode ist vor dem Hintergrund von GWT
    * RPC zusätzlich zum No Argument Constructor der implementierenden Klasse
    *BankAdministrationImpltungImpl} notwendig. Bitte diese Methode direkt nach der
-   * Instantiierung aufrufen.
+   * Instantiierung aufrufen. 
    * 
    * @throws IllegalArgumentException
    */
