@@ -1,0 +1,105 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+
+/** Initiales Bild bei Aufruf der Applikation */
+.initialPicture{
+	position: fixed;
+	max-width: 100%;
+	opacity: 0.3;
+}
+
+ /*Content Impressum*/
+#Impressum{
+	width:80px;
+	
+	} 
+	
+  .impressumBtn{
+  font-size:11px;
+  background:none;
+  padding:0px;
+  color:#279ad0;
+  text-decoration:underline;
+  border:none;
+  
+  }
+
+/** Tabellenüberschriften */
+.tableHead{
+	font-weight: bold;
+}
+
+/** Tabelle für Overview-GUI's */
+.tableBody{
+    border: 1px solid black;
+    background-color: #fff;
+    border-spacing: 5px;
+    margin-bottom: 0px;
+    border-style: solid;
+    border-color: #CCCCCC;
+}
+
+/** Jedes GUI hat eine Headline, um dem User zu zeigen, auf welcher Unterseite des Systems er sich befindet */
+.headline{
+	padding-top: 14px;
+	padding-bottom: 14px;
+	font-weight: bold;
+}
+
+/** Jedes GUI hat eine Subline, um dem User eine Erklärung zur darunterstehenden Software-Funktion zu geben */
+.subline{
+	padding-bottom: 20px;
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #777777;
+  margin: 40px 0px 70px;
+  text-align: center;
+}
+
+/** Most GWT widgets already have a style name defined */
+.gwt-DialogBox {
+  width: 400px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+/** Standard-Buttons */
+.Button {
+  margin: 15px 6px 6px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/** Individuelle Buttons für edit & delete */
+.editButton {
+	background:url(./img/EditButton.png) no-repeat;
+    cursor:pointer;
+    border:none;
+    width:50px;
+    height:30px;
+}
+
+.deleteButton {
+	background:url(./img/DeleteButton.png) no-repeat;
+    cursor:pointer;
+    border:none;
+    width:50px;
+    height:25px;
+}
+
+.DescriptionFieldText {
+	width: 50%;
+	height: 100px;
+	word-wrap: break-word;
+}
