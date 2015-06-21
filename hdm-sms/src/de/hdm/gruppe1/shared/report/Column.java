@@ -2,7 +2,7 @@ package de.hdm.gruppe1.shared.report;
 
 
 import java.io.Serializable;
-
+import de.hdm.gruppe1.shared.report.*;
 /**
  * Spalte eines <code>Row</code>-Objekts. <code>Column</code>-Objekte
  * implementieren das <code>Serializable</code>-Interface und können daher als
