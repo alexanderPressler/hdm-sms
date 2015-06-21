@@ -116,7 +116,7 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport{
 	 
 
 	
-	
+  
     public StrukturStuecklisteReport createStrukturStuecklisteReport(Baugruppe b)throws IllegalArgumentException {
 	 
 	        if (this.getSms() == null)
@@ -177,81 +177,51 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport{
 	    	   Row baugruppeRow =new Row();
 	      baugruppeRow.addColumn(new Column(String.valueOf(bg.getId())));
 	      baugruppeRow.addColumn(new Column(String.valueOf(bg.getName())));
+	      baugruppeRow.addColumn(new Column(String.valueOf(this.verwaltung.getAllBaugruppen())));
 	      result.addRow(baugruppeRow);
 	       }
-	  	return null;
+	  	return result;
 	   	}
 
 	      
-    
-//	       int hilfsZeitslotId = 1;
-//	       
-//	        accountRow.addColumn(new Column(verwaltung.getZeitslotById(
-//	                hilfsZeitslotId).toString()));
-//	 
-//	        hilfsZeitslotId = hilfsZeitslotId + 6;
-//	 
-//	        /*
-//	         * Nun werden sämtliche Stundenplaneintraege des Dozenten ausgelesen und
-//	         * in die Tabelle eingetragen. Dabei läuft die For-Schleife die Anzahl
-//	         * der Zeitslot durch und Überprüft auf vorhandene Daten.
-//	         */
-//	 
-//	        for (int i = 1; i < 37; i++) {
-//	 
-//	            Stundenplaneintrag aktuell = this.verwaltung
-//	                    .getStundenplaneintragByDozentAndZeitslot(
-//	                            d.getId(), i, studienhalbjahr);
-//	 
-//	            if (aktuell != null) {
-//	                accountRow.addColumn(new Column(
-//	 
-//	                verwaltung.getLehrveranstaltungById(
-//	                        aktuell.getLehrveranstaltungId()).toString()
-//	                        + "\n"
-//	                        + verwaltung.getRaumById(aktuell.getRaumId())
-//	                                .toString()));
-//	 
-//	            } else {
-//	                accountRow.addColumn(new Column("----"));
-//	            }
-//	 
-//	            /*
-//	             * Folgend wird am Ende der Zeile, die Reihe dem Gesamten
-//	             * hinzugefügt und eine neue Reihe erzeugt, welche mit der
-//	             * jeweiligen Uhrzeit beginnt
-//	             */
-//	 
-//	            if (i == 6 | i == 12 | i == 18 | i == 24 | i == 30) {
-//	 
-//	                result.addRow(accountRow);
-//	                accountRow = new Row();
-//	                accountRow.addColumn(new Column(verwaltung
-//	                          .getZeitslotById(hilfsZeitslotId)
-//	                          .toString()));
-//	                hilfsZeitslotId = hilfsZeitslotId + 6;
-//	            }
-//	             
-//	            if ( i == 36){
-//	                result.addRow(accountRow);
-//	                }
-//	        }
-//	        /*
-//	         * Zum Schluss müssen wir noch den fertigen Report zurückgeben.
-//	         */
-//	        return result;
-//	    }
-//	 
-//	    public void setRaum(Raum r) throws IllegalArgumentException {
-//	        this.verwaltung.setRaum(r);
-//	    }
-//	 
-	    
+
     
 
 
 	@Override
 	public MaterialBedarfReport createMaterialBedarfReport()
+			throws IllegalArgumentException {
+		 
+		if (this.getSms() == null)
+	            return null;
+	 
+	        /*
+	         * Zunächst legen wir uns einen leeren Report an.
+	         */
+		MaterialBedarfReport result = new MaterialBedarfReport();
+	 
+     // Jeder Report hat einen Titel (Bezeichnung / Überschrift).
+	        result.setTitle("MaterialBedarf ");
+	 
+     // Imressum hinzufügen
+	        this.addImprint(result);
+	 
+	        Vector <Baugruppe> baugruppen = this.verwaltung.getAllBaugruppen();
+
+		       for (Baugruppe bg:baugruppen){
+		    	   Row baugruppeRow =new Row();
+		      baugruppeRow.addColumn(new Column(String.valueOf(bg.getId())));
+		      baugruppeRow.addColumn(new Column(String.valueOf(bg.getName())));
+		      baugruppeRow.addColumn(new Column(String.valueOf(this.verwaltung.getAllBaugruppen())));
+		      result.addRow(baugruppeRow);
+		       }
+		  	return result;
+		   	}
+	}
+
+
+	@Override
+	public StrukturStuecklisteReport createStrukturStuecklisteReport()
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
