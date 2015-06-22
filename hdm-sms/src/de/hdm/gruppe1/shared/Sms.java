@@ -116,4 +116,15 @@ public interface Sms extends RemoteService {
 	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
 
 	Baugruppe getBaugruppeById(int id) throws IllegalArgumentException;
+
+
+	
+	void setBaugruppe(Baugruppe b) throws IllegalArgumentException;
+
+	public Baugruppe getBaugruppe()throws IllegalArgumentException;
+
+	
+
+	
+	
 }

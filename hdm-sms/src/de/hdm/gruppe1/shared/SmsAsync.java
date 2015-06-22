@@ -65,4 +65,9 @@ public interface SmsAsync {
 	void getAllEnderzeugnis(AsyncCallback<Vector<Enderzeugnis>> callback);
 
 	void getBaugruppeById(int id, AsyncCallback<Baugruppe> callback);
+
+	void setBaugruppe(Baugruppe b, AsyncCallback<Void> callback);
+
+	void getBaugruppe(AsyncCallback<Baugruppe> callback);
+
 }

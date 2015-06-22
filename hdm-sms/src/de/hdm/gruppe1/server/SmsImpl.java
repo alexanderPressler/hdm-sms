@@ -1,9 +1,10 @@
 package de.hdm.gruppe1.server;
 
+
+
 import java.util.Date;
 import java.util.Vector;
 
-import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
@@ -90,6 +91,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class SmsImpl extends RemoteServiceServlet implements
 		Sms {
 
+	private Baugruppe baugruppe = null;
 	
 	//TODO: Checken ob wir Diese Variable Brauchen
 	// Wie lautet die Standardkontonummer für das Kassenkonto der Bank?
@@ -100,7 +102,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	/**
 	 * Referenz auf das zugehörige BusinessObjekt.
 	 */
-	private Bauteil b = null;
+
 	
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte
@@ -536,6 +538,12 @@ public class SmsImpl extends RemoteServiceServlet implements
 	public Baugruppe getBaugruppeById(int id) throws IllegalArgumentException {
 	    return this.baugruppenMapper.findByID(id);
 	  }
+	  
+
+		  /**
+		   * Setzen der Bank für die diese Bankverwaltung tätig ist.
+		   */
+		
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT Ende : Methoden für Baugruppen-Objekte
@@ -618,4 +626,12 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ABSCHNITT Ende : Methoden für Enderzeugnis-Objekte
 	   * ***************************************************************************
 	   */
+	  public Baugruppe getBaugruppe(){
+			return this.baugruppe;
+		}
+		public void setBaugruppe (Baugruppe b) throws IllegalArgumentException {
+			    this.baugruppe = b;
+			  }
+		
+
 }
