@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.server.report;
 
+import java.util.Vector;
+
 import de.hdm.gruppe1.server.SmsImpl;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
@@ -92,7 +94,7 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	   * essentiellen Methoden für die Koexistenz von Datenobjekten (vgl.
 	   * bo-Package) bietet.
 	   */
-	private Sms stuecklistenVerwaltung = null;
+	private Sms stuecklistenReportVerwaltung = null;
 	
 	private BaugruppenMapper baugruppenMapper = null;
 	private EnderzeugnisMapper enderzeugnisMapper = null;
@@ -141,7 +143,7 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 		 */
 		SmsImpl a = new SmsImpl();
 		a.init();
-		this.stuecklistenVerwaltung = a;
+		this.stuecklistenReportVerwaltung = a;
 		
 		this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
 		this.enderzeugnisMapper = EnderzeugnisMapper.enderzeugnisMapper();
@@ -188,5 +190,40 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 * *****************************************
 	 * **********************************
 	 */
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Beginn: GetAllBaugruppen
+	 * *********************************
+	 * ******************************************
+	 */
+
+	@Override
+	public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
+	    return this.baugruppenMapper.findAll();
+	  }  
+
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Ende: GetAllBaugruppen
+	 * *****************************************
+	 * **********************************
+	 */
+	
+	/*
+	 * ***************************************************************************
+	 * ABSCHNITT, Anfang: Methoden für Enderzeugnis-Objekte
+	 * ***************************************************************************
+	 */
+	  @Override
+	public Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException {
+	    return this.enderzeugnisMapper.findAll();
+	  }
+	  
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT Ende : Methoden für Enderzeugnis-Objekte
+	   * ***************************************************************************
+	   */
 
 }

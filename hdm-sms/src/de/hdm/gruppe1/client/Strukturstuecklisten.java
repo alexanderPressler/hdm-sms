@@ -19,6 +19,7 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
 public class Strukturstuecklisten extends VerticalPanel {
 
@@ -36,7 +37,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
 	 * werden.
 	 */
-	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+	SmsReportAsync stuecklistenReportVerwaltung = ClientsideSettings.getReportGenerator();
 	
 	// Vektor wird mit allen Baugruppen aus der DB befüllt
 	Vector<Baugruppe> allBaugruppe = new Vector<Baugruppe>();
@@ -47,7 +48,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 		
 		// Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
-		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
+		stuecklistenReportVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 		
 		/**
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
@@ -147,7 +148,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-//				stuecklistenVerwaltung.createStrukturstueckliste(baugruppe, new CreateStrukturstuecklisteCallback());
+//				stuecklistenReportVerwaltung.showStrukturstueckliste(new ShowStrukturstuecklisteCallback());
 
 				/**
 				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
@@ -167,7 +168,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * @author Mario
 	 * 
 	 */
-	class CreateStrukturstuecklisteCallback implements AsyncCallback<Baugruppe> {
+	class ShowStrukturstuecklisteCallback implements AsyncCallback<Baugruppe> {
 
 		@Override
 		public void onFailure(Throwable caught) {

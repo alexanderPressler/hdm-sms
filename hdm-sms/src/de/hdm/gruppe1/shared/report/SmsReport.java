@@ -1,8 +1,9 @@
 package de.hdm.gruppe1.shared.report;
 
+import java.util.Vector;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-
 import de.hdm.gruppe1.shared.bo.*;
 
 
@@ -38,11 +39,25 @@ import de.hdm.gruppe1.shared.bo.*;
 // TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
 @RemoteServiceRelativePath("smsReport")
 public interface SmsReport extends RemoteService {
+	
+	/**
+	 * Initialisierung des Objekts. Diese Methode ist vor dem Hintergrund von
+	 * GWT RPC zusätzlich zum No Argument Constructor der implementierenden
+	 * Klasse {@link BankVerwaltungImpl} notwendig. Bitte diese Methode direkt
+	 * nach der Instantiierung aufrufen.
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public void init() throws IllegalArgumentException;
 
 	Baugruppe createStrukturStuecklisteReport(int id)
 			throws IllegalArgumentException;
 
 	Enderzeugnis createMaterialBedarfReport(int id, int anzahl)
 			throws IllegalArgumentException;
+	
+	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
+	
+	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
 
 }

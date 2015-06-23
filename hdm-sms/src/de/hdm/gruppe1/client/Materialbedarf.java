@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
+import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
 public class Materialbedarf extends VerticalPanel {
 
@@ -32,7 +33,7 @@ public class Materialbedarf extends VerticalPanel {
 	HorizontalPanel eEPanel = new HorizontalPanel();
 	
 	// Remote Service via ClientsideSettings
-	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+	SmsReportAsync stuecklistenReportVerwaltung = ClientsideSettings.getReportGenerator();
 	
 	// Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
 	Vector<Enderzeugnis> allEnderzeugnisse = new Vector<Enderzeugnis>();
@@ -47,7 +48,7 @@ public class Materialbedarf extends VerticalPanel {
 		
 		// Um das Dropdown mit Baugruppen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
-		stuecklistenVerwaltung.getAllEnderzeugnis(new GetAllEnderzeugnisseCallback());
+		stuecklistenReportVerwaltung.getAllEnderzeugnis(new GetAllEnderzeugnisseCallback());
 		
 		// Horizontales Anordnen von zugehörigen Bauteil-Widgets
 		eEPanel.add(amountEnderzeugnisse);
