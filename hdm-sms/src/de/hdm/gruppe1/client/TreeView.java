@@ -22,9 +22,11 @@ public class TreeView extends VerticalPanel {
 		TreeItem stueckliste = new TreeItem();
 		
 		//Name der Stückliste reinschreiben
-		stueckliste.setText(""+treeViewStueckliste.getName());
+		stueckliste.setText(treeViewStueckliste.getName());
 		
 		if(treeViewStueckliste.getBaugruppenPaare()!=null){
+			
+			//TODO für Baugruppen rekursive Tiefensuche implementieren
 			
 			for(int i = 0; i<treeViewStueckliste.getBaugruppenPaare().size(); i++){
 				TreeItem baugruppe = new TreeItem();
