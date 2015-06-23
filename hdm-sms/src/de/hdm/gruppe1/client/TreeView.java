@@ -20,17 +20,29 @@ public class TreeView extends VerticalPanel {
 		
 		//Knotenpunkte der TreeView
 		TreeItem stueckliste = new TreeItem();
-		TreeItem baugruppe = new TreeItem();
-		TreeItem bauteil = new TreeItem();
 		
 		//Name der Stückliste reinschreiben
-		stueckliste.addTextItem(""+treeViewStueckliste.getName());
-		baugruppe.addTextItem("Inhalt: "+treeViewStueckliste.getBaugruppenPaare().get(1).getElement().getName());
-		bauteil.addTextItem("Inhalt: "+treeViewStueckliste.getBauteilPaare().get(1).getElement().getName());
+		stueckliste.setText(""+treeViewStueckliste.getName());
 		
-		//Unterpunkte von stueckliste wird dem darüber geordneten Tree hinzugefügt
-		stueckliste.addItem(bauteil);
-		stueckliste.addItem(baugruppe);
+		if(treeViewStueckliste.getBaugruppenPaare()!=null){
+			
+			for(int i = 0; i<treeViewStueckliste.getBaugruppenPaare().size(); i++){
+				TreeItem baugruppe = new TreeItem();
+				baugruppe.setText(treeViewStueckliste.getBaugruppenPaare().get(i).getAnzahl()+" * Baugruppe: "+treeViewStueckliste.getBaugruppenPaare().get(i).getElement().getName());
+				stueckliste.addItem(baugruppe);
+			}
+			
+		}
+		
+		if(treeViewStueckliste.getBauteilPaare()!=null){
+			
+			for(int a = 0; a<treeViewStueckliste.getBauteilPaare().size(); a++){
+				TreeItem bauteil = new TreeItem();
+				bauteil.setText(treeViewStueckliste.getBauteilPaare().get(a).getAnzahl()+" * Bauteil: "+treeViewStueckliste.getBauteilPaare().get(a).getElement().getName());
+				stueckliste.addItem(bauteil);
+			}
+			
+		}
 		
 		tree.addItem(stueckliste);
 
