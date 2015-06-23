@@ -3,8 +3,14 @@ package de.hdm.gruppe1.client;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe1.shared.*;
+import de.hdm.gruppe1.client.ClientsideSettings;
+import de.hdm.gruppe1.shared.Sms;
+import de.hdm.gruppe1.shared.SmsAsync;
+import de.hdm.gruppe1.shared.SmsReport;
+import de.hdm.gruppe1.shared.SmsReportAsync;
 
 /**
  * Klasse mit Eigenschaften und Diensten, die für alle Client-seitigen Klassen
@@ -23,6 +29,15 @@ public class ClientsideSettings extends CommonSettings {
 	 */
 
 	private static SmsAsync stuecklistenVerwaltung = null;
+	
+	
+	 /**
+	   * Remote Service Proxy zur Verbindungsaufnahme mit dem Server-seitgen Dienst
+	   * namens <code>ReportGenerator</code>.
+	   */
+	  private static SmsReportAsync smsReport = null;
+
+	
 
 	/**
 	 * Name des Client-seitigen Loggers.
@@ -113,4 +128,40 @@ public class ClientsideSettings extends CommonSettings {
 	    return stuecklistenVerwaltung;
 	  }
 
+	  /**
+	   * Anlegen und Auslesen des applikationsweit eindeutigen Report Generators.
+	   * Diese Methode erstellt den ReportGenerator, sofern dieser noch nicht
+	   * existiert. Bei wiederholtem Aufruf dieser Methode wird stets das bereits
+	   * zuvor angelegte Objekt zurückgegeben.
+	   * Der Aufruf dieser Methode erfolgt im Client z.B. durch
+	   * <code>smsReportAsync smsReport = ClientSideSettings.getsmsReport()</code>.
+	   * @return eindeutige Instanz des Typs <code>smsAsync</code>
+	   */
+	  public static SmsReportAsync getsmsReport() {
+	    // Gab es bislang noch keine ReportGenerator-Instanz, dann...
+	    if (smsReport == null) {
+	      // Zunächst instantiieren wir den ReportGenerator
+	      smsReport = GWT.create(Sms.class);
+
+	      final AsyncCallback<Void> initsmsReportCallback = new AsyncCallback<Void>() {
+	        public void onFailure(Throwable caught) {
+	          ClientsideSettings.getLogger().severe(
+	              "Der Report Generator konnte nicht initialisiert werden!");
+	        }
+
+	        public void onSuccess(Void result) {
+	          ClientsideSettings.getLogger().info(
+	              "Der Report Generator wurde initialisiert.");
+	        }
+	      };
+
+	      smsReport.init(initsmsReportCallback);
+	    }
+
+	    // So, nun brauchen wir den Report Generator nur noch zurückzugeben.
+	    return smsReport;
+	  }
+
 }
+
+
