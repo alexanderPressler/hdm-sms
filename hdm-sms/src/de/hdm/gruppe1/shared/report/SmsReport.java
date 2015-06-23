@@ -39,4 +39,10 @@ import de.hdm.gruppe1.shared.bo.*;
 @RemoteServiceRelativePath("smsReport")
 public interface SmsReport extends RemoteService {
 
+	Baugruppe createStrukturStuecklisteReport(int id)
+			throws IllegalArgumentException;
+
+	Enderzeugnis createMaterialBedarfReport(int id, int anzahl)
+			throws IllegalArgumentException;
+
 }

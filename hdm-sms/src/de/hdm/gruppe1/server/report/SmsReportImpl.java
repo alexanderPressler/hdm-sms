@@ -1,5 +1,6 @@
 package de.hdm.gruppe1.server.report;
 
+import de.hdm.gruppe1.server.SmsImpl;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
@@ -85,13 +86,82 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 @SuppressWarnings("serial")
 public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
+	
+	/**
+	   * Ein ReportGenerator benötigt Zugriff auf die Stuecklisten Verwaltung (sms), da diese die
+	   * essentiellen Methoden für die Koexistenz von Datenobjekten (vgl.
+	   * bo-Package) bietet.
+	   */
+	private Sms stuecklistenVerwaltung = null;
+	
+	private BaugruppenMapper baugruppenMapper = null;
+	private EnderzeugnisMapper enderzeugnisMapper = null;
+	
+	/*
+	   * ***************************************************************************
+	   * ABSCHNITT, Beginn: Initialisierung
+	   * ***************************************************************************
+	   */
+	
+	  /**
+	   * <p>
+	   * Ein <code>RemoteServiceServlet</code> wird unter GWT mittels
+	   * <code>GWT.create(Klassenname.class)</code> Client-seitig erzeugt. Hierzu
+	   * ist ein solcher No-Argument-Konstruktor anzulegen. Ein Aufruf eines anderen
+	   * Konstruktors ist durch die Client-seitige Instantiierung durch
+	   * <code>GWT.create(Klassenname.class)</code> nach derzeitigem Stand nicht
+	   * möglich.
+	   * </p>
+	   * <p>
+	   * Es bietet sich also an, eine separate Instanzenmethode zu erstellen, die
+	   * Client-seitig direkt nach <code>GWT.create(Klassenname.class)</code>
+	   * aufgerufen wird, um eine Initialisierung der Instanz vorzunehmen.
+	   * </p>
+	   * 
+	   * @see #init()
+	   */
+	  public SmsReportImpl() throws IllegalArgumentException {
+	    /*
+	     * Eine weitergehende Funktion muss der No-Argument-Constructor nicht haben.
+	     * Er muss einfach vorhanden sein.
+	     */
+	  }
+	  /**
+	   * Initialsierungsmethode. Siehe dazu Anmerkungen zum No-Argument-Konstruktor
+	   * {@link #ReportGeneratorImpl()}. Diese Methode muss für jede Instanz von
+	   * <code>BankVerwaltungImpl</code> aufgerufen werden.
+	   * 
+	   * @see #ReportGeneratorImpl()
+	   */
+	  @Override
+	public void init() throws IllegalArgumentException {
+		/*
+		 * Ein SmsReportImpl-Objekt instantiiert für seinen Eigenbedarf eine
+		 * Impl-Instanz.
+		 */
+		SmsImpl a = new SmsImpl();
+		a.init();
+		this.stuecklistenVerwaltung = a;
+		
+		this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
+		this.enderzeugnisMapper = EnderzeugnisMapper.enderzeugnisMapper();
+	}
+	  /*
+	   * ***************************************************************************
+	   * ABSCHNITT, Ende: Initialisierung
+	   * ***************************************************************************
+	   */
 
 	/*
 	 * ***************************************************************************
 	 * ABSCHNITT, Beginn: Methoden für Report 1
-	 * *********************************
-	 * ******************************************
+	 * ***************************************************************************
 	 */
+	  //TODO: ANPASSEN AN UNSERE GUI
+	@Override
+	public Baugruppe createStrukturStuecklisteReport (int id) throws IllegalArgumentException {
+	    return this.baugruppenMapper.findByID(id);
+	  }
 
 	/*
 	 * ***************************************************************************
@@ -106,6 +176,11 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 * *********************************
 	 * ******************************************
 	 */
+	//TODO: ANPASSEN AN UNSERE GUI
+	@Override
+	public Enderzeugnis createMaterialBedarfReport (int id, int anzahl) throws IllegalArgumentException {
+	    return this.enderzeugnisMapper.findByID(id);
+	  }
 
 	/*
 	 * ***************************************************************************

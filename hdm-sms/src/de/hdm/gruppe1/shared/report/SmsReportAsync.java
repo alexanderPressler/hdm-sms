@@ -1,5 +1,10 @@
 package de.hdm.gruppe1.shared.report;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import de.hdm.gruppe1.shared.bo.Baugruppe;
+import de.hdm.gruppe1.shared.bo.Enderzeugnis;
+
 
 /**
  * Das asynchrone Gegenstück des Interface {@link BankAdministration}. Es wird
@@ -10,5 +15,11 @@ package de.hdm.gruppe1.shared.report;
  * @author Alexander Pressler &  thies
  */
 public interface SmsReportAsync {
+
+	void createStrukturStuecklisteReport(int id,
+			AsyncCallback<Baugruppe> callback);
+
+	void createMaterialBedarfReport(int id, int anzahl,
+			AsyncCallback<Enderzeugnis> callback);
 
 }
