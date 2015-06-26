@@ -40,6 +40,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 */
 	private HorizontalPanel editButtonPanel = new HorizontalPanel();
 	private HorizontalPanel deleteButtonPanel = new HorizontalPanel();
+	private HorizontalPanel treeViewPanel = new HorizontalPanel();
 
 	/**
 	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
@@ -48,6 +49,8 @@ public class StuecklisteGeneralView extends VerticalPanel {
 			"Wählen Sie in der Übersicht eine Stückliste aus, um sie mithilfe dieses Buttons zu editieren: ");
 	private final Label deleteLabel = new Label(
 			"Wählen Sie in der Übersicht mindestens eine Stückliste aus, um sie mithilfe dieses Buttons zu löschen: ");
+	private final Label treeViewLabel = new Label ("Wählen Sie in der Übersicht eine Stückliste an, um deren" +
+			"Strukturstückliste anzuzeigen: ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-
@@ -56,6 +59,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 */
 	private final Button editBtn = new Button("");
 	private final Button deleteBtn = new Button("");
+	private final Button treeViewBtn = new Button("");
 
 	/**
 	 * Tabelle, in der jegliche Stücklisten inkl. edit- & delete-Buttons angezeigt
@@ -67,6 +71,11 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * Stückliste, welche editiert werden soll.
 	 */
 	Stueckliste editStueckliste = null;
+	
+	/**
+	 * Stückliste, deren Baumstruktur angezeigt werden soll.
+	 */
+	Stueckliste treeViewStueckliste = null;
 
 	/**
 	 * Vektor, der mit allen Stücklisten aus der DB befüllt wird.
@@ -96,12 +105,15 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		editButtonPanel.add(editBtn);
 		deleteButtonPanel.add(deleteLabel);
 		deleteButtonPanel.add(deleteBtn);
+		treeViewPanel.add(treeViewLabel);
+		treeViewPanel.add(treeViewBtn);
 
 		/**
 		 * Diverse css-Formatierungen
 		 */
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
+		treeViewBtn.setStyleName("showButton");
 		HeadlineLabel.setStyleName("headline");
 		table.setStyleName("tableBody");
 
@@ -122,6 +134,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		table.setText(0, 4, "Letztes Änderungsdatum");
 		table.setText(0, 5, "Editieren");
 		table.setText(0, 6, "Löschen");
+		table.setText(0,7, "Strukturstückliste");
 
 		/**
 		 * Das FlexTable Widget unterstützt keine Headlines. Daher wird die
@@ -134,6 +147,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		table.getCellFormatter().addStyleName(0, 4, "tableHead");
 		table.getCellFormatter().addStyleName(0, 5, "tableHead");
 		table.getCellFormatter().addStyleName(0, 6, "tableHead");
+		table.getCellFormatter().addStyleName(0, 7, "tableHead");
 
 		/**
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
@@ -142,6 +156,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		this.add(HeadlineLabel);
 		this.add(editButtonPanel);
 		this.add(deleteButtonPanel);
+		this.add(treeViewPanel);
 		this.add(table);
 
 		/**
@@ -186,7 +201,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 			 */
 			if (allStuecklisten.isEmpty() == true) {
 
-				table.getFlexCellFormatter().setColSpan(1, 0, 6);
+				table.getFlexCellFormatter().setColSpan(1, 0, 7);
 
 				table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
 
@@ -211,6 +226,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 					RadioButton radioButton = new RadioButton("editRadioGroup", "");
 					CheckBox checkBox = new CheckBox("");
+					RadioButton treeViewButton = new RadioButton("treeViewGroup", "");
 
 					/**
 					 * Dem Delete-Button wird der am Ende dieser Klasse erstellte deleteClickHandler zugeordnet.
@@ -278,6 +294,31 @@ public class StuecklisteGeneralView extends VerticalPanel {
 							}
 						}
 					});
+					
+					/**
+					 * An dieser Stelle wird pro Schleifendurchlauf ein
+					 * RadioButton Widget hinzugefügt. Mithilfe der Eigenschaft
+					 * von "treeViewGroup" kann jeweils nur ein RadioButton, nach
+					 * vollständigem Befüllen der Tabelle, ausgewählt werden.
+					 */
+					table.setWidget(row, 7, treeViewButton);
+
+					/**
+					 * Dieser RadioButton wird pro Reihe mit einem
+					 * ValueChangeHandler erweitert. Dieser erkennt, welcher
+					 * RadioButton ausgewählt ist und befüllt das Klassen-Objekt
+					 * treeViewStueckliste von "Stueckliste" mit dem Objekt der
+					 * entsprechenden Tabellen-Reihe.
+					 */
+					treeViewButton.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+								@Override
+								public void onValueChange(
+										ValueChangeEvent<Boolean> e) {
+									if (e.getValue() == true) {
+										treeViewStueckliste = allStuecklisten.get(i);
+									}
+								}
+							});
 
 					/**
 					 * Die Tabelle erhält ein css-Element für den Body, welches
@@ -302,6 +343,25 @@ public class StuecklisteGeneralView extends VerticalPanel {
 					} else {
 						RootPanel.get("content_wrap").clear();
 						RootPanel.get("content_wrap").add(new EditStueckliste(editStueckliste));
+					}
+
+				}
+
+			});
+			
+			/**
+			 * ClickHandler für den Aufruf der Klasse treeView. Als Attribut
+			 * wird das Stücklisten-Objekt aus der entsprechenden Tabellen-Reihe
+			 * mitgeschickt.
+			 */
+			treeViewBtn.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+
+					if (treeViewStueckliste == null) {
+						Window.alert("Bitte wählen Sie eine Stückliste zum anzeigen aus.");
+					} else {
+						RootPanel.get("content_wrap").clear();
+						RootPanel.get("content_wrap").add(new TreeView(treeViewStueckliste));
 					}
 
 				}
