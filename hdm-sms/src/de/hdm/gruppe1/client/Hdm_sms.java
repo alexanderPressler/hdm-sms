@@ -134,7 +134,8 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 
 	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
-	    mainMenu.setWidth("100%"); 
+	    mainMenu.setWidth("100%");
+	    mainMenu.setAutoOpen(true);
 	    mainMenu.addItem("Bauteile", bauteilMenu);
 	    mainMenu.addItem("Baugruppen", baugruppeMenu);
 	    mainMenu.addItem("Enderzeugnisse", enderzeugnisMenu);

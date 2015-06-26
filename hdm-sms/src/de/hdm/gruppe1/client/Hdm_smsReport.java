@@ -35,20 +35,25 @@ public class Hdm_smsReport extends VerticalPanel implements EntryPoint {
 		      }
 		};
 		
-		/**
-		 * Das Menü enthält keine Untermenüs und beinhaltet 2 Haupt-Menüpunkte für die beiden Reports
-		 */
+	    //Menü für Report 1
+	    MenuBar report1Menu = new MenuBar(true);
+	    report1Menu.addItem("Strukturstücklisten", report1);
+	    
+	    //Menü für Report 2
+	    MenuBar report2Menu = new MenuBar(true);
+	    report2Menu.addItem("Materialbedarf", report2);
 
 		//Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
-	    mainMenu.setWidth("100%"); 
-	    mainMenu.addItem("Strukturstücklisten", report1);
-	    mainMenu.addItem("Materialbedarf", report2);
+	    mainMenu.setWidth("100%");
+	    mainMenu.setAutoOpen(true);
+	    mainMenu.addItem("Strukturstücklisten", report1Menu);
+	    mainMenu.addItem("Materialbedarf", report2Menu);
 	    
 	    //Das Begrüßungsbild der Applikation
 		welcomeImage.setUrl("./img/Welcome.jpg");
 	    welcomeImage.setStyleName("initialPicture");
-		    
+	    
 	    //Hautpmenü schließlich dem RootPanel in den Menü-div Container zuordnen
 	    RootPanel.get("head_wrap_right").add(mainMenu);
 	    RootPanel.get("content_wrap").add(welcomeImage);

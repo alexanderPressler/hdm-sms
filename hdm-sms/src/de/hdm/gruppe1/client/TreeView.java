@@ -6,6 +6,10 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import de.hdm.gruppe1.shared.bo.Baugruppe;
+import de.hdm.gruppe1.shared.bo.Bauteil;
+import de.hdm.gruppe1.shared.bo.Element;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 public class TreeView extends VerticalPanel {
@@ -15,55 +19,76 @@ public class TreeView extends VerticalPanel {
 	 */
 	private final Label HeadlineLabel = new Label("Strukturstückliste");
 	Tree tree = new Tree();
+	TreeItem rootTreeItem = new TreeItem();
+	TreeItem previousTreeItem = new TreeItem();
+	
 	
 	public TreeView(Stueckliste treeViewStueckliste) {
-		
-		//Knotenpunkte der TreeView
-		TreeItem stueckliste = new TreeItem();
-		
-		//Name der Stückliste reinschreiben
-		stueckliste.setText(treeViewStueckliste.getName());
-		
-		if(treeViewStueckliste.getBaugruppenPaare()!=null){
+		try {
+			Window.alert(treeViewStueckliste.getName());
+			treeRecursion(treeViewStueckliste);
 			
-			//TODO für Baugruppen rekursive Tiefensuche implementieren
+			/**
+			 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
+			 * zugeordnet, da diese Klasse von VerticalPanel erbt.
+			 */
+			this.add(HeadlineLabel);
+			this.add(tree);
 			
-			for(int i = 0; i<treeViewStueckliste.getBaugruppenPaare().size(); i++){
-				TreeItem baugruppe = new TreeItem();
-				baugruppe.setText(treeViewStueckliste.getBaugruppenPaare().get(i).getAnzahl()+" * Baugruppe: "+treeViewStueckliste.getBaugruppenPaare().get(i).getElement().getName());
-				stueckliste.addItem(baugruppe);
-			}
-			
+			tree.addItem(rootTreeItem);
+			/**
+			 * Abschließend wird alles dem RootPanel zugeordnet
+			 */
+			RootPanel.get("content_wrap").add(this);
+		
+		} catch (Exception e) {
+//			System.out.println(e.toString());
 		}
-		
-		if(treeViewStueckliste.getBauteilPaare()!=null){
-			
-			for(int a = 0; a<treeViewStueckliste.getBauteilPaare().size(); a++){
-				TreeItem bauteil = new TreeItem();
-				bauteil.setText(treeViewStueckliste.getBauteilPaare().get(a).getAnzahl()+" * Bauteil: "+treeViewStueckliste.getBauteilPaare().get(a).getElement().getName());
-				stueckliste.addItem(bauteil);
-			}
-			
-		}
-		
-		tree.addItem(stueckliste);
-
-		/**
-		 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
-		 * zugeordnet, da diese Klasse von VerticalPanel erbt.
-		 */
-		this.add(HeadlineLabel);
-		this.add(tree);
-		
-		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
-		 */
-		RootPanel.get("content_wrap").add(this);
 		
 	}
 	
-	/*
-	 * Click Handlers.
-	 */
-
+	private void treeRecursion(Element element) {
+		if(element instanceof Stueckliste) {
+			Stueckliste aktuellesStueckliste = (Stueckliste) element;
+			rootTreeItem.setText(aktuellesStueckliste.getName());
+			
+			for(int i = 0; i<aktuellesStueckliste.getBaugruppenPaare().size(); i++){
+				Element childBaugruppenElement = aktuellesStueckliste.getBaugruppenPaare().get(i).getElement();
+				treeRecursion(childBaugruppenElement);
+			}
+			
+			for(int i = 0; i<aktuellesStueckliste.getBauteilPaare().size(); i++){
+				Element childBauteilElement = aktuellesStueckliste.getBauteilPaare().get(i).getElement();
+				treeRecursion(childBauteilElement);
+			}
+			
+			
+			
+		}
+		if(element instanceof Bauteil) {
+			Bauteil aktuellesBauteil = (Bauteil) element;
+			
+			TreeItem bauteilTreeItem = new TreeItem();
+			bauteilTreeItem.setText(aktuellesBauteil.getName());
+						
+			
+		} else {
+			//if(elment instancaof Stueckliste)
+			Baugruppe aktuellesBaugruppe = (Baugruppe) element;
+			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().size(); i++){
+				
+				TreeItem baugruppeTreeItem = new TreeItem();
+				baugruppeTreeItem.setText(aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement().getName());
+				previousTreeItem.addItem(baugruppeTreeItem);
+				
+				previousTreeItem = baugruppeTreeItem;
+				treeRecursion(aktuellesBaugruppe);
+				
+				
+				//TODO implementieren
+//				baugruppeTreeItem.setText(treeViewStueckliste.getBaugruppenPaare().get(i).getAnzahl()+" * Baugruppe: "+treeViewStueckliste.getBaugruppenPaare().get(i).getElement().getName());
+			}
+		}
+	}
+	
 }

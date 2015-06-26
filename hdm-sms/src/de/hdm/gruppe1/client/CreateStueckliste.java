@@ -167,8 +167,6 @@ public class CreateStueckliste extends VerticalPanel {
 				bauteilPaar.setAnzahl(anzahl);
 				bauteilPaar.setElement(allBauteile.get(index));
 				
-				int c = allBauteile.get(index).getId();
-
 				/**
 				 *  Dem Vektor aller Bauteile der Stückliste wird das soeben erstellte ElementPaar hinzugefügt.
 				 */
@@ -177,8 +175,16 @@ public class CreateStueckliste extends VerticalPanel {
 				/**
 				 * Das ListBox-Element, welches hinzugefügt wurde, wird für doppeltes Hinzufügen ausgegraut.
 				 */
-				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
+				listBoxBauteile.getElement().getElementsByTagName("*").getItem(index).setAttribute("disabled", "disabled");
 
+//				listBoxBauteile.clear();
+//				for(int i = 0; i<allBauteile.size(); i++){
+//					
+//					if(allBauteile.get(i).getName() != collectBauteile.get(i - 1).getElement().getName())
+//					
+//						listBoxBauteile.addItem(allBauteile.get(i).getName());
+//				}
+				
 				/**
 				 *  Die Übersichtstabelle, welche für den User eine hilfreiche
 				 *  Übersicht aller hinzugefügten Bauteile
@@ -236,7 +242,7 @@ public class CreateStueckliste extends VerticalPanel {
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
 							
 							collectBauteile.remove(x);
 							
@@ -287,7 +293,7 @@ public class CreateStueckliste extends VerticalPanel {
 				/**
 				 * Das ListBox-Element, welches hinzugefügt wurde, wird für doppeltes Hinzufügen ausgegraut.
 				 */
-				listBoxBaugruppen.getElement().getElementsByTagName("option")
+				listBoxBaugruppen.getElement().getElementsByTagName("*")
 						.getItem(index).setAttribute("disabled", "disabled");
 
 				/**
@@ -346,7 +352,7 @@ public class CreateStueckliste extends VerticalPanel {
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
 							
 							collectBauteile.remove(x);
 							
