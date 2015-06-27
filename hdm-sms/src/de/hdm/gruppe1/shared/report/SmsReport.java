@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.shared.report;
 
+import java.util.Vector;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -44,5 +46,7 @@ public interface SmsReport extends RemoteService {
 
 	BaugruppenReport createBaugruppenReport(Stueckliste BaugruppenStueckliste)
 			throws IllegalArgumentException;
+
+	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 
 }

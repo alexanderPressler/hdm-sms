@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.server.report;
 
+import java.util.Vector;
+
 import de.hdm.gruppe1.server.SmsImpl;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
@@ -147,6 +149,17 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 		this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
 		this.enderzeugnisMapper = EnderzeugnisMapper.enderzeugnisMapper();
 	}
+	  
+	  /**
+	   * Auslesen aller BaugruppenObjekte für Auswahl in Report 1 .
+	   */
+	  @Override
+	  public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
+		  Vector<Baugruppe> alleBaugruppen = stuecklistenVerwaltung.getAllBaugruppen();
+		  return alleBaugruppen;
+	  }
+	  
+	  
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Initialisierung

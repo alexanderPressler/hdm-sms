@@ -1,5 +1,7 @@
 package de.hdm.gruppe1.shared.report;
 
+import java.util.Vector;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
@@ -22,5 +24,7 @@ public interface SmsReportAsync {
 
 	void createBaugruppenReport(Stueckliste BaugruppenStueckliste,
 			AsyncCallback<BaugruppenReport> callback);
+
+	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
 
 }

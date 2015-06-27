@@ -38,7 +38,6 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
 	 * werden.
 	 */
-	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	SmsReportAsync stuecklistenReportVerwaltung = ClientsideSettings.getReportGenerator();
 	
 	// Vektor wird mit allen Baugruppen aus der DB befüllt
@@ -50,7 +49,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 		
 		// Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
-		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
+		stuecklistenReportVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 		
 		/**
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
