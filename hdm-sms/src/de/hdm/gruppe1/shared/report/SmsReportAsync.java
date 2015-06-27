@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 
 /**
@@ -16,10 +17,10 @@ import de.hdm.gruppe1.shared.bo.Enderzeugnis;
  */
 public interface SmsReportAsync {
 
-	void createStrukturStuecklisteReport(int id,
-			AsyncCallback<Baugruppe> callback);
-
 	void createMaterialBedarfReport(int id, int anzahl,
 			AsyncCallback<Enderzeugnis> callback);
+
+	void createBaugruppenReport(Stueckliste BaugruppenStueckliste,
+			AsyncCallback<BaugruppenReport> callback);
 
 }

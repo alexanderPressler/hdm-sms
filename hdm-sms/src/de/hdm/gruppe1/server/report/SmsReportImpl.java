@@ -4,6 +4,7 @@ import de.hdm.gruppe1.server.SmsImpl;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
+import de.hdm.gruppe1.shared.report.BaugruppenReport;
 import de.hdm.gruppe1.shared.report.SmsReport;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -159,15 +160,15 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 */
 	  //TODO: ANPASSEN AN UNSERE GUI
 	@Override
-	public Baugruppe createStrukturStuecklisteReport (int id) throws IllegalArgumentException {
-	    return this.baugruppenMapper.findByID(id);
+	public BaugruppenReport createBaugruppenReport (Stueckliste BaugruppenStueckliste) throws IllegalArgumentException {
+		BaugruppenReport baugruppenReport = new BaugruppenReport(BaugruppenStueckliste);
+		return baugruppenReport;
 	  }
 
 	/*
 	 * ***************************************************************************
 	 * ABSCHNITT, Methoden für Report 1
 	 * *****************************************
-	 * **********************************
 	 */
 	
 	/*

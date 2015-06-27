@@ -19,6 +19,8 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.report.BaugruppenReport;
+import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
 public class Strukturstuecklisten extends VerticalPanel {
 
@@ -37,6 +39,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * werden.
 	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+	SmsReportAsync stuecklistenReportVerwaltung = ClientsideSettings.getReportGenerator();
 	
 	// Vektor wird mit allen Baugruppen aus der DB befüllt
 	Vector<Baugruppe> allBaugruppe = new Vector<Baugruppe>();
@@ -141,13 +144,16 @@ public class Strukturstuecklisten extends VerticalPanel {
 	private class CreateClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
-
+			
+			final int index = listBoxBaugruppen.getSelectedIndex();
+			Baugruppe baugruppe = allBaugruppe.get(index);
+			Stueckliste BaugruppenStueckliste = baugruppe.getStueckliste();
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-//				stuecklistenVerwaltung.createStrukturstueckliste(baugruppe, new CreateStrukturstuecklisteCallback());
+				stuecklistenReportVerwaltung.createBaugruppenReport(BaugruppenStueckliste, new BaugruppenReportCallback());
 
 				/**
 				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
@@ -167,7 +173,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * @author Mario
 	 * 
 	 */
-	class CreateStrukturstuecklisteCallback implements AsyncCallback<Baugruppe> {
+	class BaugruppenReportCallback implements AsyncCallback<BaugruppenReport> {
 
 		@Override
 		public void onFailure(Throwable caught) {
@@ -175,7 +181,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 		}
 
 		@Override
-		public void onSuccess(Baugruppe baugruppe) {
+		public void onSuccess(BaugruppenReport baugruppenReport) {
 			Window.alert("Das Erstellen der Strukturstückliste war erfolgreich!");
 		}
 	}
