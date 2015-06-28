@@ -1,13 +1,11 @@
 package de.hdm.gruppe1.server.report;
 
 import java.util.Vector;
-
 import de.hdm.gruppe1.server.SmsImpl;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
 import de.hdm.gruppe1.shared.report.SmsReport;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -94,7 +92,7 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	   * essentiellen Methoden für die Koexistenz von Datenobjekten (vgl.
 	   * bo-Package) bietet.
 	   */
-	private Sms stuecklistenReportVerwaltung = null;
+	private Sms stuecklistenVerwaltung = null;
 	
 	private BaugruppenMapper baugruppenMapper = null;
 	private EnderzeugnisMapper enderzeugnisMapper = null;
@@ -143,11 +141,22 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 		 */
 		SmsImpl a = new SmsImpl();
 		a.init();
-		this.stuecklistenReportVerwaltung = a;
+		this.stuecklistenVerwaltung = a;
 		
 		this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
 		this.enderzeugnisMapper = EnderzeugnisMapper.enderzeugnisMapper();
 	}
+	  
+	  /**
+	   * Auslesen aller BaugruppenObjekte für Auswahl in Report 1 .
+	   */
+	  @Override
+	  public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
+		  Vector<Baugruppe> alleBaugruppen = stuecklistenVerwaltung.getAllBaugruppen();
+		  return alleBaugruppen;
+	  }
+	  
+	  
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Initialisierung
@@ -160,16 +169,16 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 * ***************************************************************************
 	 */
 	  //TODO: ANPASSEN AN UNSERE GUI
-	@Override
-	public Baugruppe createStrukturStuecklisteReport (int id) throws IllegalArgumentException {
-	    return this.baugruppenMapper.findByID(id);
-	  }
+//	@Override
+//	public BaugruppenReport createBaugruppenReport (Stueckliste BaugruppenStueckliste) throws IllegalArgumentException {
+//		BaugruppenReport baugruppenReport = new BaugruppenReport(BaugruppenStueckliste);
+//		return baugruppenReport;
+//	  }
 
 	/*
 	 * ***************************************************************************
 	 * ABSCHNITT, Methoden für Report 1
 	 * *****************************************
-	 * **********************************
 	 */
 	
 	/*
@@ -190,40 +199,5 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 * *****************************************
 	 * **********************************
 	 */
-	
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Beginn: GetAllBaugruppen
-	 * *********************************
-	 * ******************************************
-	 */
-
-	@Override
-	public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
-	    return this.baugruppenMapper.findAll();
-	  }  
-
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Ende: GetAllBaugruppen
-	 * *****************************************
-	 * **********************************
-	 */
-	
-	/*
-	 * ***************************************************************************
-	 * ABSCHNITT, Anfang: Methoden für Enderzeugnis-Objekte
-	 * ***************************************************************************
-	 */
-	  @Override
-	public Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException {
-	    return this.enderzeugnisMapper.findAll();
-	  }
-	  
-	  /*
-	   * ***************************************************************************
-	   * ABSCHNITT Ende : Methoden für Enderzeugnis-Objekte
-	   * ***************************************************************************
-	   */
 
 }

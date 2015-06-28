@@ -1,35 +1,29 @@
-package de.hdm.gruppe1.client;
+package de.hdm.gruppe1.client.report;
+
+import java.io.Serializable;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Element;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 
-public class TreeView extends VerticalPanel {
-	
-	
-	
-	
+public class TreeViewReport extends Tree implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * GUI-Elemente für TreeView initialisieren
 	 */
-	private final Label HeadlineLabel = new Label("Strukturstückliste");
-	Tree tree = new Tree();
 	TreeItem rootTreeItem = new TreeItem();
-	
-	
-	public TreeView(Stueckliste treeViewStueckliste) {
+	TreeItem tempItem = rootTreeItem;
+
+	public TreeViewReport(Stueckliste treeViewStueckliste) {
 		try {
-			Window.alert(treeViewStueckliste.getName());
 			treeRecursion(treeViewStueckliste);
 			
 			
@@ -37,28 +31,20 @@ public class TreeView extends VerticalPanel {
 			 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
 			 * zugeordnet, da diese Klasse von VerticalPanel erbt.
 			 */
-			this.add(HeadlineLabel);
-			tree.addItem(rootTreeItem);
-			this.add(tree);
+			this.addItem(rootTreeItem);
 			
-			
-			/**
-			 * Abschließend wird alles dem RootPanel zugeordnet
-			 */
-			RootPanel.get("content_wrap").add(this);
-		
 		} catch (Exception e) {
 			GWT.log(e.toString());
 //			System.out.println(e.toString());
 		}
 		
 	}
-	
-	TreeItem tempItem = rootTreeItem;
+
 	private void treeRecursion(Element element) {
 		if(element instanceof Stueckliste) {
 			Stueckliste aktuellesStueckliste = (Stueckliste) element;
 			rootTreeItem.setText(aktuellesStueckliste.getName());
+//			rootTreeItem.setStyleName("treeIntersection");
 			
 			for(int i = 0; i<aktuellesStueckliste.getBaugruppenPaare().size(); i++){
 				Element childBaugruppenElement = aktuellesStueckliste.getBaugruppenPaare().get(i).getElement();
@@ -79,6 +65,7 @@ public class TreeView extends VerticalPanel {
 			TreeItem bauteilTreeItem = new TreeItem();
 			bauteilTreeItem.setText(aktuellesBauteil.getName());
 			rootTreeItem.addItem(bauteilTreeItem);
+//			rootTreeItem.removeStyleName("treeIntersection");
 						
 			
 		} else if(element instanceof Baugruppe) {
@@ -90,6 +77,7 @@ public class TreeView extends VerticalPanel {
 			
 			//TODO: Reihenfolge des baums stimmt noch nicht, tempItem und rootItem an tree anpassen
 			tempItem.addItem(baugruppeTreeItem);
+//			tempItem.setStyleName("treeIntersection");
 			tempItem = baugruppeTreeItem;
 			
 			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().size(); i++){
@@ -108,6 +96,9 @@ public class TreeView extends VerticalPanel {
 				childBauteilItem.setText(childBauteilElement.getName());
 				baugruppeTreeItem.addItem(childBauteilItem);
 				
+//				rootTreeItem.removeStyleName("treeIntersection");
+//				tempItem.setStyleName("treeChild");
+				
 //				treeRecursion(childBauteilElement);
 			}
 										
@@ -115,4 +106,5 @@ public class TreeView extends VerticalPanel {
 //				baugruppeTreeItem.setText(treeViewStueckliste.getBaugruppenPaare().get(i).getAnzahl()+" * Baugruppe: "+treeViewStueckliste.getBaugruppenPaare().get(i).getElement().getName());
 			}
 		}
+	
 }

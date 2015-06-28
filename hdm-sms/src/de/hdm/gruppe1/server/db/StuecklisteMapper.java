@@ -119,7 +119,7 @@ public class StuecklisteMapper {
 
 				//TODO Tabellenspalte "ersteller" aus DB löschen. Anschließend Statement hier anpassen (herauslöschen)
 				// Jetzt erst erfolgt die tatsächliche Einfügeoperation
-				stmt.executeUpdate("INSERT INTO `Stueckliste` VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '"+ stueckliste.getEditDate() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getCreationDate() +"');");
+				stmt.executeUpdate("INSERT INTO `Stueckliste` VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '"+ stueckliste.getEditDate() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getCreationDate() +"');");
 			
 				//Bauteile hinzufügen
 				for(int i=0;i<stueckliste.getBauteilPaare().size();i++){

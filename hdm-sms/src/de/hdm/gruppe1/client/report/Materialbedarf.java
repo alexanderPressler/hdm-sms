@@ -1,4 +1,4 @@
-package de.hdm.gruppe1.client;
+package de.hdm.gruppe1.client.report;
 
 import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import de.hdm.gruppe1.client.ClientsideSettings;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
@@ -48,7 +50,7 @@ public class Materialbedarf extends VerticalPanel {
 		
 		// Um das Dropdown mit Baugruppen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
-		stuecklistenReportVerwaltung.getAllEnderzeugnis(new GetAllEnderzeugnisseCallback());
+//		stuecklistenReportVerwaltung.getAllEnderzeugnis(new GetAllEnderzeugnisseCallback());
 		
 		// Horizontales Anordnen von zugehörigen Bauteil-Widgets
 		eEPanel.add(amountEnderzeugnisse);

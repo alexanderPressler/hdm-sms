@@ -8,6 +8,9 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe1.client.report.Materialbedarf;
+import de.hdm.gruppe1.client.report.Strukturstuecklisten;
+
 public class Hdm_smsReport extends VerticalPanel implements EntryPoint {
 
 	Image welcomeImage = new Image();
