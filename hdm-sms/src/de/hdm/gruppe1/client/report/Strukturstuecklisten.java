@@ -154,7 +154,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 //			stuecklistenReportVerwaltung.createBaugruppenReport(BaugruppenStueckliste, new BaugruppenReportCallback());
 
 			//Test für Tree im Client-Package
-			TreeViewReport treeReport = new TreeViewReport(baugruppenStueckliste);
+			TreeViewReport treeReport = new TreeViewReport(baugruppenStueckliste, 1);
 			HTML reportHTML = new HTML(treeReport.toString());
 			
 			RootPanel.get("content_wrap").clear();

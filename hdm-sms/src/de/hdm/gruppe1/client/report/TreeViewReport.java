@@ -24,9 +24,9 @@ public class TreeViewReport extends Tree implements Serializable {
 	
 	int anzahl;
 
-	public TreeViewReport(Stueckliste treeViewStueckliste) {
+	public TreeViewReport(Stueckliste treeViewStueckliste, int anzahl) {
 		try {
-			anzahl = 1;
+			
 			treeRecursion(treeViewStueckliste, anzahl);
 			
 			
