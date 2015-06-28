@@ -6,7 +6,6 @@ import de.hdm.gruppe1.server.SmsImpl;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
-import de.hdm.gruppe1.shared.report.BaugruppenReport;
 import de.hdm.gruppe1.shared.report.SmsReport;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -97,9 +96,6 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	   */
 	private Sms stuecklistenVerwaltung = null;
 	
-	private BaugruppenMapper baugruppenMapper = null;
-	private EnderzeugnisMapper enderzeugnisMapper = null;
-	
 	/*
 	   * ***************************************************************************
 	   * ABSCHNITT, Beginn: Initialisierung
@@ -145,20 +141,7 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 		SmsImpl a = new SmsImpl();
 		a.init();
 		this.stuecklistenVerwaltung = a;
-		
-		this.baugruppenMapper = BaugruppenMapper.baugruppenMapper();
-		this.enderzeugnisMapper = EnderzeugnisMapper.enderzeugnisMapper();
 	}
-	  
-	  /**
-	   * Auslesen aller BaugruppenObjekte für Auswahl in Report 1 .
-	   */
-	  @Override
-	  public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
-		  Vector<Baugruppe> alleBaugruppen = stuecklistenVerwaltung.getAllBaugruppen();
-		  return alleBaugruppen;
-	  }
-	  
 	  
 	  /*
 	   * ***************************************************************************
@@ -171,12 +154,20 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 * ABSCHNITT, Beginn: Methoden für Report 1
 	 * ***************************************************************************
 	 */
-	  //TODO: ANPASSEN AN UNSERE GUI
-	@Override
-	public BaugruppenReport createBaugruppenReport (Stueckliste BaugruppenStueckliste) throws IllegalArgumentException {
-		BaugruppenReport baugruppenReport = new BaugruppenReport(BaugruppenStueckliste);
-		return baugruppenReport;
+	  
+	  /**
+	   * Auslesen aller BaugruppenObjekte für Auswahl in Report 1 .
+	   */
+	  @Override
+	  public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
+		  Vector<Baugruppe> alleBaugruppen = stuecklistenVerwaltung.getAllBaugruppen();
+		  return alleBaugruppen;
 	  }
+//	@Override
+//	public BaugruppenReport createBaugruppenReport (Stueckliste BaugruppenStueckliste) throws IllegalArgumentException {
+//		BaugruppenReport baugruppenReport = new BaugruppenReport(BaugruppenStueckliste);
+//		return baugruppenReport;
+//	  }
 
 	/*
 	 * ***************************************************************************
@@ -190,11 +181,19 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 * *********************************
 	 * ******************************************
 	 */
-	//TODO: ANPASSEN AN UNSERE GUI
-	@Override
-	public Enderzeugnis createMaterialBedarfReport (int id, int anzahl) throws IllegalArgumentException {
-	    return this.enderzeugnisMapper.findByID(id);
+	  /**
+	   * Auslesen aller Baugruppen.
+	   */
+	  @Override
+	public Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException {
+		 Vector<Enderzeugnis> alleEnderzeugnisse = stuecklistenVerwaltung.getAllEnderzeugnis();
+		 return alleEnderzeugnisse;
 	  }
+	  
+//	@Override
+//	public Enderzeugnis createMaterialBedarfReport (int id, int anzahl) throws IllegalArgumentException {
+//	    return this.enderzeugnisMapper.findByID(id);
+//	  }
 
 	/*
 	 * ***************************************************************************

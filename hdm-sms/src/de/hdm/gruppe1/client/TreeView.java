@@ -9,11 +9,11 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.gruppe1.client.report.TreeViewReport;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Element;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
-import de.hdm.gruppe1.shared.report.TreeViewReport;
 
 public class TreeView extends VerticalPanel {
 	

@@ -1,25 +1,23 @@
-package de.hdm.gruppe1.client;
+package de.hdm.gruppe1.client.report;
 
 import java.util.Vector;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import de.hdm.gruppe1.client.CreateStueckliste.CreateStuecklisteCallback;
+import de.hdm.gruppe1.client.ClientsideSettings;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
-import de.hdm.gruppe1.shared.report.BaugruppenReport;
 import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
 public class Strukturstuecklisten extends VerticalPanel {
@@ -146,22 +144,30 @@ public class Strukturstuecklisten extends VerticalPanel {
 			
 			final int index = listBoxBaugruppen.getSelectedIndex();
 			Baugruppe baugruppe = allBaugruppe.get(index);
-			Stueckliste BaugruppenStueckliste = baugruppe.getStueckliste();
+			Stueckliste baugruppenStueckliste = baugruppe.getStueckliste();
+			
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-				stuecklistenReportVerwaltung.createBaugruppenReport(BaugruppenStueckliste, new BaugruppenReportCallback());
+//			stuecklistenReportVerwaltung.createBaugruppenReport(BaugruppenStueckliste, new BaugruppenReportCallback());
 
-				/**
-				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
-				 * zurück zur Übersichtstabelle weiterleiten.
-				 */
-				RootPanel.get("content_wrap").clear();
-				Window.alert("Report 1 (Strukturstückliste) wird hiermit erstellt.");
-//				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
-
+			//Test für Tree im Client-Package
+			TreeViewReport treeReport = new TreeViewReport(baugruppenStueckliste, 1);
+			HTML reportHTML = new HTML(treeReport.toString());
+			
+			RootPanel.get("content_wrap").clear();
+			RootPanel.get("content_wrap").add(reportHTML);
+			
+//				HTML reportHTML = new HTML(baugruppenReport);
+//				
+//				/**
+//				 * Nachdem der Create-Vorgang durchgeführt wurde,
+//				 */
+//				RootPanel.get("content_wrap").clear();
+//				RootPanel.get("content_wrap").add();
+				
 		}
 	}
 	
@@ -172,17 +178,26 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * @author Mario
 	 * 
 	 */
-	class BaugruppenReportCallback implements AsyncCallback<BaugruppenReport> {
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert("Das Erstellen der Strukturstückliste ist fehlgeschlagen!");
-		}
-
-		@Override
-		public void onSuccess(BaugruppenReport baugruppenReport) {
-			Window.alert("Das Erstellen der Strukturstückliste war erfolgreich!");
-		}
-	}
+//	class BaugruppenReportCallback implements AsyncCallback<BaugruppenReport> {
+//
+//		@Override
+//		public void onFailure(Throwable caught) {
+//			Window.alert("Das Erstellen der Strukturstückliste ist fehlgeschlagen!");
+//		}
+//
+//		@Override
+//		public void onSuccess(BaugruppenReport baugruppenReport) {
+//			Window.alert("Das Erstellen der Strukturstückliste war erfolgreich!");
+//			
+//			HTML reportHTML = new HTML(baugruppenReport.toString());
+//			
+//			/**
+//			 * Nachdem der Create-Vorgang durchgeführt wurde,
+//			 */
+//			RootPanel.get("content_wrap").clear();
+//			RootPanel.get("content_wrap").add(reportHTML);
+//			
+//		}
+//	}
 	
 }

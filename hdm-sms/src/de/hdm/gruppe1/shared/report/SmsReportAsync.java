@@ -19,12 +19,14 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
  */
 public interface SmsReportAsync {
 
-	void createMaterialBedarfReport(int id, int anzahl,
-			AsyncCallback<Enderzeugnis> callback);
-
-	void createBaugruppenReport(Stueckliste BaugruppenStueckliste,
-			AsyncCallback<BaugruppenReport> callback);
+//	void createMaterialBedarfReport(int id, int anzahl,
+//			AsyncCallback<Enderzeugnis> callback);
+//
+//	void createBaugruppenReport(Stueckliste BaugruppenStueckliste,
+//			AsyncCallback<BaugruppenReport> callback);
 
 	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
+
+	void getAllEnderzeugnis(AsyncCallback<Vector<Enderzeugnis>> callback);
 
 }
