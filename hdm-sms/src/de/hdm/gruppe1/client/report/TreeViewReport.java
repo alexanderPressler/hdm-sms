@@ -21,10 +21,13 @@ public class TreeViewReport extends Tree implements Serializable {
 	 */
 	TreeItem rootTreeItem = new TreeItem();
 	TreeItem tempItem = rootTreeItem;
+	
+	int anzahl;
 
 	public TreeViewReport(Stueckliste treeViewStueckliste) {
 		try {
-			treeRecursion(treeViewStueckliste);
+			anzahl = 1;
+			treeRecursion(treeViewStueckliste, anzahl);
 			
 			
 			/**
@@ -40,7 +43,7 @@ public class TreeViewReport extends Tree implements Serializable {
 		
 	}
 
-	private void treeRecursion(Element element) {
+	private void treeRecursion(Element element, int anzahl) {
 		if(element instanceof Stueckliste) {
 			Stueckliste aktuellesStueckliste = (Stueckliste) element;
 			rootTreeItem.setText(aktuellesStueckliste.getName());
@@ -48,22 +51,25 @@ public class TreeViewReport extends Tree implements Serializable {
 			
 			for(int i = 0; i<aktuellesStueckliste.getBaugruppenPaare().size(); i++){
 				Element childBaugruppenElement = aktuellesStueckliste.getBaugruppenPaare().get(i).getElement();
-				treeRecursion(childBaugruppenElement);
+				int anzahlBaugruppe = aktuellesStueckliste.getBaugruppenPaare().get(i).getAnzahl();
+				treeRecursion(childBaugruppenElement, anzahlBaugruppe);
 			}
 			
 			for(int i = 0; i<aktuellesStueckliste.getBauteilPaare().size(); i++){
 				Element childBauteilElement = aktuellesStueckliste.getBauteilPaare().get(i).getElement();
-				treeRecursion(childBauteilElement);
+				int anzahlBauteil = aktuellesStueckliste.getBauteilPaare().get(i).getAnzahl();
+				treeRecursion(childBauteilElement, anzahlBauteil);
 			}
 			
 			
 			
 		}
 		if(element instanceof Bauteil) {
+
 			Bauteil aktuellesBauteil = (Bauteil) element;
 			
 			TreeItem bauteilTreeItem = new TreeItem();
-			bauteilTreeItem.setText(aktuellesBauteil.getName());
+			bauteilTreeItem.setText(anzahl+" * Bauteil: "+aktuellesBauteil.getName());
 			rootTreeItem.addItem(bauteilTreeItem);
 //			rootTreeItem.removeStyleName("treeIntersection");
 						
@@ -73,7 +79,7 @@ public class TreeViewReport extends Tree implements Serializable {
 			Baugruppe aktuellesBaugruppe = (Baugruppe) element;
 			
 			TreeItem baugruppeTreeItem = new TreeItem();
-			baugruppeTreeItem.setText(aktuellesBaugruppe.getName());
+			baugruppeTreeItem.setText(anzahl+" * Baugruppe: "+aktuellesBaugruppe.getName());
 			
 			//TODO: Reihenfolge des baums stimmt noch nicht, tempItem und rootItem an tree anpassen
 			tempItem.addItem(baugruppeTreeItem);
@@ -82,28 +88,28 @@ public class TreeViewReport extends Tree implements Serializable {
 			
 			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().size(); i++){
 				Element childBaugruppenElement = aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement();
+				int childBaugruppenAnzahl = aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getAnzahl();
+
 				//TreeItem childBaugruppenItem = new TreeItem();
 				//childBaugruppenItem.setText(childBaugruppenElement.getName());
 				//baugruppeTreeItem.addItem(childBaugruppenItem);
 				
-				treeRecursion(childBaugruppenElement);
+				treeRecursion(childBaugruppenElement, childBaugruppenAnzahl);
 			}
 			
 
 			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBauteilPaare().size(); i++){
 				Element childBauteilElement = aktuellesBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement();
 				TreeItem childBauteilItem = new TreeItem();
-				childBauteilItem.setText(childBauteilElement.getName());
+				childBauteilItem.setText(aktuellesBaugruppe.getStueckliste().getBauteilPaare().get(i).getAnzahl()
+						+" * Bauteil: "+childBauteilElement.getName());
 				baugruppeTreeItem.addItem(childBauteilItem);
 				
 //				rootTreeItem.removeStyleName("treeIntersection");
 //				tempItem.setStyleName("treeChild");
 				
-//				treeRecursion(childBauteilElement);
 			}
 										
-				//TODO implementieren
-//				baugruppeTreeItem.setText(treeViewStueckliste.getBaugruppenPaare().get(i).getAnzahl()+" * Baugruppe: "+treeViewStueckliste.getBaugruppenPaare().get(i).getElement().getName());
 			}
 		}
 	
