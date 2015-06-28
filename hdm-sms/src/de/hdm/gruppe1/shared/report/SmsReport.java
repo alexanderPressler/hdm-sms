@@ -40,13 +40,15 @@ import de.hdm.gruppe1.shared.bo.*;
 // TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
 @RemoteServiceRelativePath("smsReport")
 public interface SmsReport extends RemoteService {
-
-	Enderzeugnis createMaterialBedarfReport(int id, int anzahl)
-			throws IllegalArgumentException;
-
+//
+//	Enderzeugnis createMaterialBedarfReport(int id, int anzahl)
+//			throws IllegalArgumentException;
+//
 //	BaugruppenReport createBaugruppenReport(Stueckliste BaugruppenStueckliste)
 //			throws IllegalArgumentException;
 
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
+
+	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
 
 }

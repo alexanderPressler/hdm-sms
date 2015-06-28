@@ -1,11 +1,13 @@
 package de.hdm.gruppe1.client.report;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -14,9 +16,12 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.gruppe1.client.ClientsideSettings;
+import de.hdm.gruppe1.client.report.Strukturstuecklisten.GetAllBaugruppenCallback;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
+import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
+import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
 public class Materialbedarf extends VerticalPanel {
@@ -44,6 +49,7 @@ public class Materialbedarf extends VerticalPanel {
 	// Instantiierung die entsprechenden GUI-Elemente geladen werden.
 	public Materialbedarf() {
 		
+		stuecklistenReportVerwaltung.getAllEnderzeugnis(new GetAllEnderzeugnisseCallback());
 		// TextBox wird mit Text vorbefüllt, der ausgeblendet wird, sobald
 		// die TextBox vom User fokussiert wird
 		amountEnderzeugnisse.getElement().setPropertyString("placeholder", "Anzahl");
@@ -169,14 +175,17 @@ public class Materialbedarf extends VerticalPanel {
 					 * mitgeschickt.
 					 */
 //					stuecklistenVerwaltung.createMaterialbedarf(enderzeugnis, anzahl, new CreateMaterialbedarfCallback());
-
-					/**
-					 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
-					 * zurück zur Übersichtstabelle weiterleiten.
-					 */
+					
+					final int index = listBoxEnderzeugnisse.getSelectedIndex();
+					Enderzeugnis enderzeugnis = allEnderzeugnisse.get(index);
+					Stueckliste enderzeugnisStueckliste = enderzeugnis.getBaugruppe().getStueckliste();
+					
+					Integer anzahl =  Integer.parseInt(amountEnderzeugnisse.getText());
+					TreeViewReport treeReport = new TreeViewReport(enderzeugnisStueckliste,anzahl);
+					HTML reportHTML = new HTML(treeReport.toString());
+					
 					RootPanel.get("content_wrap").clear();
-					Window.alert("Report 2 (Materialbedarf) wird hiermit erstellt.");
-//					RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
+					RootPanel.get("content_wrap").add(reportHTML);
 				}
 				
 			}
