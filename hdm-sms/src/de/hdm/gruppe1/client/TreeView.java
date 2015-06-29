@@ -2,13 +2,11 @@ package de.hdm.gruppe1.client;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Element;
@@ -16,31 +14,32 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 public class TreeView extends VerticalPanel {
 	
-	
-	
-	
 	/**
 	 * GUI-Elemente für TreeView initialisieren
 	 */
 	private final Label HeadlineLabel = new Label("Strukturstückliste");
+	private final Label SublineLabel = new Label("Sie können die Strukturstückliste aufklappen und zugehörige Baugruppen- und Bauteile anzeigen.");
 	Tree tree = new Tree();
 	TreeItem rootTreeItem = new TreeItem();
 	
-	
 	public TreeView(Stueckliste treeViewStueckliste) {
 		try {
-			Window.alert(treeViewStueckliste.getName());
 			treeRecursion(treeViewStueckliste);
-			
 			
 			/**
 			 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
 			 * zugeordnet, da diese Klasse von VerticalPanel erbt.
 			 */
 			this.add(HeadlineLabel);
+			this.add(SublineLabel);
 			tree.addItem(rootTreeItem);
 			this.add(tree);
 			
+			/**
+			 * Diverse css-Formatierungen
+			 */
+			HeadlineLabel.setStyleName("headline");
+			SublineLabel.setStyleName("subline");
 			
 			/**
 			 * Abschließend wird alles dem RootPanel zugeordnet
@@ -70,9 +69,8 @@ public class TreeView extends VerticalPanel {
 				treeRecursion(childBauteilElement);
 			}
 			
-			
-			
 		}
+		
 		if(element instanceof Bauteil) {
 			Bauteil aktuellesBauteil = (Bauteil) element;
 			
@@ -100,7 +98,6 @@ public class TreeView extends VerticalPanel {
 				
 				treeRecursion(childBaugruppenElement);
 			}
-			
 
 			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBauteilPaare().size(); i++){
 				Element childBauteilElement = aktuellesBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement();

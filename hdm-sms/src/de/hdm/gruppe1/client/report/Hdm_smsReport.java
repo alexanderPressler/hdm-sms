@@ -1,4 +1,4 @@
-package de.hdm.gruppe1.client;
+package de.hdm.gruppe1.client.report;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Command;
@@ -8,8 +8,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.hdm.gruppe1.client.report.Materialbedarf;
-import de.hdm.gruppe1.client.report.Strukturstuecklisten;
+import de.hdm.gruppe1.client.Impressum;
 
 public class Hdm_smsReport extends VerticalPanel implements EntryPoint {
 
@@ -38,20 +37,20 @@ public class Hdm_smsReport extends VerticalPanel implements EntryPoint {
 		      }
 		};
 		
-	    //Menü für Report 1
-	    MenuBar report1Menu = new MenuBar(true);
-	    report1Menu.addItem("Strukturstücklisten", report1);
-	    
-	    //Menü für Report 2
-	    MenuBar report2Menu = new MenuBar(true);
-	    report2Menu.addItem("Materialbedarf", report2);
+//	    //Menü für Report 1
+//	    MenuBar report1Menu = new MenuBar(true);
+//	    report1Menu.addItem("Strukturstücklisten", report1);
+//	    
+//	    //Menü für Report 2
+//	    MenuBar report2Menu = new MenuBar(true);
+//	    report2Menu.addItem("Materialbedarf", report2);
 
 		//Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
 	    mainMenu.setWidth("100%");
-	    mainMenu.setAutoOpen(true);
-	    mainMenu.addItem("Strukturstücklisten", report1Menu);
-	    mainMenu.addItem("Materialbedarf", report2Menu);
+//	    mainMenu.setAutoOpen(true);
+	    mainMenu.addItem("Strukturstücklisten", report1);
+	    mainMenu.addItem("Materialbedarf", report2);
 	    
 	    //Das Begrüßungsbild der Applikation
 		welcomeImage.setUrl("./img/Welcome.jpg");

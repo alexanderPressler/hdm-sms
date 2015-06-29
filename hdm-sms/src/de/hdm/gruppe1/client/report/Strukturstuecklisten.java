@@ -32,10 +32,10 @@ public class Strukturstuecklisten extends VerticalPanel {
 	private final Label baugruppeLabel = new Label("Gewünschte Baugruppe auswählen");
 	ListBox listBoxBaugruppen = new ListBox();
 	private final Button CreateStrukturstuecklisteButton = new Button("erstellen");
-	private final String headlineString = new String("Strukturstückliste für folgende Baugruppe: </br>");
+	private final String headlineString = new String("Strukturstückliste für folgende Baugruppe: ");
 	Date date = new Date();
 	private DateTimeFormat creationDate = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
-	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date)+"</p>");
+	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date));
 	private String impressumString = new String();
 	
 	/**
@@ -169,7 +169,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 			ImpressumReport imp = new ImpressumReport();
 			impressumString = imp.setImpressum();
 			
-			HTML reportHTML = new HTML("<h3>"+headlineString+baugruppenStueckliste.getName()+"</h3>"+creationDateString+treeReport.toString()+"<p>"+impressumString);
+			HTML reportHTML = new HTML("<h3>"+headlineString+baugruppenStueckliste.getName()+"</h3>"+creationDateString+"</p>"+treeReport.toString()+"<p>"+impressumString);
 			
 			RootPanel.get("content_wrap").clear();
 			RootPanel.get("content_wrap").add(reportHTML);

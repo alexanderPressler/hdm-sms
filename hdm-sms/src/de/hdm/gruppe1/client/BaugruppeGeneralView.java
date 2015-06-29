@@ -45,9 +45,9 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
 	 */
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht eine Baugruppe aus, um sie mithilfe dieses Buttons zu editieren: ");
+			"Markierte Baugruppe editieren ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens eine Baugruppe aus, um sie mithilfe dieses Buttons zu löschen: ");
+			"Markierte Baugruppe(n) löschen ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-

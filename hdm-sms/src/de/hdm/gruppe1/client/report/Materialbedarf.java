@@ -41,7 +41,7 @@ public class Materialbedarf extends VerticalPanel {
 	private final String anzahlString = new String("Anzahl der Enderzeugnisse: ");
 	Date date = new Date();
 	private DateTimeFormat creationDate = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
-	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date)+"</p>");
+	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date));
 	private String impressumString = new String();
 	
 	// Panel, um das Baugruppen-Dropdown neben der Anzahl-TextBox zu platzieren
@@ -196,7 +196,7 @@ public class Materialbedarf extends VerticalPanel {
 					
 					Integer anzahl =  Integer.parseInt(amountEnderzeugnisse.getText());
 					TreeViewReport treeReport = new TreeViewReport(enderzeugnisStueckliste,anzahl);
-					HTML reportHTML = new HTML("<h3>"+headlineString+enderzeugnis.getName()+"</h3>"+anzahlString+anzahl+"</br>"+creationDateString+treeReport.toString()+"<p>"+impressumString);
+					HTML reportHTML = new HTML("<h3>"+headlineString+enderzeugnis.getName()+"</h3>"+anzahlString+anzahl+"</br>"+creationDateString+"</p>"+treeReport.toString()+"<p>"+impressumString);
 					
 					RootPanel.get("content_wrap").clear();
 					RootPanel.get("content_wrap").add(reportHTML);

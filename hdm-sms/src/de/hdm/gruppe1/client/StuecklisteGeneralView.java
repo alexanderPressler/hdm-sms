@@ -46,11 +46,11 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
 	 */
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht eine Stückliste aus, um sie mithilfe dieses Buttons zu editieren: ");
+			"Markierte Stückliste editieren ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens eine Stückliste aus, um sie mithilfe dieses Buttons zu löschen: ");
-	private final Label treeViewLabel = new Label ("Wählen Sie in der Übersicht eine Stückliste an, um deren" +
-			"Strukturstückliste anzuzeigen: ");
+			"Markierte Stückliste(n)löschen ");
+	private final Label treeViewLabel = new Label (
+			"Markierte Stückliste als Strukturstückliste anzeigen ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-

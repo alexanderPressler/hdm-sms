@@ -11,7 +11,6 @@ public class ImpressumReport {
 				+ "Nobelstraße 10<br/>"
 				+ "70569 Stuttgart<br/>"
 				+ "</p>"
-				+ "</body>"
 				);		
 		
 		return reportImpressum;
