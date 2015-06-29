@@ -1,9 +1,11 @@
 package de.hdm.gruppe1.client.report;
 
+import java.util.Date;
 import java.util.Vector;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -35,6 +37,12 @@ public class Materialbedarf extends VerticalPanel {
 	private final TextBox amountEnderzeugnisse = new TextBox();
 	ListBox listBoxEnderzeugnisse = new ListBox();
 	private final Button createMaterialbedarfButton = new Button("erstellen");
+	private final String headlineString = new String("Strukturstückliste und Materialbedarf für folgendes Enderzeugnis: ");
+	private final String anzahlString = new String("Anzahl der Enderzeugnisse: ");
+	Date date = new Date();
+	private DateTimeFormat creationDate = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
+	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date)+"</p>");
+	private String impressumString = new String();
 	
 	// Panel, um das Baugruppen-Dropdown neben der Anzahl-TextBox zu platzieren
 	HorizontalPanel eEPanel = new HorizontalPanel();
@@ -180,9 +188,15 @@ public class Materialbedarf extends VerticalPanel {
 					Enderzeugnis enderzeugnis = allEnderzeugnisse.get(index);
 					Stueckliste enderzeugnisStueckliste = enderzeugnis.getBaugruppe().getStueckliste();
 					
+					/**
+					 * Eine Instanz der Klasse Impressum wird erstellt und an dieser Stelle dem report1-String hinzugefügt.
+					 */
+					ImpressumReport imp = new ImpressumReport();
+					impressumString = imp.setImpressum();
+					
 					Integer anzahl =  Integer.parseInt(amountEnderzeugnisse.getText());
 					TreeViewReport treeReport = new TreeViewReport(enderzeugnisStueckliste,anzahl);
-					HTML reportHTML = new HTML(treeReport.toString());
+					HTML reportHTML = new HTML("<h3>"+headlineString+enderzeugnis.getName()+"</h3>"+anzahlString+anzahl+"</br>"+creationDateString+treeReport.toString()+"<p>"+impressumString);
 					
 					RootPanel.get("content_wrap").clear();
 					RootPanel.get("content_wrap").add(reportHTML);
