@@ -4,6 +4,9 @@
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe1.shared.bo.*;
@@ -29,9 +32,9 @@ public class EnderzeugnisMapper {
 	
 	public Enderzeugnis insert(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
-	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
+		
 		try{
+			Statement stmt = con.createStatement();
 			//MaxID von StuecklistenBauteile abfragen
 			ResultSet rs = stmt.executeQuery("SELECT MAX(ee_ID) AS maxid "
 			          + "FROM Enderzeugnis;");
@@ -43,9 +46,16 @@ public class EnderzeugnisMapper {
 			         * Primärschlüssel.
 			         */
 			    	enderzeugnis.setId(rs.getInt("maxid")+1);
-			    	Statement stmt = con.createStatement();
-					stmt.executeUpdate("INSERT INTO Enderzeugnis VALUES ('"
-			    	+enderzeugnis.getId()+"','"+enderzeugnis.getName()+"','"+baugruppenID.toString()+"');");
+			    	
+			     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			    	  // die Datenbank zu speichern 
+			     	  Date utilDate = enderzeugnis.getEditDate();
+			     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+			     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+			     	  df.format(sqlDate);
+			     	  
+			     	 enderzeugnis.setEditDate(sqlDate);
+					stmt.executeUpdate("INSERT INTO Enderzeugnis VALUES ('"+enderzeugnis.getId()+"','"+enderzeugnis.getName()+"','"+enderzeugnis.getBaugruppe().getId()+"','"+enderzeugnis.getEditUser().getId()+"','"+enderzeugnis.getEditDate()+"');");
 			      }
 		}
 		catch(SQLException e){
@@ -56,13 +66,22 @@ public class EnderzeugnisMapper {
 	
 	public Enderzeugnis update(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
-		Statement stmt = con.createStatement();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
-		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
-	    Integer baugruppenID = new Integer(enderzeugnis.getBaugruppe().getId());
+		
 		try{
-			stmt.executeUpdate("UPDATE Enderzeugnis SET name='"+enderzeugnis.getName()+"',baugruppe='"+baugruppenID.toString()+"' WHERE ee_ID='"
-				+enderzeugnisID.toString()+"';");
+			
+	     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	    	  // die Datenbank zu speichern 
+	     	  Date utilDate = enderzeugnis.getEditDate();
+	     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+	     	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+	     	  df.format(sqlDate);
+	     	  
+	     	  
+	     	 enderzeugnis.setEditDate(sqlDate);
+			
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("UPDATE Enderzeugnis SET name='"+enderzeugnis.getName()+"', bearbeitet_Von='"+enderzeugnis.getEditUser().getId()+"', datum='"+enderzeugnis.getEditDate()+"' WHERE ee_ID='"
+				+enderzeugnis.getId()+"';");
 		}
 		catch(SQLException e){
 			e.printStackTrace();
@@ -70,39 +89,46 @@ public class EnderzeugnisMapper {
 		return enderzeugnis;
 	}
 	
-	public boolean delete(Enderzeugnis enderzeugnis){
+	public void delete(Enderzeugnis enderzeugnis){
 		Connection con = DBConnection.connection();
-		Statement stmt = con.createStatement();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
-		Integer enderzeugnisID = new Integer(enderzeugnis.getId());
+		
 		try{
-			if(stmt.executeUpdate("DELETE FROM Enderzeugnis WHERE 'ee_ID='"+enderzeugnisID.toString()+"';")==0){
-				return false;
-			}
-			else{
-				return true;
-			}
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("DELETE FROM Enderzeugnis WHERE ee_ID='"+enderzeugnis.getId()+"';");
 		}
 		catch(SQLException e){
 			e.printStackTrace();
-			return false;
 		}
 	}
 	
 	public Enderzeugnis findByID(int id){
 		Connection con = DBConnection.connection();
-		Statement stmt = con.createStatement();
-		Enderzeugnis enderzeugnis = null;
+		
+		Enderzeugnis enderzeugnis = new Enderzeugnis();
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
-		Integer enderzeugnisID = new Integer(id);
-		BaugruppenMapper bMapper = new BaugruppenMapper.BaugruppenMapper();
 		try{
-			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'ee_ID'="+enderzeugnisID.toString()+"';");
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis WHERE ee_ID='"+id+"';");
 			if(rs.next()){
-				Enderzeugnis enderzeugnis = new Enderzeugnis();
 				enderzeugnis.setId(rs.getInt("ee_ID"));
 				enderzeugnis.setName(rs.getString("name"));
-				enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+				
+				// Add User to Enderzeugnis
+				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				UserMapper um = UserMapper.userMapper(); 
+				User zugehörigerUser = um.findByID(zugehörigeUserID);
+				enderzeugnis.setEditUser(zugehörigerUser);
+				
+				// Add Baugruppe to Enderzeugnis
+				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper(); 
+				Baugruppe zugehörigeBaugruppe = bm.findByID(zugehörigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				
+				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	 enderzeugnis.setEditDate(sqlDate);
 			}
 		}
 		catch(SQLException e){
@@ -111,41 +137,61 @@ public class EnderzeugnisMapper {
 		return enderzeugnis;
 	}
 	
-	public Vector<Enderzeugnis> findByName(String name){
+//	public Vector<Enderzeugnis> findByName(String name){
+//		Connection con = DBConnection.connection();
+//		BaugruppenMapper bMapper = BaugruppenMapper.baugruppenMapper();
+//		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
+//		try{
+//			Statement stmt = con.createStatement();
+//			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'name' LIKE '%"+name+"%';");
+//			while(rs.next()){
+//				Enderzeugnis enderzeugnis = new Enderzeugnis();
+//				enderzeugnis.setId(rs.getInt("ee_ID"));
+//				enderzeugnis.setName(rs.getString("name"));
+//				enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+//				vEnderzeugnis.addElement(enderzeugnis);
+//			}	
+//		}
+//		catch(SQLException e){
+//			e.printStackTrace();
+//		}
+//		return vEnderzeugnis;
+//	}
+	
+	public Vector<Enderzeugnis> findAll(){
+		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
 		Connection con = DBConnection.connection();
-		Statement stmt = con.createStatement();
-		BaugruppenMapper bMapper = BaugruppenMapper.BaugruppenMapper();
-		Vector<Enderzeugnis> vEnderzeugnis = null;
 		try{
-			ResultSet rs = stmt.executeQuery("SELECT * FROM 'Enderzeugnis' WHERE 'name' LIKE '%"+name+"%';");
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis;");
+			//Da es viele Baugruppen geben kann müssen wir eine Schleife benutzen
 			while(rs.next()){
+				
+				//Neue Baugruppe erzeugen
 				Enderzeugnis enderzeugnis = new Enderzeugnis();
 				enderzeugnis.setId(rs.getInt("ee_ID"));
 				enderzeugnis.setName(rs.getString("name"));
-				enderzeugnis.setBaugruppe(bMapper.findByID(rs.getInt("baugruppe")));
+				
+				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	 enderzeugnis.setEditDate(sqlDate);
+				
+				// Add User to Enderzeugnis
+				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				UserMapper um = UserMapper.userMapper(); 
+				User zugehörigerUser = um.findByID(zugehörigeUserID);
+				enderzeugnis.setEditUser(zugehörigerUser);
+				
+				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper(); 
+				Baugruppe zugehörigeBaugruppe = bm.findByID(zugehörigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				
 				vEnderzeugnis.addElement(enderzeugnis);
-			}	
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
-		return vEnderzeugnis;
-	}
-	
-	public Vector<Enderzeugnis> getAll(){
-		Connection con = DBConnection.connection();
-		try{
-			
-		}
-	}
-	public Vector<Enderzeugnis> findByBaugruppe(Baugruppe baugruppe){
-		Connection con=DBConnection.connection();
-		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
-		try{
-			Statement stmt = con.createStatement();
-			ResultSet eeResult = stmt.executeQuery("SELECT * FROM Enderzegnis WHERE baugruppe='"+baugruppe.getId()+"';");
-			while(eeResult.next()){
-				vEnderzeugnis.add(this.findByID(eeResult.getInt("ee_ID")));
+				
+
+				
 			}
 		}
 		catch(SQLException e){
@@ -153,4 +199,20 @@ public class EnderzeugnisMapper {
 		}
 		return vEnderzeugnis;
 	}
+
+	public Vector<Enderzeugnis> findByBaugruppe (Baugruppe baugruppe){
+		Vector<Enderzeugnis> vEnderzeugnis = new Vector<Enderzeugnis>();
+		Connection con = DBConnection.connection();
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis WHERE baugruppe='"+baugruppe.getId()+"';");
+			while(rs.next()){
+				vEnderzeugnis.add(this.findByID(rs.getInt("ee_ID")));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return vEnderzeugnis;
+ 	}
 }

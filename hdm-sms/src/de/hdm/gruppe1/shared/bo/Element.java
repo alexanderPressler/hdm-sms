@@ -1,14 +1,32 @@
 package de.hdm.gruppe1.shared.bo;
 
+import java.util.Date;
+
 
 public abstract class Element extends BusinessObject {
 	
 	//Declaration fuer die Serializible Class
 	private static final long serialVersionUID = 1L;
 	
-	//TODO: Aenderungdatum und User einfuegen + getter/setter 
-	
 	String name = null;
+	User editUser = null;
+	Date editDate = null; 
+
+	public Date getEditDate() {
+		return editDate;
+	}
+
+	public void setEditDate(Date editDate) {
+		this.editDate = editDate;
+	}
+
+	public User getEditUser() {
+		return editUser;
+	}
+
+	public void setEditUser(User editUser) {
+		this.editUser = editUser;
+	}
 
 	public String getName() {
 		return this.name;
@@ -18,30 +36,30 @@ public abstract class Element extends BusinessObject {
 		this.name = name;
 	}
 	/**
-	   * Erzeugen einer einfachen textuellen ReprÃ¤sentation der jeweiligen
+	   * Erzeugen einer einfachen textuellen Repräsentation der jeweiligen
 	   * Kontoinstanz.
 	   */
 	  @Override
 	public String toString() {
-	    return super.toString() + " Elementname: #" + this.name;
+	    return super.toString() + " Elementname:" + this.name;
 	  }
 
 	  /**
 	   * <p>
 	   * Feststellen der <em>inhaltlichen</em> Gleichheit zweier Account-Objekte.
 	   * Die Gleichheit wird in diesem Beispiel auf eine identische Kontonummer
-	   * beschrÃ¤nkt.
+	   * beschränkt.
 	   * </p>
 	   * <p>
 	   * <b>ACHTUNG:</b> Die inhaltliche Gleichheit nicht mit dem Vergleich der
-	   * <em>IdentitÃ¤t</em> eines Objekts mit einem anderen verwechseln!!! Dies
-	   * wÃ¼rde durch den Operator <code>==</code> bestimmt. Bei Unklarheit hierzu
-	   * kÃ¶nnen Sie nocheinmal in die Definition des Sprachkerns von Java schauen.
-	   * Die Methode <code>equals(...)</code> ist fÃ¼r jeden Referenzdatentyp
+	   * <em>Identität</em> eines Objekts mit einem anderen verwechseln!!! Dies
+	   * würde durch den Operator <code>==</code> bestimmt. Bei Unklarheit hierzu
+	   * können Sie nocheinmal in die Definition des Sprachkerns von Java schauen.
+	   * Die Methode <code>equals(...)</code> ist für jeden Referenzdatentyp
 	   * definiert, da sie bereits in der Klasse <code>Object</code> in einfachster
 	   * Form realisiert ist. Dort ist sie allerdings auf die simple Bestimmung der 
-	   * Gleicheit der Java-internen Objekt-ID der verglichenen Objekte beschrÃ¤nkt.
-	   * In unseren eigenen Klassen kÃ¶nnen wir diese Methode Ã¼berschreiben und ihr
+	   * Gleicheit der Java-internen Objekt-ID der verglichenen Objekte beschränkt.
+	   * In unseren eigenen Klassen können wir diese Methode überschreiben und ihr
 	   * mehr Intelligenz verleihen.
 	   * </p>
 	   */
