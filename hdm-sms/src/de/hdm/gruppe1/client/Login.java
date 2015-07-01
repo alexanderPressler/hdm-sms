@@ -53,7 +53,7 @@ public class Login extends VerticalPanel {
 		@Override
 		public void onClick(ClickEvent event) {
 
-			Window.alert("Login Editor erfolgreich.");
+			Window.alert("Login Report erfolgreich.");
 			
 		}
 	}

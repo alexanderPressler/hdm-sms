@@ -98,8 +98,24 @@ h1 {
     height:25px;
 }
 
+.showButton {
+	background:url(./img/ShowButton.png) no-repeat;
+    cursor:pointer;
+    border:none;
+    width:50px;
+    height:25px;
+}
+
 .DescriptionFieldText {
 	width: 50%;
 	height: 100px;
 	word-wrap: break-word;
+}
+
+.numericInput {
+	width: 50px;
+}
+
+.tree {
+	padding: 15px;
 }

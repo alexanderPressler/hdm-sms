@@ -1,12 +1,12 @@
 package de.hdm.gruppe1.server.report;
 
+import java.util.Vector;
+
+import de.hdm.gruppe1.server.SmsImpl;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
-import de.hdm.gruppe1.shared.report.*;
-import de.hdm.gruppe1.server.*;
-
-import java.util.Date;
+import de.hdm.gruppe1.shared.report.SmsReport;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -84,10 +84,17 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @see BankAdministration
  * @see BankAdministrationAsync
  * @see RemoteServiceServlet
- * @author Alexander Pressler & Thiere & Thies
+ * @author Alexander Pressler & Thies
  */
 @SuppressWarnings("serial")
 public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
+	
+	/**
+	   * Ein ReportGenerator benötigt Zugriff auf die Stuecklisten Verwaltung (sms), da diese die
+	   * essentiellen Methoden für die Koexistenz von Datenobjekten (vgl.
+	   * bo-Package) bietet.
+	   */
+	private Sms stuecklistenVerwaltung = null;
 	
 	/*
 	   * ***************************************************************************
@@ -95,177 +102,77 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	   * ***************************************************************************
 	   */
 	
-	/**
-     * Ein ReportGenerator benötigt Zugriff auf die Verwaltungsklasse, da diese
-     * die essentiellen Methoden für die Koexistenz von Datenobjekten (vgl.
-     * bo-Package) bietet.
-     */
-	
-	private SmsImpl impl = null;
-	
 	  /**
-     * <p>
-     * Ein <code>RemoteServiceServlet</code> wird unter GWT mittels
-     * <code>GWT.create(Klassenname.class)</code> Client-seitig erzeugt. Hierzu
-     * ist ein solcher No-Argument-Konstruktor anzulegen. Ein Aufruf eines
-     * anderen Konstruktors ist durch die Client-seitige Instantiierung durch
-     * <code>GWT.create(Klassenname.class)</code> nach derzeitigem Stand nicht
-     * möglich.
-     * </p>
-     * <p>
-     * Es bietet sich also an, eine separate Instanzenmethode zu erstellen, die
-     * Client-seitig direkt nach <code>GWT.create(Klassenname.class)</code>
-     * aufgerufen wird, um eine Initialisierung der Instanz vorzunehmen.
-     * </p>
-     */
-  
-	 public SmsReportImpl() throws IllegalArgumentException {
-	    }
-	
-	 
-	 public void init() throws IllegalArgumentException {
-		 /*
-	         * Ein SmsReportImpl-Objekt instantiiert für seinen Eigenbedarf
-	         * eine Impl-Instanz.
-	         */
-		 SmsImpl a = new SmsImpl();
-	        a.init();
-	        this.impl = a;
-		 
-	 }
-	 
-	 
-	  /**
-	     * Auslesen der zugehörigen Verwaltungsklasse (interner Gebrauch).
-	     * 
-	     * @return das Verwaltungsklassenobjekt
+	   * <p>
+	   * Ein <code>RemoteServiceServlet</code> wird unter GWT mittels
+	   * <code>GWT.create(Klassenname.class)</code> Client-seitig erzeugt. Hierzu
+	   * ist ein solcher No-Argument-Konstruktor anzulegen. Ein Aufruf eines anderen
+	   * Konstruktors ist durch die Client-seitige Instantiierung durch
+	   * <code>GWT.create(Klassenname.class)</code> nach derzeitigem Stand nicht
+	   * möglich.
+	   * </p>
+	   * <p>
+	   * Es bietet sich also an, eine separate Instanzenmethode zu erstellen, die
+	   * Client-seitig direkt nach <code>GWT.create(Klassenname.class)</code>
+	   * aufgerufen wird, um eine Initialisierung der Instanz vorzunehmen.
+	   * </p>
+	   * 
+	   * @see #init()
+	   */
+	  public SmsReportImpl() throws IllegalArgumentException {
+	    /*
+	     * Eine weitergehende Funktion muss der No-Argument-Constructor nicht haben.
+	     * Er muss einfach vorhanden sein.
 	     */
-	    protected SmsImpl getSmsImpl() {
-	        return this.impl;
-	    }
-	 
-
-	 /*
+	  }
+	  /**
+	   * Initialsierungsmethode. Siehe dazu Anmerkungen zum No-Argument-Konstruktor
+	   * {@link #ReportGeneratorImpl()}. Diese Methode muss für jede Instanz von
+	   * <code>BankVerwaltungImpl</code> aufgerufen werden.
+	   * 
+	   * @see #ReportGeneratorImpl()
+	   */
+	  @Override
+	public void init() throws IllegalArgumentException {
+		/*
+		 * Ein SmsReportImpl-Objekt instantiiert für seinen Eigenbedarf eine
+		 * Impl-Instanz.
+		 */
+		SmsImpl a = new SmsImpl();
+		a.init();
+		this.stuecklistenVerwaltung = a;
+	}
+	  
+	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT, Ende: Initialisierung
 	   * ***************************************************************************
 	   */
-	    
-	    /**
-	     * Setzen des zugehörigen Baugruppen-Objekts.s
-	     */
-	   // public void setBaugruppe(Baugruppe bg) {
-	   //     this.impl.setBaugruppe(bg);
-	  //  }
-	 
-	    /**
-	     * Hinzufügen des Report-Impressums. Diese Methode ist aus den
-	     * <code>create...</code>-Methoden ausgegliedert, da jede dieser Methoden
-	     * diese Tatigkeiten redundant auszuführen hatte. Stattdessen rufen die
-	     * <code>create...</code>-Methoden diese Methode auf.
-	     * 
-	     * @param r der um das Impressum zu erweiternde Report.
-	     */
-	    protected void addImprint(Report r) {
-	        /*
-	         * Das Imressum soll mehrzeilig sein.
-	         */
-	        CompositeParagraph imprint = new CompositeParagraph();
-	 
-	        imprint.addSubParagraph(new SimpleParagraph(
-	                "Hochschule der Medien"));
-	        imprint.addSubParagraph(new SimpleParagraph("Stuttgart"));
-	 
-	        // Das eigentliche Hinzufügen des Impressums zum Report.
-	        r.setImprint(imprint);
-	 
-	    }
-	  
-	   
+
 	/*
 	 * ***************************************************************************
-	 * ABSCHNITT, Beginn: Methoden für Report 1 Strukturstueckliste
-	 * *********************************
-	 * ******************************************
+	 * ABSCHNITT, Beginn: Methoden für Report 1
+	 * ***************************************************************************
 	 */
-	    
-	 
-	    
-	    public StuecklisteReport createStuecklisteReport(
-	            int baugruppeid) throws IllegalArgumentException {
-	 
-	      Baugruppe bg = impl.getBaugruppeById(baugruppeid);
-	 
-	        if (this.getSmsImpl() == null)
-	            return null;
-	 
-	        /*
-	         * Zunächst legen wir uns einen leeren Report an.
-	         */
-	        StuecklisteReport result = new StuecklisteReport();
-	 
-	        // Jeder Report hat einen Titel (Bezeichnung / Überschrift).
-	        result.setTitle("Strukturstueckliste der Baugruppe");
-	 
-	        // Imressum hinzufügen
-	        this.addImprint(result);
-	 
-	        /*
-	         * Datum der Erstellung hinzufügen. new Date() erzeugt autom. einen
-	         * "Timestamp" des Zeitpunkts der Instantiierung des Date-Objekts.
-	         */
-	        result.setCreated(new Date());
-	        
-	        /*
-	         * Ab hier erfolgt die Zusammenstellung der Kopfdaten (die Dinge, die
-	         * oben auf dem Report stehen) des Reports. Die Kopfdaten sind
-	         * mehrzeilig, daher die Verwendung von CompositeParagraph.
-	         */
-	        CompositeParagraph header = new CompositeParagraph();
-	 
-	        
-	        //TODO Override
-	        // Baugruppen Name aufnehmen
-	        header.addSubParagraph(new SimpleParagraph(bg.getName()
-	                + ", " + bg.getId()));
-	         
-	        //TODO Override
-	        // Studienhalbjahr aufnehmen
-	        header.addSubParagraph(new SimpleParagraph());
-	 
-	        // Hinzufügen der zusammengestellten Kopfdaten zu dem Report
-	        result.setHeaderData(header);
-	 
-	        /*
-	         * Ab hier erfolgt ein zeilenweises Hinzufügen von der
-	         * Struckturstueckliste
-	         */
-	 
-	        /*
-	         * Zunächst legen wir eine Kopfzeile für die Strukturstuecklisten-Tabelle
-	         * an.
-	         */
-	        Row headline = new Row();
-	 
-	 
-	        // Hinzufügen der Kopfzeile
-	        result.addRow(headline);
-	 
-	        Row accountRow = new Row();
-	        
-			return result;
-	 
-	 
-	    
-	    
-	    
-	    
+	  
+	  /**
+	   * Auslesen aller BaugruppenObjekte für Auswahl in Report 1 .
+	   */
+	  @Override
+	  public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
+		  Vector<Baugruppe> alleBaugruppen = stuecklistenVerwaltung.getAllBaugruppen();
+		  return alleBaugruppen;
+	  }
+//	@Override
+//	public BaugruppenReport createBaugruppenReport (Stueckliste BaugruppenStueckliste) throws IllegalArgumentException {
+//		BaugruppenReport baugruppenReport = new BaugruppenReport(BaugruppenStueckliste);
+//		return baugruppenReport;
+//	  }
 
 	/*
 	 * ***************************************************************************
 	 * ABSCHNITT, Methoden für Report 1
 	 * *****************************************
-	 * **********************************
 	 */
 	
 	/*
@@ -274,6 +181,19 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 * *********************************
 	 * ******************************************
 	 */
+	  /**
+	   * Auslesen aller Baugruppen.
+	   */
+	  @Override
+	public Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException {
+		 Vector<Enderzeugnis> alleEnderzeugnisse = stuecklistenVerwaltung.getAllEnderzeugnis();
+		 return alleEnderzeugnisse;
+	  }
+	  
+//	@Override
+//	public Enderzeugnis createMaterialBedarfReport (int id, int anzahl) throws IllegalArgumentException {
+//	    return this.enderzeugnisMapper.findByID(id);
+//	  }
 
 	/*
 	 * ***************************************************************************
@@ -282,4 +202,4 @@ public class SmsReportImpl extends RemoteServiceServlet implements SmsReport {
 	 * **********************************
 	 */
 
-}}
+}

@@ -23,7 +23,7 @@
   
   <servlet-mapping>
     <servlet-name>SmsReportServlet</servlet-name>
-    <url-pattern>/hdm_sms/smsReport</url-pattern>
+    <url-pattern>/de.hdm.gruppe1.HdM_smsReport/smsReport</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

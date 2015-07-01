@@ -6,11 +6,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe1.shared.*;
-import de.hdm.gruppe1.client.ClientsideSettings;
-import de.hdm.gruppe1.shared.Sms;
-import de.hdm.gruppe1.shared.SmsAsync;
-import de.hdm.gruppe1.shared.SmsReport;
-import de.hdm.gruppe1.shared.SmsReportAsync;
+import de.hdm.gruppe1.shared.report.SmsReport;
+import de.hdm.gruppe1.shared.report.SmsReportAsync;
+
 
 /**
  * Klasse mit Eigenschaften und Diensten, die für alle Client-seitigen Klassen
@@ -29,15 +27,7 @@ public class ClientsideSettings extends CommonSettings {
 	 */
 
 	private static SmsAsync stuecklistenVerwaltung = null;
-	
-	
-	 /**
-	   * Remote Service Proxy zur Verbindungsaufnahme mit dem Server-seitgen Dienst
-	   * namens <code>ReportGenerator</code>.
-	   */
-	  private static SmsReportAsync smsReport = null;
-
-	
+	private static SmsReportAsync stuecklistenReportVerwaltung = null;
 
 	/**
 	 * Name des Client-seitigen Loggers.
@@ -127,41 +117,33 @@ public class ClientsideSettings extends CommonSettings {
 	    // So, nun brauchen wir die Sms(Service) nur noch zurückzugeben.
 	    return stuecklistenVerwaltung;
 	  }
-
+	  
 	  /**
-	   * Anlegen und Auslesen des applikationsweit eindeutigen Report Generators.
+	   * <p>
+	   * Anlegen und Auslesen des applikationsweit eindeutigen ReportGenerators.
 	   * Diese Methode erstellt den ReportGenerator, sofern dieser noch nicht
 	   * existiert. Bei wiederholtem Aufruf dieser Methode wird stets das bereits
 	   * zuvor angelegte Objekt zurückgegeben.
+	   * </p>
+	   * 
+	   * <p>
 	   * Der Aufruf dieser Methode erfolgt im Client z.B. durch
-	   * <code>smsReportAsync smsReport = ClientSideSettings.getsmsReport()</code>.
-	   * @return eindeutige Instanz des Typs <code>smsAsync</code>
+	   * <code>ReportGeneratorAsync reportGenerator = ClientSideSettings.getReportGenerator()</code>
+	   * .
+	   * </p>
+	   * 
+	   * @return eindeutige Instanz des Typs <code>BankAdministrationAsync</code>
+	   * @author Peter Thies
+	   * @since 28.02.2012
 	   */
-	  public static SmsReportAsync getsmsReport() {
-	    // Gab es bislang noch keine ReportGenerator-Instanz, dann...
-	    if (smsReport == null) {
-	      // Zunächst instantiieren wir den ReportGenerator
-	      smsReport = GWT.create(Sms.class);
-
-	      final AsyncCallback<Void> initsmsReportCallback = new AsyncCallback<Void>() {
-	        public void onFailure(Throwable caught) {
-	          ClientsideSettings.getLogger().severe(
-	              "Der Report Generator konnte nicht initialisiert werden!");
-	        }
-
-	        public void onSuccess(Void result) {
-	          ClientsideSettings.getLogger().info(
-	              "Der Report Generator wurde initialisiert.");
-	        }
-	      };
-
-	      smsReport.init(initsmsReportCallback);
-	    }
-
-	    // So, nun brauchen wir den Report Generator nur noch zurückzugeben.
-	    return smsReport;
-	  }
-
+	  public static SmsReportAsync getReportGenerator() {
+		    // Gab es bislang noch keine ReportGenerator-Instanz, dann...
+		    if (stuecklistenReportVerwaltung == null) {
+		      // Zunächst instantiieren wir ReportGenerator
+		    	stuecklistenReportVerwaltung = GWT.create(SmsReport.class);		     
+		    }
+		    // So, nun brauchen wir den ReportGenerator nur noch zurückzugeben.
+		    return stuecklistenReportVerwaltung;
+		  }
 }
-
 

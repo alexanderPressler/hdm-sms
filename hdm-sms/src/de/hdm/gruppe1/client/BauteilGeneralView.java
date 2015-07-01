@@ -45,9 +45,9 @@ public class BauteilGeneralView extends VerticalPanel {
 	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
 	 */
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht ein Bauteil aus, um es mithilfe dieses Buttons zu editieren: ");
+			"Markiertes Bauteil editieren ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens ein Bauteil aus, um es mithilfe dieses Buttons zu löschen: ");
+			"Markierte(s) Bauteil(e) löschen ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-

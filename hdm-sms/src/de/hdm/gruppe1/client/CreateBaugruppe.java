@@ -177,7 +177,7 @@ public class CreateBaugruppe extends VerticalPanel {
 				/**
 				 * Das ListBox-Element, welches hinzugefügt wurde, wird für doppeltes Hinzufügen ausgegraut.
 				 */
-				listBoxBauteile.getElement().getElementsByTagName("option").getItem(index).setAttribute("disabled", "disabled");
+				listBoxBauteile.getElement().getElementsByTagName("*").getItem(index).setAttribute("disabled", "disabled");
 
 				/**
 				 *  Die Übersichtstabelle, welche für den User eine hilfreiche
@@ -236,7 +236,7 @@ public class CreateBaugruppe extends VerticalPanel {
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
 							
 							collectBauteile.remove(x);
 							
@@ -280,7 +280,7 @@ public class CreateBaugruppe extends VerticalPanel {
 				/**
 				 * Das ListBox-Element, welches hinzugefügt wurde, wird für doppeltes Hinzufügen ausgegraut.
 				 */
-				listBoxBaugruppen.getElement().getElementsByTagName("option")
+				listBoxBaugruppen.getElement().getElementsByTagName("*")
 						.getItem(index).setAttribute("disabled", "disabled");
 
 				/**
@@ -340,7 +340,7 @@ public class CreateBaugruppe extends VerticalPanel {
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
 							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
+							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
 							
 							collectBauteile.remove(x);
 							

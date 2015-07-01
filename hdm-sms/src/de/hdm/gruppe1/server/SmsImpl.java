@@ -91,17 +91,6 @@ public class SmsImpl extends RemoteServiceServlet implements
 		Sms {
 
 	
-	//TODO: Checken ob wir Diese Variable Brauchen
-	// Wie lautet die Standardkontonummer für das Kassenkonto der Bank?
-	// Bankprojekt: public static final int DEFAULT_CASH_ACCOUNT_ID = 10000;
-	// Standard StundenplaneintragID
-	// Jennys projekt: private static final long serialVersionUID = 7027992284251455305L;
-	
-	/**
-	 * Referenz auf das zugehörige BusinessObjekt.
-	 */
-	private Bauteil b = null;
-	
 	/**
 	 * Referenzen auf die DatenbankMapper, welche die BusinessObjekte-Objekte
 	 * mit der Datenbank abgleicht.

@@ -45,9 +45,9 @@ public class EnderzeugnisGeneralView extends VerticalPanel {
 	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
 	 */
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht ein Enderzeugnis aus, um sie mithilfe dieses Buttons zu editieren: ");
+			"Markiertes Enderzeugnis editieren ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens ein Enderzeugnis aus, um sie mithilfe dieses Buttons zu löschen: ");
+			"Markierte(s) Enderzeugniss(e) löschen ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-
