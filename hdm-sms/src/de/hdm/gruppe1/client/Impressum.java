@@ -22,8 +22,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	    	Button impressumBtn = new Button("Impressum");
 	    	impressumBtn.setStylePrimaryName("impressumBtn");
 	    	
-	    	final Button goBackBtn = new Button("zurück");
-	        
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
 	        		"<h2>Angaben gemäß § 5 TMG:</h2>"+
@@ -43,15 +41,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	        impressumBtn.addClickHandler(new ClickHandler() {
 	        	public void onClick(ClickEvent event) {     	
 	        		RootPanel.get("content_wrap").clear();
-	        		RootPanel.get("content_wrap").add(goBackBtn);
 	        		RootPanel.get("content_wrap").add(html);
-	        	}
-	        });
-	        
-	        goBackBtn.addClickHandler(new ClickHandler() {
-	        	public void onClick(ClickEvent event) {
-	        		RootPanel.get("content_wrap").clear();
-	        		RootPanel.get("content_warp").add(new Hdm_sms());
 	        	}
 	        });
 	        

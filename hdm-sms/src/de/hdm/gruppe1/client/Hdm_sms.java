@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class Hdm_sms extends VerticalPanel implements EntryPoint {
 
 	Image welcomeImage = new Image();
-	HTML welcomeText = new HTML("<h1>Wilkommen!</h1><br/><h2>Melden Sie sich mit Ihrem Google-Account im System an,<br/>um Zugriff zum gesamten Funktionsumfang der Applikation<br/>zu bekommen.</h2>");
+	HTML welcomeText = new HTML("<h1>Wilkommen im Editor!</h1>");
 
 	/**
 	 * This is the entry point method.
@@ -80,19 +80,19 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 		      }
 		};
 		
-		Command report1 = new Command() {
-		      public void execute() {
-		    	  RootPanel.get("content_wrap").clear();
-		    	  RootPanel.get("content_wrap").add(new Strukturstuecklisten());
-		      }
-		};
-		
-		Command report2 = new Command() {
-		      public void execute() {
-		    	  RootPanel.get("content_wrap").clear();
-		    	  RootPanel.get("content_wrap").add(new Materialbedarf());
-		      }
-		};
+//		Command report1 = new Command() {
+//		      public void execute() {
+//		    	  RootPanel.get("content_wrap").clear();
+//		    	  RootPanel.get("content_wrap").add(new Strukturstuecklisten());
+//		      }
+//		};
+//		
+//		Command report2 = new Command() {
+//		      public void execute() {
+//		    	  RootPanel.get("content_wrap").clear();
+//		    	  RootPanel.get("content_wrap").add(new Materialbedarf());
+//		      }
+//		};
 		
 		Command loginTest = new Command() {
 		      public void execute() {
@@ -123,10 +123,10 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 	    stuecklisteMenu.addItem("Stückliste anlegen", createStueckliste);
 	    stuecklisteMenu.addItem("Alle Anzeigen", allStuecklisten);
 	    
-	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
-	    MenuBar reportMenu = new MenuBar(true);
-	    reportMenu.addItem("Strukturstücklisten", report1);
-	    reportMenu.addItem("Materialbedarf", report2);
+//	    //Das Menü von Stücklisten erhält folgende Mouse-Over Untermenüs
+//	    MenuBar reportMenu = new MenuBar(true);
+//	    reportMenu.addItem("Strukturstücklisten", report1);
+//	    reportMenu.addItem("Materialbedarf", report2);
 	    
 	    //Testweise Menü für Login-GUI
 	    MenuBar loginMenu = new MenuBar(true);
@@ -134,12 +134,13 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 
 	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
-	    mainMenu.setWidth("100%"); 
+	    mainMenu.setWidth("100%");
+	    mainMenu.setAutoOpen(true);
 	    mainMenu.addItem("Bauteile", bauteilMenu);
 	    mainMenu.addItem("Baugruppen", baugruppeMenu);
 	    mainMenu.addItem("Enderzeugnisse", enderzeugnisMenu);
 	    mainMenu.addItem("Stücklisten", stuecklisteMenu);
-	    mainMenu.addItem("Report", reportMenu);
+//	    mainMenu.addItem("Report", reportMenu);
 	    mainMenu.addItem("Login", loginMenu);
 	    
 	    //Der Default-Text, der beim Aufruf der Applikation angezeigt wird

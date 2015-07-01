@@ -200,27 +200,24 @@ public class StuecklisteMapper {
 	public Stueckliste update(Stueckliste stueckliste){
 		Connection con = DBConnection.connection();
 		Stueckliste dBStueckliste = new Stueckliste();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
-		Integer stuecklistenID = new Integer(stueckliste.getId());
-		Integer erstellerID = new Integer(stueckliste.getEditUser().getId());
 		
-   	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
-  	  // die Datenbank zu speichern 
-   	  Date utilDate = stueckliste.getEditDate();
-   	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
-   	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
-   	  df.format(sqlDate);
-   	  
 		try{
 			Statement stmt = con.createStatement();
 			
-			//Das edit-Datum wird erst gesetzt, wenn der UPDATE-Vorgang beginnt
-			stueckliste.setEditDate(sqlDate);
+			 // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		  	  // die Datenbank zu speichern 
+		   	  Date utilDate = stueckliste.getEditDate();
+		   	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
+		   	  DateFormat df = new SimpleDateFormat("dd/MM/YYYY HH:mm:ss");
+		   	  df.format(sqlDate);
+		   	  
+				//Das edit-Datum wird erst gesetzt, wenn der UPDATE-Vorgang beginnt
+				stueckliste.setEditDate(sqlDate);
 			
 			//Zuerst die Daten der Stueckliste ändern
 			stmt.executeUpdate("UPDATE Stueckliste SET name='"+stueckliste.getName()+"' ,datum='"
-					+stueckliste.getEditDate().toString().substring(0,19)+"',ersteller='"+erstellerID.toString()+"',bearbeitet_Von='"
-					+stueckliste.getEditUser().getId()+"' WHERE sl_ID='"+stuecklistenID.toString()+"';");
+					+stueckliste.getEditDate()+"',bearbeitet_Von='"
+					+stueckliste.getEditUser().getId()+"' WHERE sl_ID='"+stueckliste.getId()+"';");
 			//Stueckliste aus der DB abfragen
 			dBStueckliste=this.findById(stueckliste.getId());
 			//Zuerst schauen, ob Bauteile in der DB gelöscht werden müssen
@@ -268,7 +265,7 @@ public class StuecklisteMapper {
 					         */
 					    	Integer sbt_ID = new Integer((rs.getInt("maxid")+1));
 					    	//Bauteil hinzufügen
-							stmt.executeUpdate("INSERT INTO StuecklistenBauteile VALUES('"+sbt_ID.toString()+"','"+stuecklistenID.toString()+"','"
+							stmt.executeUpdate("INSERT INTO StuecklistenBauteile VALUES('"+sbt_ID+"','"+stueckliste.getId()+"','"
 									+stueckliste.getBauteilPaare().get(i).getAnzahl()+"','"+stueckliste.getBauteilPaare().get(i).getElement().getId()+"');");
 					      }  
 					
@@ -309,7 +306,7 @@ public class StuecklisteMapper {
 				//Wenn die Baugruppe in der neuen Stueckliste ist, aber nicht in der DB, dann in die DB schreiben
 				if(!exists){
 					//MaxID von StuecklistenBaugruppe abfragen
-					ResultSet rs = stmt.executeQuery("SELECT MAX(sbt_ID) AS maxid "
+					ResultSet rs = stmt.executeQuery("SELECT MAX(sbg_ID) AS maxid "
 					          + "FROM StuecklistenBaugruppe;");
 
 					     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
@@ -318,9 +315,9 @@ public class StuecklisteMapper {
 					         * a erhält den bisher maximalen, nun um 1 inkrementierten
 					         * Primärschlüssel.
 					         */
-					    	Integer sbt_ID = new Integer((rs.getInt("maxid")+1));
+					    	Integer sbg_ID = new Integer((rs.getInt("maxid")+1));
 					    	//Baugruppe hinzufügen
-							stmt.executeUpdate("INSERT INTO StuecklistenBaugruppe VALUES('"+sbt_ID.toString()+"','"+stuecklistenID.toString()+"','"
+							stmt.executeUpdate("INSERT INTO StuecklistenBaugruppe VALUES('"+sbg_ID+"','"+stueckliste.getId()+"','"
 									+stueckliste.getBaugruppenPaare().get(i).getAnzahl()+"','"+stueckliste.getBaugruppenPaare().get(i).getElement().getId()+"');");
 					      }  
 					
@@ -378,7 +375,7 @@ public class StuecklisteMapper {
 			Statement stmt = con.createStatement();
 
 			ResultSet rs = stmt
-					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.ersteller=User.userID ORDER BY sl_ID");
+					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.bearbeitet_Von=User.userID ORDER BY sl_ID");
 
 			// Für jeden Eintrag im Suchergebnis wird nun ein Customer-Objekt
 			// erstellt.
@@ -498,12 +495,10 @@ public class StuecklisteMapper {
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
-
 			// Statement ausfüllen und als Query an die DB schicken
-			// TODO: SQL Statement anpassen 
 			ResultSet rs = stmt
-					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.ersteller=User.userID WHERE sl_ID="
-							+ id + ";");
+					.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.bearbeitet_Von=User.userID WHERE sl_ID='"
+							+ id + "';");
 			
 			// "SELECT * FROM `stuecklisten` ORDER BY `name`"
 
@@ -627,6 +622,6 @@ public class StuecklisteMapper {
 			e.printStackTrace();
 		}
 		return vStueckliste;
- 	}
-	
+ 
+	}
 }

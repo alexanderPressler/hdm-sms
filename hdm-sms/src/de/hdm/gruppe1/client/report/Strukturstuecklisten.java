@@ -1,24 +1,26 @@
-package de.hdm.gruppe1.client;
+package de.hdm.gruppe1.client.report;
 
+import java.util.Date;
 import java.util.Vector;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
-import de.hdm.gruppe1.client.CreateStueckliste.CreateStuecklisteCallback;
+import de.hdm.gruppe1.client.ClientsideSettings;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
+import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
 public class Strukturstuecklisten extends VerticalPanel {
 
@@ -30,13 +32,18 @@ public class Strukturstuecklisten extends VerticalPanel {
 	private final Label baugruppeLabel = new Label("Gewünschte Baugruppe auswählen");
 	ListBox listBoxBaugruppen = new ListBox();
 	private final Button CreateStrukturstuecklisteButton = new Button("erstellen");
+	private final String headlineString = new String("Strukturstückliste für folgende Baugruppe: ");
+	Date date = new Date();
+	private DateTimeFormat creationDate = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
+	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date));
+	private String impressumString = new String();
 	
 	/**
 	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
 	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
 	 * werden.
 	 */
-	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+	SmsReportAsync stuecklistenReportVerwaltung = ClientsideSettings.getReportGenerator();
 	
 	// Vektor wird mit allen Baugruppen aus der DB befüllt
 	Vector<Baugruppe> allBaugruppe = new Vector<Baugruppe>();
@@ -47,7 +54,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 		
 		// Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser
 		// RPC-Aufruf gestartet
-		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
+		stuecklistenReportVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 		
 		/**
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
@@ -141,22 +148,40 @@ public class Strukturstuecklisten extends VerticalPanel {
 	private class CreateClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
-
+			
+			final int index = listBoxBaugruppen.getSelectedIndex();
+			Baugruppe baugruppe = allBaugruppe.get(index);
+			Stueckliste baugruppenStueckliste = baugruppe.getStueckliste();
+			
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-//				stuecklistenVerwaltung.createStrukturstueckliste(baugruppe, new CreateStrukturstuecklisteCallback());
+//			stuecklistenReportVerwaltung.createBaugruppenReport(BaugruppenStueckliste, new BaugruppenReportCallback());
 
-				/**
-				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
-				 * zurück zur Übersichtstabelle weiterleiten.
-				 */
-				RootPanel.get("content_wrap").clear();
-				Window.alert("Report 1 (Strukturstückliste) wird hiermit erstellt.");
-//				RootPanel.get("content_wrap").add(new StuecklisteGeneralView());
-
+			//Test für Tree im Client-Package
+			TreeViewReport treeReport = new TreeViewReport(baugruppenStueckliste, 1);
+			
+			/**
+			 * Eine Instanz der Klasse Impressum wird erstellt und an dieser Stelle dem report1-String hinzugefügt.
+			 */
+			ImpressumReport imp = new ImpressumReport();
+			impressumString = imp.setImpressum();
+			
+			HTML reportHTML = new HTML("<h3>"+headlineString+baugruppenStueckliste.getName()+"</h3>"+creationDateString+"</p>"+treeReport.toString()+"<p>"+impressumString);
+			
+			RootPanel.get("content_wrap").clear();
+			RootPanel.get("content_wrap").add(reportHTML);
+			
+//				HTML reportHTML = new HTML(baugruppenReport);
+//				
+//				/**
+//				 * Nachdem der Create-Vorgang durchgeführt wurde,
+//				 */
+//				RootPanel.get("content_wrap").clear();
+//				RootPanel.get("content_wrap").add();
+				
 		}
 	}
 	
@@ -167,17 +192,26 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * @author Mario
 	 * 
 	 */
-	class CreateStrukturstuecklisteCallback implements AsyncCallback<Baugruppe> {
-
-		@Override
-		public void onFailure(Throwable caught) {
-			Window.alert("Das Erstellen der Strukturstückliste ist fehlgeschlagen!");
-		}
-
-		@Override
-		public void onSuccess(Baugruppe baugruppe) {
-			Window.alert("Das Erstellen der Strukturstückliste war erfolgreich!");
-		}
-	}
+//	class BaugruppenReportCallback implements AsyncCallback<BaugruppenReport> {
+//
+//		@Override
+//		public void onFailure(Throwable caught) {
+//			Window.alert("Das Erstellen der Strukturstückliste ist fehlgeschlagen!");
+//		}
+//
+//		@Override
+//		public void onSuccess(BaugruppenReport baugruppenReport) {
+//			Window.alert("Das Erstellen der Strukturstückliste war erfolgreich!");
+//			
+//			HTML reportHTML = new HTML(baugruppenReport.toString());
+//			
+//			/**
+//			 * Nachdem der Create-Vorgang durchgeführt wurde,
+//			 */
+//			RootPanel.get("content_wrap").clear();
+//			RootPanel.get("content_wrap").add(reportHTML);
+//			
+//		}
+//	}
 	
 }

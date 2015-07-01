@@ -1,6 +1,5 @@
 package de.hdm.gruppe1.client;
 
-import java.util.Date;
 import java.util.Vector;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,7 +18,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
-
 /**
  * Die Klasse BauteilGeneralView liefert eine Übersicht mit allen vorhandenen
  * Bauteilen im System und bietet Möglichkeiten, diese zu editieren oder
@@ -37,7 +35,7 @@ public class BauteilGeneralView extends VerticalPanel {
 	private final Label HeadlineLabel = new Label("Bauteilübersicht");
 
 	/**
-	 * Buttons sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
+	 * Einige GUI-Elemente sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
 	 * ein "vertikales Zwischen-Panel" benötigt.
 	 */
 	private HorizontalPanel editButtonPanel = new HorizontalPanel();
@@ -47,9 +45,9 @@ public class BauteilGeneralView extends VerticalPanel {
 	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
 	 */
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht ein Bauteil aus, um es mithilfe dieses Buttons zu editieren: ");
+			"Markiertes Bauteil editieren ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens ein Bauteil aus, um es mithilfe dieses Buttons zu löschen: ");
+			"Markierte(s) Bauteil(e) löschen ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-
@@ -76,8 +74,8 @@ public class BauteilGeneralView extends VerticalPanel {
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 
 	/**
-	 * Vektor, der alle zu löschenden Bauteile zwischenspeichert. Im Anschluss werden diese Bauteile nacheinander aus
-	 * der DB gelöscht.
+	 * Vektor, der alle zu löschenden Bauteile zwischenspeichert. Dies erfolgt mithilfe von Aus- bzw. Abwählen
+	 * der CheckBoxen. Im Anschluss werden diese Bauteile nacheinander aus der DB gelöscht.
 	 */
 	Vector<Bauteil> deleteBauteile = new Vector<Bauteil>();
 
@@ -92,17 +90,18 @@ public class BauteilGeneralView extends VerticalPanel {
 
 		/**
 		 * Damit die edit und delete Buttons horizontal angeordnet werden,
-		 * müssen diese dem ButtonPanel zugeordnet werden.
+		 * müssen diese einem separaten horizontalen Panel zugeordnet werden.
 		 */
 		editButtonPanel.add(editLabel);
 		editButtonPanel.add(editBtn);
 		deleteButtonPanel.add(deleteLabel);
 		deleteButtonPanel.add(deleteBtn);
+		
 		/**
 		 * Dem Delete-Button wird der am Ende dieser Klasse erstellte deleteClickHandler zugeordnet.
 		 */
 		deleteBtn.addClickHandler(new deleteClickHandler());
-		
+
 		/**
 		 * Diverse css-Formatierungen
 		 */
@@ -169,14 +168,14 @@ public class BauteilGeneralView extends VerticalPanel {
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
-	 * @author Mario
+	 * @author Mario Alex
 	 * 
 	 */
 	class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Bauteile konnten nicht geladen werden");
+			Window.alert("Bauteile konnten nicht geladen werden.");
 		}
 
 		@Override
@@ -217,8 +216,7 @@ public class BauteilGeneralView extends VerticalPanel {
 					final int i = row - 1;
 
 					CheckBox checkBox = new CheckBox("");
-					RadioButton radioButton = new RadioButton("editRadioGroup",
-							"");
+					RadioButton radioButton = new RadioButton("editRadioGroup", "");
 					
 					/**
 					 * Pro Vektor-Index wird eine Reihe in die Tabelle
@@ -226,10 +224,8 @@ public class BauteilGeneralView extends VerticalPanel {
 					 */
 					table.setText(row, 0, "" + allBauteile.get(i).getId());
 					table.setText(row, 1, allBauteile.get(i).getName());
-					table.setText(row, 2, allBauteile.get(i)
-							.getMaterialBeschreibung());
-					table.setText(row, 3, allBauteile.get(i)
-							.getBauteilBeschreibung());
+					table.setText(row, 2, allBauteile.get(i).getMaterialBeschreibung());
+					table.setText(row, 3, allBauteile.get(i).getBauteilBeschreibung());
 					table.setText(row, 4, allBauteile.get(i).getEditUser().getName());
 					table.setText(row, 5, allBauteile.get(i).getEditDate().toString().substring(0, 19));
 
@@ -264,6 +260,11 @@ public class BauteilGeneralView extends VerticalPanel {
 					 */
 					table.setWidget(row, 7, checkBox);
 
+					/**
+					 * Basierende darauf, ob der ValueChangeHandler eine Aus- bzw. Abwahl der betroffenen
+					 * CheckBox erkennt, wird dem globalen deleteBauteile-Vektor ein Element hinzugefügt
+					 * bzw. daraus entfernt.
+					 */
 					checkBox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 						@Override
 						public void onValueChange(ValueChangeEvent<Boolean> e) {
@@ -309,7 +310,7 @@ public class BauteilGeneralView extends VerticalPanel {
 	}
 
 	/**
-	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt löscht
+	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt löscht.
 	 * 
 	 * @author Mario Alex
 	 * 
@@ -331,7 +332,7 @@ public class BauteilGeneralView extends VerticalPanel {
 					 * aufgerufen. Hierbei werden die gewünschten Werte
 					 * mitgeschickt.
 					 */
-					stuecklistenVerwaltung.delete(b,new DeleteBauteilCallback());
+					stuecklistenVerwaltung.delete(b, new DeleteBauteilCallback());
 					RootPanel.get("content_wrap").clear();
 					RootPanel.get("content_wrap").add(new BauteilGeneralView());
 				}
@@ -350,7 +351,7 @@ public class BauteilGeneralView extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Loeschen des Bauteils ist fehlgeschlagen!");
+			Window.alert("Das Löschen des Bauteils ist fehlgeschlagen!");
 		}
 
 		@Override
@@ -358,7 +359,7 @@ public class BauteilGeneralView extends VerticalPanel {
 
 			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
 			//Wenn nicht, dann zeige diesen Window Alert an.
-			Window.alert("Das Bauteil wurde erfolgreich geloescht, wenn es nirgendwo referenziert ist.");
+			Window.alert("Das Bauteil wurde erfolgreich gelöscht, wenn es nirgendwo referenziert ist.");
 		}
 	}
 }
