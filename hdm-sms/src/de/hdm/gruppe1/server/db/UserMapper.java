@@ -13,9 +13,9 @@ import de.hdm.gruppe1.shared.bo.User;
 
 /**
  * Mapper-Klasse, die <code>bauteil</code>-Objekte auf eine relationale
- * Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur Verfügung
+ * Datenbank abbildet. Hierzu wird eine Reihe von Methoden zur VerfÃ¼gung
  * gestellt, mit deren Hilfe z.B. Objekte gesucht, erzeugt, modifiziert und
- * gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
+ * gelÃ¶scht werden kÃ¶nnen. Das Mapping ist bidirektional. D.h., Objekte kÃ¶nnen
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
  * @see CustomerMapper, TransactionMapper
@@ -28,7 +28,7 @@ public class UserMapper {
 	 * hierbei von einem sogenannten <b>Singleton</b>.
 	 * <p>
 	 * Diese Variable ist durch den Bezeichner <code>static</code> nur einmal
-	 * für sämtliche eventuellen Instanzen dieser Klasse vorhanden. Sie
+	 * fÃ¼r sÃ¤mtliche eventuellen Instanzen dieser Klasse vorhanden. Sie
 	 * speichert die einzige Instanz dieser Klasse.
 	 * 
 	 * @see UserMapper()
@@ -36,7 +36,7 @@ public class UserMapper {
 	private static UserMapper userMapper = null;
 
 	/**
-	 * Geschützter Konstruktor - verhindert die Möglichkeit, mit
+	 * GeschÃ¼tzter Konstruktor - verhindert die MÃ¶glichkeit, mit
 	 * <code>new</code> neue Instanzen dieser Klasse zu erzeugen.
 	 */
 	protected UserMapper() {
@@ -45,7 +45,7 @@ public class UserMapper {
 	 /**
 	   * Diese statische Methode kann aufgrufen werden durch
 	   * <code>UserMapper.bauteilMapper()</code>. Sie stellt die
-	   * Singleton-Eigenschaft sicher, indem Sie dafür sorgt, dass nur eine einzige
+	   * Singleton-Eigenschaft sicher, indem Sie dafÃ¼r sorgt, dass nur eine einzige
 	   * Instanz von <code>BauteilMapper</code> existiert.
 	   * <p>
 	   * 
@@ -64,12 +64,12 @@ public class UserMapper {
 	  }
 	  
 	  /**
-	   * Einfügen eines <code>Bauteil</code>-Objekts in die Datenbank. Dabei wird
-	   * auch der Primärschlüssel des übergebenen Objekts geprüft und ggf.
+	   * EinfÃ¼gen eines <code>Bauteil</code>-Objekts in die Datenbank. Dabei wird
+	   * auch der PrimÃ¤rschlÃ¼ssel des Ã¼bergebenen Objekts geprÃ¼ft und ggf.
 	   * berichtigt.
 	   * 
 	   * @param a das zu speichernde Objekt
-	   * @return das bereits übergebene Objekt, jedoch mit ggf. korrigierter
+	   * @return das bereits Ã¼bergebene Objekt, jedoch mit ggf. korrigierter
 	   *         <code>id</code>.
 	   */
 	  public User insert(User user) {
@@ -79,17 +79,17 @@ public class UserMapper {
 	      Statement stmt = con.createStatement();
 
 	      /*
-	       * Zunächst schauen wir nach, welches der momentan höchste
-	       * Primärschlüsselwert ist.
+	       * ZunÃ¤chst schauen wir nach, welches der momentan hÃ¶chste
+	       * PrimÃ¤rschlÃ¼sselwert ist.
 	       */
 	      ResultSet rs = stmt.executeQuery("SELECT MAX(userID) AS maxid "
 	          + "FROM User ");
 
-	      // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+	      // Wenn wir etwas zurÃ¼ckerhalten, kann dies nur einzeilig sein
 	      if (rs.next()) {
 	        /*
-	         * a erhält den bisher maximalen, nun um 1 inkrementierten
-	         * Primärschlüssel.
+	         * a erhÃ¤lt den bisher maximalen, nun um 1 inkrementierten
+	         * PrimÃ¤rschlÃ¼ssel.
 	         */
 	    	  user.setId(rs.getInt("maxid") + 1);
 
@@ -104,13 +104,13 @@ public class UserMapper {
 	    }
 
 	    /*
-	     * Rückgabe, des evtl. korrigierten Bauteil.
+	     * RÃ¼ckgabe, des evtl. korrigierten Bauteil.
 	     * 
 	     * HINWEIS: Da in Java nur Referenzen auf Objekte und keine physischen
-	     * Objekte übergeben werden, wäre die Anpassung des bauteil-Objekts auch
-	     * ohne diese explizite Rückgabe außerhalb dieser Methode sichtbar. Die
-	     * explizite Rückgabe von a ist eher ein Stilmittel, um zu signalisieren,
-	     * dass sich das Objekt evtl. im Laufe der Methode verändert hat.
+	     * Objekte Ã¼bergeben werden, wÃ¤re die Anpassung des bauteil-Objekts auch
+	     * ohne diese explizite RÃ¼ckgabe auï¿½erhalb dieser Methode sichtbar. Die
+	     * explizite RÃ¼ckgabe von a ist eher ein Stilmittel, um zu signalisieren,
+	     * dass sich das Objekt evtl. im Laufe der Methode verÃ¤ndert hat.
 	     */
 	    return user;
 	  }	
@@ -123,7 +123,7 @@ public class UserMapper {
 			    
 			    ResultSet rs = stmt.executeQuery("SELECT * FROM User WHERE userID ='"
 			    		+id+"';");
-			    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+			    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthÃ¤lt
 			    if(rs.next()){
 			    	user = new User();
 			    	user.setId(rs.getInt("userID"));

@@ -28,7 +28,7 @@ public class Bauteil extends Element {
 	/**
 	 * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.
 	 * Diese besteht aus dem Text, der durch die <code>toString()</code>-Methode
-	 * der Superklasse erzeugt wird, ergänzt durch den Name und Teilbeschreibung
+	 * der Superklasse erzeugt wird, ergÃ¤nzt durch den Name und Teilbeschreibung
 	 * des jeweiligen Bauteils.
 	 */
 	@Override

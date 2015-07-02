@@ -14,70 +14,70 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * <p>
  * Implementierungsklasse des Interface <code>BankAdministration</code>. Diese
  * Klasse ist <em>die</em> Klasse, die neben {@link ReportGeneratorImpl}
- * sämtliche Applikationslogik (oder engl. Business Logic) aggregiert. Sie ist
- * wie eine Spinne, die sämtliche Zusammenhänge in ihrem Netz (in unserem Fall
- * die Daten der Applikation) überblickt und für einen geordneten Ablauf und
- * dauerhafte Konsistenz der Daten und Abläufe sorgt.
+ * sÃ¤mtliche Applikationslogik (oder engl. Business Logic) aggregiert. Sie ist
+ * wie eine Spinne, die sÃ¤mtliche ZusammenhÃ¤nge in ihrem Netz (in unserem Fall
+ * die Daten der Applikation) Ã¼berblickt und fÃ¼r einen geordneten Ablauf und
+ * dauerhafte Konsistenz der Daten und AblÃ¤ufe sorgt.
  * </p>
  * <p>
  * Die Applikationslogik findet sich in den Methoden dieser Klasse. Jede dieser
  * Methoden kann als <em>Transaction Script</em> bezeichnet werden. Dieser Name
- * lässt schon vermuten, dass hier analog zu Datenbanktransaktion pro
- * Transaktion gleiche mehrere Teilaktionen durchgeführt werden, die das System
+ * lÃ¤sst schon vermuten, dass hier analog zu Datenbanktransaktion pro
+ * Transaktion gleiche mehrere Teilaktionen durchgefÃ¼hrt werden, die das System
  * von einem konsistenten Zustand in einen anderen, auch wieder konsistenten
- * Zustand überführen. Wenn dies zwischenzeitig scheitern sollte, dann ist das
- * jeweilige Transaction Script dafür verwantwortlich, eine Fehlerbehandlung
- * durchzuführen.
+ * Zustand Ã¼berfÃ¼hren. Wenn dies zwischenzeitig scheitern sollte, dann ist das
+ * jeweilige Transaction Script dafÃ¼r verwantwortlich, eine Fehlerbehandlung
+ * durchzufÃ¼hren.
  * </p>
  * <p>
  * Diese Klasse steht mit einer Reihe weiterer Datentypen in Verbindung. Dies
  * sind:
  * <ol>
  * <li>{@link BankAdministration}: Dies ist das <em>lokale</em> - also
- * Server-seitige - Interface, das die im System zur Verfügung gestellten
+ * Server-seitige - Interface, das die im System zur VerfÃ¼gung gestellten
  * Funktionen deklariert.</li>
  * <li>{@link BankAdministrationAsync}: <code>BankVerwaltungImpl</code> und
  * <code>BankAdministration</code> bilden nur die Server-seitige Sicht der
- * Applikationslogik ab. Diese basiert vollständig auf synchronen
- * Funktionsaufrufen. Wir müssen jedoch in der Lage sein, Client-seitige
+ * Applikationslogik ab. Diese basiert vollstÃ¤ndig auf synchronen
+ * Funktionsaufrufen. Wir mÃ¼ssen jedoch in der Lage sein, Client-seitige
  * asynchrone Aufrufe zu bedienen. Dies bedingt ein weiteres Interface, das in
  * der Regel genauso benannt wird, wie das synchrone Interface, jedoch mit dem
- * zusätzlichen Suffix "Async". Es steht nur mittelbar mit dieser Klasse in
+ * zusÃ¤tzlichen Suffix "Async". Es steht nur mittelbar mit dieser Klasse in
  * Verbindung. Die Erstellung und Pflege der Async Interfaces wird durch das
- * Google Plugin semiautomatisch unterstützt. Weitere Informationen unter
+ * Google Plugin semiautomatisch unterstÃ¼tzt. Weitere Informationen unter
  * {@link BankAdministrationAsync}.</li>
  * <li> {@link RemoteServiceServlet}: Jede Server-seitig instantiierbare und
- * Client-seitig über GWT RPC nutzbare Klasse muss die Klasse
+ * Client-seitig Ã¼ber GWT RPC nutzbare Klasse muss die Klasse
  * <code>RemoteServiceServlet</code> implementieren. Sie legt die funktionale
- * Basis für die Anbindung von <code>BankVerwaltungImpl</code> an die Runtime
+ * Basis fÃ¼r die Anbindung von <code>BankVerwaltungImpl</code> an die Runtime
  * des GWT RPC-Mechanismus.</li>
  * </ol>
  * </p>
  * <p>
  * <b>Wichtiger Hinweis:</b> Diese Klasse bedient sich sogenannter
- * Mapper-Klassen. Sie gehören der Datenbank-Schicht an und bilden die
+ * Mapper-Klassen. Sie gehÃ¶ren der Datenbank-Schicht an und bilden die
  * objektorientierte Sicht der Applikationslogik auf die relationale
  * organisierte Datenbank ab. Zuweilen kommen "kreative" Zeitgenossen auf die
  * Idee, in diesen Mappern auch Applikationslogik zu realisieren. Siehe dazu
  * auch die Hinweise in {@link #delete(Customer)} Einzig nachvollziehbares
- * Argument für einen solchen Ansatz ist die Steigerung der Performance
+ * Argument fÃ¼r einen solchen Ansatz ist die Steigerung der Performance
  * umfangreicher Datenbankoperationen. Doch auch dieses Argument zieht nur dann,
- * wenn wirklich große Datenmengen zu handhaben sind. In einem solchen Fall
- * würde man jedoch eine entsprechend erweiterte Architektur realisieren, die
- * wiederum sämtliche Applikationslogik in der Applikationsschicht isolieren
- * würde. Also, keine Applikationslogik in die Mapper-Klassen "stecken" sondern
+ * wenn wirklich groÃŸe Datenmengen zu handhaben sind. In einem solchen Fall
+ * wÃ¼rde man jedoch eine entsprechend erweiterte Architektur realisieren, die
+ * wiederum sÃ¤mtliche Applikationslogik in der Applikationsschicht isolieren
+ * wÃ¼rde. Also, keine Applikationslogik in die Mapper-Klassen "stecken" sondern
  * dies auf die Applikationsschicht konzentrieren!
  * </p>
  * <p>
- * Beachten Sie, dass sämtliche Methoden, die mittels GWT RPC aufgerufen werden
- * können ein <code>throws IllegalArgumentException</code> in der
- * Methodendeklaration aufweisen. Diese Methoden dürfen also Instanzen von
- * {@link IllegalArgumentException} auswerfen. Mit diesen Exceptions können z.B.
+ * Beachten Sie, dass sÃ¤mtliche Methoden, die mittels GWT RPC aufgerufen werden
+ * kÃ¶nnen ein <code>throws IllegalArgumentException</code> in der
+ * Methodendeklaration aufweisen. Diese Methoden dÃ¼rfen also Instanzen von
+ * {@link IllegalArgumentException} auswerfen. Mit diesen Exceptions kÃ¶nnen z.B.
  * Probleme auf der Server-Seite in einfacher Weise auf die Client-Seite
  * transportiert und dort systematisch in einem Catch-Block abgearbeitet werden.
  * </p>
  * <p>
- * Es gibt sicherlich noch viel mehr über diese Klasse zu schreiben. Weitere
+ * Es gibt sicherlich noch viel mehr Ã¼ber diese Klasse zu schreiben. Weitere
  * Infos erhalten Sie in der Lehrveranstaltung.
  * </p>
  * 
@@ -102,10 +102,10 @@ public class SmsImpl extends RemoteServiceServlet implements
 	private EnderzeugnisMapper enderzeugnisMapper = null;
 	
 	/*
-	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
+	   * Da diese Klasse ein gewisse GrÃ¶ÃŸe besitzt - dies ist eigentlich ein
 	   * Hinweise, dass hier eine weitere Gliederung sinnvoll ist - haben wir zur
-	   * besseren Übersicht Abschnittskomentare eingefügt. Sie leiten ein Cluster in
-	   * irgeneinerweise zusammengehöriger Methoden ein. Ein entsprechender
+	   * besseren Ãœbersicht Abschnittskomentare eingefÃ¼gt. Sie leiten ein Cluster in
+	   * irgeneinerweise zusammengehÃ¶riger Methoden ein. Ein entsprechender
 	   * Kommentar steht am Ende eines solchen Clusters.
 	   */
 
@@ -122,7 +122,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ist ein solcher No-Argument-Konstruktor anzulegen. Ein Aufruf eines anderen
 	   * Konstruktors ist durch die Client-seitige Instantiierung durch
 	   * <code>GWT.create(Klassenname.class)</code> nach derzeitigem Stand nicht
-	   * möglich.
+	   * mÃ¶glich.
 	   * </p>
 	   * <p>
 	   * Es bietet sich also an, eine separate Instanzenmethode zu erstellen, die
@@ -141,7 +141,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  
 	  /**
 	   * Initialsierungsmethode. Siehe dazu Anmerkungen zum No-Argument-Konstruktor
-	   * {@link #ReportGeneratorImpl()}. Diese Methode muss für jede Instanz von
+	   * {@link #ReportGeneratorImpl()}. Diese Methode muss fÃ¼r jede Instanz von
 	   * <code>BankVerwaltungImpl</code> aufgerufen werden.
 	   * 
 	   * @see #ReportGeneratorImpl()
@@ -149,7 +149,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public void init() throws IllegalArgumentException {
 	    /*
-	     * Ganz wesentlich ist, dass die BankAdministration einen vollständigen Satz
+	     * Ganz wesentlich ist, dass die BankAdministration einen vollstÃ¤ndigen Satz
 	     * von Mappern besitzt, mit deren Hilfe sie dann mit der Datenbank
 	     * kommunizieren kann.
 	     */
@@ -167,17 +167,17 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Beginn: Methoden für Bauteil-Objekte
+	   * ABSCHNITT, Beginn: Methoden fÃ¼r Bauteil-Objekte
 	   * ***************************************************************************
 	   */
 	  /**
 	   * <p>
-	   * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
+	   * Anlegen eines neuen Bauteiles. Dies fÃ¼hrt implizit zu einem Speichern des
 	   * neuen Bauteiles in der Datenbank.
 	   * </p>
 	   * 
 	   * <p>
-	   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
+	   * <b>HINWEIS:</b> Ã„nderungen an Bauteil-Objekten mÃ¼ssen stets durch Aufruf
 	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
 	   * </p>
 	   * 
@@ -191,7 +191,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    b.setBauteilBeschreibung(bauteilBeschreibung);
 	    b.setMaterialBeschreibung(materialBeschreibung);
 	    
-	    // Erstellungsdatum wird generiert und dem Objekt angehängt
+	    // Erstellungsdatum wird generiert und dem Objekt angehÃ¤ngt
 	    Date date = new Date();
 	    b.setEditDate(date);
 	    
@@ -203,7 +203,7 @@ public class SmsImpl extends RemoteServiceServlet implements
         b.setEditUser(editUser);
 
 	    /*
-	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
+	     * Setzen einer vorlÃ¤ufigen Kundennr. Der insert-Aufruf liefert dann ein
 	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
 	     */
 
@@ -227,7 +227,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	        editUser.setGoogleID("000000000000");
 	        b.setEditUser(editUser);
 	    
-	        // Aenderungsdatum wird generiert und dem Objekt angehängt
+	        // Aenderungsdatum wird generiert und dem Objekt angehÃ¤ngt
 	        // Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
 		    Date date = new Date();
 		    b.setEditDate(date);
@@ -236,10 +236,10 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  }
 	  
 	  /**
-	   * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung von
-	   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
-	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
-	   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
+	   * LÃ¶schen eines Kunden. NatÃ¼rlich wÃ¼rde ein reales System zur Verwaltung von
+	   * Bankkunden ein LÃ¶schen allein schon aus GrÃ¼nden der Dokumentation nicht
+	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" Ã¤ndern. Wir
+	   * wollen hier aber dennoch zu Demonstrationszwecken eine LÃ¶schfunktion
 	   * vorstellen.
 	   */
 	  @Override
@@ -247,12 +247,12 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 
 		  Vector<Stueckliste> vStueckliste = this.stuecklisteMapper.findByBauteil(b);
 		
-		  //Abgleich mit Stücklisten
+		  //Abgleich mit StÃ¼cklisten
 		  if(vStueckliste.isEmpty()==true){
 			  this.bauteilMapper.delete(b);
 		  } else {
 			  //TODO Exception schreiben
-			  System.out.println("Bauteil wird in Stückliste verwendet: ");
+			  System.out.println("Bauteil wird in StÃ¼ckliste verwendet: ");
 			  
 		  }
 	    
@@ -276,18 +276,18 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Ende: Methoden für Bauteil-Objekte
+	   * ABSCHNITT, Ende: Methoden fÃ¼r Bauteil-Objekte
 	   * ***************************************************************************
 	   */
 	  
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, : Methoden für Stueckliste-Objekte
+	   * ABSCHNITT, : Methoden fÃ¼r Stueckliste-Objekte
 	   * ***************************************************************************
 	   */
 	  /**
 	   * <p>
-	   * Anlegen eines neuen Stueckliste. Dies führt implizit zu einem Speichern des
+	   * Anlegen eines neuen Stueckliste. Dies fÃ¼hrt implizit zu einem Speichern des
 	   * neuen Stuecklistes in der Datenbank.
 	   * @see createStueckliste(String name)
 	   */
@@ -299,7 +299,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    s.setBauteilPaare(BauteilPaare);
 	    s.setBaugruppenPaare(BaugruppenPaare);
 	    
-	 // Erstellungsdatum wird generiert und dem Objekt angehängt
+	 // Erstellungsdatum wird generiert und dem Objekt angehÃ¤ngt
 	    Date date = new Date();
 	    s.setEditDate(date);
 	    
@@ -315,7 +315,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    return this.stuecklisteMapper.insert(s);
 	  }
 	  /**
-	   * Löschen einer Stueckliste 
+	   * LÃ¶schen einer Stueckliste 
 	   */
 	  @Override
 	public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
@@ -330,7 +330,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  //TODO Exception
 		  else {
 			  
-			  System.out.println("Stueckliste kann nicht gelöscht werden: ");
+			  System.out.println("Stueckliste kann nicht gelÃ¶scht werden: ");
 			  System.out.println("Stueckliste wird verwendet in: "+ b.getName());
 			 
 		  }
@@ -343,7 +343,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
 		
-		// Aenderungsdatum wird generiert und dem Objekt angehängt
+		// Aenderungsdatum wird generiert und dem Objekt angehÃ¤ngt
 		    Date date = new Date();
 		    s.setEditDate(date);
 		  
@@ -365,23 +365,23 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  }
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Ende: Methoden für Stuecklisten-Objekte
+	   * ABSCHNITT, Ende: Methoden fÃ¼r Stuecklisten-Objekte
 	   * ***************************************************************************
 	   */
 	  
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Beginn: Methoden für User-Objekte
+	   * ABSCHNITT, Beginn: Methoden fÃ¼r User-Objekte
 	   * ***************************************************************************
 	   */
 	  /**
 	   * <p>
-	   * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
+	   * Anlegen eines neuen Bauteiles. Dies fÃ¼hrt implizit zu einem Speichern des
 	   * neuen Bauteiles in der Datenbank.
 	   * </p>
 	   * 
 	   * <p>
-	   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
+	   * <b>HINWEIS:</b> Ã„nderungen an Bauteil-Objekten mÃ¼ssen stets durch Aufruf
 	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
 	   * </p>
 	   * 
@@ -395,7 +395,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    u.setName(name);
 
 	    /*
-	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
+	     * Setzen einer vorlÃ¤ufigen Kundennr. Der insert-Aufruf liefert dann ein
 	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
 	     */
 //	    b.setId(10);
@@ -405,19 +405,19 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  }
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Ende: Methoden für User-Objekte
+	   * ABSCHNITT, Ende: Methoden fÃ¼r User-Objekte
 	   * ***************************************************************************
 	   */
 	  
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT, Methoden für Baugruppen-Objekte
+	   * ABSCHNITT, Methoden fÃ¼r Baugruppen-Objekte
 	   * ***************************************************************************
 	   */
 	  
 	  /**
 	   * <p>
-	   * Anlegen einer neuen Baugruppe . Dies führt implizit zu einem Speichern des
+	   * Anlegen einer neuen Baugruppe . Dies fÃ¼hrt implizit zu einem Speichern des
 	   * neuen Stuecklistes in der Datenbank.
 	   * @see createStueckliste(String name)
 	   */
@@ -431,7 +431,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	        editUser.setId(1);
 	        editUser.setGoogleID("000000000000");
 
-	     // Erstellungsdatum wird generiert und dem Objekt angehäng
+	     // Erstellungsdatum wird generiert und dem Objekt angehÃ¤ng
 		Date date = new Date();
 		
 		Stueckliste s = new Stueckliste();
@@ -455,7 +455,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 
 	  
 	  /**
-	   * Löschen einer Baugruppe 
+	   * LÃ¶schen einer Baugruppe 
 	   */
 	  @Override
 	public void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException {
@@ -463,7 +463,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  Vector<Stueckliste> vStueckliste = this.stuecklisteMapper.findByBaugruppe(b);
 		  Vector<Enderzeugnis> vEnderzeugnis = this.enderzeugnisMapper.findByBaugruppe(b);
 			
-		  //Abgleich mit Stücklisten
+		  //Abgleich mit StÃ¼cklisten
 		  if(vStueckliste.isEmpty()==true && vEnderzeugnis.isEmpty()==true){
 			 
 			  this.baugruppenMapper.delete(b);
@@ -474,7 +474,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  else {
 			  if(vStueckliste.isEmpty()==false){
 				  //TODO Exception schreiben
-				  System.out.println("Baugruppe wird in Stückliste verwendet.");
+				  System.out.println("Baugruppe wird in StÃ¼ckliste verwendet.");
 			  }
 			  
 			  if(vEnderzeugnis.isEmpty()==false){
@@ -491,7 +491,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException {
 		
-		// Aenderungsdatum wird generiert und dem Objekt angehängt
+		// Aenderungsdatum wird generiert und dem Objekt angehÃ¤ngt
 		    Date date = new Date();
 		    b.setEditDate(date);
 		  
@@ -527,19 +527,19 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  }
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT Ende : Methoden für Baugruppen-Objekte
+	   * ABSCHNITT Ende : Methoden fÃ¼r Baugruppen-Objekte
 	   * ***************************************************************************
 	   */
 	  
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT: Methoden für Enderzeugnis-Objekte
+	   * ABSCHNITT: Methoden fÃ¼r Enderzeugnis-Objekte
 	   * ***************************************************************************
 	   */
 	  
 	  /**
 	   * <p>
-	   * Anlegen einer neuen Baugruppe . Dies führt implizit zu einem Speichern des
+	   * Anlegen einer neuen Baugruppe . Dies fÃ¼hrt implizit zu einem Speichern des
 	   * neuen Stuecklistes in der Datenbank.
 	   * @see createStueckliste(String name)
 	   */
@@ -553,7 +553,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	        editUser.setId(1);
 	        editUser.setGoogleID("000000000000");
 
-	     // Erstellungsdatum wird generiert und dem Objekt angehäng
+	     // Erstellungsdatum wird generiert und dem Objekt angehÃ¤ng
 		Date date = new Date();
 	    
 	    Enderzeugnis e = new Enderzeugnis();
@@ -568,7 +568,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 
 	  
 	  /**
-	   * Löschen einer Baugruppe 
+	   * LÃ¶schen einer Baugruppe 
 	   */
 	  @Override
 	public void deleteEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException {
@@ -581,7 +581,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException {
 		
-		// Aenderungsdatum wird generiert und dem Objekt angehängt
+		// Aenderungsdatum wird generiert und dem Objekt angehÃ¤ngt
 		    Date date = new Date();
 		    e.setEditDate(date);
 		  
@@ -604,7 +604,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  
 	  /*
 	   * ***************************************************************************
-	   * ABSCHNITT Ende : Methoden für Enderzeugnis-Objekte
+	   * ABSCHNITT Ende : Methoden fÃ¼r Enderzeugnis-Objekte
 	   * ***************************************************************************
 	   */
 }

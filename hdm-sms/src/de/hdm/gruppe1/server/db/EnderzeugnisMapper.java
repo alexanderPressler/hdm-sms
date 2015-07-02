@@ -39,15 +39,15 @@ public class EnderzeugnisMapper {
 			ResultSet rs = stmt.executeQuery("SELECT MAX(ee_ID) AS maxid "
 			          + "FROM Enderzeugnis;");
 
-			     // Wenn wir etwas zurückerhalten, kann dies nur einzeilig sein
+			     // Wenn wir etwas zurÃ¼ckerhalten, kann dies nur einzeilig sein
 			     if (rs.next()) {
 			        /*
-			         * a erhält den bisher maximalen, nun um 1 inkrementierten
-			         * Primärschlüssel.
+			         * a erhÃ¤lt den bisher maximalen, nun um 1 inkrementierten
+			         * PrimÃ¤rschlÃ¼ssel.
 			         */
 			    	enderzeugnis.setId(rs.getInt("maxid")+1);
 			    	
-			     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			     	  // Java Util Date wird umgewandelt in SQL Date um das Ã„nderungsdatum in
 			    	  // die Datenbank zu speichern 
 			     	  Date utilDate = enderzeugnis.getEditDate();
 			     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
@@ -69,7 +69,7 @@ public class EnderzeugnisMapper {
 		
 		try{
 			
-	     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	     	  // Java Util Date wird umgewandelt in SQL Date um das Ã„nderungsdatum in
 	    	  // die Datenbank zu speichern 
 	     	  Date utilDate = enderzeugnis.getEditDate();
 	     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
@@ -105,7 +105,7 @@ public class EnderzeugnisMapper {
 		Connection con = DBConnection.connection();
 		
 		Enderzeugnis enderzeugnis = new Enderzeugnis();
-		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
+		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies ÃƒÂ¼ber eine Instanz der Klasse Integer geschehen
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis WHERE ee_ID='"+id+"';");
@@ -114,18 +114,18 @@ public class EnderzeugnisMapper {
 				enderzeugnis.setName(rs.getString("name"));
 				
 				// Add User to Enderzeugnis
-				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				int zugehÃ¶rigeUserID = rs.getInt("bearbeitet_Von");
 				UserMapper um = UserMapper.userMapper(); 
-				User zugehörigerUser = um.findByID(zugehörigeUserID);
-				enderzeugnis.setEditUser(zugehörigerUser);
+				User zugehÃ¶rigerUser = um.findByID(zugehÃ¶rigeUserID);
+				enderzeugnis.setEditUser(zugehÃ¶rigerUser);
 				
 				// Add Baugruppe to Enderzeugnis
-				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				int zugehÃ¶rigeBaugruppeID = rs.getInt("baugruppe");
 				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper(); 
-				Baugruppe zugehörigeBaugruppe = bm.findByID(zugehörigeBaugruppeID);
-				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				Baugruppe zugehÃ¶rigeBaugruppe = bm.findByID(zugehÃ¶rigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehÃ¶rigeBaugruppe);
 				
-				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+				// Java Util Date wird umgewandelt in SQL Date um das Ã„nderungsdatum in
 		    	 // die Datenbank zu speichern 
 		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
 		     	 enderzeugnis.setEditDate(sqlDate);
@@ -164,7 +164,7 @@ public class EnderzeugnisMapper {
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis;");
-			//Da es viele Baugruppen geben kann müssen wir eine Schleife benutzen
+			//Da es viele Baugruppen geben kann mÃ¼ssen wir eine Schleife benutzen
 			while(rs.next()){
 				
 				//Neue Baugruppe erzeugen
@@ -172,21 +172,21 @@ public class EnderzeugnisMapper {
 				enderzeugnis.setId(rs.getInt("ee_ID"));
 				enderzeugnis.setName(rs.getString("name"));
 				
-				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+				// Java Util Date wird umgewandelt in SQL Date um das Ã„nderungsdatum in
 		    	 // die Datenbank zu speichern 
 		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
 		     	 enderzeugnis.setEditDate(sqlDate);
 				
 				// Add User to Enderzeugnis
-				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				int zugehÃ¶rigeUserID = rs.getInt("bearbeitet_Von");
 				UserMapper um = UserMapper.userMapper(); 
-				User zugehörigerUser = um.findByID(zugehörigeUserID);
-				enderzeugnis.setEditUser(zugehörigerUser);
+				User zugehÃ¶rigerUser = um.findByID(zugehÃ¶rigeUserID);
+				enderzeugnis.setEditUser(zugehÃ¶rigerUser);
 				
-				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				int zugehÃ¶rigeBaugruppeID = rs.getInt("baugruppe");
 				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper(); 
-				Baugruppe zugehörigeBaugruppe = bm.findByID(zugehörigeBaugruppeID);
-				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				Baugruppe zugehÃ¶rigeBaugruppe = bm.findByID(zugehÃ¶rigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehÃ¶rigeBaugruppe);
 				
 				vEnderzeugnis.addElement(enderzeugnis);
 				

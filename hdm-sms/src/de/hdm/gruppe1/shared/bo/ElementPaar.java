@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * Klasse, um Elemente und deren Anzahl für Stuecklisten zu speichern
+ * Klasse, um Elemente und deren Anzahl fÃ¼r Stuecklisten zu speichern
  * </p>
  * 
  * @author Alex und Mario

@@ -20,8 +20,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 		public void onLoad(){
 	    
 	    	Button impressumBtn = new Button("Impressum");
-	    	impressumBtn.setStylePrimaryName("Button");
-	        
+	    	impressumBtn.setStylePrimaryName("impressumBtn");
+	    	
 	        final HTML html = new HTML("");
 	        html.setHTML("<h2>Impressum</h2>"+
 	        		"<h2>Angaben gemäß § 5 TMG:</h2>"+
@@ -35,7 +35,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	        		"<td>0711 8923 10</td></tr>"+
 	        		"<tr><td>E-Mail:</td>"+
 	        		"<td>info@hdm-stuttgart.de</td>"+
-	        		"</tr></table>"
+	        		"</tr></table><p>"
 	        		);
 	        
 	        impressumBtn.addClickHandler(new ClickHandler() {

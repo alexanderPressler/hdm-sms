@@ -33,8 +33,8 @@ public class BaugruppenMapper {
 			Statement stmt = con.createStatement();
 
 			/*
-			 * Zunächst schauen wir nach, welches der momentan höchste
-			 * Primärschlüsselwert ist.
+			 * ZunÃ¤chst schauen wir nach, welches der momentan hÃ¶chste
+			 * PrimÃ¤rschlÃ¼sselwert ist.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT MAX(bg_ID) AS maxid "
 					+ "FROM Baugruppe ");
@@ -43,12 +43,12 @@ public class BaugruppenMapper {
 			if(rs.next()){
 				
 				/*
-				 * a erhält den bisher maximalen, nun um 1 inkrementierten
-				 * Primärschlüssel.
+				 * a erhÃ¤lt den bisher maximalen, nun um 1 inkrementierten
+				 * PrimÃ¤rschlÃ¼ssel.
 				 */
 				baugruppe.setId(rs.getInt("maxid") + 1);
 				
-		     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		     	  // Java Util Date wird umgewandelt in SQL Date um das Ã„nderungsdatum in
 		    	  // die Datenbank zu speichern 
 		     	  Date utilDate = baugruppe.getEditDate();
 		     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
@@ -75,7 +75,7 @@ public class BaugruppenMapper {
 		Connection con = DBConnection.connection();
 		try{
 			
-	     	  // Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+	     	  // Java Util Date wird umgewandelt in SQL Date um das Ã„nderungsdatum in
 	    	  // die Datenbank zu speichern 
 	     	  Date utilDate = baugruppe.getEditDate();
 	     	  java.sql.Timestamp sqlDate = new java.sql.Timestamp(utilDate.getTime());  
@@ -102,7 +102,7 @@ public class BaugruppenMapper {
 
 	    try {
 	      Statement stmt = con.createStatement();
-	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+	      //Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 	      Integer baugruppeID = new Integer(baugruppe.getId());
 	      
 	      
@@ -126,17 +126,17 @@ public class BaugruppenMapper {
 		Baugruppe baugruppe = null;
 		try{
 			Statement stmt = con.createStatement();
-			//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies über eine Instanz der Klasse Integer geschehen
+			//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 		    Integer baugruppeID = new Integer(id);
 		    
 		    ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON Baugruppe.bearbeitet_Von=User.userID WHERE bg_ID ='"
 		    		+baugruppeID.toString()+"';");
-		    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+		    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthÃ¤lt
 		    if(rs.next()){
 		    	baugruppe = new Baugruppe();
 		    	baugruppe.setId(rs.getInt("bg_ID"));
 		    	baugruppe.setName(rs.getString("name"));
-		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
+		    	//Da wir die Stueckliste der Baugruppe auflÃ¶sen mÃ¼ssen brauchen wir einen StuecklistenMapper
 		    	StuecklisteMapper slm = StuecklisteMapper.stuecklisteMapper();
 		    	baugruppe.setStueckliste(slm.findById(rs.getInt("stueckliste")));
 		    	
@@ -145,7 +145,7 @@ public class BaugruppenMapper {
 		    	user.setName(rs.getString("eMail"));
 		    	user.setGoogleID(rs.getString("googleID"));
 		    	baugruppe.setEditUser(user);
-		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	// Java Util Date wird umgewandelt in SQL Date um das Ã„nderungsdatum in
 		    	 // die Datenbank zu speichern 
 		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
 		     	baugruppe.setEditDate(sqlDate);
@@ -164,13 +164,13 @@ public class BaugruppenMapper {
 //			Statement stmt = con.createStatement();
 //			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON Baugruppe.bearbeitet_Von=User.userID WHERE Baugruppe.name LIKE '%"
 //					+name+"%';");
-//			//Da es viele Baugruppen geben kann, die diesen Namen haben müssen wir eine Schleife benutzen
+//			//Da es viele Baugruppen geben kann, die diesen Namen haben mÃ¼ssen wir eine Schleife benutzen
 //			while(rs.next()){
 //				//Neue Baugruppe erzeugen
 //				Baugruppe baugruppe = new Baugruppe();
 //		    	baugruppe.setId(rs.getInt("bg_ID"));
 //		    	baugruppe.setName(rs.getString("name"));
-//		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
+//		    	//Da wir die Stueckliste der Baugruppe auflÃ¶sen mÃ¼ssen brauchen wir einen StuecklistenMapper
 //		    	StuecklisteMapper slm = StuecklisteMapper.stuecklisteMapper();
 //		    	baugruppe.setStueckliste(slm.findById(rs.getInt("stueckliste")));
 //		    	//Neuen User erzeugen
@@ -179,10 +179,10 @@ public class BaugruppenMapper {
 //		    	user.setName(rs.getString("eMail"));
 //		    	user.setGoogleID(rs.getString("googleID"));
 //		    	baugruppe.setEditUser(user);
-//		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufügen
+//		    	//Timestamp Objekt aus Datumsstring erzeugen, um es in baugruppe einzufÃ¼gen
 //				Timestamp timestamp = Timestamp.valueOf(rs.getString("datum"));
 //				baugruppe.setEditDate(timestamp);
-//				//Baugruppe der ArrayList hinzufügen
+//				//Baugruppe der ArrayList hinzufÃ¼gen
 //				vBaugruppe.addElement(baugruppe);
 //			}
 //		}
@@ -198,13 +198,13 @@ public class BaugruppenMapper {
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON Baugruppe.bearbeitet_Von=User.userID;");
-			//Da es viele Baugruppen geben kann müssen wir eine Schleife benutzen
+			//Da es viele Baugruppen geben kann mÃ¼ssen wir eine Schleife benutzen
 			while(rs.next()){
 				//Neue Baugruppe erzeugen
 				Baugruppe baugruppe = new Baugruppe();
 		    	baugruppe.setId(rs.getInt("bg_ID"));
 		    	baugruppe.setName(rs.getString("name"));
-		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
+		    	//Da wir die Stueckliste der Baugruppe auflÃ¶sen mÃ¼ssen brauchen wir einen StuecklistenMapper
 		    	StuecklisteMapper slm = StuecklisteMapper.stuecklisteMapper();
 		    	baugruppe.setStueckliste(slm.findById(rs.getInt("stueckliste")));
 		    	//Neuen User erzeugen
@@ -213,11 +213,11 @@ public class BaugruppenMapper {
 		    	user.setName(rs.getString("eMail"));
 		    	user.setGoogleID(rs.getString("googleID"));
 		    	baugruppe.setEditUser(user);
-		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	// Java Util Date wird umgewandelt in SQL Date um das Ã„nderungsdatum in
 		    	 // die Datenbank zu speichern 
 		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
 		     	baugruppe.setEditDate(sqlDate);
-				//Baugruppe der ArrayList hinzufügen
+				//Baugruppe der ArrayList hinzufÃ¼gen
 				vBaugruppe.addElement(baugruppe);
 			}
 		}

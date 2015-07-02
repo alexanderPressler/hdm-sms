@@ -4,7 +4,7 @@ import de.hdm.gruppe1.shared.bo.BusinessObject;
 
 /**
  * Nutzerklasse, diese Klasse greift auf die Nutzerdaten
- * über die Google Accounts API zu .
+ * Ã¼ber die Google Accounts API zu .
  * 
  * @author alex
  * @version 1.0
