@@ -48,7 +48,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	private final Label editLabel = new Label(
 			"Markierte Stückliste editieren ");
 	private final Label deleteLabel = new Label(
-			"Markierte Stückliste(n)löschen ");
+			"Markierte Stückliste(n) löschen ");
 	private final Label treeViewLabel = new Label (
 			"Markierte Stückliste als Strukturstückliste anzeigen ");
 

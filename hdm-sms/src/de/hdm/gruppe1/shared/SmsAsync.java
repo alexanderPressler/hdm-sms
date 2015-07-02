@@ -46,7 +46,8 @@ public interface SmsAsync {
 
 	void createUser(String googleID, String name, AsyncCallback<User> callback);
 
-	void createBaugruppe(String name, Vector<ElementPaar> collectBauteile,Vector<ElementPaar> collectBaugruppen,
+	void createBaugruppe(String name, Vector<ElementPaar> BauteilPaare,
+			Vector<ElementPaar> BaugruppenPaare,
 			AsyncCallback<Baugruppe> callback);
 
 	void deleteBaugruppe(Baugruppe b, AsyncCallback<Void> callback);
@@ -65,9 +66,4 @@ public interface SmsAsync {
 	void getAllEnderzeugnis(AsyncCallback<Vector<Enderzeugnis>> callback);
 
 	void getBaugruppeById(int id, AsyncCallback<Baugruppe> callback);
-
-	void setBaugruppe(Baugruppe b, AsyncCallback<Void> callback);
-
-	void getBaugruppe(AsyncCallback<Baugruppe> callback);
-
 }

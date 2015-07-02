@@ -91,7 +91,7 @@ public interface Sms extends RemoteService {
 
 	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
 
-	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException, BaugruppenReferenceException;
 
 	User createUser(String googleID, String name)
 			throws IllegalArgumentException;
@@ -102,7 +102,7 @@ public interface Sms extends RemoteService {
 
 	void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException;
 
-	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException;
+	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException;
 
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 
@@ -116,15 +116,4 @@ public interface Sms extends RemoteService {
 	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
 
 	Baugruppe getBaugruppeById(int id) throws IllegalArgumentException;
-
-
-	
-	void setBaugruppe(Baugruppe b) throws IllegalArgumentException;
-
-	public Baugruppe getBaugruppe()throws IllegalArgumentException;
-
-	
-
-	
-	
 }

@@ -581,7 +581,7 @@ public class EditStueckliste extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Die Stückliste wurde nicht editiert.");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override
@@ -726,4 +726,3 @@ public class EditStueckliste extends VerticalPanel {
 
 		}
 	}
-}

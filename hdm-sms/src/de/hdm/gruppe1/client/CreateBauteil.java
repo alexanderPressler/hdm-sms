@@ -74,7 +74,7 @@ public class CreateBauteil extends VerticalPanel {
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
-		DescriptionField.setStyleName("DescriptionFieldText");
+//		DescriptionField.setStyleName("DescriptionFieldText");
 		CreateBauteilButton.setStyleName("Button");
 
 		/**

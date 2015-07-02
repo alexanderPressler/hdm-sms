@@ -1,10 +1,9 @@
 package de.hdm.gruppe1.server;
 
-
-
 import java.util.Date;
 import java.util.Vector;
 
+import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
@@ -90,18 +89,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class SmsImpl extends RemoteServiceServlet implements
 		Sms {
-
-	private Baugruppe baugruppe = null;
-	
-	//TODO: Checken ob wir Diese Variable Brauchen
-	// Wie lautet die Standardkontonummer für das Kassenkonto der Bank?
-	// Bankprojekt: public static final int DEFAULT_CASH_ACCOUNT_ID = 10000;
-	// Standard StundenplaneintragID
-	// Jennys projekt: private static final long serialVersionUID = 7027992284251455305L;
-	
-	/**
-	 * Referenz auf das zugehörige BusinessObjekt.
-	 */
 
 	
 	/**
@@ -354,8 +341,16 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Bauteils.
 	   */
 	  @Override
-	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException, BaugruppenReferenceException {
 		
+		  for(int i=0; i<s.getBaugruppenPaare().size();i++){
+			  LoopPrevention lP = new LoopPrevention();
+			  if(lP.checkForStuecklistenLoop(s, (Baugruppe)s.getBaugruppenPaare().get(i).getElement())){
+				  BaugruppenReferenceException bRE = new BaugruppenReferenceException((Baugruppe)s.getBaugruppenPaare().get(i).getElement());
+				  throw bRE;
+			  }
+		  }
+		  
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
 		    s.setEditDate(date);
@@ -502,8 +497,16 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Baugruppe.
 	   */
 	  @Override
-	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException {
+	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException {
 		
+		  for(int i=0; i<b.getStueckliste().getBaugruppenPaare().size();i++){
+			  LoopPrevention lP = new LoopPrevention();
+			  if(lP.checkForBaugruppenLoop(b, (Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement())){
+				  BaugruppenReferenceException bRE = new BaugruppenReferenceException((Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement());
+				  throw bRE;
+			  }
+		  }
+		  
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
 		    b.setEditDate(date);
@@ -538,12 +541,6 @@ public class SmsImpl extends RemoteServiceServlet implements
 	public Baugruppe getBaugruppeById(int id) throws IllegalArgumentException {
 	    return this.baugruppenMapper.findByID(id);
 	  }
-	  
-
-		  /**
-		   * Setzen der Bank für die diese Bankverwaltung tätig ist.
-		   */
-		
 	  /*
 	   * ***************************************************************************
 	   * ABSCHNITT Ende : Methoden für Baugruppen-Objekte
@@ -626,12 +623,4 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ABSCHNITT Ende : Methoden für Enderzeugnis-Objekte
 	   * ***************************************************************************
 	   */
-	  public Baugruppe getBaugruppe(){
-			return this.baugruppe;
-		}
-		public void setBaugruppe (Baugruppe b) throws IllegalArgumentException {
-			    this.baugruppe = b;
-			  }
-		
-
 }

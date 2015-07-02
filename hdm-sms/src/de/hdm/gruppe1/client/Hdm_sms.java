@@ -80,24 +80,17 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 		      }
 		};
 		
-//		Command report1 = new Command() {
-//		      public void execute() {
-//		    	  RootPanel.get("content_wrap").clear();
-//		    	  RootPanel.get("content_wrap").add(new Strukturstuecklisten());
-//		      }
-//		};
-//		
-//		Command report2 = new Command() {
-//		      public void execute() {
-//		    	  RootPanel.get("content_wrap").clear();
-//		    	  RootPanel.get("content_wrap").add(new Materialbedarf());
-//		      }
-//		};
-		
 		Command loginTest = new Command() {
 		      public void execute() {
 		    	  RootPanel.get("content_wrap").clear();
 		    	  RootPanel.get("content_wrap").add(new Login());
+		      }
+		};
+		
+		Command loginRegistration = new Command() {
+		      public void execute() {
+		    	  RootPanel.get("content_wrap").clear();
+		    	  RootPanel.get("content_wrap").add(new Registration());
 		      }
 		};
 		
@@ -131,6 +124,7 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 	    //Testweise Menü für Login-GUI
 	    MenuBar loginMenu = new MenuBar(true);
 	    loginMenu.addItem("Login", loginTest);
+	    loginMenu.addItem("Registrieren", loginRegistration);
 
 	    //Alle Untermenüs werden hier dem Hauptmenü zugeordnet
 	    MenuBar mainMenu = new MenuBar();
