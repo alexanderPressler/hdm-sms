@@ -2,6 +2,9 @@ package de.hdm.gruppe1.server.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.google.appengine.api.utils.SystemProperty;
 
 /**
@@ -44,7 +47,6 @@ public class DBConnection {
      * Software neu komilieren zu müssen.
      */
     private static String googleUrl = "jdbc:mysql://173.194.236.86:3306/sms?user=root";
-//    private static String localUrl = "jdbc:mysql://localhost:3306/phpmyadmin?root";
     
     /**
      * Diese statische Methode kann aufgrufen werden durch
@@ -75,18 +77,8 @@ public class DBConnection {
         if (con == null) {
         	String url=null;
         	try {
-//        	      if (SystemProperty.environment.value() ==
-//        	          SystemProperty.Environment.Value.Production) {
-//        	        // Load the class that provides the new "jdbc:google:mysql://" prefix.
-//        	        Class.forName("com.mysql.jdbc.GoogleDriver");
-//        	        url = googleUrl;
-//        	      }
-//        	      else {
-//        	        // Local MySQL instance to use during development.
-//        	        Class.forName("com.mysql.jdbc.Driver");
-//        	        url = localUrl;
-//        	      }
-        	      Class.forName("com.mysql.jdbc.Driver");
+
+        		Class.forName("com.mysql.jdbc.Driver");
       	        url = googleUrl;
         	      con= DriverManager.getConnection(url);
             }
@@ -99,5 +91,34 @@ public class DBConnection {
         // Zurückgegeben der Verbindung
         return con;
     }
+	
+//	/**
+//	 * Vor Deployment
+//	 */
+//	private static Connection con = null;
+//
+//	public static Connection connection() {
+//
+//		/**
+//		 * Falls die DB-Connection noch nicht besteht, führe nachfolgende
+//		 * Befehle aus.
+//		 */
+//		if (con == null) {
+//
+//			try {
+//				DriverManager.registerDriver(new AppEngineDriver());
+//
+//				 con = DriverManager.getConnection("jdbc:google:rdbms://hdm-sms:usdb/sms", "root", "");
+//			}
+//
+//			catch (SQLException e1) {
+//				con = null;
+//
+//				e1.printStackTrace();
+//			}
+//		}
+//
+//		return con;
+//	}
     
 }
