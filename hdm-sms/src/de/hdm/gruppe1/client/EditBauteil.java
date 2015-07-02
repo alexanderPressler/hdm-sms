@@ -7,6 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.shared.SmsAsync;
@@ -35,7 +36,7 @@ public class EditBauteil extends VerticalPanel {
 	private final TextBox MaterialField = new TextBox();
 	private final Label DescriptionFieldLabel = new Label(
 			"Textuelle Beschreibung");
-	private final TextBox DescriptionField = new TextBox();
+	private final TextArea DescriptionField = new TextArea();
 	private final Button EditBauteilButton = new Button("ändern");
 
 	/**
@@ -74,7 +75,7 @@ public class EditBauteil extends VerticalPanel {
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
-		DescriptionField.setStyleName("DescriptionFieldText");
+//		DescriptionField.setStyleName("DescriptionFieldText");
 		EditBauteilButton.setStyleName("Button");
 
 		/**
