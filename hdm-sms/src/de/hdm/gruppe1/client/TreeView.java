@@ -26,19 +26,60 @@ public class TreeView extends VerticalPanel {
 	private final Label HeadlineLabel = new Label("Strukturstückliste");
 	Tree tree = new Tree();
 	TreeItem rootTreeItem = new TreeItem();
+	TreeItem tempItem = new TreeItem();
 	
 	
 	public TreeView(Stueckliste treeViewStueckliste) {
 		try {
 			Window.alert(treeViewStueckliste.getName());
-			treeRecursion(treeViewStueckliste);
-			
-			
-			/**
-			 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
-			 * zugeordnet, da diese Klasse von VerticalPanel erbt.
-			 */
 			this.add(HeadlineLabel);
+			
+			//Root des Baums setzen
+			rootTreeItem.setText(treeViewStueckliste.getName());
+			//Bauteilkinder werden ausgelesen und dem baum angehängt
+			for(int i = 0; i<treeViewStueckliste.getBauteilPaare().size(); i++){
+				Element childBauteilElement = treeViewStueckliste.getBauteilPaare().get(i).getElement();
+				TreeItem bauteilTreeItem = new TreeItem();
+				bauteilTreeItem.setText(childBauteilElement.getName());
+				rootTreeItem.addItem(bauteilTreeItem);
+			}
+			//Baugruppenkinder werden ausgelesen und dem baum angehängt
+			for(int i = 0; i<treeViewStueckliste.getBaugruppenPaare().size(); i++){
+				Element childBaugruppenElement = treeViewStueckliste.getBaugruppenPaare().get(i).getElement();
+				TreeItem baugruppeTreeItem = new TreeItem();
+				baugruppeTreeItem.setText(childBaugruppenElement.getName());
+				
+					//die Kinder (weitere Bauteile) der Baugruppenkinder werden ausgelesenund dem baum angehängt
+					Baugruppe childBaugruppe = (Baugruppe) childBaugruppenElement;
+					for(int u = 0; u<childBaugruppe.getStueckliste().getBauteilPaare().size(); u++){
+						Element childOfChildBauteilElement = childBaugruppe.getStueckliste().getBauteilPaare().get(u).getElement();
+						TreeItem childOfChildBauteilItem = new TreeItem();
+						childOfChildBauteilItem.setText(childOfChildBauteilElement.getName());
+						baugruppeTreeItem.addItem(childOfChildBauteilItem);
+						}
+					//die Kinder (weitere gruppen) der Bauteilkinder werden ausgelesenund dem baum angehängt
+					for(int o = 0; o<childBaugruppe.getStueckliste().getBaugruppenPaare().size(); o++){
+						Element childOfChildBaugruppeElement = childBaugruppe.getStueckliste().getBaugruppenPaare().get(o).getElement();
+						TreeItem childOfChildBaugruppeItem = new TreeItem();
+						childOfChildBaugruppeItem.setText(childOfChildBaugruppeElement.getName());
+						
+								//die KindesKinder (weitere Bauteile) der Baugruppenkinder werden ausgelesenund dem baum angehängt
+								Baugruppe childofchildBaugruppe = (Baugruppe) childOfChildBaugruppeElement;
+								for(int u = 0; u<childofchildBaugruppe.getStueckliste().getBauteilPaare().size(); u++){
+									Element childOfChildBauteilElement = childofchildBaugruppe.getStueckliste().getBauteilPaare().get(u).getElement();
+									TreeItem childOfChildBauteilItem = new TreeItem();
+									childOfChildBauteilItem.setText(childOfChildBauteilElement.getName());
+									childOfChildBaugruppeItem.addItem(childOfChildBauteilItem);
+									}
+								
+						baugruppeTreeItem.addItem(childOfChildBaugruppeItem);
+				}
+				
+				rootTreeItem.addItem(baugruppeTreeItem);
+			}
+			
+			
+			
 			tree.addItem(rootTreeItem);
 			this.add(tree);
 			
@@ -55,65 +96,4 @@ public class TreeView extends VerticalPanel {
 		
 	}
 	
-	TreeItem tempItem = rootTreeItem;
-	private void treeRecursion(Element element) {
-		if(element instanceof Stueckliste) {
-			Stueckliste aktuellesStueckliste = (Stueckliste) element;
-			rootTreeItem.setText(aktuellesStueckliste.getName());
-			
-			for(int i = 0; i<aktuellesStueckliste.getBaugruppenPaare().size(); i++){
-				Element childBaugruppenElement = aktuellesStueckliste.getBaugruppenPaare().get(i).getElement();
-				treeRecursion(childBaugruppenElement);
-			}
-			
-			for(int i = 0; i<aktuellesStueckliste.getBauteilPaare().size(); i++){
-				Element childBauteilElement = aktuellesStueckliste.getBauteilPaare().get(i).getElement();
-				treeRecursion(childBauteilElement);
-			}
-			
-			
-			
-		}
-		if(element instanceof Bauteil) {
-			Bauteil aktuellesBauteil = (Bauteil) element;
-			
-			TreeItem bauteilTreeItem = new TreeItem();
-			bauteilTreeItem.setText(aktuellesBauteil.getName());
-			rootTreeItem.addItem(bauteilTreeItem);
-						
-			
-		} else if(element instanceof Baugruppe) {
-			//if(elment instancaof Stueckliste)
-			Baugruppe aktuellesBaugruppe = (Baugruppe) element;
-			
-			TreeItem baugruppeTreeItem = new TreeItem();
-			baugruppeTreeItem.setText(aktuellesBaugruppe.getName());
-			
-			//TODO: Reihenfolge des baums stimmt noch nicht, tempItem und rootItem an tree anpassen
-			tempItem.addItem(baugruppeTreeItem);
-			tempItem = baugruppeTreeItem;
-			
-			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().size(); i++){
-				Element childBaugruppenElement = aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement();
-				//TreeItem childBaugruppenItem = new TreeItem();
-				//childBaugruppenItem.setText(childBaugruppenElement.getName());
-				//baugruppeTreeItem.addItem(childBaugruppenItem);
-				
-				treeRecursion(childBaugruppenElement);
-			}
-			
-
-			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBauteilPaare().size(); i++){
-				Element childBauteilElement = aktuellesBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement();
-				TreeItem childBauteilItem = new TreeItem();
-				childBauteilItem.setText(childBauteilElement.getName());
-				baugruppeTreeItem.addItem(childBauteilItem);
-				
-//				treeRecursion(childBauteilElement);
-			}
-										
-				//TODO implementieren
-//				baugruppeTreeItem.setText(treeViewStueckliste.getBaugruppenPaare().get(i).getAnzahl()+" * Baugruppe: "+treeViewStueckliste.getBaugruppenPaare().get(i).getElement().getName());
-			}
-		}
 }
