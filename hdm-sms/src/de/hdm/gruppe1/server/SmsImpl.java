@@ -341,8 +341,16 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Bauteils.
 	   */
 	  @Override
-	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException, BaugruppenReferenceException {
 		
+		  for(int i=0; i<s.getBaugruppenPaare().size();i++){
+			  LoopPrevention lP = new LoopPrevention();
+			  if(lP.checkForStuecklistenLoop(s, (Baugruppe)s.getBaugruppenPaare().get(i).getElement())){
+				  BaugruppenReferenceException bRE = new BaugruppenReferenceException((Baugruppe)s.getBaugruppenPaare().get(i).getElement());
+				  throw bRE;
+			  }
+		  }
+		  
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
 		    s.setEditDate(date);
@@ -489,8 +497,16 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Baugruppe.
 	   */
 	  @Override
-	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException {
+	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException {
 		
+		  for(int i=0; i<b.getStueckliste().getBaugruppenPaare().size();i++){
+			  LoopPrevention lP = new LoopPrevention();
+			  if(lP.checkForBaugruppenLoop(b, (Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement())){
+				  BaugruppenReferenceException bRE = new BaugruppenReferenceException((Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement());
+				  throw bRE;
+			  }
+		  }
+		  
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
 		    b.setEditDate(date);
