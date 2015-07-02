@@ -102,7 +102,7 @@ public interface Sms extends RemoteService {
 
 	void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException;
 
-	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException;
+	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException;
 
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 
