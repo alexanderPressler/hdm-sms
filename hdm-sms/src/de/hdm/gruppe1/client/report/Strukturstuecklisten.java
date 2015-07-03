@@ -124,7 +124,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 				/**
 				 * Die Schleife durchläuft den kompletten Ergebnis-Vektor.
 				 */
-				for (int c = 0; c <= allBaugruppe.size(); c++) {
+				for (int c = 0; c < allBaugruppe.size(); c++) {
 
 					/**
 					 * Das DropDown wird mithilfe dieser for-Schleife für jede

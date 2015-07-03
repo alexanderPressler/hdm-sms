@@ -18,6 +18,7 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
+import java.util.Arrays;
 
 /**
  * Die Klasse CreateStueckliste ermöglicht dem User, Objekte von Stückliste in
@@ -62,7 +63,7 @@ public class CreateBaugruppe extends VerticalPanel {
 	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
-
+	
 	/**
 	 *  Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu
 	 *  sammeln, bevor die Baugruppe gespeichert wird.
@@ -222,23 +223,42 @@ public class CreateBaugruppe extends VerticalPanel {
 						@Override
 						public void onClick(ClickEvent event) {
 
-							/**
-							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
-							 */
-							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
-							bauteilCollection.removeRow(rowIndex);
+//							/**
+//							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
+//							 */
+//							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+//							bauteilCollection.removeRow(rowIndex);
 
+							// TODO implementieren
+							// ListBox-Element, das hinzugefügt wurde, wird für
+							// doppeltes Hinzufügen gesperrt
+							
 							/**
 							 *  Zum anderen wird das ElementPaar von Bauteil aus dem collectBauteile Vektor entfernt.
 							 */
 							int x = a - 1;
 							
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
+							//Test
+							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+							Window.alert("Inhalt Tabelle ID: "+bauteilCollection.getText(rowIndex, 0));
+							
+							Bauteil b = (Bauteil) collectBauteile.get(x).getElement();
+							int vektorIndex = allBauteile.indexOf(b);
+							
+							listBoxBauteile.getElement().getElementsByTagName("*").getItem(vektorIndex).removeAttribute("disabled");
 							
 							collectBauteile.remove(x);
+							
+							bauteilCollection.clear();
+							
+							for(int c = 0; c<collectBauteile.size(); c++){
+								
+								bauteilCollection.setText(c+1, 0, ""+ collectBauteile.get(x).getElement().getId());
+								bauteilCollection.setText(c+1, 1, "" + collectBauteile.get(x).getAnzahl());
+								bauteilCollection.setText(c+1, 2, collectBauteile.get(x).getElement().getName());
+								bauteilCollection.setWidget(c+1, 3, removeBtButton);
+								
+							}
 							
 						}
 					});
@@ -430,7 +450,7 @@ public class CreateBaugruppe extends VerticalPanel {
 			 * befüllt.
 			 */
 			allBauteile = alleBauteile;
-
+			
 			if (allBauteile.isEmpty() == true) {
 
 				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
