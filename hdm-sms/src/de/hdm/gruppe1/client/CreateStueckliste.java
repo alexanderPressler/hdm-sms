@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
@@ -232,19 +234,25 @@ public class CreateStueckliste extends VerticalPanel {
 							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
 							 */
 							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(bauteilCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBauteile.size(); i++){
+								if(collectBauteile.get(i).getElement().getId()==id){
+									collectBauteile.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBauteile.size();i++){
+								if(allBauteile.get(i).getId()==id){
+									listBoxBauteile.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
 							bauteilCollection.removeRow(rowIndex);
-
-							/**
-							 *  Zum anderen wird das ElementPaar von Bauteil aus dem collectBauteile Vektor entfernt.
-							 */
-							int x = a - 1;
-							
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
-							
-							collectBauteile.remove(x);
+							String message = new String("Folgende Bauteile sind noch im Vektor: ");
+							for(int i=0; i<collectBauteile.size(); i++){
+								message= message+collectBauteile.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
 							
 						}
 					});
@@ -342,19 +350,25 @@ public class CreateStueckliste extends VerticalPanel {
 							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
 							 */
 							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(baugruppeCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								if(collectBaugruppen.get(i).getElement().getId()==id){
+									collectBaugruppen.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBaugruppen.size();i++){
+								if(allBaugruppen.get(i).getId()==id){
+									listBoxBaugruppen.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
 							baugruppeCollection.removeRow(rowIndex);
-
-							/**
-							 *  Zum anderen wird das ElementPaar von Baugruppe aus dem collectBaugruppen Vektor entfernt.
-							 */
-							int x = b - 1;
-
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
-							
-							collectBauteile.remove(x);
+							String message = new String("Folgende Baugruppen sind noch im Vektor: ");
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								message= message+collectBaugruppen.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
 							
 						}
 
