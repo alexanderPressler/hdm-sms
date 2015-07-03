@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
@@ -75,6 +77,8 @@ public class EditStueckliste extends VerticalPanel {
 	// Stückliste gespeichert wird
 	FlexTable bauteilCollection = new FlexTable();
 	FlexTable baugruppeCollection = new FlexTable();
+	
+	Stueckliste eStueckliste = new Stueckliste();
 
 	/**
 	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
@@ -84,6 +88,8 @@ public class EditStueckliste extends VerticalPanel {
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 
 	public EditStueckliste(Stueckliste editStueckliste) {
+		
+		eStueckliste=editStueckliste;
 
 		// TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
 		// die TextBox vom User fokussiert wird
@@ -163,19 +169,25 @@ public class EditStueckliste extends VerticalPanel {
 					// Zum einen wird die entsprechende Reihe aus der
 					// FlexTable entfernt.
 					int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+					Integer id = new Integer(bauteilCollection.getText(rowIndex, 0));
+					for(int i=0; i<collectBauteile.size(); i++){
+						if(collectBauteile.get(i).getElement().getId()==id){
+							collectBauteile.remove(i);
+							break;
+						}
+					}
+					for(int i=0; i<allBauteile.size();i++){
+						if(allBauteile.get(i).getId()==id){
+							listBoxBauteile.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+							break;
+						}
+					}
 					bauteilCollection.removeRow(rowIndex);
-
-					// Zum anderen wird das ElementPaar von Bauteil aus
-					// dem collectBauteile Vektor entfernt
-//					int x = a - 1;
-					Window.alert("Gelöscht wird: "+collectBauteile.get(a).getElement().getName());
-
-					// TODO implementieren
-					// ListBox-Element, das hinzugefügt wurde, wird für
-					// doppeltes Hinzufügen gesperrt
-					listBoxBauteile.getElement().getElementsByTagName("option").getItem(a).removeAttribute("disabled");
-					
-					collectBauteile.remove(a);
+					String message = new String("Folgende Bauteile sind noch im Vektor: ");
+					for(int i=0; i<collectBauteile.size(); i++){
+						message= message+collectBauteile.get(i).getElement().getName()+" , ";
+					}
+					Window.alert(message);
 					
 				}
 			});
@@ -224,19 +236,25 @@ public class EditStueckliste extends VerticalPanel {
 					// Zum einen wird die entsprechende Reihe aus der
 					// FlexTable entfernt.
 					int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+					Integer id = new Integer(baugruppeCollection.getText(rowIndex, 0));
+					for(int i=0; i<collectBaugruppen.size(); i++){
+						if(collectBaugruppen.get(i).getElement().getId()==id){
+							collectBaugruppen.remove(i);
+							break;
+						}
+					}
+					for(int i=0; i<allBaugruppen.size();i++){
+						if(allBaugruppen.get(i).getId()==id){
+							listBoxBaugruppen.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+							break;
+						}
+					}
 					baugruppeCollection.removeRow(rowIndex);
-
-					// Zum anderen wird das ElementPaar von Bauteil aus
-					// dem collectBauteile Vektor entfernt
-//					int x = a - 1;
-					Window.alert("Gelöscht wird: "+collectBaugruppen.get(a).getElement().getName());
-
-					// TODO implementieren
-					// ListBox-Element, das hinzugefügt wurde, wird für
-					// doppeltes Hinzufügen gesperrt
-					listBoxBauteile.getElement().getElementsByTagName("option").getItem(a).removeAttribute("disabled");
-					
-					collectBaugruppen.remove(a);
+					String message = new String("Folgende Baugruppen sind noch im Vektor: ");
+					for(int i=0; i<collectBaugruppen.size(); i++){
+						message= message+collectBaugruppen.get(i).getElement().getName()+" , ";
+					}
+					Window.alert(message);
 					
 				}
 			});
@@ -315,18 +333,25 @@ public class EditStueckliste extends VerticalPanel {
 							// Zum einen wird die entsprechende Reihe aus der
 							// FlexTable entfernt.
 							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(bauteilCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBauteile.size(); i++){
+								if(collectBauteile.get(i).getElement().getId()==id){
+									collectBauteile.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBauteile.size();i++){
+								if(allBauteile.get(i).getId()==id){
+									listBoxBauteile.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
 							bauteilCollection.removeRow(rowIndex);
-
-							// Zum anderen wird das ElementPaar von Bauteil aus
-							// dem collectBauteile Vektor entfernt
-							int x = a - 1;
-							
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).setAttribute("enabled", "enabled");
-
-							collectBauteile.remove(x);
+							String message = new String("Folgende Bauteile sind noch im Vektor: ");
+							for(int i=0; i<collectBauteile.size(); i++){
+								message= message+collectBauteile.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
 							
 						}
 					});
@@ -414,20 +439,26 @@ public class EditStueckliste extends VerticalPanel {
 
 							// Zum einen wird die entsprechende Reihe aus der
 							// FlexTable entfernt.
-							int rowIndex = baugruppeCollection.getCellForEvent(
-									event).getRowIndex();
+							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(baugruppeCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								if(collectBaugruppen.get(i).getElement().getId()==id){
+									collectBaugruppen.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBaugruppen.size();i++){
+								if(allBaugruppen.get(i).getId()==id){
+									listBoxBaugruppen.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
 							baugruppeCollection.removeRow(rowIndex);
-
-							// Zum anderen wird das ElementPaar von Baugruppe
-							// aus dem collectBaugruppen Vektor entfernt
-							int x = b - 1;
-
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBaugruppen.getElement().getElementsByTagName("option").getItem(x).setAttribute("disabled", "disabled");
-
-							collectBaugruppen.remove(x);
+							String message = new String("Folgende Baugruppen sind noch im Vektor: ");
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								message= message+collectBaugruppen.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
 							
 						}
 
@@ -632,6 +663,12 @@ public class EditStueckliste extends VerticalPanel {
 					 * Bauteil mit dessen Namen befüllt.
 					 */
 					listBoxBauteile.addItem(allBauteile.get(c).getName());
+					for (int i=0; i<eStueckliste.getBauteilPaare().size();i++){
+						if(allBauteile.get(c).getId()==eStueckliste.getBauteilPaare().get(i).getElement().getId()){
+							listBoxBauteile.getElement().getElementsByTagName("*")
+							.getItem(c).setAttribute("disabled", "disabled");
+						}
+					}
 
 				}
 
@@ -681,6 +718,12 @@ public class EditStueckliste extends VerticalPanel {
 					 * Baugruppe mit dessen Namen befüllt.
 					 */
 					listBoxBaugruppen.addItem(allBaugruppen.get(c).getName());
+					for (int i=0; i<eStueckliste.getBaugruppenPaare().size();i++){
+						if(allBaugruppen.get(c).getId()==eStueckliste.getBaugruppenPaare().get(i).getElement().getId()){
+							listBoxBaugruppen.getElement().getElementsByTagName("*")
+							.getItem(c).setAttribute("disabled", "disabled");
+						}
+					}
 
 				}
 
