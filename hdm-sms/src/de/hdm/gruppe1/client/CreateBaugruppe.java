@@ -39,9 +39,9 @@ public class CreateBaugruppe extends VerticalPanel {
 	private final Label baugruppeLabel = new Label("Baugruppen für Baugruppe");
 	private final TextBox NameField = new TextBox();
 	private final Label BauteilLabel = new Label(
-			"Gewünschte Anzahl von Bauteilen hinzufügen");
+			"Gew�nschte Anzahl von Bauteilen hinzufügen");
 	private final Label BaugruppeLabel = new Label(
-			"Gewünschte Anzahl von Baugruppen hinzufügen");
+			"Gew�nschte Anzahl von Baugruppen hinzufügen");
 	private final TextBox amountBauteile = new TextBox();
 	ListBox listBoxBauteile = new ListBox();
 	private final Button collectBtButton = new Button("hinzufügen");
@@ -161,7 +161,7 @@ public class CreateBaugruppe extends VerticalPanel {
 				Integer anzahl = Integer.parseInt(amountBauteile.getText());
 
 				/**
-				 *  Der Vektor collectBauteile wird ein Objekt von ElementPaar hinzugefügt,
+				 *  Der Vektor collectBauteile wird ein Objekt von ElementPaar hinzugef�gt,
 				 *  welches in den folgenden Zeilen befüllt wird.
 				 */
 				ElementPaar bauteilPaar = new ElementPaar();
@@ -217,17 +217,17 @@ public class CreateBaugruppe extends VerticalPanel {
 					 *  jederzeit ein ElementPaar von Bauteil wieder entfernen kann. Es ist ihm lediglich möglich,
 					 *  gesamte ElementPaare von Bauteilen zu entfernen. Dies muss er ebenfalls durchführen, wenn er
 					 *  lediglich die Anzahl ändern möchte. Das Bauteil mit der gewünschten neuen Anzahl kann er
-					 *  schnell erneut aus dem Dropdown hinzufügen.
+					 *  schnell erneut aus dem Dropdown hinzuf�gen.
 					 */
 					removeBtButton.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 
-//							/**
-//							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
-//							 */
+							/**
+							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
+							 */
 //							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
-//							bauteilCollection.removeRow(rowIndex);
+							
 
 							// TODO implementieren
 							// ListBox-Element, das hinzugefügt wurde, wird für
@@ -236,29 +236,36 @@ public class CreateBaugruppe extends VerticalPanel {
 							/**
 							 *  Zum anderen wird das ElementPaar von Bauteil aus dem collectBauteile Vektor entfernt.
 							 */
-							int x = a - 1;
 							
 							//Test
 							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
-							Window.alert("Inhalt Tabelle ID: "+bauteilCollection.getText(rowIndex, 0));
-							
-							Bauteil b = (Bauteil) collectBauteile.get(x).getElement();
-							int vektorIndex = allBauteile.indexOf(b);
-							
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(vektorIndex).removeAttribute("disabled");
-							
-							collectBauteile.remove(x);
-							
-							bauteilCollection.clear();
-							
-							for(int c = 0; c<collectBauteile.size(); c++){
-								
-								bauteilCollection.setText(c+1, 0, ""+ collectBauteile.get(x).getElement().getId());
-								bauteilCollection.setText(c+1, 1, "" + collectBauteile.get(x).getAnzahl());
-								bauteilCollection.setText(c+1, 2, collectBauteile.get(x).getElement().getName());
-								bauteilCollection.setWidget(c+1, 3, removeBtButton);
-								
+							Integer id = new Integer(bauteilCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBauteile.size(); i++){
+								if(collectBauteile.get(i).getElement().getId()==id){
+									collectBauteile.remove(i);
+									break;
+								}
 							}
+							for(int i=0; i<allBauteile.size();i++){
+								if(allBauteile.get(i).getId()==id){
+									listBoxBauteile.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
+							bauteilCollection.removeRow(rowIndex);
+							String message = new String("Folgende Bauteile sind noch im Vektor: ");
+							for(int i=0; i<collectBauteile.size(); i++){
+								message= message+collectBauteile.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
+							
+//							Bauteil b = (Bauteil) collectBauteile.get(x).getElement();
+//							int vektorIndex = allBauteile.indexOf(b);
+//							
+//							listBoxBauteile.getElement().getElementsByTagName("*").getItem(vektorIndex).removeAttribute("disabled");
+//							
+//							collectBauteile.remove(x);
+							
 							
 						}
 					});
@@ -348,21 +355,26 @@ public class CreateBaugruppe extends VerticalPanel {
 							/**
 							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
 							 */
-							int rowIndex = baugruppeCollection.getCellForEvent(
-									event).getRowIndex();
+							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(baugruppeCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								if(collectBaugruppen.get(i).getElement().getId()==id){
+									collectBaugruppen.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBaugruppen.size();i++){
+								if(allBaugruppen.get(i).getId()==id){
+									listBoxBaugruppen.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
 							baugruppeCollection.removeRow(rowIndex);
-
-							/**
-							 *  Zum anderen wird das ElementPaar von Baugruppe aus dem collectBaugruppen Vektor entfernt.
-							 */
-							int x = b - 1;
-
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
-							
-							collectBauteile.remove(x);
+							String message = new String("Folgende Baugruppen sind noch im Vektor: ");
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								message= message+collectBaugruppen.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
 							
 						}
 
@@ -458,7 +470,7 @@ public class CreateBaugruppe extends VerticalPanel {
 			} else {
 
 				/**
-				 * Die Schleife durchläuft den kompletten Ergebnis-Vektor.
+				 * Die Schleife durchl�uft den kompletten Ergebnis-Vektor.
 				 */
 				for (int c = 0; c <= allBauteile.size(); c++) {
 
@@ -478,7 +490,7 @@ public class CreateBaugruppe extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
 	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
-	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
+	 * und erlaubt daher, auf die Attribute der �bergeordneten Klasse
 	 * zuzugreifen.
 	 * 
 	 * @author Mario

@@ -17,11 +17,9 @@ public class SmsException extends Exception {
 	private static final long serialVersionUID = 1L;
 	private String message;
 	private Element ausloeser;
-	
-	public SmsException(){
+	public SmsException (){
 		
 	}
-	
 	public SmsException (String message){
 	setMessage(message);
 	}
