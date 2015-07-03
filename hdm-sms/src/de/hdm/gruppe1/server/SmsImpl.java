@@ -492,7 +492,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		
 		  for(int i=0; i<b.getStueckliste().getBaugruppenPaare().size();i++){
 			  LoopPrevention lP = new LoopPrevention();
-			  if(!lP.checkForLoop(b, (Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement())){
+			  if(!lP.checkForBaugruppenLoop(b, (Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement())){
 				  BaugruppenReferenceException bRE = new BaugruppenReferenceException((Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement());
 				  throw bRE;
 			  }
