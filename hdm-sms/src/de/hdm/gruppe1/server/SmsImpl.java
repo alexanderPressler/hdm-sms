@@ -100,6 +100,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	private UserMapper userMapper = null;
 	private BaugruppenMapper baugruppenMapper = null;
 	private EnderzeugnisMapper enderzeugnisMapper = null;
+	private LoginInfo logInfo = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -195,12 +196,8 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    Date date = new Date();
 	    b.setEditDate(date);
 	    
-	  //TODO dynamisch anpassen
-        User editUser = new User();
-        editUser.setName("statischer User");
-        editUser.setId(1);
-        editUser.setGoogleID("000000000000");
-        b.setEditUser(editUser);
+	  
+        b.setEditUser(logInfo.getUser());
 
 	    /*
 	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
@@ -220,12 +217,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public void save(Bauteil b) throws IllegalArgumentException {
 		 
-		//TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        b.setEditUser(editUser);
+	        b.setEditUser(logInfo.getUser());
 	    
 	        // Aenderungsdatum wird generiert und dem Objekt angehängt
 	        // Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
@@ -303,12 +295,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    Date date = new Date();
 	    s.setEditDate(date);
 	    
-	  //TODO dynamisch anpassen
-        User editUser = new User();
-        editUser.setName("statischer User");
-        editUser.setId(1);
-        editUser.setGoogleID("000000000000");
-        s.setEditUser(editUser);
+        s.setEditUser(logInfo.getUser());
 	    
 
 	    // Objekt in der DB speichern.
@@ -347,12 +334,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		    Date date = new Date();
 		    s.setEditDate(date);
 		  
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        s.setEditUser(editUser);
+	        s.setEditUser(logInfo.getUser());
 		  
 		  this.stuecklisteMapper.update(s);
 	  }
@@ -424,17 +406,12 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare, 
 			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
 
 	     // Erstellungsdatum wird generiert und dem Objekt angehäng
 		Date date = new Date();
 		
 		Stueckliste s = new Stueckliste();
-		s.setEditUser(editUser);
+		s.setEditUser(logInfo.getUser());
 		s.setName(name+"_sl");
 	    s.setBauteilPaare(BauteilPaare);
 	    s.setBaugruppenPaare(BaugruppenPaare);
@@ -444,7 +421,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   
 	    Baugruppe b = new Baugruppe();
 	    b.setEditDate(date);
-	    b.setEditUser(editUser);
+	    b.setEditUser(logInfo.getUser());
 	    b.setName(name);
 	    b.setStueckliste(s);
 	      
@@ -501,16 +478,11 @@ public class SmsImpl extends RemoteServiceServlet implements
 		    Date date = new Date();
 		    b.setEditDate(date);
 		  
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        b.setEditUser(editUser);
+	        b.setEditUser(logInfo.getUser());
 	        
 	       Stueckliste s = b.getStueckliste();
 	       s.setEditDate(date);
-	       s.setEditUser(editUser);
+	       s.setEditUser(logInfo.getUser());
 	       
 	       this.stuecklisteMapper.update(s);
 		  
@@ -552,12 +524,6 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  @Override
 	public Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe ) throws IllegalArgumentException {
 		
-		     
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
 
 	     // Erstellungsdatum wird generiert und dem Objekt angehäng
 		Date date = new Date();
@@ -566,7 +532,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    e.setEditDate(date);
 	    e.setName(name);
 	    e.setBaugruppe(baugruppe);
-	    e.setEditUser(editUser);
+	    e.setEditUser(logInfo.getUser());
 	      
 	    // Objekt in der DB speichern.
 	    return this.enderzeugnisMapper.insert(e);
@@ -591,12 +557,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		    Date date = new Date();
 		    e.setEditDate(date);
 		  
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        e.setEditUser(editUser);
+	        e.setEditUser(logInfo.getUser());
 		  
 	        this.enderzeugnisMapper.update(e);
 	  }
@@ -607,6 +568,10 @@ public class SmsImpl extends RemoteServiceServlet implements
 	public Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException {
 	    return this.enderzeugnisMapper.findAll();
 	  }
+	  
+	 public void setLoginInfo(LoginInfo loginInfo){
+		 logInfo=loginInfo;
+	 }
 	  
 	  /*
 	   * ***************************************************************************

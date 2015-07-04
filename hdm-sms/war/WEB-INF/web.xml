@@ -23,7 +23,7 @@
   
   <servlet-mapping>
     <servlet-name>SmsReportServlet</servlet-name>
-    <url-pattern>/de.hdm.gruppe1.HdM_smsReport/smsReport</url-pattern>
+    <url-pattern>de.hdm.gruppe1.HdM_smsReport/smsReport</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
@@ -31,5 +31,15 @@
     <welcome-file>Hdm_sms.html</welcome-file>
     <welcome-file>Hdm_smsReport.html</welcome-file>
   </welcome-file-list>
+  
+  <servlet>
+    <servlet-name>loginService</servlet-name>
+    <servlet-class>de.hdm.gruppe1.server.LoginServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>loginService</servlet-name>
+    <url-pattern>/hdm_sms/login</url-pattern>
+  </servlet-mapping>
 
 </web-app>

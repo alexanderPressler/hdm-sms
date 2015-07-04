@@ -18,7 +18,6 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
-import java.util.Arrays;
 
 /**
  * Die Klasse CreateStueckliste erm�glicht dem User, Objekte von St�ckliste in

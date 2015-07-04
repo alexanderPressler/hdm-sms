@@ -4,11 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.Vector;
-
-import de.hdm.gruppe1.shared.bo.Baugruppe;
-import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.User;
 
 /**
@@ -94,8 +89,9 @@ public class UserMapper {
 	    	  user.setId(rs.getInt("maxid") + 1);
 
 	        stmt = con.createStatement();
+	        System.out.println(user.getId()+", "+user.getGoogleID()+", "+user.getName());
 
-	        stmt.executeUpdate("INSERT INTO User VALUES ('"+ user.getId() +"','"+ user.getGoogleID() +"'" +"','"+ user.getName() +"'");
+	        stmt.executeUpdate("INSERT INTO User VALUES ('"+ user.getId() +"','"+ user.getGoogleID() +"','"+ user.getName() +"');");
 	      
 	      }
 	    }
@@ -123,7 +119,29 @@ public class UserMapper {
 			    
 			    ResultSet rs = stmt.executeQuery("SELECT * FROM User WHERE userID ='"
 			    		+id+"';");
-			    //Da es nur eine Baugruppe mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+			    //Da es nur eine User mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
+			    if(rs.next()){
+			    	user = new User();
+			    	user.setId(rs.getInt("userID"));
+			    	user.setName(rs.getString("eMail"));
+			    	user.setGoogleID(rs.getString("googleID"));
+			    	
+			    }
+			}
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+			return user;
+		}
+	  public User findByGoogleID (String googleID){
+			Connection con = DBConnection.connection();
+			User user = null;
+			try{
+				Statement stmt = con.createStatement();
+			    
+			    ResultSet rs = stmt.executeQuery("SELECT * FROM User WHERE googleID ='"
+			    		+googleID+"';");
+			    //Da es nur einen User mit dieser ID geben kann ist davon auszugehen, dass das ResultSet nur eine Zeile enthält
 			    if(rs.next()){
 			    	user = new User();
 			    	user.setId(rs.getInt("userID"));
