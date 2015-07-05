@@ -423,7 +423,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare, 
-			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException , DublicateBaugruppeException {
+			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
 		  //TODO dynamisch anpassen
 	        User editUser = new User();
 	        editUser.setName("statischer User");
@@ -488,7 +488,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Baugruppe.
 	   */
 	  @Override
-	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException, DublicateBaugruppeException {
+	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException {
 		
 		  for(int i=0; i<b.getStueckliste().getBaugruppenPaare().size();i++){
 			  LoopPrevention lP = new LoopPrevention();

@@ -3,6 +3,7 @@ com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException, true, true, t
 com.google.gwt.user.client.rpc.RpcTokenException, true, true, false, false, com.google.gwt.user.client.rpc.RpcTokenException/2345075298, 2345075298
 com.google.gwt.user.client.rpc.XsrfToken, false, false, true, true, com.google.gwt.user.client.rpc.XsrfToken/4254043109, 4254043109
 de.hdm.gruppe1.shared.BaugruppenReferenceException, true, true, false, false, de.hdm.gruppe1.shared.BaugruppenReferenceException/1014355239, 1014355239
+de.hdm.gruppe1.shared.DublicateBaugruppeException, true, true, false, false, de.hdm.gruppe1.shared.DublicateBaugruppeException/3985951366, 3985951366
 de.hdm.gruppe1.shared.Sms, false, false, false, false, _, 1313561851
 de.hdm.gruppe1.shared.SmsException, true, false, false, false, de.hdm.gruppe1.shared.SmsException/4154858253, 4154858253
 de.hdm.gruppe1.shared.bo.Baugruppe, true, true, true, true, de.hdm.gruppe1.shared.bo.Baugruppe/3751143134, 3751143134

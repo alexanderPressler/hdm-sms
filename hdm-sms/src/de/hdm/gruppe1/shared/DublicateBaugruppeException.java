@@ -14,7 +14,7 @@ public class DublicateBaugruppeException extends SmsException {
 	}
 	public DublicateBaugruppeException(Baugruppe cause) {
 		super(cause);
-		this.setMessage("Die Baugruppe konnte nicht hinzugefügt werden, da es bereits eine Baugruppe mit diesem Namen in der Datenbank gibt.");
+		this.setMessage("Die Baugruppe konnte nicht hinzugefügt werden, da es bereits eine Baugruppe mit diesem Namen in der Datenbank gibt: ");
 	}
 	
 }
