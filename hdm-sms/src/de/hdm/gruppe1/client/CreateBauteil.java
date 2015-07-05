@@ -10,7 +10,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.client.ClientsideSettings;
+import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
@@ -109,22 +111,18 @@ public class CreateBauteil extends VerticalPanel {
 					&& DescriptionField.getText().isEmpty() != true
 					&& MaterialField.getText().isEmpty() != true) {
 				
-				/**
-				 * Der Inhalt der individuellen Benutzereingaben werden in diesen
-				 * Strings zwischengespeichert, damit im weiteren Verlauf dieser
-				 * Klasse damit gearbeitet werden kann.
-				 */
-				String name = NameField.getText();
-				String bauteilBeschreibung = DescriptionField.getText();
-				String materialBeschreibung = MaterialField.getText();
-
+				FieldVerifier umlaut = new FieldVerifier();
+				String inputName = umlaut.changeUmlaut(NameField.getText());
+				String inputDescription = umlaut.changeUmlaut(DescriptionField.getText());
+				String inputMaterial = umlaut.changeUmlaut(MaterialField.getText());
+			
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-				stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
-						materialBeschreibung, new CreateBauteilCallback());
+				stuecklistenVerwaltung.createBauteil(inputName, inputDescription,
+						inputMaterial, new CreateBauteilCallback());
 
 				/**
 				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI

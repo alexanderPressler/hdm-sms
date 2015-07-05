@@ -572,26 +572,30 @@ public class EditBaugruppe extends VerticalPanel {
 		@Override
 		public void onClick(ClickEvent event) {
 
-			Baugruppe b = new Baugruppe();
-			Stueckliste s = new Stueckliste();
-			/**
-			 * Aus einem Textfeld kann kein Integer-Wert ausgelesen werden,
-			 * daher ist dieser Zwischenschritt notwendig: Auslesen des Id-Werts
-			 * mithilfe Integer, da Integer die toString-Methode unterstützt.
-			 */
-			b.setId(Integer.parseInt(IdField.getText()));
-			b.setName(NameField.getText());
-			s.setId(Integer.parseInt(sIdField.getText()));
-			s.setName(sNameField.getText());
-			s.setBauteilPaare(collectBauteile);
-			s.setBaugruppenPaare(collectBaugruppen);
-			b.setStueckliste(s);
+			
 			
 			/**
 			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
 			 * notwendigen Felder befüllt sind.
 			 */
 			if (NameField.getText().isEmpty() == false) {
+				
+				FieldVerifier umlaut = new FieldVerifier();
+				String input = umlaut.changeUmlaut(NameField.getText());
+				Baugruppe b = new Baugruppe();
+				Stueckliste s = new Stueckliste();
+				/**
+				 * Aus einem Textfeld kann kein Integer-Wert ausgelesen werden,
+				 * daher ist dieser Zwischenschritt notwendig: Auslesen des Id-Werts
+				 * mithilfe Integer, da Integer die toString-Methode unterstützt.
+				 */
+				b.setId(Integer.parseInt(IdField.getText()));
+				b.setName(input);
+				s.setId(Integer.parseInt(sIdField.getText()));
+				s.setName(sNameField.getText());
+				s.setBauteilPaare(collectBauteile);
+				s.setBaugruppenPaare(collectBaugruppen);
+				b.setStueckliste(s);
 				/**
 				 * Die konkrete RPC-Methode für den editier-Befehl wird
 				 * aufgerufen. Hierbei wird das vorab befüllte Baugruppen-Objekt

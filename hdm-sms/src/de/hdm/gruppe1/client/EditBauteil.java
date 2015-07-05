@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
@@ -128,6 +130,11 @@ public class EditBauteil extends VerticalPanel {
 					&& DescriptionField.getText().isEmpty() != true
 					&& MaterialField.getText().isEmpty() != true) {
 				
+				FieldVerifier umlaut = new FieldVerifier();
+				String inputName = umlaut.changeUmlaut(NameField.getText());
+				String inputDescription = umlaut.changeUmlaut(DescriptionField.getText());
+				String inputMaterial = umlaut.changeUmlaut(MaterialField.getText());
+				
 				/**
 				 * Dieses Bauteil-Objekt wird erstellt, um es in den darauffolgenden Zeilen
 				 * mit Inhalten aus den individuellen User-Eingaben in den Textfeldern zu
@@ -140,9 +147,9 @@ public class EditBauteil extends VerticalPanel {
 				 * mithilfe Integer, da Integer die toString-Methode unterstützt.
 				 */
 				b.setId(Integer.parseInt(IdField.getText()));
-				b.setName(NameField.getText());
-				b.setBauteilBeschreibung(DescriptionField.getText());
-				b.setMaterialBeschreibung(MaterialField.getText());
+				b.setName(inputName);
+				b.setBauteilBeschreibung(inputDescription);
+				b.setMaterialBeschreibung(inputMaterial);
 
 				/**
 				 * Die konkrete RPC-Methode für den editier-Befehl wird aufgerufen.

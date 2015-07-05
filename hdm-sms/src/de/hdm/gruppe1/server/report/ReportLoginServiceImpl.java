@@ -9,7 +9,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class LoginServiceImpl extends RemoteServiceServlet implements
+public class ReportLoginServiceImpl extends RemoteServiceServlet implements
     LoginService {
 
   /**

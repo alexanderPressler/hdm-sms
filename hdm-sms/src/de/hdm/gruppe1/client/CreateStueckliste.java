@@ -644,13 +644,16 @@ public class CreateStueckliste extends VerticalPanel {
 			 * notwendigen Felder befüllt sind.
 			 */
 			if (NameField.getText().isEmpty() != true) {
+				
+				FieldVerifier umlaut = new FieldVerifier();
+				String input = umlaut.changeUmlaut(NameField.getText());
 
 				/**
 				 * Der Inhalt der individuellen Benutzereingaben werden in diesen
 				 * Strings zwischengespeichert, damit im weiteren Verlauf dieser
 				 * Klasse damit gearbeitet werden kann.
 				 */
-				String nameStueckliste = NameField.getText();
+				String nameStueckliste = input;
 				
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird

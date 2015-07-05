@@ -43,12 +43,12 @@
   </servlet-mapping>
 
   <servlet>
-    <servlet-name>loginService</servlet-name>
-    <servlet-class>de.hdm.gruppe1.server.report.LoginServiceImpl</servlet-class>
+    <servlet-name>reportLoginService</servlet-name>
+    <servlet-class>de.hdm.gruppe1.server.report.ReportLoginServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>loginService</servlet-name>
+    <servlet-name>reportLoginService</servlet-name>
     <url-pattern>/report/login</url-pattern>
   </servlet-mapping>
 

@@ -672,6 +672,9 @@ public class EditStueckliste extends VerticalPanel {
 			 */
 			if (NameField.getText().isEmpty() != true) {
 				
+				FieldVerifier umlaut = new FieldVerifier();
+				String input = umlaut.changeUmlaut(NameField.getText());
+				
 				/**
 				 * Dieses Stücklisten-Objekt wird erstellt, um es in den darauffolgenden Zeilen
 				 * mit Inhalten aus den individuellen User-Eingaben in den Textfeldern zu
@@ -684,7 +687,7 @@ public class EditStueckliste extends VerticalPanel {
 				 * mithilfe Integer, da Integer die toString-Methode unterstützt.
 				 */
 				s.setId(Integer.parseInt(IdField.getText()));
-				s.setName(NameField.getText());
+				s.setName(input);
 				s.setBauteilPaare(collectBauteile);
 				s.setBaugruppenPaare(collectBaugruppen);
 				

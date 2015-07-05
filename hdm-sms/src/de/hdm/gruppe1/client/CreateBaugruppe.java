@@ -598,7 +598,6 @@ public class CreateBaugruppe extends VerticalPanel {
 				 * aufgerufen. Hierbei werden die gew�nschten Werte
 				 * mitgeschickt.
 				 */
-//				String nameStueckliste = NameField.getText();
 				String nameStueckliste = input;
 				stuecklistenVerwaltung.createBaugruppe(nameStueckliste,
 						collectBauteile, collectBaugruppen,

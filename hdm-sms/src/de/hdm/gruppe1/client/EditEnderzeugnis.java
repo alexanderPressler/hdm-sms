@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -12,8 +13,10 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.client.CreateStueckliste.CreateStuecklisteCallback;
 import de.hdm.gruppe1.client.EditBaugruppe.SaveCallback;
+import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
@@ -146,6 +149,9 @@ public class EditEnderzeugnis extends VerticalPanel {
 			 * notwendigen Felder befüllt sind.
 			 */
 			if (NameField.getText().isEmpty() != true) {
+				
+				FieldVerifier umlaut = new FieldVerifier();
+				String input = umlaut.changeUmlaut(NameField.getText());
 
 				Enderzeugnis e = new Enderzeugnis();
 				/**
@@ -154,7 +160,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 				 * mithilfe Integer, da Integer die toString-Methode unterstützt.
 				 */
 				e.setId(Integer.parseInt(IdField.getText()));
-				e.setName(NameField.getText());
+				e.setName(input);
 				
 				Baugruppe b = new Baugruppe();
 				b.setId(Integer.parseInt(BgIdField.getText()));
