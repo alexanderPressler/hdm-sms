@@ -591,12 +591,17 @@ public class CreateBaugruppe extends VerticalPanel {
 			 */
 			if (NameField.getText().isEmpty() != true) {
 
+				FieldVerifier umlaut = new FieldVerifier();
+				String input = umlaut.changeUmlaut(NameField.getText());
+				
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-				String nameStueckliste = NameField.getText();
+//				String nameStueckliste = NameField.getText();
+				String nameStueckliste = input;
+				
 				stuecklistenVerwaltung.createBaugruppe(nameStueckliste,
 						collectBauteile, collectBaugruppen,
 						new CreateBaugruppeCallback());
