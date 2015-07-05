@@ -3,6 +3,10 @@ com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException, true, true, t
 com.google.gwt.user.client.rpc.RpcTokenException, true, true, false, false, com.google.gwt.user.client.rpc.RpcTokenException/2345075298, 2345075298
 com.google.gwt.user.client.rpc.XsrfToken, false, false, true, true, com.google.gwt.user.client.rpc.XsrfToken/4254043109, 4254043109
 de.hdm.gruppe1.shared.BaugruppenReferenceException, true, true, false, false, de.hdm.gruppe1.shared.BaugruppenReferenceException/1014355239, 1014355239
+de.hdm.gruppe1.shared.DuplicateBaugruppeException, true, true, false, false, de.hdm.gruppe1.shared.DuplicateBaugruppeException/999362335, 999362335
+de.hdm.gruppe1.shared.DuplicateBauteilException, true, true, false, false, de.hdm.gruppe1.shared.DuplicateBauteilException/3592553911, 3592553911
+de.hdm.gruppe1.shared.DuplicateEnderzeugnisException, true, true, false, false, de.hdm.gruppe1.shared.DuplicateEnderzeugnisException/2992087352, 2992087352
+de.hdm.gruppe1.shared.DuplicateStuecklisteException, true, true, false, false, de.hdm.gruppe1.shared.DuplicateStuecklisteException/776416660, 776416660
 de.hdm.gruppe1.shared.LoginInfo, false, false, true, true, de.hdm.gruppe1.shared.LoginInfo/1285838330, 1285838330
 de.hdm.gruppe1.shared.Sms, false, false, false, false, _, 1313561851
 de.hdm.gruppe1.shared.SmsException, true, false, false, false, de.hdm.gruppe1.shared.SmsException/4154858253, 4154858253

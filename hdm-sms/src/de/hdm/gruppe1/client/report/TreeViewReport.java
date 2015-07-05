@@ -21,23 +21,24 @@ public class TreeViewReport extends Tree implements Serializable {
 	/**
 	 * GUI-Elemente für TreeView initialisieren
 	 */
-	TreeItem rootTreeItem = new TreeItem();
-	TreeItem tempItem = rootTreeItem;
+	private TreeItem rootTreeItem = new TreeItem();
+	private TreeItem tempItem = rootTreeItem;
 	
 	/**
 	 * Vektoren, um alle Bauteile und Baugruppen eines Baums aufzunehmen. Nachdem der Baum komplett durchlaufen
 	 * wurde und alle dabei aufgetauchten Bauteile, bzw. Baugruppen in diesen beiden Vektoren gesammelt wurden,
 	 * werden die Vektoren auf identische Bauteile, bzw. Baugruppen untersucht.
 	 */
-	Vector<ElementPaar> bauteilAusBaum = new Vector<ElementPaar>();
-	Vector<ElementPaar> baugruppeAusBaum = new Vector<ElementPaar>();
+	private Vector<ElementPaar> bauteilAusBaum = new Vector<ElementPaar>();
+	private Vector<ElementPaar> baugruppeAusBaum = new Vector<ElementPaar>();
 	
 	/**
 	 * In diesen Vektoren stehen nach Durchlaufen der Methode summateBauteile alle Bauteil- bzw. Baugruppenpaare.
 	 * Identische Bauteile- bzw. Baugruppen sind bereits zusammen addiert.
 	 */
-	Vector<ElementPaar> summedBauteile = new Vector<ElementPaar>();
-	Vector<ElementPaar> summedBaugruppen = new Vector<ElementPaar>();
+	private Vector<ElementPaar> summedBauteile = new Vector<ElementPaar>();
+
+	private Vector<ElementPaar> summedBaugruppen = new Vector<ElementPaar>();
 	
 	int anzahl;
 
@@ -46,8 +47,11 @@ public class TreeViewReport extends Tree implements Serializable {
 			
 			treeRecursion(treeViewStueckliste, anzahl);
 			summateBauteile(bauteilAusBaum);
-			
-			
+			String message = new String("SummedBauteileVektor:");
+			for(int i=0; i<summedBauteile.size();i++){
+				message=message+" "+summedBauteile.get(i).getAnzahl()+"*"+summedBauteile.get(i).getElement().getName();
+			}
+			Window.alert(message);
 			/**
 			 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
 			 * zugeordnet, da diese Klasse von VerticalPanel erbt.
@@ -141,10 +145,10 @@ public class TreeViewReport extends Tree implements Serializable {
 				/**
 				 * Der Vektor baugruppeSumme wird mit dem hier vorgefundenen ElementPaar von Baugruppe befüllt.
 				 */
-				ElementPaar baugruppenPaar = new ElementPaar();
-				baugruppenPaar.setAnzahl(anzahl);
-				baugruppenPaar.setElement(aktuellesBaugruppe);
-				baugruppeAusBaum.add(baugruppenPaar);
+				ElementPaar bauteilPaar = new ElementPaar();
+				bauteilPaar.setAnzahl(anzahl);
+				bauteilPaar.setElement(childBauteilElement);
+				bauteilAusBaum.add(bauteilPaar);
 				
 //				rootTreeItem.removeStyleName("treeIntersection");
 //				tempItem.setStyleName("treeChild");
@@ -162,10 +166,15 @@ public class TreeViewReport extends Tree implements Serializable {
 	 * @return allBauteile
 	 */
 	private Vector<ElementPaar> summateBauteile(Vector<ElementPaar> bauteilAusBaum) {
-		
+		String message= new String("BauteilAusBaum Inhalt:");
+		for(int i=0; i<bauteilAusBaum.size();i++){
+			message=message+" "+bauteilAusBaum.get(i).getAnzahl()+"*"+bauteilAusBaum.get(i).getElement().getName();
+		}
+		Window.alert(message);
 		/**
 		 * Die for-Schleife durchläuft den Vektor mit allen vorhandenen Bauteilen des Baums.
 		 */
+		int durchlauf = 0;
 		for(int i = 0; i<bauteilAusBaum.size(); i++) {
 			
 			/**
@@ -173,8 +182,9 @@ public class TreeViewReport extends Tree implements Serializable {
 			 * damit für jeden Schleifendurchlauf der ersten Schleife alle bereits vorhandenen BauteilPaare
 			 * überprüft werden.
 			 */
+			if(summedBauteile.size()!=0){
 			for(int c = 0; c<summedBauteile.size(); c++) {
-				
+				durchlauf++;
 				/**
 				 * Falls die Bauteil-Id bereits vorhanden ist, wird dessen Anzahl mit der bereits bestehenden Anzahl
 				 * verrechnet.
@@ -193,11 +203,12 @@ public class TreeViewReport extends Tree implements Serializable {
 					 * Anschließend wird das Element von Bauteil gesetzt und in den Ergebnis-Vektor summedBauteile
 					 * geschrieben.
 					 */
-					ElementPaar dublicateBauteilPaar = new ElementPaar();
-					dublicateBauteilPaar.setAnzahl(anzahlResult);
-					dublicateBauteilPaar.setElement(bauteilAusBaum.get(i).getElement());
-					summedBauteile.add(dublicateBauteilPaar);
-							
+					ElementPaar duplicateBauteilPaar = new ElementPaar();
+					duplicateBauteilPaar.setAnzahl(anzahlResult);
+					duplicateBauteilPaar.setElement(bauteilAusBaum.get(i).getElement());
+					summedBauteile.set(c, duplicateBauteilPaar);
+					break;
+					
 				}
 				
 				/**
@@ -206,15 +217,17 @@ public class TreeViewReport extends Tree implements Serializable {
 				 */
 				else {
 					
-					ElementPaar uniqueBauteilPaar = new ElementPaar();
-					uniqueBauteilPaar.setAnzahl(bauteilAusBaum.get(i).getAnzahl());
-					uniqueBauteilPaar.setElement(bauteilAusBaum.get(i).getElement());
-					summedBauteile.add(uniqueBauteilPaar);
+					summedBauteile.add(bauteilAusBaum.get(i));
 				}
-				
+			}
+			}
+			else{
+				summedBauteile.add(bauteilAusBaum.get(i));
 			}
 			
+			
 		}
+		Window.alert("Anzahl der durchläufe: "+durchlauf);
 		
 		/**
 		 * Das Ergebnis dieser Methode liefert einen Vektor mit allen Bauteilen des Baums.
@@ -223,5 +236,14 @@ public class TreeViewReport extends Tree implements Serializable {
 		return summedBauteile;
 		
 	}
+	
+	public Vector<ElementPaar> getSummedBauteile() {
+		return summedBauteile;
+	}
+
+	public Vector<ElementPaar> getSummedBaugruppen() {
+		return summedBaugruppen;
+	}
+
 	
 }

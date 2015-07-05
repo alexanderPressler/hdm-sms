@@ -629,10 +629,10 @@ public class StuecklisteMapper {
 		Stueckliste stueckliste = null;
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Stueckliste JOIN User ON Bauteile.bearbeitet_Von=User.userID WHERE name='"+name+"';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.bearbeitet_Von=User.userID WHERE name='"+name+"';");
 			if(rs.next()){
 				stueckliste= new Stueckliste();
-				stueckliste.setId(rs.getInt("id"));
+				stueckliste.setId(rs.getInt("sl_id"));
 				stueckliste.setName(rs.getString("name"));
 		    	
 		    	User user = new User();
