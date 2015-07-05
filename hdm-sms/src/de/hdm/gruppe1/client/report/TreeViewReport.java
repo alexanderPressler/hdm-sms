@@ -224,4 +224,8 @@ public class TreeViewReport extends Tree implements Serializable {
 		
 	}
 	
+	public Vector<ElementPaar> getSummedBauteile() {
+		return summedBauteile;
+	}
+	
 }
