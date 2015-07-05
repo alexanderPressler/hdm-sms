@@ -3,6 +3,7 @@ package de.hdm.gruppe1.server;
 import java.util.Date;
 import java.util.Vector;
 
+import de.hdm.gruppe1.shared.DuplicateBaugruppeException;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
@@ -186,7 +187,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
-	      throws IllegalArgumentException {
+	      throws IllegalArgumentException, DuplicateBauteilException {
+		  
+		//Überprüfen, ob ein Bauteil mit dem Namen schon existiert
+		  Bauteil bauteil = bauteilMapper.finByName(name);
+		  if(bauteil!=null){
+			  DuplicateBauteilException dBE = new DuplicateBauteilException(bauteil);
+			  throw dBE;
+		  }
 	    Bauteil b = new Bauteil();
 	    b.setName(name);
 	    b.setBauteilBeschreibung(bauteilBeschreibung);
@@ -215,7 +223,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Bauteils.
 	   */
 	  @Override
-	public void save(Bauteil b) throws IllegalArgumentException {
+	public void save(Bauteil b) throws IllegalArgumentException, DuplicateBauteilException {
+		  
+		//Überprüfen, ob ein Bauteil mit dem Namen schon existiert
+		  Bauteil bauteil = bauteilMapper.finByName(b.getName());
+		  if(bauteil!=null){
+			  DuplicateBauteilException dBE = new DuplicateBauteilException(bauteil);
+			  throw dBE;
+		  }
 		 
 	        b.setEditUser(logInfo.getUser());
 	    
@@ -285,7 +300,15 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public Stueckliste createStueckliste(String name, Vector<ElementPaar> BauteilPaare, 
-			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
+			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException, DuplicateStuecklisteException {
+		  
+		//Überprüfen, ob eine Stueckliste mit dem Namen schon existiert
+		  Stueckliste stueckliste = stuecklisteMapper.finByName(name);
+		  if(stueckliste!=null){
+			  DuplicateStuecklisteException dSE = new DuplicateStuecklisteException(stueckliste);
+			  throw dSE;
+		  }
+		  
 		Stueckliste s = new Stueckliste();
 	    s.setName(name);
 	    s.setBauteilPaare(BauteilPaare);
@@ -328,7 +351,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Bauteils.
 	   */
 	  @Override
-	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException, DuplicateStuecklisteException {
+		  
+		//Überprüfen, ob eine Stueckliste mit dem Namen schon existiert
+		  Stueckliste stueckliste = stuecklisteMapper.finByName(s.getName());
+		  if(stueckliste!=null){
+			  DuplicateStuecklisteException dSE = new DuplicateStuecklisteException(stueckliste);
+			  throw dSE;
+		  }
 		
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
@@ -405,7 +435,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare, 
-			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
+			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException, DuplicateBaugruppeException{
+		  
+		  //Überprüfen, ob eine Baugruppe mit dem Namen schon existiert
+		  Baugruppe baugruppe = baugruppenMapper.finByName(name);
+		  if(baugruppe!=null){
+			  DuplicateBaugruppeException dBE = new DuplicateBaugruppeException(baugruppe);
+			  throw dBE;
+		  }
 
 	     // Erstellungsdatum wird generiert und dem Objekt angehäng
 		Date date = new Date();
@@ -465,7 +502,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Baugruppe.
 	   */
 	  @Override
-	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException {
+	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException, DuplicateBaugruppeException {
+		  
+		//Überprüfen, ob eine Baugruppe mit dem Namen schon existiert
+		  Baugruppe baugruppe = baugruppenMapper.finByName(b.getName());
+		  if(baugruppe!=null){
+			  DuplicateBaugruppeException dBE = new DuplicateBaugruppeException(baugruppe);
+			  throw dBE;
+		  }
 		
 		  for(int i=0; i<b.getStueckliste().getBaugruppenPaare().size();i++){
 			  LoopPrevention lP = new LoopPrevention();
@@ -522,7 +566,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * @see createStueckliste(String name)
 	   */
 	  @Override
-	public Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe ) throws IllegalArgumentException {
+	public Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe ) throws IllegalArgumentException, DuplicateEnderzeugnisException {
+		  
+		//Überprüfen, ob ein Enderzeugnis mit dem Namen schon existiert
+		  Enderzeugnis enderzeugnis = enderzeugnisMapper.finByName(name);
+		  if(enderzeugnis!=null){
+			  DuplicateEnderzeugnisException dEE = new DuplicateEnderzeugnisException(enderzeugnis);
+			  throw dEE;
+		  }
 		
 
 	     // Erstellungsdatum wird generiert und dem Objekt angehäng
@@ -551,7 +602,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Enderzeugnisses.
 	   */
 	  @Override
-	public void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException {
+	public void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException, DuplicateEnderzeugnisException {
+		  
+		//Überprüfen, ob ein Enderzeugnis mit dem Namen schon existiert
+		  Enderzeugnis enderzeugnis = enderzeugnisMapper.finByName(e.getName());
+		  if(enderzeugnis!=null){
+			  DuplicateEnderzeugnisException dEE = new DuplicateEnderzeugnisException(enderzeugnis);
+			  throw dEE;
+		  }
 		
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();

@@ -629,7 +629,7 @@ public class EditBaugruppe extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Die Baugruppe wurde nicht editiert.");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override

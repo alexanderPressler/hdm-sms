@@ -64,11 +64,12 @@ public interface Sms extends RemoteService {
 	 *            MaterialBeschreibung
 	 * @return Ein fertiges Kunden-Objekt.
 	 * @throws IllegalArgumentException
+	 * @throws DuplicateBauteilException 
 	 */
 	Bauteil createBauteil(String name, String bauteilBeschreibung,
-			String materialBeschreibung) throws IllegalArgumentException;
+			String materialBeschreibung) throws IllegalArgumentException, DuplicateBauteilException;
 
-	 public void save(Bauteil b) throws IllegalArgumentException;
+	 public void save(Bauteil b) throws IllegalArgumentException, DuplicateBauteilException;
 
 	 /**
 	   * Löschen des übergebenen Bauteils.
@@ -85,33 +86,33 @@ public interface Sms extends RemoteService {
 	Stueckliste createStueckliste(String name,
 			Vector<ElementPaar> BauteilPaare,
 			Vector<ElementPaar> BaugruppenPaare)
-			throws IllegalArgumentException;
+			throws IllegalArgumentException, DuplicateStuecklisteException;
 
 	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
 
 	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
 
-	void saveStueckliste(Stueckliste s) throws IllegalArgumentException;
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException, DuplicateStuecklisteException;
 
 	User createUser(String googleID, String name)
 			throws IllegalArgumentException;
 
 	Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare,
 			Vector<ElementPaar> BaugruppenPaare)
-			throws IllegalArgumentException;
+			throws IllegalArgumentException, DuplicateBaugruppeException;
 
 	void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException;
 
-	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException;
+	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException, DuplicateBaugruppeException;
 
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 
 	Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe)
-			throws IllegalArgumentException;
+			throws IllegalArgumentException, DuplicateEnderzeugnisException;
 
 	void deleteEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException;
 
-	void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException;
+	void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException, DuplicateEnderzeugnisException;
 
 	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
 

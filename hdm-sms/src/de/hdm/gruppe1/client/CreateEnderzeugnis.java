@@ -219,7 +219,7 @@ public class CreateEnderzeugnis extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen des Enderzeugnisses ist fehlgeschlagen!");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override

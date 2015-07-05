@@ -207,7 +207,7 @@ public class EditEnderzeugnis extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Enderzeugnis wurde nicht editiert.");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override

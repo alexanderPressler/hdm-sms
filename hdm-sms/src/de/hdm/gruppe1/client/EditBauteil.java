@@ -191,7 +191,7 @@ public class EditBauteil extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Bauteil wurde nicht editiert!");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override

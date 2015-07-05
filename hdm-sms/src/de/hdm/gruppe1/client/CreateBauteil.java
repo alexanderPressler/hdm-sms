@@ -157,7 +157,7 @@ public class CreateBauteil extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen des Bauteils ist fehlgeschlagen!");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override

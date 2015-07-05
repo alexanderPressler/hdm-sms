@@ -697,7 +697,7 @@ public class CreateStueckliste extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen der Stückliste ist fehlgeschlagen!");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override

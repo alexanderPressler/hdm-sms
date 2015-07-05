@@ -624,4 +624,32 @@ public class StuecklisteMapper {
 		return vStueckliste;
  	}
 	
+	public Stueckliste finByName (String name){
+		Connection con = DBConnection.connection();
+		Stueckliste stueckliste = null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Stueckliste JOIN User ON Bauteile.bearbeitet_Von=User.userID WHERE name='"+name+"';");
+			if(rs.next()){
+				stueckliste= new Stueckliste();
+				stueckliste.setId(rs.getInt("id"));
+				stueckliste.setName(rs.getString("name"));
+		    	
+		    	User user = new User();
+		    	user.setId(rs.getInt("userID"));
+		    	user.setName(rs.getString("eMail"));
+		    	user.setGoogleID(rs.getString("googleID"));
+		    	stueckliste.setEditUser(user);
+		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	stueckliste.setEditDate(sqlDate);
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return stueckliste;
+	}
+
 }
