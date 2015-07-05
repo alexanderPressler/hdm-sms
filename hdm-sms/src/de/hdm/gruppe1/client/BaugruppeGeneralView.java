@@ -20,10 +20,10 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
 
 /**
  * Die Klasse BaugruppeGeneralView liefert eine Übersicht mit allen vorhandenen
- * Baugruppen im System und bietet Möglichkeiten, diese zu editieren oder
- * löschen.
+ * Baugruppen im System. Baugruppen können aus der Übersicht ausgewählt werden, um sie zu editieren oder
+ * zu löschen.
  * 
- * @author Mario Theiler
+ * @author Katja Thiere, Mario Thieler
  * @version 1.0
  */
 public class BaugruppeGeneralView extends VerticalPanel {
@@ -42,7 +42,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	private HorizontalPanel deleteButtonPanel = new HorizontalPanel();
 
 	/**
-	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
+	 * Erzeugen von Labels, um eine textuelle Beschreibung der dazugehörigen Buttons mitzuliefern
 	 */
 	private final Label editLabel = new Label(
 			"Markierte Baugruppe editieren ");
@@ -51,8 +51,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-
-	 * bzw. delete-Button. Dies entspricht dem neuesten Stand der
-	 * Web-Programmierung.
+	 * bzw. delete-Button. 
 	 */
 	private final Button editBtn = new Button("");
 	private final Button deleteBtn = new Button("");
@@ -92,6 +91,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		 * Damit die edit und delete Buttons horizontal angeordnet werden,
 		 * müssen diese einem separaten horizontalen Panel zugeordnet werden.
 		 */
+		
 		editButtonPanel.add(editLabel);
 		editButtonPanel.add(editBtn);
 		deleteButtonPanel.add(deleteLabel);
@@ -100,6 +100,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		/**
 		 * Diverse css-Formatierungen
 		 */
+		
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
 		HeadlineLabel.setStyleName("headline");
@@ -110,11 +111,13 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		 * einem Vektor zurückliefert. Dadurch wird der Klassen-Vektor
 		 * "allBaugruppen" befüllt.
 		 */
+		
 		stuecklistenVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 
 		/**
 		 * Die erste Reihe der Tabelle wird mit Überschriften vordefiniert.
 		 */
+		
 		table.setText(0, 0, "ID");
 		table.setText(0, 1, "Name");
 		table.setText(0, 2, "Letzter Änderer");
@@ -126,6 +129,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		 * Das FlexTable Widget unterstützt keine Headlines. Daher wird die
 		 * erste Reihe über folgenden Umweg formatiert.
 		 */
+		
 		table.getCellFormatter().addStyleName(0, 0, "tableHead");
 		table.getCellFormatter().addStyleName(0, 1, "tableHead");
 		table.getCellFormatter().addStyleName(0, 2, "tableHead");
@@ -137,6 +141,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		 * Nachdem alle Elemente geladen sind, wird alles dem VerticalPanel
 		 * zugeordnet, da diese Klasse von VerticalPanel erbt.
 		 */
+		
 		this.add(HeadlineLabel);
 		this.add(editButtonPanel);
 		this.add(deleteButtonPanel);
@@ -158,8 +163,6 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
-	 * 
-	 * @author Mario Alex
 	 * 
 	 */
 	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
@@ -308,8 +311,6 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Baugruppen-Objekt löscht.
 	 * 
-	 * @author Mario Alex
-	 * 
 	 */
 	private class deleteClickHandler implements ClickHandler {
 		@Override
@@ -339,8 +340,6 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	/**
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Delete-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario Alex
 	 *
 	 */
 	class DeleteBaugruppeCallback implements AsyncCallback<Void> {
@@ -353,9 +352,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		@Override
 		public void onSuccess(Void result) {
 
-			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
-			//Wenn nicht, dann zeige diesen Window Alert an.
-			Window.alert("Die Baugruppe wurde erfolgreich gelöscht, wenn sie nirgendwo referenziert ist.");
+			Window.alert("Die Baugruppe wurde erfolgreich gelöscht!");
 		}
 	}
 

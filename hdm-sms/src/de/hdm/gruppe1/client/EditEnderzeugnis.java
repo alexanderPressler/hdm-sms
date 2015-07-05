@@ -8,7 +8,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -16,18 +15,20 @@ import de.hdm.gruppe1.client.CreateStueckliste.CreateStuecklisteCallback;
 import de.hdm.gruppe1.client.EditBaugruppe.SaveCallback;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
-import de.hdm.gruppe1.shared.bo.Bauteil;
-import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
-import de.hdm.gruppe1.shared.bo.Stueckliste;
+
 
 /**
  * Die Klasse CreateEnderzeugnis ermöglicht dem User, Objekte von Baugruppen in
  * der Datenbank als Enderzeugnisse mit entsprechender Referenz zueinander abzuspeichern.
- * 
- * @author Mario Theiler
+ * Das Enderzeugniss kann einen differentzierten Namen zur Baugruppe annehmen, welcher für den Verkauf als
+ * externe Artikel Bezeichnung gebraucht wird. 
+ *  
+ * @author Katja Thiere, Mario Theiler
  * @version 1.0
+ * 
  */
+
 public class EditEnderzeugnis extends VerticalPanel {
 	
 	/**
@@ -46,13 +47,24 @@ public class EditEnderzeugnis extends VerticalPanel {
 	private final Label BaugruppeLabel = new Label("Gewünschte Baugruppe ändern");
 	private final Button EditEnderzeugnisButton = new Button("ändern");
 	
-	// Vektor wird mit allen Baugruppen aus der DB befüllt
+	
+	/**
+	 * Vektor wird mit allen Baugruppen aus der DB befüllt
+	 */
+	
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
-	//Horizontales Anordnen der Bauteil-Id mit Bauteil-Name
+	/**
+	 * Horizontales Anordnen der Bauteil-Id mit Bauteil-Name
+	 */
+	
 	HorizontalPanel baugruppePanel = new HorizontalPanel();
 	
-	// Remote Service via ClientsideSettings
+	/**
+	 * Remote Service via ClientsideSettings
+	 */
+	
+	
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
 	public EditEnderzeugnis(Enderzeugnis editEnderzeugnis) {
@@ -134,8 +146,6 @@ public class EditEnderzeugnis extends VerticalPanel {
 	 * wird, da es sich sonst um eine Neuanlage und nicht um einen
 	 * Editier-Vorgang handeln würde.
 	 * 
-	 * @author Mario
-	 * 
 	 */
 	private class EditClickHandler implements ClickHandler {
 		@Override
@@ -168,7 +178,6 @@ public class EditEnderzeugnis extends VerticalPanel {
 					 * mitgeschickt.
 					 */
 					
-					//TODO implementieren
 					stuecklistenVerwaltung.saveEnderzeugnis(e, new SaveCallback());
 					
 					/**
@@ -193,8 +202,6 @@ public class EditEnderzeugnis extends VerticalPanel {
 	/**
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Update-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	class SaveCallback implements AsyncCallback<Void> {

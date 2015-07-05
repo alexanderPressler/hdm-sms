@@ -20,10 +20,10 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 
 /**
- * Die Klasse CreateStueckliste ermöglicht dem User, Objekte von Stückliste in
- * der Datenbank anzulegen.
+ * Die Klasse CreateBaugruppe ermöglicht dem User, Baugruppen Objekte in
+ * die Datenbank anzulegen. Baugruppen Objekte werden als Stücklisten gespeichert.
  * 
- * @author Mario Theiler
+ * @author Katja Thiere, Mario Theiler
  * @version 1.0
  */
 public class CreateBaugruppe extends VerticalPanel {
@@ -31,6 +31,7 @@ public class CreateBaugruppe extends VerticalPanel {
 	/**
 	 * GUI-Elemente für CreateBauruppe initialisieren.
 	 */
+
 	private final Label HeadlineLabel = new Label("Baugruppe anlegen");
 	private final Label SublineLabel = new Label(
 			"Um eine Baugruppe anzulegen, füllen Sie bitte alle Felder aus und bestätigen mit dem <anlegen>-Button ihre Eingabe.");
@@ -83,15 +84,15 @@ public class CreateBaugruppe extends VerticalPanel {
 	 * werden.
 	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
-	
+
 	int c = 0;
-	
+
 	public CreateBaugruppe() {
 
 		/**
-		 * TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
-		 * die TextBox vom User fokussiert wird.
+		 * Textbox mit Eingabehilfe-String "Anzahl" der benötigten Bauteile bzw Baugruppen 
 		 */
+
 		NameField.getElement().setPropertyString("placeholder", "Name");
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
 		amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
@@ -153,9 +154,9 @@ public class CreateBaugruppe extends VerticalPanel {
 				 *  Der index dient dazu, herauszufinden, welches Element im DropDown ausgewählt wurde.
 				 */
 				final int index = listBoxBauteile.getSelectedIndex();
-				
-				/**
-				 *  amountBauteile ist eine TextBox. Diese wird hiermit in einen int-Wert umgewandelt.
+
+				/** 
+				 * Umwandlung des Datentyps amountBauteile in einen int-Wert
 				 */
 				Integer anzahl = Integer.parseInt(amountBauteile.getText());
 
@@ -166,7 +167,7 @@ public class CreateBaugruppe extends VerticalPanel {
 				ElementPaar bauteilPaar = new ElementPaar();
 				bauteilPaar.setAnzahl(anzahl);
 				bauteilPaar.setElement(allBauteile.get(index));
-				
+
 				int c = allBauteile.get(index).getId();
 
 				/**
@@ -175,7 +176,7 @@ public class CreateBaugruppe extends VerticalPanel {
 				collectBauteile.add(bauteilPaar);
 
 				/**
-				 * Das ListBox-Element, welches hinzugefügt wurde, wird für doppeltes Hinzufügen ausgegraut.
+				 *  ListBox-Element, dass das Hinzufügen von doppelten Elementpaaren spert (Elementpaar wird in der Anzeige ausgegraut)
 				 */
 				listBoxBauteile.getElement().getElementsByTagName("*").getItem(index).setAttribute("disabled", "disabled");
 
@@ -185,7 +186,7 @@ public class CreateBaugruppe extends VerticalPanel {
 				 *  bereitstellt, wird mithilfe dieser for-Schleife aufgebaut.
 				 *  Die Schleife startet bei i = 1, da die
 				 *  erste Reihe der Tabelle bereits mit den Überschriften befüllt
-				 *  ist und diese nicht überschrieben werden soll.
+				 *  ist und diese nicht Überschrieben werden soll.
 				 */
 				for (int i = 1; i <= collectBauteile.size(); i++) {
 
@@ -212,34 +213,44 @@ public class CreateBaugruppe extends VerticalPanel {
 					bauteilCollection.setWidget(a, 3, removeBtButton);
 
 					/**
-					 *  In jeder Reihe wird ein Entfernen-Button platziert, damit der User schnell und unkompliziert
-					 *  jederzeit ein ElementPaar von Bauteil wieder entfernen kann. Es ist ihm lediglich möglich,
-					 *  gesamte ElementPaare von Bauteilen zu entfernen. Dies muss er ebenfalls durchführen, wenn er
-					 *  lediglich die Anzahl ändern möchte. Das Bauteil mit der gewünschten neuen Anzahl kann er
-					 *  schnell erneut aus dem Dropdown hinzufügen.
+					 * Durch den Aufruf des Clickhandler removeBtButton 
+					 * lassen sich Elementpaare aus der BauteilCollection Tabelle wieder entfernen.
+					 * Anmerkung - Wenn lediglich die Anzahl eines Bauteil Objekt verändert werden soll, 
+					 * muss das gesamte ElementPaar von der BauteilCollection Tabelle entfernt und erneut 
+					 * mit der richtigen Anzahl der Bauteil dem Collection Table wieder hinzugefügt werden.
 					 */
 					removeBtButton.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 
 							/**
-							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
+							 * Entfernen des ElementPaares Bauteil aus dem
+							 * FlexTable.
 							 */
-							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
-							bauteilCollection.removeRow(rowIndex);
 
-							/**
-							 *  Zum anderen wird das ElementPaar von Bauteil aus dem collectBauteile Vektor entfernt.
-							 */
-							int x = a - 1;
-							
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
-							
-							collectBauteile.remove(x);
-							
+							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(bauteilCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBauteile.size(); i++){
+								if(collectBauteile.get(i).getElement().getId()==id){
+									collectBauteile.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBauteile.size();i++){
+								if(allBauteile.get(i).getId()==id){
+									listBoxBauteile.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
+							bauteilCollection.removeRow(rowIndex);
+							String message = new String("Folgende Bauteile sind noch im Vektor: ");
+							for(int i=0; i<collectBauteile.size(); i++){
+								message= message+collectBauteile.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
+
+
+
 						}
 					});
 				}
@@ -249,7 +260,8 @@ public class CreateBaugruppe extends VerticalPanel {
 		});
 
 		/**
-		 *  Mithilfe des Hinzufügen-Buttons wird die BaugruppenCollection Tabelle befüllt.
+		 *  Baugruppen Collection Tabelle 
+		 *  Mthilfe des Hinzufügen-Buttons wird die BaugruppenCollection Tabelle befüllt.
 		 */
 		collectBgButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
@@ -259,8 +271,8 @@ public class CreateBaugruppe extends VerticalPanel {
 				 */
 				int index = listBoxBaugruppen.getSelectedIndex();
 
-				/**
-				 *  amountBaugruppen ist eine TextBox. Diese wird hiermit in einen int-Wert umgewandelt.
+				/** 
+				 * Umwandlung des Datentyps amountBauteile in einen int-Wert
 				 */
 				Integer anzahl = Integer.parseInt(amountBaugruppen.getText());
 
@@ -278,10 +290,10 @@ public class CreateBaugruppe extends VerticalPanel {
 				collectBaugruppen.add(baugruppePaar);
 
 				/**
-				 * Das ListBox-Element, welches hinzugefügt wurde, wird für doppeltes Hinzufügen ausgegraut.
+				 *  ListBox-Element, dass das Hinzufügen von doppelten Elementpaaren sperrt (Elementpaar wird in der Anzeige ausgegraut)
 				 */
 				listBoxBaugruppen.getElement().getElementsByTagName("*")
-						.getItem(index).setAttribute("disabled", "disabled");
+				.getItem(index).setAttribute("disabled", "disabled");
 
 				/**
 				 *  Die Übersichtstabelle, welche für den User eine hilfreiche
@@ -289,7 +301,7 @@ public class CreateBaugruppe extends VerticalPanel {
 				 *  bereitstellt, wird mithilfe dieser for-Schleife aufgebaut.
 				 *  Die Schleife startet bei i = 1, da die
 				 *  erste Reihe der Tabelle bereits mit den Überschriften befüllt
-				 *  ist und diese nicht überschrieben werden soll.
+				 *  ist und diese nicht Überschrieben werden soll.
 				 */
 				for (int i = 1; i <= collectBaugruppen.size(); i++) {
 
@@ -316,11 +328,11 @@ public class CreateBaugruppe extends VerticalPanel {
 					baugruppeCollection.setWidget(b, 3, removeBgButton);
 
 					/**
-					 *  In jeder Reihe wird ein Entfernen-Button platziert, damit der User schnell und unkompliziert
-					 *  jederzeit ein ElementPaar von Baugruppe wieder entfernen kann. Es ist ihm lediglich möglich,
-					 *  gesamte ElementPaare von Baugruppen zu entfernen. Dies muss er ebenfalls durchführen, wenn er
-					 *  lediglich die Anzahl ändern möchte. Die Baugruppe mit der gewünschten neuen Anzahl kann er
-					 *  schnell erneut aus dem Dropdown hinzufügen.
+					 * Durch den Aufruf des Clickhandler removeBgButton 
+					 * lassen sich Elementpaare aus der BaugruppenCollection Tabelle wieder entfernen.
+					 * Anmerkung - Wenn lediglich die Anzahl eines Baugruppen Objektes verändert werden soll, 
+					 * muss das gesamte ElementPaar von der BaugruppenCollection Tabelle entfernt und erneut 
+					 * mit der richtigen Anzahl der Baugruppen dem Collection Table wieder hinzugefügt werden.
 					 */
 					removeBgButton.addClickHandler(new ClickHandler() {
 						public void onClick(ClickEvent event) {
@@ -328,22 +340,27 @@ public class CreateBaugruppe extends VerticalPanel {
 							/**
 							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
 							 */
-							int rowIndex = baugruppeCollection.getCellForEvent(
-									event).getRowIndex();
+							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(baugruppeCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								if(collectBaugruppen.get(i).getElement().getId()==id){
+									collectBaugruppen.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBaugruppen.size();i++){
+								if(allBaugruppen.get(i).getId()==id){
+									listBoxBaugruppen.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
 							baugruppeCollection.removeRow(rowIndex);
+							String message = new String("Folgende Baugruppen sind noch im Vektor: ");
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								message= message+collectBaugruppen.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
 
-							/**
-							 *  Zum anderen wird das ElementPaar von Baugruppe aus dem collectBaugruppen Vektor entfernt.
-							 */
-							int x = b - 1;
-
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
-							
-							collectBauteile.remove(x);
-							
 						}
 
 					});
@@ -353,12 +370,16 @@ public class CreateBaugruppe extends VerticalPanel {
 
 		});
 
-		// Horizontales Anordnen von zugehörigen Bauteil-Widgets
+		/**
+		 * Horizontales Anordnen von zugehörigen Bauteil-Widgets
+		 */
 		btPanel.add(amountBauteile);
 		btPanel.add(listBoxBauteile);
 		btPanel.add(collectBtButton);
 
-		// Horizontales Anordnen von zugehörigen Baugruppe-Widgets
+		/**
+		 *  Horizontales Anordnen von zugehörigen Baugruppe-Widgets
+		 */
 		bgPanel.add(amountBaugruppen);
 		bgPanel.add(listBoxBaugruppen);
 		bgPanel.add(collectBgButton);
@@ -409,10 +430,8 @@ public class CreateBaugruppe extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
 	 * der DB vorhandenen Bauteilen liefert. Die Klasse ist eine nested-class
-	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
+	 * und erlaubt daher, auf die Attribute der Übergeordneten Klasse
 	 * zuzugreifen.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
@@ -426,7 +445,7 @@ public class CreateBaugruppe extends VerticalPanel {
 		public void onSuccess(Vector<Bauteil> alleBauteile) {
 
 			/**
-			 * Der Bauteil-Vektor allBauteile wird mit dem Ergebnis dieses RPC´s
+			 * Der Bauteil-Vektor allBauteile wird mit dem Ergebnis dieses RPC's
 			 * befüllt.
 			 */
 			allBauteile = alleBauteile;
@@ -454,14 +473,12 @@ public class CreateBaugruppe extends VerticalPanel {
 
 		}
 	}
-	
+
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
 	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
-	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
+	 * und erlaubt daher, auf die Attribute der Übergeordneten Klasse
 	 * zuzugreifen.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
@@ -475,7 +492,7 @@ public class CreateBaugruppe extends VerticalPanel {
 		public void onSuccess(Vector<Baugruppe> alleBaugruppen) {
 
 			/**
-			 * Der Baugruppen-Vektor allBaugruppen wird mit dem Ergebnis dieses RPC´s
+			 * Der Baugruppen-Vektor allBaugruppen wird mit dem Ergebnis dieses RPC's
 			 * befüllt.
 			 */
 			allBaugruppen = alleBaugruppen;
@@ -504,12 +521,15 @@ public class CreateBaugruppe extends VerticalPanel {
 		}
 	}
 
-	// Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
-	// eine Hinweismeldung.
-	// Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
-	// FieldVerifier geprüft,
-	// ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
-	// ebenfalls eine Hinweismeldung.
+	/**
+	 * Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
+	 * eine Hinweismeldung.
+	 * Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
+	 * FieldVerifier geprüft,
+	 * ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
+	 * ebenfalls eine Hinweismeldung.
+	 */
+
 	private class numericBtHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -523,12 +543,15 @@ public class CreateBaugruppe extends VerticalPanel {
 		}
 	}
 
-	// Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
-	// eine Hinweismeldung.
-	// Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
-	// FieldVerifier geprüft,
-	// ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
-	// ebenfalls eine Hinweismeldung.
+	/**
+	 * Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
+	 * eine Hinweismeldung.
+	 * Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
+	 * FieldVerifier geprüft,
+	 * ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
+	 * ebenfalls eine Hinweismeldung.
+	 */
+
 	private class numericBgHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -545,8 +568,6 @@ public class CreateBaugruppe extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Baugruppen-Objekt in
 	 * der Datenbank anlegt.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	private class CreateClickHandler implements ClickHandler {
@@ -590,8 +611,6 @@ public class CreateBaugruppe extends VerticalPanel {
 	/**
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	class CreateBaugruppeCallback implements AsyncCallback<Baugruppe> {

@@ -16,10 +16,10 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 
 /**
- * Die Klasse CreateEnderzeugnis ermöglicht dem User, Objekte von Baugruppen in
+ * Die Klasse CreateEnderzeugnis ermöglicht es dem User, Objekte von Baugruppen in
  * der Datenbank als Enderzeugnisse mit entsprechender Referenz zueinander abzuspeichern.
  * 
- * @author Mario Theiler
+ * @author Katja Thiere, Mario Theiler
  * @version 1.0
  */
 public class CreateEnderzeugnis extends VerticalPanel {
@@ -38,7 +38,7 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	private final Button CreateEnderzeugnisButton = new Button("Enderzeugnis anlegen");
 	
 	/**
-	 *  Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt.
+	 *  Vektor wird mit allen Baugruppen aus der DB befüllt.
 	 */
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
@@ -52,8 +52,7 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	public CreateEnderzeugnis() {
 		
 		/**
-		 * TextBox wird mit Text vorbefüllt, der ausgeblendet wird, sobald
-		 * die TextBox vom User fokussiert wird.
+		 * Textbox mit Eingabehilfe-String Namen, Dropdown menu von Baugruppen
 		 */
 		NameField.getElement().setPropertyString("placeholder", "Name");
 		
@@ -106,8 +105,6 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
-	 * @author Mario
-	 * 
 	 */
 	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
 
@@ -137,7 +134,7 @@ public class CreateEnderzeugnis extends VerticalPanel {
 				for (int c = 0; c <= allBaugruppen.size(); c++) {
 
 					/**
-					 * Das DropDown wird mithilfe dieser for-Schleife für jede
+					 * Das DropDown wird Mithilfe dieser for-Schleife für jede
 					 * Baugruppe mit dessen Namen befüllt.
 					 */
 					listBoxBaugruppen.addItem(allBaugruppen.get(c).getName());
@@ -152,8 +149,6 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Enderzeugnis-Objekt in
 	 * der Datenbank anlegt.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	private class CreateClickHandler implements ClickHandler {
@@ -173,12 +168,17 @@ public class CreateEnderzeugnis extends VerticalPanel {
 				 */
 				String nameEnderzeugnis = NameField.getText();
 				
-				// Der index dient dazu, herauszufinden, welches Element im
-				// DropDown ausgewählt wurde
+				/**
+				 *  Der index dient dazu, herauszufinden, welches Element im
+				 *  DropDown ausgewählt wurde
+				 */
+		
 				final int index = listBoxBaugruppen.getSelectedIndex();
 				
-				// Dem Enderzeugnis wird ein Objekt von Baugruppe hinzugefügt,
-				// welches in den folgenden Zeilen mit einer Stückliste befüllt wird
+				/** Dem Enderzeugnis wird ein Objekt von Baugruppe hinzugefügt,
+				* welches in den folgenden Zeilen mit einer Stückliste befüllt wird
+				*/
+				
 				Baugruppe b = new Baugruppe();
 				b.setId(allBaugruppen.get(index).getId());
 
@@ -205,8 +205,6 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	/**
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	class CreateEnderzeugnisCallback implements AsyncCallback<Enderzeugnis> {
