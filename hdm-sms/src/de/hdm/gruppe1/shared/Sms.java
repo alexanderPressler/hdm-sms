@@ -98,11 +98,11 @@ public interface Sms extends RemoteService {
 
 	Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare,
 			Vector<ElementPaar> BaugruppenPaare)
-			throws IllegalArgumentException;
+			throws IllegalArgumentException, DublicateBaugruppeException;
 
 	void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException;
 
-	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException;
+	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException, DublicateBaugruppeException;
 
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 

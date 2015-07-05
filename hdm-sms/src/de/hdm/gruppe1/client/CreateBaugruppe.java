@@ -635,7 +635,6 @@ public class CreateBaugruppe extends VerticalPanel {
 
 		@Override
 		public void onSuccess(Baugruppe baugruppe) {
-
 			Window.alert("Die Baugruppe wurde erfolgreich angelegt.");
 		}
 	}
