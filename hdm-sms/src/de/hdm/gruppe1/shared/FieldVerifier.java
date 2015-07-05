@@ -50,13 +50,11 @@ public class FieldVerifier {
 	}
 	
 	public String changeUmlaut(String name){
-//        name = "ärmel öl über";
         
         name = name.replace("ä","ae");
         name = name.replace("ö","oe");
         name = name.replace("ü","ue");
  
-        System.out.println(name);
         return name;
 	}
 }
