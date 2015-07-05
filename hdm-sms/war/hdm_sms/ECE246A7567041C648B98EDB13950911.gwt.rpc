@@ -2,7 +2,10 @@ com.google.gwt.i18n.shared.impl.DateRecord, true, true, true, true, com.google.g
 com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException, true, true, true, true, com.google.gwt.user.client.rpc.IncompatibleRemoteServiceException/3936916533, 3936916533
 com.google.gwt.user.client.rpc.RpcTokenException, true, true, false, false, com.google.gwt.user.client.rpc.RpcTokenException/2345075298, 2345075298
 com.google.gwt.user.client.rpc.XsrfToken, false, false, true, true, com.google.gwt.user.client.rpc.XsrfToken/4254043109, 4254043109
+de.hdm.gruppe1.shared.BaugruppenReferenceException, true, true, false, false, de.hdm.gruppe1.shared.BaugruppenReferenceException/1014355239, 1014355239
+de.hdm.gruppe1.shared.LoginInfo, false, false, true, true, de.hdm.gruppe1.shared.LoginInfo/1285838330, 1285838330
 de.hdm.gruppe1.shared.Sms, false, false, false, false, _, 1313561851
+de.hdm.gruppe1.shared.SmsException, true, false, false, false, de.hdm.gruppe1.shared.SmsException/4154858253, 4154858253
 de.hdm.gruppe1.shared.bo.Baugruppe, true, true, true, true, de.hdm.gruppe1.shared.bo.Baugruppe/3751143134, 3751143134
 de.hdm.gruppe1.shared.bo.Bauteil, true, true, true, true, de.hdm.gruppe1.shared.bo.Bauteil/654340575, 654340575
 de.hdm.gruppe1.shared.bo.BusinessObject, true, false, true, false, de.hdm.gruppe1.shared.bo.BusinessObject/294087307, 294087307

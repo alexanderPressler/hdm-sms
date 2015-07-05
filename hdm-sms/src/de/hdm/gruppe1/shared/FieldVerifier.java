@@ -48,4 +48,13 @@ public class FieldVerifier {
 		return false;
 		}
 	}
+	
+	public String changeUmlaut(String name){
+        
+        name = name.replace("ä","ae");
+        name = name.replace("ö","oe");
+        name = name.replace("ü","ue");
+ 
+        return name;
+	}
 }

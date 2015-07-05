@@ -23,7 +23,7 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 public class EditBauteil extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für EditBauteil initialisieren
+	 * GUI-Elemente für EditBauteil initialisieren.
 	 */
 	private final Label HeadlineLabel = new Label("Bauteil ändern");
 	private final Label SublineLabel = new Label(
@@ -71,11 +71,10 @@ public class EditBauteil extends VerticalPanel {
 		IdField.setReadOnly(true);
 
 		/**
-		 * Diverse css-Formatierungen
+		 * Diverse css-Formatierungen.
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
-//		DescriptionField.setStyleName("DescriptionFieldText");
 		EditBauteilButton.setStyleName("Button");
 
 		/**
@@ -85,17 +84,16 @@ public class EditBauteil extends VerticalPanel {
 		EditBauteilButton.addClickHandler(new EditClickHandler());
 
 		/**
-		 * In ein Textfeld kann nur ein Text geladen werden, kein int. Daher ist
-		 * dieser Zwischenschritt notwendig: Zwischenspeichern des Werts
-		 * mithilfe Integer, da Integer die toString-Methode unterstützt, ein
-		 * einfacher int jedoch nicht.
+		 * In ein Textfeld kann nur ein Text geladen werden, kein Inhalt einer int-Variable. Daher ist
+		 * dieser Zwischenschritt notwendig: Zwischenspeichern des Werts mithilfe Integer, da Integer
+		 * die toString-Methode unterstützt, ein einfacher int jedoch nicht.
 		 * 
 		 */
 		Integer iD = new Integer(editBauteil.getId());
 
 		/**
 		 * Mithilfe des an diese Klasse übergebenen Bauteil-Objektes werden die
-		 * Textfelder befüllt.
+		 * Textfelder vorbefüllt.
 		 */
 		IdField.setText(iD.toString());
 		NameField.setText(editBauteil.getName());
@@ -103,15 +101,11 @@ public class EditBauteil extends VerticalPanel {
 		DescriptionField.setText(editBauteil.getBauteilBeschreibung());
 
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 * Abschließend wird die Klasse dem RootPanel zugeordnet.
 		 */
 		RootPanel.get("content_wrap").add(this);
 
 	}
-
-	/*
-	 * Click Handlers.
-	 */
 
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die mithilfe eines
@@ -120,23 +114,12 @@ public class EditBauteil extends VerticalPanel {
 	 * da es sich sonst um eine Neuanlage und nicht um einen Editier-Vorgang
 	 * handeln würde.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler
 	 * 
 	 */
 	private class EditClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
-
-			Bauteil b = new Bauteil();
-			/**
-			 * Aus einem Textfeld kann kein Integer-Wert ausgelesen werden,
-			 * daher ist dieser Zwischenschritt notwendig: Auslesen des Id-Werts
-			 * mithilfe Integer, da Integer die toString-Methode unterstützt.
-			 */
-			b.setId(Integer.parseInt(IdField.getText()));
-			b.setName(NameField.getText());
-			b.setBauteilBeschreibung(DescriptionField.getText());
-			b.setMaterialBeschreibung(MaterialField.getText());
 
 			/**
 			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle notwendigen Felder befüllt sind.
@@ -144,6 +127,22 @@ public class EditBauteil extends VerticalPanel {
 			if (NameField.getText().isEmpty() != true
 					&& DescriptionField.getText().isEmpty() != true
 					&& MaterialField.getText().isEmpty() != true) {
+				
+				/**
+				 * Dieses Bauteil-Objekt wird erstellt, um es in den darauffolgenden Zeilen
+				 * mit Inhalten aus den individuellen User-Eingaben in den Textfeldern zu
+				 * befüllen und dieses anschließend dem RPC mit zu geben.
+				 */
+				Bauteil b = new Bauteil();
+				/**
+				 * Aus einem Textfeld kann kein Integer-Wert ausgelesen werden,
+				 * daher ist dieser Zwischenschritt notwendig: Auslesen des Id-Werts
+				 * mithilfe Integer, da Integer die toString-Methode unterstützt.
+				 */
+				b.setId(Integer.parseInt(IdField.getText()));
+				b.setName(NameField.getText());
+				b.setBauteilBeschreibung(DescriptionField.getText());
+				b.setMaterialBeschreibung(MaterialField.getText());
 
 				/**
 				 * Die konkrete RPC-Methode für den editier-Befehl wird aufgerufen.
@@ -161,6 +160,10 @@ public class EditBauteil extends VerticalPanel {
 
 			}
 
+			/**
+			 * Falls nicht alle Felder ordnungsgemäß befüllt sind, wird dem User
+			 * folgende Hinweismeldung angezeigt.
+			 */
 			else {
 
 				Window.alert("Bitte alle Felder ausfüllen.");
@@ -174,14 +177,14 @@ public class EditBauteil extends VerticalPanel {
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Update-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler
 	 * 
 	 */
 	class SaveCallback implements AsyncCallback<Void> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Bauteil wurde nicht editiert.");
+			Window.alert("Das Bauteil wurde nicht editiert!");
 		}
 
 		@Override
