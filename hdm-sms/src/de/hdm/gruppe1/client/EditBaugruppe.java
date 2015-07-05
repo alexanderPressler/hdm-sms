@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
@@ -21,17 +23,18 @@ import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
- * Die Klasse EditBaugruppe erhält bei Aufruf ein zuvor ausgewähltes
- * Baugruppen-Objekt. Dieses kann dann mithilfe dieser Klasse editiert werden.
- * 
- * @author Mario Theiler
- * @version 1.0
+ *  Mit der Klasse EditBaugruppe lassen sich Baugruppen Objekte editieren. 
+ *  Die Klasse bietet eine Übersicht der bereits verwendeten Baugruppen und Bauteile. Diese lassen sich löschen sowei neue. 
+ *  Bauteile oder Baugruppen der Baugruppe hinzufügen
+ * Die Klasse erbt von Vertical Panel.
  */
+
 public class EditBaugruppe extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für EditBaugruppe initialisieren
+	 * GUI-Elemente um EditBaugruppe zu initialisieren 
 	 */
+	
 	private final Label HeadlineLabel = new Label("Baugruppe ändern");
 	private final Label SublineLabel = new Label(
 			"Um eine Baugruppe zu ändern, füllen Sie bitte alle Felder aus und bestätigen mit dem <editieren>-Button ihre Eingabe.");
@@ -56,44 +59,79 @@ public class EditBaugruppe extends VerticalPanel {
 	private final Button collectBgButton = new Button("hinzufügen");
 	private final Button EditBaugruppeButton = new Button("ändern");
 
-	// Panels, um die hinzufügen-Buttons neben den Dropdowns zu platzieren
+	/**
+	 *  Horizontale Panels, um weitere Baugruppen oder Bauteil-Elemente der Baugruppe hinzuzufügen
+	 */
+
 	HorizontalPanel btPanel = new HorizontalPanel();
 	HorizontalPanel bgPanel = new HorizontalPanel();
+	
+	/**
+	 *  Horizontales Panel zur Anzeige der dazugehörigen Stückliste einer Baugruppe. Die Ausgabe kann nicht editiert werden
+	 */
+	
 	HorizontalPanel stuecklistePanel = new HorizontalPanel();
-
-	// Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
+	
+	/**
+	 * Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
+	 */
+	
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 
-	// Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu
-	// sammeln, bevor die Baugruppe gespeichert wird
+	/**
+	 * Vektoren mit allen Bauteilen und Baugruppen, die einer Baugruppe zugeordnet sind oder
+	 * neu hinzugefügt wurden
+	 */
+	
 	Vector<ElementPaar> collectBauteile = new Vector<ElementPaar>();
 	Vector<ElementPaar> collectBaugruppen = new Vector<ElementPaar>();
 
-	// Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die
-	// Baugruppe gespeichert wird
+	/**
+	 * Ausgabe aller enthaltenen Baugruppen/Bauteile eine Baugruppe mithilfe eines Flextables 
+	 */
+	
 	FlexTable bauteilCollection = new FlexTable();
 	FlexTable baugruppeCollection = new FlexTable();
+	
+	
+	Baugruppe eBaugruppe= new Baugruppe();
 
 	/**
 	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
 	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
 	 * werden.
 	 */
+	
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
+	
+	/**
+	 * Methode, um Bauteile bzw. Baugruppen der Baugruppe hinzu zu fügen
+	 */
 
 	public EditBaugruppe(Baugruppe editBaugruppe) {
-
-		// TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
-		// die TextBox vom User fokussiert wird
+		
+		eBaugruppe=editBaugruppe;
+		
+		
+		/**
+		 * Textbox mit Eingabehilfe-STring Anzahl benötigter Bauteile bzw Baugruppen 
+		 */
+		
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
 		amountBaugruppen.getElement().setPropertyString("placeholder", "Anzahl");
 
-		// ClickHandler um zu prüfen, ob die Texteingabe numerisch ist
+		/**
+		 * ClickHandler um zu prüfen, ob die Texteingabe numerisch ist
+		 */
+		
 		collectBtButton.addClickHandler(new numericBtHandler());
 		collectBgButton.addClickHandler(new numericBgHandler());
 
-		// Die erste Reihe der Tabelle wird mit Überschriften vordefiniert
+		/**
+		 * Flextable, Ausgabe enthaltende Elemente der Baugruppe
+		 */
+
 		bauteilCollection.setText(0, 0, "ID");
 		bauteilCollection.setText(0, 1, "Anzahl");
 		bauteilCollection.setText(0, 2, "Name");
@@ -104,12 +142,16 @@ public class EditBaugruppe extends VerticalPanel {
 		baugruppeCollection.setText(0, 2, "Name");
 		baugruppeCollection.setText(0, 3, "Entfernen");
 
-		// css für Tabelle definieren
+
 		bauteilCollection.setStyleName("tableBody");
 		baugruppeCollection.setStyleName("tableBody");
+		
+		/**
+		 * Das FlexTable Widget unterstützt keine Headlines. Daher wird die
+		 * erste Reihe über folgenden Umweg formatiert
+		 */
 
-		// Das FlexTable Widget unterstützt keine Headlines. Daher wird die
-		// erste Reihe über folgenden Umweg formatiert
+		
 		bauteilCollection.getCellFormatter().addStyleName(0, 0, "tableHead");
 		bauteilCollection.getCellFormatter().addStyleName(0, 1, "tableHead");
 		bauteilCollection.getCellFormatter().addStyleName(0, 2, "tableHead");
@@ -122,8 +164,12 @@ public class EditBaugruppe extends VerticalPanel {
 		
 		for(int i = 0; i<editBaugruppe.getStueckliste().getBauteilPaare().size(); i++) {
 			
-			// Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
-			// welches in den folgenden Zeilen befüllt wird
+			/**
+			 * Der Tabelle wird ein Objekt von ElementPaar hinzugefügt,
+			 * welches in den folgenden Zeilen befüllt wird
+			 */
+			
+			
 			ElementPaar bauteilPaar = new ElementPaar();
 			bauteilPaar.setAnzahl(editBaugruppe.getStueckliste().getBauteilPaare().get(i).getAnzahl());
 			bauteilPaar.setElement(editBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement());
@@ -140,6 +186,7 @@ public class EditBaugruppe extends VerticalPanel {
 			bauteilCollection.setText(i+1, 1, ""+ editBaugruppe.getStueckliste().getBauteilPaare().get(i).getAnzahl());
 			bauteilCollection.setText(i+1, 2, editBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement().getName());
 			bauteilCollection.setWidget(i+1, 3, removeBtButton);
+
 			
 			// Der Wert von i muss final sein, damit sie im
 			// nachfolgenden ClickHandler verwendet werden kann.
@@ -162,19 +209,25 @@ public class EditBaugruppe extends VerticalPanel {
 					// Zum einen wird die entsprechende Reihe aus der
 					// FlexTable entfernt.
 					int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+					Integer id = new Integer(bauteilCollection.getText(rowIndex, 0));
+					for(int i=0; i<collectBauteile.size(); i++){
+						if(collectBauteile.get(i).getElement().getId()==id){
+							collectBauteile.remove(i);
+							break;
+						}
+					}
+					for(int i=0; i<allBauteile.size();i++){
+						if(allBauteile.get(i).getId()==id){
+							listBoxBauteile.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+							break;
+						}
+					}
 					bauteilCollection.removeRow(rowIndex);
-
-					// Zum anderen wird das ElementPaar von Bauteil aus
-					// dem collectBauteile Vektor entfernt
-					int x = a - 1;
-					Window.alert("Gelöscht wird: "+collectBauteile.get(a).getElement().getName());
-
-					// TODO implementieren
-					// ListBox-Element, das hinzugefügt wurde, wird für
-					// doppeltes Hinzufügen gesperrt
-					listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
-					
-					collectBauteile.remove(a);
+					String message = new String("Folgende Bauteile sind noch im Vektor: ");
+					for(int i=0; i<collectBauteile.size(); i++){
+						message= message+collectBauteile.get(i).getElement().getName()+" , ";
+					}
+					Window.alert(message);
 					
 				}
 			});
@@ -191,7 +244,7 @@ public class EditBaugruppe extends VerticalPanel {
 
 			// Dem Vektor aller Bauteile der Baugruppe wird das soeben
 			// erstellte ElementPaar hinzugefügt
-			collectBauteile.add(baugruppenPaar);
+			collectBaugruppen.add(baugruppenPaar);
 			
 			// Button, um in der BauteilCollection-Tabelle und
 			// gleichzeitig dem Vektor ein Bauteil wieder zu entfernen
@@ -223,19 +276,25 @@ public class EditBaugruppe extends VerticalPanel {
 					// Zum einen wird die entsprechende Reihe aus der
 					// FlexTable entfernt.
 					int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+					Integer id = new Integer(baugruppeCollection.getText(rowIndex, 0));
+					for(int i=0; i<collectBaugruppen.size(); i++){
+						if(collectBaugruppen.get(i).getElement().getId()==id){
+							collectBaugruppen.remove(i);
+							break;
+						}
+					}
+					for(int i=0; i<allBaugruppen.size();i++){
+						if(allBaugruppen.get(i).getId()==id){
+							listBoxBaugruppen.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+							break;
+						}
+					}
 					baugruppeCollection.removeRow(rowIndex);
-
-					// Zum anderen wird das ElementPaar von Bauteil aus
-					// dem collectBauteile Vektor entfernt
-					int x = a - 1;
-					Window.alert("Gelöscht wird: "+collectBaugruppen.get(a).getElement().getName());
-
-					// TODO implementieren
-					// ListBox-Element, das hinzugefügt wurde, wird für
-					// doppeltes Hinzufügen gesperrt
-					listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).removeAttribute("disabled");
-					
-					collectBaugruppen.remove(a);
+					String message = new String("Folgende Baugruppen sind noch im Vektor: ");
+					for(int i=0; i<collectBaugruppen.size(); i++){
+						message= message+collectBaugruppen.get(i).getElement().getName()+" , ";
+					}
+					Window.alert(message);
 					
 				}
 			});
@@ -314,18 +373,25 @@ public class EditBaugruppe extends VerticalPanel {
 							// Zum einen wird die entsprechende Reihe aus der
 							// FlexTable entfernt.
 							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(bauteilCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBauteile.size(); i++){
+								if(collectBauteile.get(i).getElement().getId()==id){
+									collectBauteile.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBauteile.size();i++){
+								if(allBauteile.get(i).getId()==id){
+									listBoxBauteile.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
 							bauteilCollection.removeRow(rowIndex);
-
-							// Zum anderen wird das ElementPaar von Bauteil aus
-							// dem collectBauteile Vektor entfernt
-							int x = a - 1;
-							
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("option").getItem(x).setAttribute("enabled", "enabled");
-
-							collectBauteile.remove(x);
+							String message = new String("Folgende Bauteile sind noch im Vektor: ");
+							for(int i=0; i<collectBauteile.size(); i++){
+								message= message+collectBauteile.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
 							
 						}
 					});
@@ -413,20 +479,26 @@ public class EditBaugruppe extends VerticalPanel {
 
 							// Zum einen wird die entsprechende Reihe aus der
 							// FlexTable entfernt.
-							int rowIndex = baugruppeCollection.getCellForEvent(
-									event).getRowIndex();
+							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
+							Integer id = new Integer(baugruppeCollection.getText(rowIndex, 0));
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								if(collectBaugruppen.get(i).getElement().getId()==id){
+									collectBaugruppen.remove(i);
+									break;
+								}
+							}
+							for(int i=0; i<allBaugruppen.size();i++){
+								if(allBaugruppen.get(i).getId()==id){
+									listBoxBaugruppen.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
 							baugruppeCollection.removeRow(rowIndex);
-
-							// Zum anderen wird das ElementPaar von Baugruppe
-							// aus dem collectBaugruppen Vektor entfernt
-							int x = b - 1;
-
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBaugruppen.getElement().getElementsByTagName("option").getItem(x).setAttribute("disabled", "disabled");
-
-							collectBaugruppen.remove(x);
+							String message = new String("Folgende Baugruppen sind noch im Vektor: ");
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								message= message+collectBaugruppen.get(i).getElement().getName()+" , ";
+							}
+							Window.alert(message);
 							
 						}
 
@@ -645,6 +717,13 @@ public class EditBaugruppe extends VerticalPanel {
 					 * Bauteil mit dessen Namen befüllt.
 					 */
 					listBoxBauteile.addItem(allBauteile.get(c).getName());
+					for (int i=0; i<eBaugruppe.getStueckliste().getBauteilPaare().size();i++){
+						if(allBauteile.get(c).getId()==eBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement().getId()){
+							listBoxBauteile.getElement().getElementsByTagName("*")
+							.getItem(c).setAttribute("disabled", "disabled");
+						}
+					}
+					
 
 				}
 
@@ -694,6 +773,12 @@ public class EditBaugruppe extends VerticalPanel {
 					 * Baugruppe mit dessen Namen befüllt.
 					 */
 					listBoxBaugruppen.addItem(allBaugruppen.get(c).getName());
+					for (int i=0; i<eBaugruppe.getStueckliste().getBaugruppenPaare().size();i++){
+						if(allBaugruppen.get(c).getId()==eBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement().getId()){
+							listBoxBaugruppen.getElement().getElementsByTagName("*")
+							.getItem(c).setAttribute("disabled", "disabled");
+						}
+					}
 
 				}
 
