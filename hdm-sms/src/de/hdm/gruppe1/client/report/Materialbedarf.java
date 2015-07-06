@@ -22,6 +22,7 @@ import de.hdm.gruppe1.client.report.Strukturstuecklisten.GetAllBaugruppenCallbac
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
+import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.report.SmsReportAsync;
@@ -43,6 +44,10 @@ public class Materialbedarf extends VerticalPanel {
 	private DateTimeFormat creationDate = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
 	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date));
 	private String impressumString = new String();
+	private String headlineForSummedBauteile = new String("Summe der Bauteile");
+	private String headlineForSummedBaugruppen = new String("Summe der Baugruppen");
+	private String bauteilTableString = new String();
+	private String baugruppeTableString = new String();
 	
 	// Panel, um das Baugruppen-Dropdown neben der Anzahl-TextBox zu platzieren
 	HorizontalPanel eEPanel = new HorizontalPanel();
@@ -196,8 +201,41 @@ public class Materialbedarf extends VerticalPanel {
 					
 					Integer anzahl =  Integer.parseInt(amountEnderzeugnisse.getText());
 					TreeViewReport treeReport = new TreeViewReport(enderzeugnisStueckliste,anzahl);
-					HTML reportHTML = new HTML("<h3>"+headlineString+enderzeugnis.getName()+"</h3>"+anzahlString+anzahl+"</br>"+creationDateString+"</p>"+treeReport.toString()+"<p>"+impressumString);
 					
+					/**
+					 * Mithilfe des treeReport-Objektes wird an dieser Stelle der Ergebnis-Vektor aller Bauteile
+					 * herangezogen, um ihn anschließend aufzubereiten und als HTML anzuzeigen.
+					 */
+					Vector<ElementPaar> bauteileAsHtml = treeReport.getSummedBauteile();
+					
+					/**
+					 * Diese for-Schleife schreibt für jedes Element im Bauteil-Vektor einen Eintrag und trennt diese
+					 * Einträge mithilfe eines HTML-Tags.
+					 */
+					for(int b = 0; b<bauteileAsHtml.size(); b++) {
+						bauteilTableString=bauteilTableString+bauteileAsHtml.get(b).getAnzahl()+" * "+bauteileAsHtml.get(b).getElement().getName()+"</br>";
+					}
+					
+					/**
+					 * Mithilfe des treeReport-Objektes wird an dieser Stelle der Ergebnis-Vektor aller Baugruppen
+					 * herangezogen, um ihn anschließend aufzubereiten und als HTML anzuzeigen.
+					 */
+					Vector<ElementPaar> baugruppenAsHtml = treeReport.getSummedBaugruppen();
+					
+					/**
+					 * Diese for-Schleife schreibt für jedes Element im Baugruppen-Vektor einen Eintrag und trennt diese
+					 * Einträge mithilfe eines HTML-Tags.
+					 */
+					for(int c = 0; c<baugruppenAsHtml.size(); c++) {
+						baugruppeTableString=baugruppeTableString+baugruppenAsHtml.get(c).getAnzahl()+" * "+baugruppenAsHtml.get(c).getElement().getName()+"</br>";
+					}
+					
+					/**
+					 * Das HTML-Widget ist in der Lage HTML-Tags zu interpretieren und eignet sich daher ideal für eine
+					 * Anzeige des Reports in statischem HTML.
+					 */
+					HTML reportHTML = new HTML("<h3>"+headlineString+enderzeugnis.getName()+"</h3>"+anzahlString+anzahl+"</br>"+creationDateString+"</p>"+treeReport.toString()+"<p>"+headlineForSummedBauteile+"<p>"+bauteilTableString+"<p>"+headlineForSummedBaugruppen+"<p>"+baugruppeTableString+"<p>"+impressumString);
+										
 					RootPanel.get("content_wrap").clear();
 					RootPanel.get("content_wrap").add(reportHTML);
 				}

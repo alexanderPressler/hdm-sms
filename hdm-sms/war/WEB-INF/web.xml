@@ -23,11 +23,12 @@
   
   <servlet-mapping>
     <servlet-name>SmsReportServlet</servlet-name>
-    <url-pattern>/hdm_sms/smsReport</url-pattern>
+ <url-pattern>/de.hdm.gruppe1.HdM_smsReport/smsReport</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>
+    <welcome-file>Hdm_smsEntry.html</welcome-file>
     <welcome-file>Hdm_sms.html</welcome-file>
     <welcome-file>Hdm_smsReport.html</welcome-file>
   </welcome-file-list>

@@ -23,7 +23,7 @@ import de.hdm.gruppe1.shared.bo.User;
  * gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
- * 
+ * @see CustomerMapper, TransactionMapper
  * @author Thies
  */
 public class StuecklisteMapper {
@@ -119,7 +119,7 @@ public class StuecklisteMapper {
 
 				//TODO Tabellenspalte "ersteller" aus DB löschen. Anschließend Statement hier anpassen (herauslöschen)
 				// Jetzt erst erfolgt die tatsächliche Einfügeoperation
-				stmt.executeUpdate("INSERT INTO `Stueckliste` VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '"+ stueckliste.getEditDate() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getCreationDate() +"');");
+				stmt.executeUpdate("INSERT INTO `Stueckliste` VALUES ('"+ stueckliste.getId() +"', '"+  stueckliste.getName()  +"', '"+ stueckliste.getEditDate() +"', '"+ stueckliste.getEditUser().getId() +"', '"+ stueckliste.getCreationDate() +"');");
 			
 				//Bauteile hinzufügen
 				for(int i=0;i<stueckliste.getBauteilPaare().size();i++){
@@ -622,6 +622,34 @@ public class StuecklisteMapper {
 			e.printStackTrace();
 		}
 		return vStueckliste;
- 
+ 	}
+	
+	public Stueckliste finByName (String name){
+		Connection con = DBConnection.connection();
+		Stueckliste stueckliste = null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Stueckliste JOIN User ON Stueckliste.bearbeitet_Von=User.userID WHERE name='"+name+"';");
+			if(rs.next()){
+				stueckliste= new Stueckliste();
+				stueckliste.setId(rs.getInt("sl_id"));
+				stueckliste.setName(rs.getString("name"));
+		    	
+		    	User user = new User();
+		    	user.setId(rs.getInt("userID"));
+		    	user.setName(rs.getString("eMail"));
+		    	user.setGoogleID(rs.getString("googleID"));
+		    	stueckliste.setEditUser(user);
+		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	stueckliste.setEditDate(sqlDate);
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return stueckliste;
 	}
+
 }

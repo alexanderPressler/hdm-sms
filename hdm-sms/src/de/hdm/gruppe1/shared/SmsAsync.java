@@ -12,12 +12,12 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.bo.User;
 
 /**
- * Das asynchrone Gegenstück des Interface {@link BankAdministration}. Es wird
+ * Das asynchrone Gegenstück des Interface {@link Sms}. Es wird
  * semiautomatisch durch das Google Plugin erstellt und gepflegt. Daher erfolgt
  * hier keine weitere Dokumentation. Für weitere Informationen siehe das
- * synchrone Interface {@link BankAdministration}.
+ * synchrone Interface {@link Sms}.
  * 
- * @author Alexander Pressler &  thies
+ * @author  Pressler &  thies & schmidt
  */
 public interface SmsAsync {
 	
@@ -66,4 +66,5 @@ public interface SmsAsync {
 	void getAllEnderzeugnis(AsyncCallback<Vector<Enderzeugnis>> callback);
 
 	void getBaugruppeById(int id, AsyncCallback<Baugruppe> callback);
+	void setLoginInfo (LoginInfo loginInfo, AsyncCallback<Void> callback);
 }

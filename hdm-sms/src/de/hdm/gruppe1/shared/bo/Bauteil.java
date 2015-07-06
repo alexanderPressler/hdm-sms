@@ -10,17 +10,34 @@ public class Bauteil extends Element {
 	String bauteilBeschreibung = "leer";
 	String materialBeschreibung = "leer";
 
+	/**
+	 * Beschrebung eines Bauteil auslesen
+	 * @return bauteilBeschreibung
+	 */
 	public String getBauteilBeschreibung() {
 		return this.bauteilBeschreibung;
 	}
 
+	/**
+	 * Eine Beschreibung für Bauteil setzten
+	 * @param bauteilBeschreibung
+	 */
 	public void setBauteilBeschreibung(String bauteilBeschreibung) {
 		this.bauteilBeschreibung = bauteilBeschreibung;
 	}
 
+	/**
+	 * Eine Materialbeschriebung auslesen
+	 * @return
+	 */
 	public String getMaterialBeschreibung() {
 		return this.materialBeschreibung;
 	}
+
+	/**
+	 * setzten der Beschreibung eines Bauteilmaterials
+	 * @param materialBeschreibung
+	 */
 	public void setMaterialBeschreibung(String materialBeschreibung) {
 		this.materialBeschreibung = materialBeschreibung;
 	}

@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -11,6 +12,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
+import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
@@ -165,13 +168,16 @@ public class CreateEnderzeugnis extends VerticalPanel {
 			 * notwendigen Felder befüllt sind.
 			 */
 			if (NameField.getText().isEmpty() != true) {
-
+				
+				FieldVerifier umlaut = new FieldVerifier();
+				String input = umlaut.changeUmlaut(NameField.getText());
+				
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-				String nameEnderzeugnis = NameField.getText();
+				String nameEnderzeugnis = input;
 				
 				// Der index dient dazu, herauszufinden, welches Element im
 				// DropDown ausgewählt wurde
@@ -213,7 +219,7 @@ public class CreateEnderzeugnis extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen des Enderzeugnisses ist fehlgeschlagen!");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override

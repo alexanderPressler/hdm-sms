@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.hdm.gruppe1.server.db;
 
 import java.sql.*;
@@ -104,12 +101,13 @@ public class EnderzeugnisMapper {
 	public Enderzeugnis findByID(int id){
 		Connection con = DBConnection.connection();
 		
-		Enderzeugnis enderzeugnis = new Enderzeugnis();
+		Enderzeugnis enderzeugnis = null;
 		//Da ich ein int nicht einfach durch casting in einen String wandeln kann, muss dies Ã¼ber eine Instanz der Klasse Integer geschehen
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis WHERE ee_ID='"+id+"';");
 			if(rs.next()){
+				enderzeugnis = new Enderzeugnis();
 				enderzeugnis.setId(rs.getInt("ee_ID"));
 				enderzeugnis.setName(rs.getString("name"));
 				
@@ -215,4 +213,39 @@ public class EnderzeugnisMapper {
 		}
 		return vEnderzeugnis;
  	}
+	
+	public Enderzeugnis finByName (String name){
+		Connection con = DBConnection.connection();
+		Enderzeugnis enderzeugnis = null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Enderzeugnis WHERE name='"+name+"';");
+			if(rs.next()){
+				enderzeugnis = new Enderzeugnis();
+				enderzeugnis.setId(rs.getInt("ee_ID"));
+				enderzeugnis.setName(rs.getString("name"));
+				
+				// Add User to Enderzeugnis
+				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				UserMapper um = UserMapper.userMapper(); 
+				User zugehörigerUser = um.findByID(zugehörigeUserID);
+				enderzeugnis.setEditUser(zugehörigerUser);
+				
+				// Add Baugruppe to Enderzeugnis
+				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper(); 
+				Baugruppe zugehörigeBaugruppe = bm.findByID(zugehörigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				
+				// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	 enderzeugnis.setEditDate(sqlDate);
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return enderzeugnis;
+	}
 }

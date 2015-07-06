@@ -14,7 +14,8 @@ public class BaugruppenReferenceException extends SmsException {
 	
 	public BaugruppenReferenceException(Baugruppe cause) {
 		super(cause);
-		this.setMessage("Die Baugruppe '"+cause.getName()+"' konnte nicht hinzugefügt werden, da ansonsten ein Datenbank-Loop entstehen würde.");
+		this.setMessage("Die Baugruppe '"+cause.getName()+"' konnte nicht"
+				+ " hinzugefügt werden, da ansonsten ein Datenbank-Loop entstehen würde.");
 	}
 
 }

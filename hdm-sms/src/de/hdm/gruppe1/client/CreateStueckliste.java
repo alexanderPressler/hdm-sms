@@ -1,6 +1,7 @@
 package de.hdm.gruppe1.client;
 
 import java.util.Vector;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
@@ -53,27 +55,27 @@ public class CreateStueckliste extends VerticalPanel {
 
 	/**
 	 * Einige GUI-Elemente sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
-	 * ein "horizontales Zwischen-Panel" benötigt.
+	 * ein horizontales "Zwischen-Panel" benötigt.
 	 */
 	HorizontalPanel btPanel = new HorizontalPanel();
 	HorizontalPanel bgPanel = new HorizontalPanel();
 
 	/**
-	 *  Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt.
+	 *  Diese Vektoren werden mit allen Bauteilen bzw. Baugruppen aus der DB befüllt.
 	 */
 	Vector<Bauteil> allBauteile = new Vector<Bauteil>();
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 
 	/**
 	 *  Vektoren, um die hinzugefügten Bauteile/Baugruppen in einer Übersicht zu
-	 *  sammeln, bevor die Baugruppe gespeichert wird.
+	 *  sammeln, bevor die Stückliste gespeichert wird.
 	 */
 	Vector<ElementPaar> collectBauteile = new Vector<ElementPaar>();
 	Vector<ElementPaar> collectBaugruppen = new Vector<ElementPaar>();
 
 	/**
 	 *  Tabellen, um in der GUI alle Bauteile/Baugruppen anzuzeigen, bevor die
-	 *  Baugruppe gespeichert wird.
+	 *  Stückliste gespeichert wird.
 	 */
 	FlexTable bauteilCollection = new FlexTable();
 	FlexTable baugruppeCollection = new FlexTable();
@@ -85,13 +87,14 @@ public class CreateStueckliste extends VerticalPanel {
 	 */
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
-	int c = 0;
+//	int c = 0;
 	
 	public CreateStueckliste() {
 
 		/**
 		 * TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
-		 * die TextBox vom User fokussiert wird.
+		 * die TextBox vom User fokussiert wird. Dadurch wird eine klare Übersicht
+		 * für den Benutzer geschaffen.
 		 */
 		NameField.getElement().setPropertyString("placeholder", "Name");
 		amountBauteile.getElement().setPropertyString("placeholder", "Anzahl");
@@ -104,7 +107,8 @@ public class CreateStueckliste extends VerticalPanel {
 		collectBgButton.addClickHandler(new numericBgHandler());
 
 		/**
-		 * Die erste Reihe der Tabellen wird mit Überschriften vordefiniert.
+		 * Die erste Reihe der Tabelle wird mit Überschriften vordefiniert. Aus diesem Grund wird in allen
+		 * nachfolgenden Funktionen, in denen die Tabelle befüllt wird, jeweils der Reihen-Index +1 gesetzt.
 		 */
 		bauteilCollection.setText(0, 0, "ID");
 		bauteilCollection.setText(0, 1, "Anzahl");
@@ -117,7 +121,7 @@ public class CreateStueckliste extends VerticalPanel {
 		baugruppeCollection.setText(0, 3, "Entfernen");
 
 		/**
-		 * Diverse css-Formatierungen für die Tabelle
+		 * Diverse css-Formatierungen für die Tabelle.
 		 */
 		bauteilCollection.setStyleName("tableBody");
 		baugruppeCollection.setStyleName("tableBody");
@@ -155,12 +159,12 @@ public class CreateStueckliste extends VerticalPanel {
 				final int index = listBoxBauteile.getSelectedIndex();
 				
 				/**
-				 *  amountBauteile ist eine TextBox. Diese wird hiermit in einen int-Wert umgewandelt.
+				 *  amountBauteile ist eine TextBox. Dessen Inhalt wird hiermit in einen int-Wert umgewandelt.
 				 */
 				Integer anzahl = Integer.parseInt(amountBauteile.getText());
 
 				/**
-				 *  Der Vektor collectBauteile wird ein Objekt von ElementPaar hinzugefügt,
+				 *  Dem Vektor collectBauteile wird ein Objekt von ElementPaar hinzugefügt,
 				 *  welches in den folgenden Zeilen befüllt wird.
 				 */
 				ElementPaar bauteilPaar = new ElementPaar();
@@ -177,14 +181,6 @@ public class CreateStueckliste extends VerticalPanel {
 				 */
 				listBoxBauteile.getElement().getElementsByTagName("*").getItem(index).setAttribute("disabled", "disabled");
 
-//				listBoxBauteile.clear();
-//				for(int i = 0; i<allBauteile.size(); i++){
-//					
-//					if(allBauteile.get(i).getName() != collectBauteile.get(i - 1).getElement().getName())
-//					
-//						listBoxBauteile.addItem(allBauteile.get(i).getName());
-//				}
-				
 				/**
 				 *  Die Übersichtstabelle, welche für den User eine hilfreiche
 				 *  Übersicht aller hinzugefügten Bauteile
@@ -229,22 +225,42 @@ public class CreateStueckliste extends VerticalPanel {
 						public void onClick(ClickEvent event) {
 
 							/**
-							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
+							 * Mithilfe dieses Abschnitts wird die aktuell angeklickte Reihe ermittelt.
 							 */
 							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
-							bauteilCollection.removeRow(rowIndex);
-
+							
 							/**
-							 *  Zum anderen wird das ElementPaar von Bauteil aus dem collectBauteile Vektor entfernt.
+							 * Anschließend kann mithilfe dieses Row-Indexes die ID des zugehörigen
+							 * Bauteils ausgelesen werden.
 							 */
-							int x = a - 1;
+							Integer id = new Integer(bauteilCollection.getText(rowIndex, 0));
 							
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
+							/**
+							 * Mithilfe der Id wird in dieser for-Schleife das entsprechende Bauteil im
+							 * collectBauteile-Vektor entfernt. Wurde es gefunden, bricht die Schleife ab.
+							 */
+							for(int i=0; i<collectBauteile.size(); i++){
+								if(collectBauteile.get(i).getElement().getId()==id){
+									collectBauteile.remove(i);
+									break;
+								}
+							}
 							
-							collectBauteile.remove(x);
+							/**
+							 * Zudem wird auch das Bauteil (ebenfalls mithilfe seiner Id) im Dropdown
+							 * ausgegraut und für weiteres Hinzufügen gesperrt.
+							 */
+							for(int i=0; i<allBauteile.size();i++){
+								if(allBauteile.get(i).getId()==id){
+									listBoxBauteile.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
+							
+							/**
+							 * Hiermit erfolgt das Entfernen der zugehörigen Reihe in der FlexTable.
+							 */
+							bauteilCollection.removeRow(rowIndex);
 							
 						}
 					});
@@ -278,7 +294,7 @@ public class CreateStueckliste extends VerticalPanel {
 				Integer anzahl = Integer.parseInt(amountBaugruppen.getText());
 
 				/**
-				 *  Der Vektor collectBauteile wird ein Objekt von ElementPaar hinzugefügt,
+				 *  Dem Vektor collectBauteile wird ein Objekt von ElementPaar hinzugefügt,
 				 *  welches in den folgenden Zeilen befüllt wird.
 				 */
 				ElementPaar baugruppePaar = new ElementPaar();
@@ -339,22 +355,38 @@ public class CreateStueckliste extends VerticalPanel {
 						public void onClick(ClickEvent event) {
 
 							/**
-							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
+							 * Mithilfe der Id wird in dieser for-Schleife die entsprechende Baugruppe im
+							 * collectBaugruppen-Vektor entfernt. Wurde es gefunden, bricht die Schleife ab.
 							 */
 							int rowIndex = baugruppeCollection.getCellForEvent(event).getRowIndex();
-							baugruppeCollection.removeRow(rowIndex);
-
-							/**
-							 *  Zum anderen wird das ElementPaar von Baugruppe aus dem collectBaugruppen Vektor entfernt.
-							 */
-							int x = b - 1;
-
-							// TODO implementieren
-							// ListBox-Element, das hinzugefügt wurde, wird für
-							// doppeltes Hinzufügen gesperrt
-							listBoxBauteile.getElement().getElementsByTagName("*").getItem(x).removeAttribute("disabled");
+							Integer id = new Integer(baugruppeCollection.getText(rowIndex, 0));
 							
-							collectBauteile.remove(x);
+							/**
+							 * Mithilfe der Id wird in dieser for-Schleife die entsprechende Baugruppe im
+							 * collectBaugruppen-Vektor entfernt. Wurde es gefunden, bricht die Schleife ab.
+							 */
+							for(int i=0; i<collectBaugruppen.size(); i++){
+								if(collectBaugruppen.get(i).getElement().getId()==id){
+									collectBaugruppen.remove(i);
+									break;
+								}
+							}
+							 
+							/**
+							 * Zudem wird auch die Baugruppe (ebenfalls mithilfe seiner Id) im Dropdown
+							 * ausgegraut und für weiteres Hinzufügen gesperrt.
+							 */
+							for(int i=0; i<allBaugruppen.size();i++){
+								if(allBaugruppen.get(i).getId()==id){
+									listBoxBaugruppen.getElement().getElementsByTagName("*").getItem(i).removeAttribute("disabled");
+									break;
+								}
+							}
+							
+							/**
+							 * Hiermit erfolgt das Entfernen der zugehörigen Reihe in der FlexTable.
+							 */
+							baugruppeCollection.removeRow(rowIndex);
 							
 						}
 
@@ -365,12 +397,16 @@ public class CreateStueckliste extends VerticalPanel {
 
 		});
 
-		// Horizontales Anordnen von zugehörigen Bauteil-Widgets
+		/**
+		 *  Horizontales Anordnen von zugehörigen Bauteil-Widgets.
+		 */
 		btPanel.add(amountBauteile);
 		btPanel.add(listBoxBauteile);
 		btPanel.add(collectBtButton);
 
-		// Horizontales Anordnen von zugehörigen Baugruppe-Widgets
+		/**
+		 *  Horizontales Anordnen von zugehörigen Baugruppe-Widgets.
+		 */
 		bgPanel.add(amountBaugruppen);
 		bgPanel.add(listBoxBaugruppen);
 		bgPanel.add(collectBgButton);
@@ -393,7 +429,7 @@ public class CreateStueckliste extends VerticalPanel {
 		this.add(CreateStuecklisteButton);
 
 		/**
-		 * Diverse css-Formatierungen
+		 * Diverse css-Formatierungen.
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
@@ -408,15 +444,11 @@ public class CreateStueckliste extends VerticalPanel {
 		CreateStuecklisteButton.addClickHandler(new CreateClickHandler());
 
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 *  Abschließend wird die Klasse dem RootPanel zugeordnet.
 		 */
 		RootPanel.get("content_wrap").add(this);
 
 	}
-
-	/*
-	 * Click Handlers.
-	 */
 
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
@@ -424,16 +456,22 @@ public class CreateStueckliste extends VerticalPanel {
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler
 	 * 
 	 */
 	class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
 
+		/**
+		 * Nach einem nicht erfolgreichen RPC wird folgende Hinweismeldung ausgegeben.
+		 */
 		@Override
 		public void onFailure(Throwable caught) {
 			Window.alert("Bauteile konnten nicht geladen werden");
 		}
 
+		/**
+		 * Nach einem erfolgreichen RPC wird folgendes ausgeführt.
+		 */
 		@Override
 		public void onSuccess(Vector<Bauteil> alleBauteile) {
 
@@ -443,6 +481,11 @@ public class CreateStueckliste extends VerticalPanel {
 			 */
 			allBauteile = alleBauteile;
 
+			/**
+			 * Abfangen eines leeren RPC-Vektors mithilfe dieser Hinweismeldung. Der User erkennt außerdem,
+			 * dass es sich nicht um ein Datenbankverbindungs-Problem handelt, da in solchen Fällen eine
+			 * andere Hinweismeldung ausgegeben wird.
+			 */
 			if (allBauteile.isEmpty() == true) {
 
 				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
@@ -473,16 +516,22 @@ public class CreateStueckliste extends VerticalPanel {
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler
 	 * 
 	 */
 	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
 
+		/**
+		 * Nach einem nicht erfolgreichen RPC wird folgende Hinweismeldung ausgegeben.
+		 */
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Baugruppen konnten nicht geladen werden");
+			Window.alert("Baugruppen konnten nicht geladen werden!");
 		}
 
+		/**
+		 * Nach einem erfolgreichen RPC wird folgendes ausgeführt.
+		 */
 		@Override
 		public void onSuccess(Vector<Baugruppe> alleBaugruppen) {
 
@@ -492,6 +541,11 @@ public class CreateStueckliste extends VerticalPanel {
 			 */
 			allBaugruppen = alleBaugruppen;
 
+			/**
+			 * Abfangen eines leeren RPC-Vektors mithilfe dieser Hinweismeldung. Der User erkennt außerdem,
+			 * dass es sich nicht um ein Datenbankverbindungs-Problem handelt, da in solchen Fällen eine
+			 * andere Hinweismeldung ausgegeben wird.
+			 */
 			if (allBaugruppen.isEmpty() == true) {
 
 				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
@@ -516,38 +570,58 @@ public class CreateStueckliste extends VerticalPanel {
 		}
 	}
 
-	// Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
-	// eine Hinweismeldung.
-	// Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
-	// FieldVerifier geprüft,
-	// ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
-	// ebenfalls eine Hinweismeldung.
+	/**
+	 * Dieser Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja, erscheint eine Hinweismeldung.
+	 * Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse FieldVerifier geprüft, ob
+	 * im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint ebenfalls eine entsprechende Hinweismeldung.
+	 * 
+	 * @author Mario Theiler
+	 *
+	 */
 	private class numericBtHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
 
+			/**
+			 * Prüfen, ob Inhalt im Textfeld vorhanden ist.
+			 */
 			if (amountBauteile.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZahl(amountBauteile.getText()) == false) {
+			}
+			
+			/**
+			 * Prüfen, ob es sich um eine numerische Eingabe handelt.
+			 */
+			else if (FieldVerifier.istZahl(amountBauteile.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
 		}
 	}
-
-	// Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
-	// eine Hinweismeldung.
-	// Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
-	// FieldVerifier geprüft,
-	// ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
-	// ebenfalls eine Hinweismeldung.
+	
+	/**
+	 * Dieser Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja, erscheint eine Hinweismeldung.
+	 * Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse FieldVerifier geprüft, ob
+	 * im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint ebenfalls eine entsprechende Hinweismeldung.
+	 * 
+	 * @author Mario Theiler
+	 *
+	 */
 	private class numericBgHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
 
+			/**
+			 * Prüfen, ob Inhalt im Textfeld vorhanden ist.
+			 */
 			if (amountBaugruppen.getText().isEmpty() == true) {
 				Window.alert("Bitte die gewünschte Anzahl eintragen.");
-			} else if (FieldVerifier.istZahl(amountBaugruppen.getText()) == false) {
+			}
+			
+			/**
+			 * Prüfen, ob es sich um eine numerische Eingabe handelt.
+			 */
+			else if (FieldVerifier.istZahl(amountBaugruppen.getText()) == false) {
 				Window.alert("Bitte nur Zahlen eintragen.");
 			}
 
@@ -570,13 +644,22 @@ public class CreateStueckliste extends VerticalPanel {
 			 * notwendigen Felder befüllt sind.
 			 */
 			if (NameField.getText().isEmpty() != true) {
+				
+				FieldVerifier umlaut = new FieldVerifier();
+				String input = umlaut.changeUmlaut(NameField.getText());
 
+				/**
+				 * Der Inhalt der individuellen Benutzereingaben werden in diesen
+				 * Strings zwischengespeichert, damit im weiteren Verlauf dieser
+				 * Klasse damit gearbeitet werden kann.
+				 */
+				String nameStueckliste = input;
+				
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-				String nameStueckliste = NameField.getText();
 				stuecklistenVerwaltung.createStueckliste(nameStueckliste,
 						collectBauteile, collectBaugruppen,
 						new CreateStuecklisteCallback());
@@ -590,6 +673,10 @@ public class CreateStueckliste extends VerticalPanel {
 
 			}
 
+			/**
+			 * Falls nicht alle Felder ordnungsgemäß befüllt sind, wird dem User
+			 * folgende Hinweismeldung angezeigt.
+			 */
 			else {
 
 				Window.alert("Bitte Namensfeld ausfüllen.");
@@ -603,20 +690,19 @@ public class CreateStueckliste extends VerticalPanel {
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler
 	 * 
 	 */
 	class CreateStuecklisteCallback implements AsyncCallback<Stueckliste> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen der Stueckliste ist fehlgeschlagen!");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override
 		public void onSuccess(Stueckliste stueckliste) {
-
-			Window.alert("Die Stueckliste wurde erfolgreich angelegt.");
+			Window.alert("Die Stückliste wurde erfolgreich angelegt.");
 		}
 	}
 

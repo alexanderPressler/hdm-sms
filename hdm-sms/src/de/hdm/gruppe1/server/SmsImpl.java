@@ -3,7 +3,9 @@ package de.hdm.gruppe1.server;
 import java.util.Date;
 import java.util.Vector;
 
+import de.hdm.gruppe1.shared.DuplicateBaugruppeException;
 import de.hdm.gruppe1.shared.FieldVerifier;
+import de.hdm.gruppe1.shared.LoginInfo;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
@@ -96,6 +98,7 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	private UserMapper userMapper = null;
 	private BaugruppenMapper baugruppenMapper = null;
 	private EnderzeugnisMapper enderzeugnisMapper = null;
+	private LoginInfo logInfo = null;
 
 	/**
 	 * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -147,8 +150,8 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	@Override
 	public void init() throws IllegalArgumentException {
 		/**
-		 * Ganz wesentlich ist, dass die Sms einen vollständigen
-		 * Satz von Mappern besitzt, mit deren Hilfe sie dann mit der Datenbank
+		 * Ganz wesentlich ist, dass die Sms einen vollständigen Satz von
+		 * Mappern besitzt, mit deren Hilfe sie dann mit der Datenbank
 		 * kommunizieren kann.
 		 */
 		this.bauteilMapper = BauteilMapper.bauteilMapper();
@@ -186,72 +189,87 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	 */
 	@Override
 	public Bauteil createBauteil(String name, String bauteilBeschreibung,
-			String materialBeschreibung) throws IllegalArgumentException {
+			String materialBeschreibung) throws IllegalArgumentException, 
+			DuplicateBauteilException {
+
+		//Überprüfen, ob ein Bauteil mit dem Namen schon existiert
+		  Bauteil bauteil = bauteilMapper.finByName(name);
+		  if(bauteil!=null){
+			  DuplicateBauteilException dBE = new DuplicateBauteilException(bauteil);
+			  throw dBE;
+		  }
 		Bauteil b = new Bauteil();
 		b.setName(name);
 		b.setBauteilBeschreibung(bauteilBeschreibung);
 		b.setMaterialBeschreibung(materialBeschreibung);
 
-		// Erstellungsdatum wird generiert und dem Objekt angehängt
+		/**
+		 * Erstellungsdatum wird generiert und dem Objekt angehängt
+		 */
 		Date date = new Date();
 		b.setEditDate(date);
 
-		// TODO dynamisch anpassen
-		User editUser = new User();
-		editUser.setName("statischer User");
-		editUser.setId(1);
-		editUser.setGoogleID("000000000000");
-		b.setEditUser(editUser);
+		   b.setEditUser(logInfo.getUser());
 
-		/*
-		 * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
-		 * Objekt, dessen Nummer mit der Datenbank konsistent ist.
-		 */
+		    /**
+		     * Setzen einer vorläufigen BauteilNr. Der insert-Aufruf liefert dann ein
+		     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
+		     */
 
-		// Objekt in der DB speichern.
+			/**
+			 * Objekt in der DB speichern.
+			 */
 
-		return this.bauteilMapper.insert(b);
-	}
-
+	        return this.bauteilMapper.insert(b);
+		  }
+	
 	/**
 	 * Speichern eines Bauteils.
 	 */
 	@Override
-	public void save(Bauteil b) throws IllegalArgumentException {
-
-		// TODO dynamisch anpassen
-		User editUser = new User();
-		editUser.setName("statischer User");
-		editUser.setId(1);
-		editUser.setGoogleID("000000000000");
-		b.setEditUser(editUser);
-
-		// Aenderungsdatum wird generiert und dem Objekt angehängt
-		// Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
-		Date date = new Date();
-		b.setEditDate(date);
-
-		this.bauteilMapper.update(b);
-	}
-
-	/**
-	 * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung
-	 * von Bankkunden ein Löschen allein schon aus Gründen der Dokumentation
-	 * nicht bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern.
-	 * Wir wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
-	 * vorstellen.
-	 */
+	public void save(Bauteil b) throws IllegalArgumentException, DuplicateBauteilException {
+		  
+		//Überprüfen, ob ein Bauteil mit dem Namen schon existiert
+		  Bauteil bauteil = bauteilMapper.finByName(b.getName());
+		  if(bauteil!=null){
+			  DuplicateBauteilException dBE = new DuplicateBauteilException(bauteil);
+			  throw dBE;
+		  }
+		 
+	        b.setEditUser(logInfo.getUser());
+	    
+	        // Aenderungsdatum wird generiert und dem Objekt angehängt
+	        // Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
+		    Date date = new Date();
+		    b.setEditDate(date);
+	        
+		  this.bauteilMapper.update(b);
+	  }
+	  
+	  /**
+	   * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung von
+	   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
+	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
+	   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
+	   * vorstellen.
+	   */
 	@Override
 	public void delete(Bauteil b) throws IllegalArgumentException {
 
 		Vector<Stueckliste> vStueckliste = this.stuecklisteMapper
 				.findByBauteil(b);
 
-		// Abgleich mit Stücklisten
+		/**
+		 * Abgleich mit Stücklisten
+		 */
 		if (vStueckliste.isEmpty() == true) {
 			this.bauteilMapper.delete(b);
 		} else {
-			// TODO Exception schreiben
+
+			/**
+			 * Exception ausschreiben
+			 */
+
 			System.out.println("Bauteil wird in Stückliste verwendet: ");
 
 		}
@@ -287,38 +305,44 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	 * ****************************
 	 * ***********************************************
 	 */
+
+
 	/**
-	 * <p>
 	 * Anlegen eines neuen Stueckliste. Dies führt implizit zu einem Speichern
 	 * des neuen Stuecklistes in der Datenbank.
-	 * 
+	 * @param name
+	 * @param BauteilPaare
+	 * @param BaugruppePaare
+	 * @throws IllegalArgumentException
 	 * @see createStueckliste(String name)
 	 */
-	@Override
-	public Stueckliste createStueckliste(String name,
-			Vector<ElementPaar> BauteilPaare,
-			Vector<ElementPaar> BaugruppenPaare)
-			throws IllegalArgumentException {
-		Stueckliste s = new Stueckliste();
-		s.setName(name);
-		s.setBauteilPaare(BauteilPaare);
-		s.setBaugruppenPaare(BaugruppenPaare);
+	
+	  @Override
+		public Stueckliste createStueckliste(String name, Vector<ElementPaar> BauteilPaare, 
+				Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException, DuplicateStuecklisteException {
+			  
+			//Überprüfen, ob eine Stueckliste mit dem Namen schon existiert
+			  Stueckliste stueckliste = stuecklisteMapper.finByName(name);
+			  if(stueckliste!=null){
+				  DuplicateStuecklisteException dSE = new DuplicateStuecklisteException(stueckliste);
+				  throw dSE;
+			  }
+			  
+			Stueckliste s = new Stueckliste();
+		    s.setName(name);
+		    s.setBauteilPaare(BauteilPaare);
+		    s.setBaugruppenPaare(BaugruppenPaare);
+		    
+		 // Erstellungsdatum wird generiert und dem Objekt angehängt
+		    Date date = new Date();
+		    s.setEditDate(date);
+		    
+	        s.setEditUser(logInfo.getUser());
+		    
 
-		// Erstellungsdatum wird generiert und dem Objekt angehängt
-		Date date = new Date();
-		s.setEditDate(date);
-
-		// TODO dynamisch anpassen
-		User editUser = new User();
-		editUser.setName("statischer User");
-		editUser.setId(1);
-		editUser.setGoogleID("000000000000");
-		s.setEditUser(editUser);
-
-		// Objekt in der DB speichern.
-		return this.stuecklisteMapper.insert(s);
-	}
-
+		    // Objekt in der DB speichern.
+		    return this.stuecklisteMapper.insert(s);
+		  }
 	/**
 	 * Löschen einer Stueckliste
 	 */
@@ -333,7 +357,9 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 			this.stuecklisteMapper.delete(s);
 		}
 
-		// TODO Exception
+		/**
+		 * exception ausschreiben
+		 */
 		else {
 
 			System.out.println("Stueckliste kann nicht gelöscht werden: ");
@@ -348,31 +374,28 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	 */
 	@Override
 	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException,
-			BaugruppenReferenceException {
+	DuplicateStuecklisteException {
+		  
 
-		for (int i = 0; i < s.getBaugruppenPaare().size(); i++) {
-			LoopPrevention lP = new LoopPrevention();
-			if (lP.checkForStuecklistenLoop(s, (Baugruppe) s
-					.getBaugruppenPaare().get(i).getElement())) {
-				BaugruppenReferenceException bRE = new BaugruppenReferenceException(
-						(Baugruppe) s.getBaugruppenPaare().get(i).getElement());
-				throw bRE;
-			}
-		}
-
+		/**
+		 * Überprüfen, ob eine Stueckliste mit dem Namen schon existiert
+		 */
+		  Stueckliste stueckliste = stuecklisteMapper.finByName(s.getName());
+		  if(stueckliste!=null){
+			  DuplicateStuecklisteException dSE = new DuplicateStuecklisteException(stueckliste);
+			  throw dSE;
+		  }
+		
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
-		Date date = new Date();
-		s.setEditDate(date);
+		    Date date = new Date();
+		    s.setEditDate(date);
+		  
+	        s.setEditUser(logInfo.getUser());
+		  
+		  this.stuecklisteMapper.update(s);
+	  }
 
-		// TODO dynamisch anpassen
-		User editUser = new User();
-		editUser.setName("statischer User");
-		editUser.setId(1);
-		editUser.setGoogleID("000000000000");
-		s.setEditUser(editUser);
 
-		this.stuecklisteMapper.update(s);
-	}
 
 	/**
 	 * Auslesen aller Stuecklisten.
@@ -451,25 +474,26 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	public Baugruppe createBaugruppe(String name,
 			Vector<ElementPaar> BauteilPaare,
 			Vector<ElementPaar> BaugruppenPaare)
-			throws IllegalArgumentException {
-
-	
-		User editUser = new User();
-		editUser.setName("statischer User");
-		editUser.setId(1);
-		editUser.setGoogleID("000000000000");
+			throws IllegalArgumentException, DuplicateBaugruppeException{
+		 
+		//Überprüfen, ob eine Baugruppe mit dem Namen schon existiert
+		  Baugruppe baugruppe = baugruppenMapper.finByName(name);
+		  if(baugruppe!=null){
+			  DuplicateBaugruppeException dBE = new DuplicateBaugruppeException(baugruppe);
+			  throw dBE;
+		  }
 
 		/**
-		 * /** Erstellungsdatum wird generiert und dem Objekt angehängt an das 
+		 * /** Erstellungsdatum wird generiert und dem Objekt angehängt an das
 		 * Stücklisten Obejkt das erzeugt wird
 		 * 
 		 */
-		 
+
 		Date date = new Date();
 
-		Stueckliste s = new Stueckliste();
-		s.setEditUser(editUser);
-		s.setName(name + "_sl");
+			Stueckliste s = new Stueckliste();
+			s.setEditUser(logInfo.getUser());
+			s.setName(name + "_sl");
 		s.setBauteilPaare(BauteilPaare);
 		s.setBaugruppenPaare(BaugruppenPaare);
 		s.setEditDate(date);
@@ -477,12 +501,12 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 
 		Baugruppe b = new Baugruppe();
 		b.setEditDate(date);
-		b.setEditUser(editUser);
+		b.setEditUser(logInfo.getUser());
 		b.setName(name);
 		b.setStueckliste(s);
 
 		/**
-		 *  Objekt b  in der DB speichern.
+		 * Objekt b in der DB speichern.
 		 */
 		return this.baugruppenMapper.insert(b);
 	}
@@ -493,8 +517,8 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	@Override
 	public void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException {
 		/**
-		 * Zuerst werden die Baugruppe gefunden die der Stueckliste und den Enderzeugnis
-		 * ensprechen
+		 * Zuerst werden die Baugruppe gefunden die der Stueckliste und den
+		 * Enderzeugnis ensprechen
 		 */
 		Vector<Stueckliste> vStueckliste = this.stuecklisteMapper
 				.findByBaugruppe(b);
@@ -502,9 +526,9 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 				.findByBaugruppe(b);
 
 		/**
-		 * Abgleichen  mit Stücklisten
+		 * Abgleichen mit Stücklisten
 		 */
-	
+
 		if (vStueckliste.isEmpty() == true && vEnderzeugnis.isEmpty() == true) {
 
 			this.baugruppenMapper.delete(b);
@@ -514,12 +538,12 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 
 		else {
 			if (vStueckliste.isEmpty() == false) {
-			
+				 //TODO Exception schreiben
 				System.out.println("Baugruppe wird in Stückliste verwendet.");
 			}
-
+				//TODO Exception schreiben
 			if (vEnderzeugnis.isEmpty() == false) {
-			
+
 				System.out
 						.println("Baugruppe wird in Enderzeugnis verwendet: ");
 			}
@@ -535,33 +559,32 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException,
 			BaugruppenReferenceException {
 
-		for (int i = 0; i < b.getStueckliste().getBaugruppenPaare().size(); i++) {
-			LoopPrevention lP = new LoopPrevention();
-			if (lP.checkForBaugruppenLoop(b, (Baugruppe) b.getStueckliste()
-					.getBaugruppenPaare().get(i).getElement())) {
-				BaugruppenReferenceException bRE = new BaugruppenReferenceException(
-						(Baugruppe) b.getStueckliste().getBaugruppenPaare()
-								.get(i).getElement());
-				throw bRE;
-			}
-		}
+		//Überprüfen, ob eine Baugruppe mit dem Namen schon existiert
+		  Baugruppe baugruppe = baugruppenMapper.finByName(b.getName());
+		  if(baugruppe!=null){
+			  DuplicateBaugruppeException dBE = new DuplicateBaugruppeException(baugruppe);
+			  throw dBE;
+		  }
+		
+		  for(int i=0; i<b.getStueckliste().getBaugruppenPaare().size();i++){
+			  LoopPrevention lP = new LoopPrevention();
+			  if(!lP.checkForBaugruppenLoop(b, (Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement())){
+				  BaugruppenReferenceException bRE = new BaugruppenReferenceException((Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement());
+				  throw bRE;
+			  }
+		  }
 
 		/**
-		 *  Aenderungsdatum wird generiert und dem Objekt angehängt
+		 * Aenderungsdatum wird generiert und dem Objekt angehängt
 		 */
 		Date date = new Date();
 		b.setEditDate(date);
-
-	
-		User editUser = new User();
-		editUser.setName("statischer User");
-		editUser.setId(1);
-		editUser.setGoogleID("000000000000");
-		b.setEditUser(editUser);
+		
+		b.setEditUser(logInfo.getUser());
 
 		Stueckliste s = b.getStueckliste();
 		s.setEditDate(date);
-		s.setEditUser(editUser);
+		s.setEditUser(logInfo.getUser());
 
 		this.stuecklisteMapper.update(s);
 
@@ -609,20 +632,25 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	public Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe)
 			throws IllegalArgumentException {
 
-		// TODO dynamisch anpassen
-		User editUser = new User();
-		editUser.setName("statischer User");
-		editUser.setId(1);
-		editUser.setGoogleID("000000000000");
-
-		// Erstellungsdatum wird generiert und dem Objekt angehäng
+		/**
+		 * Überprüfen, ob ein Enderzeugnis mit dem Namen schon existiert
+		 */
+		  Enderzeugnis enderzeugnis = enderzeugnisMapper.finByName(name);
+		  if(enderzeugnis!=null){
+			  DuplicateEnderzeugnisException dEE = new DuplicateEnderzeugnisException(enderzeugnis);
+			  throw dEE;
+		  }
+		/**
+		 *  Erstellungsdatum wird generiert und dem Objekt angehäng
+		 */
 		Date date = new Date();
 
 		Enderzeugnis e = new Enderzeugnis();
 		e.setEditDate(date);
 		e.setName(name);
 		e.setBaugruppe(baugruppe);
-		e.setEditUser(editUser);
+
+	    e.setEditUser(logInfo.getUser());
 
 		/**
 		 * e Objekt in der DB speichern.
@@ -647,18 +675,22 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 	public void saveEnderzeugnis(Enderzeugnis e)
 			throws IllegalArgumentException {
 
-		/**Aenderungsdatum wird generiert und dem Objekt angehängt
+		/**
+		 * Überprüfen, ob ein Enderzeugnis mit dem Namen schon existiert
+		 */
+		  Enderzeugnis enderzeugnis = enderzeugnisMapper.finByName(e.getName());
+		  if(enderzeugnis!=null){
+			  DuplicateEnderzeugnisException dEE = new DuplicateEnderzeugnisException(enderzeugnis);
+			  throw dEE;
+		  }
+		/**
+		 * Aenderungsdatum wird generiert und dem Objekt angehängt
 		 * 
 		 */
 		Date date = new Date();
 		e.setEditDate(date);
 
-		// TODO dynamisch anpassen
-		User editUser = new User();
-		editUser.setName("statischer User");
-		editUser.setId(1);
-		editUser.setGoogleID("000000000000");
-		e.setEditUser(editUser);
+		e.setEditUser(logInfo.getUser());
 
 		this.enderzeugnisMapper.update(e);
 	}
@@ -671,7 +703,10 @@ public class SmsImpl extends RemoteServiceServlet implements Sms {
 			throws IllegalArgumentException {
 		return this.enderzeugnisMapper.findAll();
 	}
-
+	 public void setLoginInfo(LoginInfo loginInfo){
+		 logInfo=loginInfo;
+	 }
+	  
 	/*
 	 * ***************************************************************************
 	 * ABSCHNITT Ende : Methoden für Enderzeugnis-Objekte
