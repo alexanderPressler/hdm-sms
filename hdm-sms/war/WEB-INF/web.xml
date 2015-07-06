@@ -31,5 +31,4 @@
     <welcome-file>Hdm_sms.html</welcome-file>
     <welcome-file>Hdm_smsReport.html</welcome-file>
   </welcome-file-list>
-
 </web-app>

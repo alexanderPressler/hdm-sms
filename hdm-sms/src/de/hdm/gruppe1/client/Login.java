@@ -1,14 +1,20 @@
 package de.hdm.gruppe1.client;
 
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
 import de.hdm.gruppe1.client.CreateBauteil.CreateBauteilCallback;
+import de.hdm.gruppe1.shared.bo.User;
 
 public class Login extends VerticalPanel {
 	
@@ -19,6 +25,11 @@ public class Login extends VerticalPanel {
 	private final Label loginReportLabel = new Label("Report: ");
 	private final Button loginEditorBtn = new Button ("Login");
 	private final Button loginReportBtn = new Button ("Login");
+	
+	UserService userService = UserServiceFactory.getUserService();
+	com.google.appengine.api.users.User user = userService.getCurrentUser();
+	private Anchor signInLink = new Anchor("Anmelden");
+
 	
 	public Login(){
 		
