@@ -1,9 +1,6 @@
-package de.hdm.gruppe1.client.report;
-
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.Vector;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 
@@ -12,12 +9,12 @@ import de.hdm.gruppe1.shared.bo.Bauteil;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.bo.ElementPaar;;
 
-public class TreeViewReport extends Tree {
+public class TreeView extends Tree {
 	//Stacks für Bauteile und Baugruppen für die Addition derer
-	private Vector<ElementPaar> bauteile = new Vector<ElementPaar>();
-	private LinkedList<ElementPaar> baugruppen = new LinkedList<ElementPaar>();
+	private ArrayDeque<ElementPaar> bauteile = new ArrayDeque<ElementPaar>();
+	private ArrayDeque<ElementPaar> baugruppen = new ArrayDeque<ElementPaar>();
 	
-	public TreeViewReport (Stueckliste stueckliste, int anzahl){
+	public TreeView (Stueckliste stueckliste, int anzahl){
 		//RootTreeItem erstellen und Anzahl und Namen der Stueckliste als Text hinzufügen
 		TreeItem rootTreeItem = new TreeItem();
 		rootTreeItem.setText("Stückliste '"+stueckliste.getName()+"'");
@@ -47,7 +44,7 @@ public class TreeViewReport extends Tree {
 			//Anzahl aktualisieren
 			elementPaar.setAnzahl(multi);
 			//Dem BauteilStack hinzufügen
-			bauteile.add(elementPaar);
+			bauteile.addLast(elementPaar);
 		}
 		//Baugruppe
 		if(elementPaar.getElement() instanceof Baugruppe){
@@ -77,24 +74,20 @@ public class TreeViewReport extends Tree {
 	
 	public Vector<ElementPaar> addiereBauteile (){
 		Vector<ElementPaar> bauteilVector = new Vector<ElementPaar>();
-		//Das erste Bauteil dem Vector hinzufügen
-		bauteilVector.add(bauteile.get(0));
-		//Den Vector ab index 1 komplett durchlaufen
-		for(int i=1; i<bauteile.size();i++){
-			//Jeweiliges ElementPaar mit dem bauteilVector vergleichen
-			Boolean gefunden=false;
-			for(int j=0; j<bauteilVector.size();j++){
-				if(bauteile.get(i).getElement().getId()==bauteilVector.get(j).getElement().getId()){
-					//Anzahl addieren
-					int anzahl= bauteile.get(i).getAnzahl() + bauteilVector.get(j).getAnzahl();
-					//Anzahl aktualisieren
-					bauteilVector.get(j).setAnzahl(anzahl);
-					gefunden=true;
-				}
+		//Den Stack solange durchlaufen bis er leer ist
+		while(!bauteile.isEmpty()){
+			//Prüfen, ob das erste Bauteil schon im Vector ist
+			if(bauteilVector.contains(bauteile.getFirst())){
+				//Index finden
+				int index = bauteilVector.indexOf(bauteile.getFirst());
+				//Anzahl aktualisieren
+				int anzahl = bauteilVector.get(index).getAnzahl() + bauteile.removeFirst().getAnzahl();
+				bauteilVector.get(index).setAnzahl(anzahl);
 			}
-			//Falls das Bauteil nicht gefunden wurde dem bauteilVector hinzufügen
-			if(gefunden==false){
-				bauteilVector.add(bauteile.get(i));
+			//Wenn nicht
+			else{
+				//Dem Vector hinzufügen
+				bauteilVector.addElement(bauteile.removeFirst());
 			}
 		}
 		//Vector zurückgeben
@@ -104,24 +97,20 @@ public class TreeViewReport extends Tree {
 	
 	public Vector<ElementPaar> addiereBaugruppen (){
 		Vector<ElementPaar> baugruppenVector = new Vector<ElementPaar>();
-		//Die erste Baugruppe dem Vector hinzufügen
-		baugruppenVector.add(baugruppen.get(0));
-		//Den Vector ab index 1 komplett durchlaufen
-		for(int i=1; i<baugruppen.size();i++){
-			//Jeweiliges ElementPaar mit dem baugruppenVector vergleichen
-			Boolean gefunden=false;
-			for(int j=0; j<baugruppenVector.size();j++){
-				if(baugruppen.get(i).getElement().getId()==baugruppenVector.get(j).getElement().getId()){
-					//Anzahl addieren
-					int anzahl= baugruppen.get(i).getAnzahl() + baugruppenVector.get(j).getAnzahl();
-					//Anzahl aktualisieren
-					baugruppenVector.get(j).setAnzahl(anzahl);
-					gefunden=true;
-				}
+		//Den Stack solange durchlaufen bis er leer ist
+		while(!baugruppen.isEmpty()){
+			//Prüfen, ob das erste Bauteil schon im Vector ist
+			if(baugruppenVector.contains(baugruppen.getFirst())){
+				//Index finden
+				int index = baugruppenVector.indexOf(baugruppen.getFirst());
+				//Anzahl aktualisieren
+				int anzahl = baugruppenVector.get(index).getAnzahl() + baugruppen.removeFirst().getAnzahl();
+				baugruppenVector.get(index).setAnzahl(anzahl);
 			}
-			//Falls die Baugruppe nicht gefunden wurde dem baugruppenVector hinzufügen
-			if(gefunden==false){
-				baugruppenVector.add(baugruppen.get(i));
+			//Wenn nicht
+			else{
+				//Dem Vector hinzufügen
+				baugruppenVector.addElement(bauteile.getFirst());
 			}
 		}
 		//Vector zurückgeben

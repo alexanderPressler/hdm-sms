@@ -18,10 +18,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.gruppe1.client.ClientsideSettings;
-import de.hdm.gruppe1.client.report.Strukturstuecklisten.GetAllBaugruppenCallback;
 import de.hdm.gruppe1.shared.FieldVerifier;
-import de.hdm.gruppe1.shared.SmsAsync;
-import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
@@ -42,7 +39,9 @@ public class Materialbedarf extends VerticalPanel {
 	private final String anzahlString = new String("Anzahl der Enderzeugnisse: ");
 	Date date = new Date();
 	private DateTimeFormat creationDate = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
-	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date));
+	private final String reportCreationDateString = new String("Report erstellt am: "+creationDate.format(date));
+	private final String stuecklistenCreationDateString = new String("Stückliste erstellt am: ");
+	private final String stuecklistenIDString = new String("Stücklisten ID: ");
 	private String impressumString = new String();
 	private String headlineForSummedBauteile = new String("Summe der Bauteile");
 	private String headlineForSummedBaugruppen = new String("Summe der Baugruppen");
@@ -179,15 +178,8 @@ public class Materialbedarf extends VerticalPanel {
 				} else if (FieldVerifier.istZahl(amountEnderzeugnisse.getText()) == false) {
 					Window.alert("Bitte nur Zahlen eintragen.");
 					
-				//Sofern beide Bedingungen nicht erfüllt sind, wird der CreateCallback ausgeführ.
+				//Sofern beide Bedingungen nicht erfüllt sind, wird der CreateCallback ausgeführt
 				} else {
-					
-					/**
-					 * Die konkrete RPC-Methode für den create-Befehl wird
-					 * aufgerufen. Hierbei werden die gewünschten Werte
-					 * mitgeschickt.
-					 */
-//					stuecklistenVerwaltung.createMaterialbedarf(enderzeugnis, anzahl, new CreateMaterialbedarfCallback());
 					
 					final int index = listBoxEnderzeugnisse.getSelectedIndex();
 					Enderzeugnis enderzeugnis = allEnderzeugnisse.get(index);
@@ -201,12 +193,11 @@ public class Materialbedarf extends VerticalPanel {
 					
 					Integer anzahl =  Integer.parseInt(amountEnderzeugnisse.getText());
 					TreeViewReport treeReport = new TreeViewReport(enderzeugnisStueckliste,anzahl);
-					
 					/**
 					 * Mithilfe des treeReport-Objektes wird an dieser Stelle der Ergebnis-Vektor aller Bauteile
 					 * herangezogen, um ihn anschließend aufzubereiten und als HTML anzuzeigen.
 					 */
-					Vector<ElementPaar> bauteileAsHtml = treeReport.getSummedBauteile();
+					Vector<ElementPaar> bauteileAsHtml = treeReport.addiereBauteile();
 					
 					/**
 					 * Diese for-Schleife schreibt für jedes Element im Bauteil-Vektor einen Eintrag und trennt diese
@@ -220,7 +211,7 @@ public class Materialbedarf extends VerticalPanel {
 					 * Mithilfe des treeReport-Objektes wird an dieser Stelle der Ergebnis-Vektor aller Baugruppen
 					 * herangezogen, um ihn anschließend aufzubereiten und als HTML anzuzeigen.
 					 */
-					Vector<ElementPaar> baugruppenAsHtml = treeReport.getSummedBaugruppen();
+					Vector<ElementPaar> baugruppenAsHtml = treeReport.addiereBaugruppen();
 					
 					/**
 					 * Diese for-Schleife schreibt für jedes Element im Baugruppen-Vektor einen Eintrag und trennt diese
@@ -234,32 +225,16 @@ public class Materialbedarf extends VerticalPanel {
 					 * Das HTML-Widget ist in der Lage HTML-Tags zu interpretieren und eignet sich daher ideal für eine
 					 * Anzeige des Reports in statischem HTML.
 					 */
-					HTML reportHTML = new HTML("<h3>"+headlineString+enderzeugnis.getName()+"</h3>"+anzahlString+anzahl+"</br>"+creationDateString+"</p>"+treeReport.toString()+"<p>"+headlineForSummedBauteile+"<p>"+bauteilTableString+"<p>"+headlineForSummedBaugruppen+"<p>"+baugruppeTableString+"<p>"+impressumString);
+					HTML reportHTML = new HTML("<h3>"+headlineString+enderzeugnis.getName()+"</h3>"+reportCreationDateString+"</p>"
+							+stuecklistenIDString+enderzeugnisStueckliste.getId()+"<br>"+stuecklistenCreationDateString
+							+creationDate.format(enderzeugnisStueckliste.getCreationDate())+"</p>"
+							+anzahlString+anzahl+"</br>"+"</p>"+treeReport.toString()+"<p><b>"+headlineForSummedBauteile+"</b><p>"
+							+bauteilTableString+"<p><b>"+headlineForSummedBaugruppen+"</b><p>"+baugruppeTableString+"<p>"+impressumString);
 										
 					RootPanel.get("content_wrap").clear();
 					RootPanel.get("content_wrap").add(reportHTML);
 				}
 				
-			}
-		}
-		
-		/**
-		 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
-		 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-		 * 
-		 * @author Mario
-		 * 
-		 */
-		class CreateMaterialbedarfCallback implements AsyncCallback<Enderzeugnis> {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Das Erstellen des Materialbedarfs ist fehlgeschlagen!");
-			}
-
-			@Override
-			public void onSuccess(Enderzeugnis enderzeugnis) {
-				Window.alert("Das Erstellen des Materialbedarfs war erfolgreich!");
 			}
 		}
 	

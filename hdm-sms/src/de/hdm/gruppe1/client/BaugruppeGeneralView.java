@@ -353,9 +353,6 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		@Override
 		public void onSuccess(Void result) {
 
-			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
-			//Wenn nicht, dann zeige diesen Window Alert an.
-			Window.alert("Die Baugruppe wurde erfolgreich gelöscht, wenn sie nirgendwo referenziert ist.");
 		}
 	}
 

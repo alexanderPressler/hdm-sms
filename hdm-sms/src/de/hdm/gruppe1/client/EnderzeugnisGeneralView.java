@@ -353,7 +353,6 @@ public class EnderzeugnisGeneralView extends VerticalPanel {
 		@Override
 		public void onSuccess(Void result) {
 
-			Window.alert("Das Enderzeugnis wurde erfolgreich gelöscht.");
 		}
 	}
 

@@ -10,6 +10,6 @@
 			<attribute name="javadoc_location" value="file:/D:/Program%20Files%20(x86)/eclipse/plugins/com.google.appengine.eclipse.sdkbundle_1.9.19/appengine-java-sdk-1.9.19/docs/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/App Engine (1)"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

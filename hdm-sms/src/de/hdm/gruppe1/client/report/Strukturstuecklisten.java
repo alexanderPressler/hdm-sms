@@ -14,11 +14,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.client.ClientsideSettings;
-import de.hdm.gruppe1.shared.FieldVerifier;
-import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
-import de.hdm.gruppe1.shared.bo.Bauteil;
-import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
@@ -35,7 +31,9 @@ public class Strukturstuecklisten extends VerticalPanel {
 	private final String headlineString = new String("Strukturstückliste für folgende Baugruppe: ");
 	Date date = new Date();
 	private DateTimeFormat creationDate = DateTimeFormat.getFormat("dd.MM.yyyy HH:mm:ss");
-	private final String creationDateString = new String("Erstellt am: "+creationDate.format(date));
+	private final String reportCreationDateString = new String("Report erstellt am: "+creationDate.format(date));
+	private final String stuecklistenCreationDateString = new String("Stückliste erstellt am: ");
+	private final String stuecklistenIDString = new String("Stücklisten ID: ");
 	private String impressumString = new String();
 	
 	/**
@@ -169,49 +167,15 @@ public class Strukturstuecklisten extends VerticalPanel {
 			ImpressumReport imp = new ImpressumReport();
 			impressumString = imp.setImpressum();
 			
-			HTML reportHTML = new HTML("<h3>"+headlineString+baugruppenStueckliste.getName()+"</h3>"+creationDateString+"</p>"+treeReport.toString()+"<p>"+impressumString);
+			HTML reportHTML = new HTML("<h3>"+headlineString+baugruppe.getName()+"</h3>"+reportCreationDateString+"</p>"
+			+stuecklistenIDString+baugruppenStueckliste.getId()+"<br>"+stuecklistenCreationDateString
+			+creationDate.format(baugruppenStueckliste.getCreationDate())+"</p>"
+			+treeReport.toString()+"<p>"+impressumString);
 			
 			RootPanel.get("content_wrap").clear();
 			RootPanel.get("content_wrap").add(reportHTML);
 			
-//				HTML reportHTML = new HTML(baugruppenReport);
-//				
-//				/**
-//				 * Nachdem der Create-Vorgang durchgeführt wurde,
-//				 */
-//				RootPanel.get("content_wrap").clear();
-//				RootPanel.get("content_wrap").add();
-				
 		}
 	}
-	
-	/**
-	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
-	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario
-	 * 
-	 */
-//	class BaugruppenReportCallback implements AsyncCallback<BaugruppenReport> {
-//
-//		@Override
-//		public void onFailure(Throwable caught) {
-//			Window.alert("Das Erstellen der Strukturstückliste ist fehlgeschlagen!");
-//		}
-//
-//		@Override
-//		public void onSuccess(BaugruppenReport baugruppenReport) {
-//			Window.alert("Das Erstellen der Strukturstückliste war erfolgreich!");
-//			
-//			HTML reportHTML = new HTML(baugruppenReport.toString());
-//			
-//			/**
-//			 * Nachdem der Create-Vorgang durchgeführt wurde,
-//			 */
-//			RootPanel.get("content_wrap").clear();
-//			RootPanel.get("content_wrap").add(reportHTML);
-//			
-//		}
-//	}
 	
 }

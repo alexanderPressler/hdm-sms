@@ -376,14 +376,12 @@ public class BauteilGeneralView extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
 			Window.alert("Das Löschen des Bauteils ist fehlgeschlagen!");
 		}
 
 		@Override
 		public void onSuccess(Void result) {
 
-			Window.alert("Das Bauteil wurde erfolgreich gelöscht, wenn es nirgendwo referenziert ist.");
 		}
 	}
 }

@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Bauteil;
-import de.hdm.gruppe1.shared.bo.Element;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 
@@ -26,19 +25,21 @@ public class TreeView extends VerticalPanel {
 	Tree tree = new Tree();
 	TreeItem rootTreeItem = new TreeItem();
 	
-	/**
-	 * Vektoren, um alle Bauteile und Baugruppen eines Baums aufzunehmen. Nachdem der Baum komplett durchlaufen
-	 * wurde und alle dabei aufgetauchten Bauteile, bzw. Baugruppen in diesen beiden Vektoren gesammelt wurden,
-	 * werden die Vektoren auf identische Bauteile, bzw. Baugruppen untersucht.
-	 */
-	private Vector<ElementPaar> bauteilAusBaum = new Vector<ElementPaar>();
-	private Vector<ElementPaar> baugruppeAusBaum = new Vector<ElementPaar>();
-	
-	int anzahl;
-	
 	public TreeView(Stueckliste treeViewStueckliste) {
 		try {
-			treeRecursion(treeViewStueckliste,1);
+			//RootTreeItem erstellen und Anzahl und Namen der Stueckliste als Text hinzufügen
+			TreeItem rootTreeItem = new TreeItem();
+			rootTreeItem.setText("Stückliste '"+treeViewStueckliste.getName()+"'");
+			//Treekursion für alle Bauteile der Stückliste starten
+			for(int i=0;i<treeViewStueckliste.getBauteilPaare().size();i++){
+				//BauteilPaare in TreeItems verwandeln und der RootTreeItem hinzufügen
+				rootTreeItem.addItem(this.treeRecursion(treeViewStueckliste.getBauteilPaare().get(i)));
+			}
+			//Rekursion für alle Baugruppen der Stückliste durchführen
+			for(int j=0; j<treeViewStueckliste.getBaugruppenPaare().size();j++){
+				//BaugruppenPaare in TreeItems verwandeln und dem RootTreeItem hinzufügen
+				rootTreeItem.addItem(this.treeRecursion(treeViewStueckliste.getBaugruppenPaare().get(j)));
+			}
 			
 			/**
 			 * Bei Instantiierung der Klasse wird alles dem VerticalPanel
@@ -68,96 +69,33 @@ public class TreeView extends VerticalPanel {
 	}
 	
 	TreeItem tempItem = rootTreeItem;
-	private void treeRecursion(Element element, int anzahl) {
-		if(element instanceof Stueckliste) {
-			Stueckliste aktuellesStueckliste = (Stueckliste) element;
-			rootTreeItem.setText(aktuellesStueckliste.getName());
-//			rootTreeItem.setStyleName("treeIntersection");
-			
-			for(int i = 0; i<aktuellesStueckliste.getBaugruppenPaare().size(); i++){
-				Element childBaugruppenElement = aktuellesStueckliste.getBaugruppenPaare().get(i).getElement();
-				int anzahlBaugruppe = aktuellesStueckliste.getBaugruppenPaare().get(i).getAnzahl();
-				treeRecursion(childBaugruppenElement, anzahlBaugruppe);
-			}
-			
-			for(int i = 0; i<aktuellesStueckliste.getBauteilPaare().size(); i++){
-				Element childBauteilElement = aktuellesStueckliste.getBauteilPaare().get(i).getElement();
-				int anzahlBauteil = aktuellesStueckliste.getBauteilPaare().get(i).getAnzahl();
-				treeRecursion(childBauteilElement, anzahlBauteil);
-			}
-			
-			
-			
+	public TreeItem treeRecursion (ElementPaar elementPaar){
+		TreeItem newTreeItem = new TreeItem();
+		//Überprüfen ob das ElementPaar ein Bauteil oder eine Baugruppe enthält
+		//Bauteil
+		if(elementPaar.getElement() instanceof Bauteil){
+			//Bauteil TreeItem erstellen
+			newTreeItem.setText(elementPaar.getAnzahl()+"*Bauteil '"+elementPaar.getElement().getName()+"'");
 		}
-		if(element instanceof Bauteil) {
-
-			Bauteil aktuellesBauteil = (Bauteil) element;
-			
-			TreeItem bauteilTreeItem = new TreeItem();
-			bauteilTreeItem.setText(anzahl+" * Bauteil: "+aktuellesBauteil.getName());
-			rootTreeItem.addItem(bauteilTreeItem);
-//			rootTreeItem.removeStyleName("treeIntersection");
-			
-//			/**
-//			 * Der Vektor bauteilSumme wird mit dem hier vorgefundenen ElementPaar von Bauteil befüllt.
-//			 */
-//			ElementPaar bauteilPaar = new ElementPaar();
-//			bauteilPaar.setAnzahl(anzahl);
-//			bauteilPaar.setElement(aktuellesBauteil);
-//			bauteilAusBaum.add(bauteilPaar);
-			
-		} else if(element instanceof Baugruppe) {
-			//if(elment instancaof Stueckliste)
-			Baugruppe aktuellesBaugruppe = (Baugruppe) element;
-			
-			TreeItem baugruppeTreeItem = new TreeItem();
-			baugruppeTreeItem.setText(anzahl+" * Baugruppe: "+aktuellesBaugruppe.getName());
-			
-//			/**
-//			 * Der Vektor baugruppeSumme wird mit dem hier vorgefundenen ElementPaar von Baugruppe befüllt.
-//			 */
-//			ElementPaar baugruppePaar = new ElementPaar();
-//			baugruppePaar.setAnzahl(anzahl);
-//			baugruppePaar.setElement(aktuellesBaugruppe);
-//			baugruppeAusBaum.add(baugruppePaar);
-			
-			//TODO: Reihenfolge des baums stimmt noch nicht, tempItem und rootItem an tree anpassen
-			tempItem.addItem(baugruppeTreeItem);
-//			tempItem.setStyleName("treeIntersection");
-			tempItem = baugruppeTreeItem;
-			
-			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().size(); i++){
-				Element childBaugruppenElement = aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement();
-				int childBaugruppenAnzahl = aktuellesBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getAnzahl();
-
-				//TreeItem childBaugruppenItem = new TreeItem();
-				//childBaugruppenItem.setText(childBaugruppenElement.getName());
-				//baugruppeTreeItem.addItem(childBaugruppenItem);
-				
-				treeRecursion(childBaugruppenElement, childBaugruppenAnzahl);
+		//Baugruppe
+		if(elementPaar.getElement() instanceof Baugruppe){
+			//Baugruppe TreeItem erstellen
+			newTreeItem.setText(elementPaar.getAnzahl()+"*Baugruppe '"+elementPaar.getElement().getName()+"'");
+			Baugruppe bg = (Baugruppe) elementPaar.getElement();
+			//Rekursion für die Bauteile der Baugruppe starten
+			for(int k=0; k<bg.getStueckliste().getBauteilPaare().size(); k++){
+				//BauteilPaare in TreeItems verwandeln und hinzufügen
+				newTreeItem.addItem(this.treeRecursion(bg.getStueckliste().getBauteilPaare().get(k)));
 			}
-			
-
-			for(int i = 0; i<aktuellesBaugruppe.getStueckliste().getBauteilPaare().size(); i++){
-				Element childBauteilElement = aktuellesBaugruppe.getStueckliste().getBauteilPaare().get(i).getElement();
-				TreeItem childBauteilItem = new TreeItem();
-				childBauteilItem.setText(aktuellesBaugruppe.getStueckliste().getBauteilPaare().get(i).getAnzahl()
-						+" * Bauteil: "+childBauteilElement.getName());
-				baugruppeTreeItem.addItem(childBauteilItem);
-				
-//				/**
-//				 * Der Vektor baugruppeSumme wird mit dem hier vorgefundenen ElementPaar von Baugruppe befüllt.
-//				 */
-//				ElementPaar baugruppenPaar = new ElementPaar();
-//				baugruppenPaar.setAnzahl(anzahl);
-//				baugruppenPaar.setElement(aktuellesBaugruppe);
-//				baugruppeAusBaum.add(baugruppenPaar);
-				
-//				rootTreeItem.removeStyleName("treeIntersection");
-//				tempItem.setStyleName("treeChild");
-				
-			}
-										
+			//Rekursion für die Baugruppen der Baugruppe starten
+			for(int l=0; l<bg.getStueckliste().getBaugruppenPaare().size();l++){
+				//BaugruppenlPaare in TreeItems verwandeln und hinzufügen
+				newTreeItem.addItem(this.treeRecursion(bg.getStueckliste().getBaugruppenPaare().get(l)));
 			}
 		}
+		
+		//TreeItem zurückgeben
+		return newTreeItem;
+		
+	}
 }

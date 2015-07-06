@@ -442,13 +442,11 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
 			Window.alert("Das Löschen der Stueckliste ist fehlgeschlagen!");
 		}
 
 		@Override
 		public void onSuccess(Void result) {
-			Window.alert("Die Stueckliste wurde erfolgreich gelöscht.");
 		}
 	}
 
