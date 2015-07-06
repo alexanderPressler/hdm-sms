@@ -2,18 +2,35 @@ package de.hdm.gruppe1.shared.bo;
 
 import java.util.Date;
 
-
+/**
+ * Element ist die Oberklasse von Bauteilen und Baugruppen {@link Bauteil @link Baugruppe}.
+ * Diese Oberklasse vererbt an genannte 
+ * Klassen die Eigenschaften die auch alle Klassen beinhalten. Das ist zB. Name,
+ * der bearbeitende Anwender und das Datum der Bearbeitung.Hier werden diese
+ * Eigenschaften erzeugt.
+ * Ausserdem erbt Element von der Superklasse Business Object, sie ist die Basisklasse 
+ * aller in diesemProjekt für die Umsetzung des Fachkonzepts relevanten Klassen dar.
+ * </p>
+ * @author Schmidt & Pressler
+ *
+ */
 public abstract class Element extends BusinessObject {
 	
 	//Declaration fuer die Serializible Class
 	private static final long serialVersionUID = 1L;
 	
-	//TODO: Aenderungdatum und User einfuegen + getter/setter 
-	
+	/**
+	 * Deklaration der Attribute
+	 * name
+	 * letzter Bearbeiter 
+	 * Bearbeitungsdatum
+	 * + Setter & Getter
+	 */
 	String name = null;
 	User editUser = null;
 	Date editDate = null; 
 
+	
 	public Date getEditDate() {
 		return editDate;
 	}
@@ -40,6 +57,7 @@ public abstract class Element extends BusinessObject {
 	/**
 	   * Erzeugen einer einfachen textuellen Repräsentation der jeweiligen
 	   * Kontoinstanz.
+	   * @see #toString()
 	   */
 	  @Override
 	public String toString() {
@@ -64,6 +82,7 @@ public abstract class Element extends BusinessObject {
 	   * In unseren eigenen Klassen können wir diese Methode überschreiben und ihr
 	   * mehr Intelligenz verleihen.
 	   * </p>
+	   * @see #equals(Object)
 	   */
 	  @Override
 	public boolean equals(Object o) {

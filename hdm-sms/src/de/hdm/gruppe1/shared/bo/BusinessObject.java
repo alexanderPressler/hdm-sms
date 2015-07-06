@@ -17,8 +17,7 @@ import java.io.Serializable;
  * textuelle Notation in JSON (siehe http://www.json.org/) kodiert.
  * </p>
  * 
- * @author thies
- * @version 1.0
+ * @author thies, Schmidt & Pressler
  */
 
 public abstract class BusinessObject implements Serializable {
@@ -40,9 +39,9 @@ public abstract class BusinessObject implements Serializable {
 	}
 
 	/**
-	 * @author thies 
 	 * Erzeugen einer einfachen textuellen Darstellung der jeweiligen Instanz.
 	 * Dies kann selbstverständlich in Subklassen überschrieben werden.
+	 * @see #toString()
 	 */
 	@Override
 	public String toString() {
@@ -54,7 +53,6 @@ public abstract class BusinessObject implements Serializable {
 	
 	  /**
 	   * <p>
-	   * @author thies 
 	   * Feststellen der <em>inhaltlichen</em> Gleichheit zweier
 	   * <code>BusinessObject</code>-Objekte. Die Gleichheit wird in diesem Beispiel auf eine
 	   * identische ID beschränkt.
@@ -71,6 +69,7 @@ public abstract class BusinessObject implements Serializable {
 	   * In unseren eigenen Klassen können wir diese Methode überschreiben und ihr
 	   * mehr Intelligenz verleihen.
 	   * </p>
+	   * @see #equals(Object o)
 	   */
 	//TODO: was heisst dieses @override 
 	  @Override
@@ -109,6 +108,7 @@ public abstract class BusinessObject implements Serializable {
 	   * Zusammen mit <code>equals</code> sollte diese Methode immer definiert werden. Manche Java-Klassen
 	   * verwendenden <code>hashCode</code>, um initial ein Objekt (z.B. in einer Hashtable) zu identifizieren. Erst danach
 	   * würde mit <code>equals</code> festgestellt, ob es sich tatsächlich um das gesuchte Objekt handelt.
+	   * @see #hashCode()
 	   */
 	  @Override
 	public int hashCode() {

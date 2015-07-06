@@ -14,11 +14,11 @@ import de.hdm.gruppe1.shared.bo.User;
 
 /**
  * <p>
- * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Banken.
+ * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Ausgabe des Reports.
  * </p>
  * <p>
  * <b>Frage:</b> Warum werden diese Methoden nicht als Teil der Klassen
- * {@link Bank}, {@link Customer}, {@link Account} oder {@link Transaction}
+ * {@link Stueckliste}, {@link User}, {@link Baugruppe} oder {@link Bauteil}
  * implementiert?<br>
  * <b>Antwort:</b> Z.B. das Löschen eines Kunden erfordert Kenntnisse über die
  * Verflechtung eines Kunden mit Konto-Objekten. Um die Klasse <code>Bank</code>
@@ -39,9 +39,8 @@ import de.hdm.gruppe1.shared.bo.User;
  * Servlets an.
  * </p>
  * 
- * @author  Alexander Pressler & Thies
+ * @author Thies, Schmidt & Pressler
  */
-// TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
 @RemoteServiceRelativePath("sms")
 public interface Sms extends RemoteService {
 
@@ -64,19 +63,22 @@ public interface Sms extends RemoteService {
 	 *            MaterialBeschreibung
 	 * @return Ein fertiges Kunden-Objekt.
 	 * @throws IllegalArgumentException
-	 * @throws DuplicateBauteilException 
+	 * @throws DuplicateBauteilException
 	 */
 	Bauteil createBauteil(String name, String bauteilBeschreibung,
-			String materialBeschreibung) throws IllegalArgumentException, DuplicateBauteilException;
+			String materialBeschreibung) throws IllegalArgumentException,
+			DuplicateBauteilException;
 
-	 public void save(Bauteil b) throws IllegalArgumentException, DuplicateBauteilException;
+	public void save(Bauteil b) throws IllegalArgumentException,
+			DuplicateBauteilException;
 
-	 /**
-	   * Löschen des übergebenen Bauteils.
-	   * 
-	   * @param b der zu löschende Bauteil
-	   * @throws IllegalArgumentException
-	   */
+	/**
+	 * Löschen des übergebenen Bauteils.
+	 * 
+	 * @param b
+	 *            der zu löschende Bauteil
+	 * @throws IllegalArgumentException
+	 */
 	void delete(Bauteil b) throws IllegalArgumentException;
 
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
@@ -92,7 +94,8 @@ public interface Sms extends RemoteService {
 
 	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
 
-	void saveStueckliste(Stueckliste s) throws IllegalArgumentException, DuplicateStuecklisteException;
+	void saveStueckliste(Stueckliste s) throws IllegalArgumentException,
+			DuplicateStuecklisteException;
 
 	User createUser(String googleID, String name)
 			throws IllegalArgumentException;
@@ -103,7 +106,8 @@ public interface Sms extends RemoteService {
 
 	void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException;
 
-	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException, DuplicateBaugruppeException;
+	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException,
+			BaugruppenReferenceException, DuplicateBaugruppeException;
 
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 
@@ -112,10 +116,12 @@ public interface Sms extends RemoteService {
 
 	void deleteEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException;
 
-	void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException, DuplicateEnderzeugnisException;
+	void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException,
+			DuplicateEnderzeugnisException;
 
 	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
 
 	Baugruppe getBaugruppeById(int id) throws IllegalArgumentException;
-	void setLoginInfo (LoginInfo loginInfo) throws IllegalArgumentException;
+
+	void setLoginInfo(LoginInfo loginInfo) throws IllegalArgumentException;
 }

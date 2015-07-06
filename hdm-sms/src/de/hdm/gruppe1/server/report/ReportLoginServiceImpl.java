@@ -9,19 +9,30 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+/**
+ * Implementierung des <code>ReportGenerator-Login Service</code>-Interface. Die technische
+ * Realisierung bzgl. <code>RemoteServiceServlet</code> bzw. GWT RPC erfolgt
+ * analog zu {@ReportLoginService}. Für Details zu GWT RPC siehe dort.
+ * 
+ * @see ReportLoginService
+ * @author Thies, Schmidt & Pressler 
+ */
 public class ReportLoginServiceImpl extends RemoteServiceServlet implements
     LoginService {
 
-  /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	   * Nutzerdaten mit Hilfe des Google User Service abgereifen
+	   * @see #getUserInfo(String requestUri)
+	   */
 public LoginInfo getUserInfo(String requestUri) {
-    UserService userService = UserServiceFactory.getUserService();
+    //aktuellen User ziehen und Login Inho erstellen
+	UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
     LoginInfo loginInfo = new LoginInfo();
-
+    
+    //wenn nutzer nicht vorhanden neu anlegen
     if (user != null) {
     	de.hdm.gruppe1.shared.bo.User currentUser = new de.hdm.gruppe1.shared.bo.User();
         UserMapper uMapper = UserMapper.userMapper();
@@ -32,6 +43,7 @@ public LoginInfo getUserInfo(String requestUri) {
       	  currentUser.setName(user.getEmail());
       	  currentUser=uMapper.insert(currentUser);
         }
+      //Ansonsten eingeloggten Nutzer setzen 
       loginInfo.setLoggedIn(true);
       loginInfo.setEmailAddress(user.getEmail());
       loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));

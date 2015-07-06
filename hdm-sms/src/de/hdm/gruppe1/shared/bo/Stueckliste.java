@@ -3,8 +3,23 @@ package de.hdm.gruppe1.shared.bo;
 import java.util.Date;
 import java.util.Vector;
 
+/**
+ * In Stücklisten werden Baugruppen und Enderzeugnissen verwendet.Eine Stückliste kann
+ * eine oder mehrer Bauteilen & Baugruppen verwenden.Daher werden wir für die 
+ * Objekte eine dynamische Liste einsetzten.
+ * @author Schmidt & Pressler
+ *
+ */
 public class Stueckliste extends Element {
 
+	private static final long serialVersionUID = 1L; 
+	
+	/**
+	 * Deklaration der Attribute
+	 * Vektor: mit Bauteilpaaren
+	 * Vektor: mit Baugruppenpaaren
+	 * + Setter & Getter
+	 */
 	Vector<ElementPaar> BauteilPaare = new Vector<ElementPaar>();
 	Vector<ElementPaar> BaugruppenPaare = new Vector<ElementPaar>();
 	Date creationDate = null;

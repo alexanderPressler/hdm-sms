@@ -1,6 +1,15 @@
 package de.hdm.gruppe1.server;
 import de.hdm.gruppe1.shared.bo.*;
 
+/**
+ * Diese Klasse soll das festhängen in einer Dauerschleife verhinden,
+ * Sie verhindert, dass Baugruppen oder Stuecklisten sich selbst 
+ * hinzugefügt werden können.
+ * 
+ * @author Herrmann
+ * @version 1.0
+ * 
+ */
 public class LoopPrevention {
 	//Gibt true zurück, wenn ein Loop gefunden wird, ansonsten false
 	public Boolean checkForBaugruppenLoop (Baugruppe source, Baugruppe toAdd){

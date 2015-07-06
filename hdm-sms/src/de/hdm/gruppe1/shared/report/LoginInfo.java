@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * Diese Klasse enthält alle Daten über die aktuelle Nutzersession
  * 
- * @author Andreas Herrmann
+ * @author Herrmann
  *
  */
 public class LoginInfo implements Serializable {

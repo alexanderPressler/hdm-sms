@@ -10,20 +10,14 @@ import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 
 /**
- * Das asynchrone Gegenstück des Interface {@link BankAdministration}. Es wird
+ * Das asynchrone Gegenstück des Interface {@link SmsReport}. Es wird
  * semiautomatisch durch das Google Plugin erstellt und gepflegt. Daher erfolgt
  * hier keine weitere Dokumentation. Für weitere Informationen siehe das
- * synchrone Interface {@link BankAdministration}.
+ * synchrone Interface {@link SmsReport}.
  * 
  * @author Alexander Pressler &  thies
  */
 public interface SmsReportAsync {
-
-//	void createMaterialBedarfReport(int id, int anzahl,
-//			AsyncCallback<Enderzeugnis> callback);
-//
-//	void createBaugruppenReport(Stueckliste BaugruppenStueckliste,
-//			AsyncCallback<BaugruppenReport> callback);
 
 	void getAllBaugruppen(AsyncCallback<Vector<Baugruppe>> callback);
 

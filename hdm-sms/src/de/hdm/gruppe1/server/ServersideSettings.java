@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * <code>ServerSideSettings.getLogger()</code> genutzt werden kann.
  * </p>
  * 
- * @author thies
+ * @author Thies, Schmidt & Pressler
  * @version 1.0
  * @since 28.02.2012
  * 
