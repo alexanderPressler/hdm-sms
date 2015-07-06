@@ -36,23 +36,23 @@ public class BauteilGeneralView extends VerticalPanel {
 
 	/**
 	 * Einige GUI-Elemente sollen nebeneinander angezeigt werden, nicht vertikal. Daher wird
-	 * ein "vertikales Zwischen-Panel" benötigt.
+	 * ein vertikales "Zwischen-Panel" benötigt.
 	 */
 	private HorizontalPanel editButtonPanel = new HorizontalPanel();
 	private HorizontalPanel deleteButtonPanel = new HorizontalPanel();
 
 	/**
-	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
+	 * Den Buttons wird jeweils ein erklärendes Text-Label hinzugefügt.
 	 */
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht ein Bauteil aus, um es mithilfe dieses Buttons zu editieren: ");
+			"Markiertes Bauteil editieren ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens ein Bauteil aus, um es mithilfe dieses Buttons zu löschen: ");
+			"Markierte(s) Bauteil(e) löschen ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-
 	 * bzw. delete-Button. Dies entspricht dem neuesten Stand der
-	 * Web-Programmierung.
+	 * Web-Programmierung (Aussage Herr Thies).
 	 */
 	private final Button editBtn = new Button("");
 	private final Button deleteBtn = new Button("");
@@ -103,7 +103,7 @@ public class BauteilGeneralView extends VerticalPanel {
 		deleteBtn.addClickHandler(new deleteClickHandler());
 
 		/**
-		 * Diverse css-Formatierungen
+		 * Diverse css-Formatierungen.
 		 */
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
@@ -118,7 +118,8 @@ public class BauteilGeneralView extends VerticalPanel {
 		stuecklistenVerwaltung.getAllBauteile(new GetAllBauteileCallback());
 
 		/**
-		 * Die erste Reihe der Tabelle wird mit Überschriften vordefiniert.
+		 * Die erste Reihe der Tabelle wird mit Überschriften vordefiniert. Aus diesem Grund wird in allen
+		 * nachfolgenden Funktionen, in denen die Tabelle befüllt wird, jeweils der Reihen-Index +1 gesetzt.
 		 */
 		table.setText(0, 0, "ID");
 		table.setText(0, 1, "Name");
@@ -152,15 +153,11 @@ public class BauteilGeneralView extends VerticalPanel {
 		this.add(table);
 
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 * Abschließend wird die Klasse dem RootPanel zugeordnet.
 		 */
 		RootPanel.get("content_wrap").add(this);
 
 	}
-
-	/*
-	 * Click Handlers
-	 */
 
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
@@ -168,16 +165,22 @@ public class BauteilGeneralView extends VerticalPanel {
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
-	 * @author Mario Alex
+	 * @author Mario Theiler, Alexander Pressler
 	 * 
 	 */
 	class GetAllBauteileCallback implements AsyncCallback<Vector<Bauteil>> {
 
+		/**
+		 * Nach einem nicht erfolgreichen RPC wird folgende Hinweismeldung ausgegeben.
+		 */
 		@Override
 		public void onFailure(Throwable caught) {
 			Window.alert("Bauteile konnten nicht geladen werden.");
 		}
 
+		/**
+		 * Nach einem erfolgreichen RPC wird folgendes ausgeführt.
+		 */
 		@Override
 		public void onSuccess(Vector<Bauteil> alleBauteile) {
 
@@ -189,12 +192,17 @@ public class BauteilGeneralView extends VerticalPanel {
 
 			/**
 			 * Abfangen eines leeren RPC-Vektors mithilfe eines Labels, das sich
-			 * über die komplette Reihe erstreckt.
+			 * über die komplette Reihe erstreckt. Dies ermöglicht dem User direkt, zu erkennen ob Daten
+			 * in der Datenbank vorhanden sind, oder nicht. Der User erkennt außerdem, dass es sich nicht
+			 * um ein Datenbankverbindungs-Problem handelt, da in solchen Fällen eine andere Hinweis-
+			 * meldung ausgegeben wird.
 			 */
 			if (allBauteile.isEmpty() == true) {
 
+				/**
+				 * Das Label erstreckt sich über die gesamte Tabellenbreite.
+				 */
 				table.getFlexCellFormatter().setColSpan(1, 0, 7);
-
 				table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
 
 			}
@@ -202,7 +210,7 @@ public class BauteilGeneralView extends VerticalPanel {
 			else {
 				/**
 				 * Die flexTable table wird mithilfe dieser for-Schleife Reihe
-				 * um Reihe für jedes Bauteil befüllt.
+				 * um Reihe mit im Ausgangsvektor vorhandenen Bauteilen befüllt.
 				 */
 				for (int row = 1; row <= allBauteile.size(); row++) {
 
@@ -215,12 +223,17 @@ public class BauteilGeneralView extends VerticalPanel {
 					 */
 					final int i = row - 1;
 
+					/**
+					 * Buttons, mit deren Hilfe ein individuelles Editieren, bzw. Löschen
+					 * in der gesamten Tabelle ermöglicht wird.
+					 */
 					CheckBox checkBox = new CheckBox("");
 					RadioButton radioButton = new RadioButton("editRadioGroup", "");
 					
 					/**
 					 * Pro Vektor-Index wird eine Reihe in die Tabelle
-					 * geschrieben.
+					 * geschrieben. Jede Reihe enthält die zum Objekt
+					 * gespeicherten Informationen.
 					 */
 					table.setText(row, 0, "" + allBauteile.get(i).getId());
 					table.setText(row, 1, allBauteile.get(i).getName());
@@ -290,7 +303,9 @@ public class BauteilGeneralView extends VerticalPanel {
 			/**
 			 * ClickHandler für den Aufruf der Klasse editBauteil. Als Attribut
 			 * wird das Bauteil-Objekt aus der entsprechenden Tabellen-Reihe
-			 * mitgeschickt.
+			 * mitgeschickt. Der Vorteil hierbei ist, dass kein erneuter RPC zur Datenbank
+			 * abgeschickt werden muss, da das vollständige Objekt bereits in der GUI
+			 * vorhanden ist.
 			 */
 			editBtn.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -312,25 +327,35 @@ public class BauteilGeneralView extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt löscht.
 	 * 
-	 * @author Mario Alex
+	 * @author Mario Theiler, Alexander Pressler
 	 * 
 	 */
 	private class deleteClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
 
+			/**
+			 * Hiermit wird abgefangen, falls keine CheckBox(en) ausgewählt sind.
+			 */
 			if (deleteBauteile.isEmpty() == true) {
 				Window.alert("Es wurde kein Bauteil zum Löschen ausgewählt.");
 			}
 
 			else {
+				
+				/**
+				 * Anderenfalls wird der zuvor mithilfe der ValueChange Handler befüllte Vektor
+				 * in seiner vollen Länge durchlaufen und jeweils ein RPC mit dem Lösch-Befehl
+				 * abgeschickt.
+				 */
 				for (int i = 0; i <= deleteBauteile.size(); i++) {
 					Bauteil b = new Bauteil();
 					b = deleteBauteile.get(i);
 					/**
-					 * Die konkrete RPC-Methode für den create-Befehl wird
+					 * Die konkrete RPC-Methode für den delete-Befehl wird
 					 * aufgerufen. Hierbei werden die gewünschten Werte
-					 * mitgeschickt.
+					 * mitgeschickt. Im Anschluss wird die BauteilGeneralView-Klasse
+					 * neu geladen und angezeigt.
 					 */
 					stuecklistenVerwaltung.delete(b, new DeleteBauteilCallback());
 					RootPanel.get("content_wrap").clear();
@@ -351,14 +376,13 @@ public class BauteilGeneralView extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
+			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
 			Window.alert("Das Löschen des Bauteils ist fehlgeschlagen!");
 		}
 
 		@Override
 		public void onSuccess(Void result) {
 
-			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
-			//Wenn nicht, dann zeige diesen Window Alert an.
 			Window.alert("Das Bauteil wurde erfolgreich gelöscht, wenn es nirgendwo referenziert ist.");
 		}
 	}

@@ -241,4 +241,35 @@ public class BaugruppenMapper {
 		}
 		return baugruppe;
 	}
+	
+	public Baugruppe finByName (String name){
+		Connection con = DBConnection.connection();
+		Baugruppe baugruppe = null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Baugruppe JOIN User ON Baugruppe.bearbeitet_Von=User.userID WHERE name='"+name+"';");
+			if(rs.next()){
+				baugruppe = new Baugruppe();
+		    	baugruppe.setId(rs.getInt("bg_ID"));
+		    	baugruppe.setName(rs.getString("name"));
+		    	//Da wir die Stueckliste der Baugruppe auflösen müssen brauchen wir einen StuecklistenMapper
+		    	StuecklisteMapper slm = StuecklisteMapper.stuecklisteMapper();
+		    	baugruppe.setStueckliste(slm.findById(rs.getInt("stueckliste")));
+		    	
+		    	User user = new User();
+		    	user.setId(rs.getInt("userID"));
+		    	user.setName(rs.getString("eMail"));
+		    	user.setGoogleID(rs.getString("googleID"));
+		    	baugruppe.setEditUser(user);
+		    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+		    	 // die Datenbank zu speichern 
+		     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+		     	baugruppe.setEditDate(sqlDate);
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return baugruppe;
+	}
 }

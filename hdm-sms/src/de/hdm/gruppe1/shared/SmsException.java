@@ -9,7 +9,7 @@ import de.hdm.gruppe1.shared.bo.Element;
  * @author Andreas Herrmann
  *
  */
-public class ReferenceException extends Exception {
+public class SmsException extends Exception {
 
 	/**
 	 * 
@@ -17,16 +17,18 @@ public class ReferenceException extends Exception {
 	private static final long serialVersionUID = 1L;
 	private String message;
 	private Element ausloeser;
-	
-	public ReferenceException (String message){
+	public SmsException (){
+		
+	}
+	public SmsException (String message){
 	setMessage(message);
 	}
 	
-	public ReferenceException (Element cause){
+	public SmsException (Element cause){
 		this.ausloeser=cause;
 	}
 	
-	public ReferenceException (String message, Element cause){
+	public SmsException (String message, Element cause){
 		this.message=message;
 		this.ausloeser=cause;
 	}

@@ -10,7 +10,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+
 import de.hdm.gruppe1.client.ClientsideSettings;
+import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Bauteil;
 
@@ -49,7 +51,8 @@ public class CreateBauteil extends VerticalPanel {
 
 		/**
 		 * TextBoxen werden mit Text vorbefüllt, der ausgeblendet wird, sobald
-		 * die TextBox vom User fokussiert wird.
+		 * die TextBox vom User fokussiert wird. Dadurch wird eine klare Übersicht
+		 * für den Benutzer geschaffen.
 		 */
 		NameField.getElement().setPropertyString("placeholder", "Name");
 		MaterialField.getElement().setPropertyString("placeholder", "Material");
@@ -70,11 +73,10 @@ public class CreateBauteil extends VerticalPanel {
 		this.add(CreateBauteilButton);
 		
 		/**
-		 * Diverse css-Formatierungen
+		 * Diverse css-Formatierungen.
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
-		DescriptionField.setStyleName("DescriptionFieldText");
 		CreateBauteilButton.setStyleName("Button");
 
 		/**
@@ -84,30 +86,22 @@ public class CreateBauteil extends VerticalPanel {
 		CreateBauteilButton.addClickHandler(new CreateClickHandler());
 
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 *  Abschließend wird die Klasse dem RootPanel zugeordnet.
 		 */
 		RootPanel.get("content_wrap").add(this);
 
 	}
 
-	/*
-	 * Click Handlers.
-	 */
-
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Bauteil-Objekt in der
 	 * Datenbank anlegt.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler
 	 * 
 	 */
 	private class CreateClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
-
-			String name = NameField.getText();
-			String bauteilBeschreibung = DescriptionField.getText();
-			String materialBeschreibung = MaterialField.getText();
 
 			/**
 			 * Vor dem Aufruf der RPC-Methode create wird geprüft, ob alle
@@ -116,14 +110,19 @@ public class CreateBauteil extends VerticalPanel {
 			if (NameField.getText().isEmpty() != true
 					&& DescriptionField.getText().isEmpty() != true
 					&& MaterialField.getText().isEmpty() != true) {
-
+				
+				FieldVerifier umlaut = new FieldVerifier();
+				String inputName = umlaut.changeUmlaut(NameField.getText());
+				String inputDescription = umlaut.changeUmlaut(DescriptionField.getText());
+				String inputMaterial = umlaut.changeUmlaut(MaterialField.getText());
+			
 				/**
 				 * Die konkrete RPC-Methode für den create-Befehl wird
 				 * aufgerufen. Hierbei werden die gewünschten Werte
 				 * mitgeschickt.
 				 */
-				stuecklistenVerwaltung.createBauteil(name, bauteilBeschreibung,
-						materialBeschreibung, new CreateBauteilCallback());
+				stuecklistenVerwaltung.createBauteil(inputName, inputDescription,
+						inputMaterial, new CreateBauteilCallback());
 
 				/**
 				 * Nachdem der Create-Vorgang durchgeführt wurde, soll die GUI
@@ -134,6 +133,10 @@ public class CreateBauteil extends VerticalPanel {
 
 			}
 
+			/**
+			 * Falls nicht alle Felder ordnungsgemäß befüllt sind, wird dem User
+			 * folgende Hinweismeldung angezeigt.
+			 */
 			else {
 
 				Window.alert("Bitte alle Felder ausfüllen.");
@@ -147,19 +150,18 @@ public class CreateBauteil extends VerticalPanel {
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler
 	 * 
 	 */
 	class CreateBauteilCallback implements AsyncCallback<Bauteil> {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen des Bauteils ist fehlgeschlagen!");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override
 		public void onSuccess(Bauteil bauteil) {
-
 			Window.alert("Das Bauteil wurde erfolgreich angelegt.");
 		}
 	}

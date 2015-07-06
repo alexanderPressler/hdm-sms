@@ -262,7 +262,7 @@ public class BauteilMapper {
 				if (rs.next()) {
 					// Ergebnis-Tupel in Objekt umwandeln
 					Bauteil bauteil = new Bauteil();
-					bauteil.setId(rs.getInt("id"));
+					bauteil.setId(rs.getInt("teilnummer"));
 					bauteil.setName(rs.getString("name"));
 					bauteil.setBauteilBeschreibung(rs.getString("bauteilBeschreibung"));
 					bauteil.setMaterialBeschreibung(rs.getString("materialBeschreibung"));
@@ -286,6 +286,33 @@ public class BauteilMapper {
 			}
 
 			return null;
+		}
+		public Bauteil finByName (String name){
+			Connection con = DBConnection.connection();
+			Bauteil bauteil = null;
+			try{
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT * FROM Bauteile JOIN User ON Bauteile.bearbeitet_Von=User.userID WHERE name='"+name+"';");
+				if(rs.next()){
+					bauteil = new Bauteil();
+			    	bauteil.setId(rs.getInt("teilnummer"));
+			    	bauteil.setName(rs.getString("name"));
+			    	
+			    	User user = new User();
+			    	user.setId(rs.getInt("userID"));
+			    	user.setName(rs.getString("eMail"));
+			    	user.setGoogleID(rs.getString("googleID"));
+			    	bauteil.setEditUser(user);
+			    	// Java Util Date wird umgewandelt in SQL Date um das Änderungsdatum in
+			    	 // die Datenbank zu speichern 
+			     	 java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+			     	bauteil.setEditDate(sqlDate);
+				}
+			}
+			catch(SQLException e){
+				e.printStackTrace();
+			}
+			return bauteil;
 		}
 
 }

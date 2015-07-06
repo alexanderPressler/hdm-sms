@@ -46,16 +46,16 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
 	 */
 	private final Label editLabel = new Label(
-			"Wählen Sie in der Übersicht eine Stückliste aus, um sie mithilfe dieses Buttons zu editieren: ");
+			"Markierte Stückliste editieren ");
 	private final Label deleteLabel = new Label(
-			"Wählen Sie in der Übersicht mindestens eine Stückliste aus, um sie mithilfe dieses Buttons zu löschen: ");
-	private final Label treeViewLabel = new Label ("Wählen Sie in der Übersicht eine Stückliste an, um deren" +
-			"Strukturstückliste anzuzeigen: ");
+			"Markierte Stückliste(n) löschen ");
+	private final Label treeViewLabel = new Label (
+			"Markierte Stückliste als Strukturstückliste anzeigen ");
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-
 	 * bzw. delete-Button. Dies entspricht dem neuesten Stand der
-	 * Web-Programmierung.
+	 * Web-Programmierung (Aussage Herr Thies).
 	 */
 	private final Button editBtn = new Button("");
 	private final Button deleteBtn = new Button("");
@@ -109,7 +109,7 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		treeViewPanel.add(treeViewBtn);
 
 		/**
-		 * Diverse css-Formatierungen
+		 * Diverse css-Formatierungen.
 		 */
 		editBtn.setStyleName("editButton");
 		deleteBtn.setStyleName("deleteButton");
@@ -125,7 +125,8 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		stuecklistenVerwaltung.getAllStuecklisten(new GetAllStuecklistenCallback());
 
 		/**
-		 * Die erste Reihe der Tabelle wird mit Überschriften vordefiniert.
+		 * Die erste Reihe der Tabelle wird mit Überschriften vordefiniert. Aus diesem Grund wird in allen
+		 * nachfolgenden Funktionen, in denen die Tabelle befüllt wird, jeweils der Reihen-Index +1 gesetzt.
 		 */
 		table.setText(0, 0, "ID");
 		table.setText(0, 1, "Name");
@@ -160,15 +161,11 @@ public class StuecklisteGeneralView extends VerticalPanel {
 		this.add(table);
 
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 * Abschließend wird die Klasse dem RootPanel zugeordnet.
 		 */
 		RootPanel.get("content_wrap").add(this);
 
 	}
-
-	/*
-	 * Click Handlers.
-	 */
 
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
@@ -176,16 +173,22 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
-	 * @author Mario Alex
+	 * @author Mario Theiler, Alexander Pressler
 	 * 
 	 */
 	class GetAllStuecklistenCallback implements AsyncCallback<Vector<Stueckliste>> {
 
+		/**
+		 * Nach einem nicht erfolgreichen RPC wird folgende Hinweismeldung ausgegeben.
+		 */
 		@Override
 		public void onFailure(Throwable caught) {
 			Window.alert("Stücklisten konnten nicht geladen werden.");
 		}
 
+		/**
+		 * Nach einem erfolgreichen RPC wird folgendes ausgeführt.
+		 */
 		@Override
 		public void onSuccess(Vector<Stueckliste> alleStuecklisten) {
 
@@ -197,12 +200,17 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 			/**
 			 * Abfangen eines leeren RPC-Vektors mithilfe eines Labels, das sich
-			 * über die komplette Reihe erstreckt.
+			 * über die komplette Reihe erstreckt. Dies ermöglicht dem User direkt, zu erkennen ob Daten
+			 * in der Datenbank vorhanden sind, oder nicht. Der User erkennt außerdem, dass es sich nicht
+			 * um ein Datenbankverbindungs-Problem handelt, da in solchen Fällen eine andere Hinweis-
+			 * meldung ausgegeben wird.
 			 */
 			if (allStuecklisten.isEmpty() == true) {
 
+				/**
+				 * Das Label erstreckt sich über die gesamte Tabellenbreite.
+				 */
 				table.getFlexCellFormatter().setColSpan(1, 0, 7);
-
 				table.setWidget(1, 0, new Label("Es sind leider keine Daten in der Datenbank vorhanden."));
 
 			}
@@ -224,6 +232,10 @@ public class StuecklisteGeneralView extends VerticalPanel {
 					 */
 					final int i = row - 1;
 
+					/**
+					 * Buttons, mit deren Hilfe ein individuelles Editieren, Löschen, bzw. näheres
+					 * ansehen als Strukturstückliste in der gesamten Tabelle ermöglicht wird.
+					 */
 					RadioButton radioButton = new RadioButton("editRadioGroup", "");
 					CheckBox checkBox = new CheckBox("");
 					RadioButton treeViewButton = new RadioButton("treeViewGroup", "");
@@ -235,7 +247,8 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 					/**
 					 * Pro Vektor-Index wird eine Reihe in die Tabelle
-					 * geschrieben.
+					 * geschrieben. Jede Reihe enthält die zum Objekt
+					 * gespeicherten Informationen.
 					 */
 					table.setText(row, 0, "" + allStuecklisten.get(i).getId());
 					table.setText(row, 1, allStuecklisten.get(i).getName());
@@ -333,7 +346,9 @@ public class StuecklisteGeneralView extends VerticalPanel {
 			/**
 			 * ClickHandler für den Aufruf der Klasse editStueckliste. Als Attribut
 			 * wird das Stücklisten-Objekt aus der entsprechenden Tabellen-Reihe
-			 * mitgeschickt.
+			 * mitgeschickt. Der Vorteil hierbei ist, dass kein erneuter RPC zur Datenbank
+			 * abgeschickt werden muss, da das vollständige Objekt bereits in der GUI
+			 * vorhanden ist.
 			 */
 			editBtn.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -352,7 +367,9 @@ public class StuecklisteGeneralView extends VerticalPanel {
 			/**
 			 * ClickHandler für den Aufruf der Klasse treeView. Als Attribut
 			 * wird das Stücklisten-Objekt aus der entsprechenden Tabellen-Reihe
-			 * mitgeschickt.
+			 * mitgeschickt. Der Vorteil hierbei ist, dass kein erneuter RPC zur Datenbank
+			 * abgeschickt werden muss, da das vollständige Objekt bereits in der GUI
+			 * vorhanden ist.
 			 */
 			treeViewBtn.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -375,25 +392,36 @@ public class StuecklisteGeneralView extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Stuecklisten-Objekt löscht.
 	 * 
-	 * @author Mario Alex
+	 * @author Mario Theiler, Alexander Pressler
 	 * 
 	 */
 	private class deleteClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
 
+			/**
+			 * Hiermit wird abgefangen, falls keine CheckBox(en) ausgewählt sind.
+			 */
 			if (deleteStuecklisten.isEmpty() == true) {
 				Window.alert("Es wurde keine Stückliste zum Löschen ausgewählt.");
 			}
 
 			else {
+				
+				/**
+				 * Anderenfalls wird der zuvor mithilfe der ValueChange Handler befüllte Vektor
+				 * in seiner vollen Länge durchlaufen und jeweils ein RPC mit dem Lösch-Befehl
+				 * abgeschickt.
+				 */
 				for (int i = 0; i <= deleteStuecklisten.size(); i++) {
 					Stueckliste s = new Stueckliste();
 					s = deleteStuecklisten.get(i);
+					
 					/**
-					 * Die konkrete RPC-Methode für den create-Befehl wird
+					 * Die konkrete RPC-Methode für den delete-Befehl wird
 					 * aufgerufen. Hierbei werden die gewünschten Werte
-					 * mitgeschickt.
+					 * mitgeschickt. Im Anschluss wird die StuecklisteGeneralView-Klasse
+					 * neu geladen und angezeigt.
 					 */
 					stuecklistenVerwaltung.deleteStueckliste(s, new DeleteStuecklisteCallback());
 					RootPanel.get("content_wrap").clear();
@@ -414,12 +442,12 @@ public class StuecklisteGeneralView extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
+			//TODO Exception einbauen. Falls es eine Exception gibt, zeige diese an.
 			Window.alert("Das Löschen der Stueckliste ist fehlgeschlagen!");
 		}
 
 		@Override
 		public void onSuccess(Void result) {
-
 			Window.alert("Die Stueckliste wurde erfolgreich gelöscht.");
 		}
 	}

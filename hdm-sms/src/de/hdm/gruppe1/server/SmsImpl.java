@@ -3,6 +3,7 @@ package de.hdm.gruppe1.server;
 import java.util.Date;
 import java.util.Vector;
 
+import de.hdm.gruppe1.shared.DuplicateBaugruppeException;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
@@ -100,6 +101,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	private UserMapper userMapper = null;
 	private BaugruppenMapper baugruppenMapper = null;
 	private EnderzeugnisMapper enderzeugnisMapper = null;
+	private LoginInfo logInfo = null;
 	
 	/*
 	   * Da diese Klasse ein gewisse Größe besitzt - dies ist eigentlich ein
@@ -185,7 +187,14 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
-	      throws IllegalArgumentException {
+	      throws IllegalArgumentException, DuplicateBauteilException {
+		  
+		//Überprüfen, ob ein Bauteil mit dem Namen schon existiert
+		  Bauteil bauteil = bauteilMapper.finByName(name);
+		  if(bauteil!=null){
+			  DuplicateBauteilException dBE = new DuplicateBauteilException(bauteil);
+			  throw dBE;
+		  }
 	    Bauteil b = new Bauteil();
 	    b.setName(name);
 	    b.setBauteilBeschreibung(bauteilBeschreibung);
@@ -195,12 +204,8 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    Date date = new Date();
 	    b.setEditDate(date);
 	    
-	  //TODO dynamisch anpassen
-        User editUser = new User();
-        editUser.setName("statischer User");
-        editUser.setId(1);
-        editUser.setGoogleID("000000000000");
-        b.setEditUser(editUser);
+	  
+        b.setEditUser(logInfo.getUser());
 
 	    /*
 	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
@@ -218,14 +223,16 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Bauteils.
 	   */
 	  @Override
-	public void save(Bauteil b) throws IllegalArgumentException {
+	public void save(Bauteil b) throws IllegalArgumentException, DuplicateBauteilException {
+		  
+		//Überprüfen, ob ein Bauteil mit dem Namen schon existiert
+		  Bauteil bauteil = bauteilMapper.finByName(b.getName());
+		  if(bauteil!=null){
+			  DuplicateBauteilException dBE = new DuplicateBauteilException(bauteil);
+			  throw dBE;
+		  }
 		 
-		//TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        b.setEditUser(editUser);
+	        b.setEditUser(logInfo.getUser());
 	    
 	        // Aenderungsdatum wird generiert und dem Objekt angehängt
 	        // Das Datum wird zum Zeitpunkt des RPC Aufrufs erstellt
@@ -293,7 +300,15 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public Stueckliste createStueckliste(String name, Vector<ElementPaar> BauteilPaare, 
-			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
+			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException, DuplicateStuecklisteException {
+		  
+		//Überprüfen, ob eine Stueckliste mit dem Namen schon existiert
+		  Stueckliste stueckliste = stuecklisteMapper.finByName(name);
+		  if(stueckliste!=null){
+			  DuplicateStuecklisteException dSE = new DuplicateStuecklisteException(stueckliste);
+			  throw dSE;
+		  }
+		  
 		Stueckliste s = new Stueckliste();
 	    s.setName(name);
 	    s.setBauteilPaare(BauteilPaare);
@@ -303,12 +318,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    Date date = new Date();
 	    s.setEditDate(date);
 	    
-	  //TODO dynamisch anpassen
-        User editUser = new User();
-        editUser.setName("statischer User");
-        editUser.setId(1);
-        editUser.setGoogleID("000000000000");
-        s.setEditUser(editUser);
+        s.setEditUser(logInfo.getUser());
 	    
 
 	    // Objekt in der DB speichern.
@@ -341,18 +351,20 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Bauteils.
 	   */
 	  @Override
-	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException {
+	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException, DuplicateStuecklisteException {
+		  
+		//Überprüfen, ob eine Stueckliste mit dem Namen schon existiert
+		  Stueckliste stueckliste = stuecklisteMapper.finByName(s.getName());
+		  if(stueckliste!=null){
+			  DuplicateStuecklisteException dSE = new DuplicateStuecklisteException(stueckliste);
+			  throw dSE;
+		  }
 		
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
 		    s.setEditDate(date);
 		  
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        s.setEditUser(editUser);
+	        s.setEditUser(logInfo.getUser());
 		  
 		  this.stuecklisteMapper.update(s);
 	  }
@@ -423,19 +435,20 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  @Override
 	public Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare, 
-			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException {
-			 
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
+			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException, DuplicateBaugruppeException{
+		  
+		  //Überprüfen, ob eine Baugruppe mit dem Namen schon existiert
+		  Baugruppe baugruppe = baugruppenMapper.finByName(name);
+		  if(baugruppe!=null){
+			  DuplicateBaugruppeException dBE = new DuplicateBaugruppeException(baugruppe);
+			  throw dBE;
+		  }
 
 	     // Erstellungsdatum wird generiert und dem Objekt angehäng
 		Date date = new Date();
 		
 		Stueckliste s = new Stueckliste();
-		s.setEditUser(editUser);
+		s.setEditUser(logInfo.getUser());
 		s.setName(name+"_sl");
 	    s.setBauteilPaare(BauteilPaare);
 	    s.setBaugruppenPaare(BaugruppenPaare);
@@ -445,7 +458,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   
 	    Baugruppe b = new Baugruppe();
 	    b.setEditDate(date);
-	    b.setEditUser(editUser);
+	    b.setEditUser(logInfo.getUser());
 	    b.setName(name);
 	    b.setStueckliste(s);
 	      
@@ -489,22 +502,31 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Baugruppe.
 	   */
 	  @Override
-	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException {
+	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException, DuplicateBaugruppeException {
+		  
+		//Überprüfen, ob eine Baugruppe mit dem Namen schon existiert
+		  Baugruppe baugruppe = baugruppenMapper.finByName(b.getName());
+		  if(baugruppe!=null){
+			  DuplicateBaugruppeException dBE = new DuplicateBaugruppeException(baugruppe);
+			  throw dBE;
+		  }
 		
+		  for(int i=0; i<b.getStueckliste().getBaugruppenPaare().size();i++){
+			  LoopPrevention lP = new LoopPrevention();
+			  if(!lP.checkForBaugruppenLoop(b, (Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement())){
+				  BaugruppenReferenceException bRE = new BaugruppenReferenceException((Baugruppe)b.getStueckliste().getBaugruppenPaare().get(i).getElement());
+				  throw bRE;
+			  }
+		  }
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
 		    b.setEditDate(date);
 		  
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        b.setEditUser(editUser);
+	        b.setEditUser(logInfo.getUser());
 	        
 	       Stueckliste s = b.getStueckliste();
 	       s.setEditDate(date);
-	       s.setEditUser(editUser);
+	       s.setEditUser(logInfo.getUser());
 	       
 	       this.stuecklisteMapper.update(s);
 		  
@@ -544,14 +566,15 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * @see createStueckliste(String name)
 	   */
 	  @Override
-	public Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe ) throws IllegalArgumentException {
+	public Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe ) throws IllegalArgumentException, DuplicateEnderzeugnisException {
+		  
+		//Überprüfen, ob ein Enderzeugnis mit dem Namen schon existiert
+		  Enderzeugnis enderzeugnis = enderzeugnisMapper.finByName(name);
+		  if(enderzeugnis!=null){
+			  DuplicateEnderzeugnisException dEE = new DuplicateEnderzeugnisException(enderzeugnis);
+			  throw dEE;
+		  }
 		
-		     
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
 
 	     // Erstellungsdatum wird generiert und dem Objekt angehäng
 		Date date = new Date();
@@ -560,7 +583,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    e.setEditDate(date);
 	    e.setName(name);
 	    e.setBaugruppe(baugruppe);
-	    e.setEditUser(editUser);
+	    e.setEditUser(logInfo.getUser());
 	      
 	    // Objekt in der DB speichern.
 	    return this.enderzeugnisMapper.insert(e);
@@ -579,18 +602,20 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * Speichern eines Enderzeugnisses.
 	   */
 	  @Override
-	public void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException {
+	public void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException, DuplicateEnderzeugnisException {
+		  
+		//Überprüfen, ob ein Enderzeugnis mit dem Namen schon existiert
+		  Enderzeugnis enderzeugnis = enderzeugnisMapper.finByName(e.getName());
+		  if(enderzeugnis!=null){
+			  DuplicateEnderzeugnisException dEE = new DuplicateEnderzeugnisException(enderzeugnis);
+			  throw dEE;
+		  }
 		
 		// Aenderungsdatum wird generiert und dem Objekt angehängt
 		    Date date = new Date();
 		    e.setEditDate(date);
 		  
-		  //TODO dynamisch anpassen
-	        User editUser = new User();
-	        editUser.setName("statischer User");
-	        editUser.setId(1);
-	        editUser.setGoogleID("000000000000");
-	        e.setEditUser(editUser);
+	        e.setEditUser(logInfo.getUser());
 		  
 	        this.enderzeugnisMapper.update(e);
 	  }
@@ -601,6 +626,10 @@ public class SmsImpl extends RemoteServiceServlet implements
 	public Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException {
 	    return this.enderzeugnisMapper.findAll();
 	  }
+	  
+	 public void setLoginInfo(LoginInfo loginInfo){
+		 logInfo=loginInfo;
+	 }
 	  
 	  /*
 	   * ***************************************************************************
