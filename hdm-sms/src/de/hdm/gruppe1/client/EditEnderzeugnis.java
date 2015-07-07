@@ -9,20 +9,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.hdm.gruppe1.client.CreateStueckliste.CreateStuecklisteCallback;
-import de.hdm.gruppe1.client.EditBaugruppe.SaveCallback;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
-import de.hdm.gruppe1.shared.bo.Bauteil;
-import de.hdm.gruppe1.shared.bo.ElementPaar;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
-import de.hdm.gruppe1.shared.bo.Stueckliste;
 
 /**
  * Die Klasse CreateEnderzeugnis ermöglicht dem User, Objekte von Baugruppen in
@@ -173,8 +167,6 @@ public class EditEnderzeugnis extends VerticalPanel {
 					 * aufgerufen. Hierbei wird das gewünschte Objekt
 					 * mitgeschickt.
 					 */
-					
-					//TODO implementieren
 					stuecklistenVerwaltung.saveEnderzeugnis(e, new SaveCallback());
 					
 					/**

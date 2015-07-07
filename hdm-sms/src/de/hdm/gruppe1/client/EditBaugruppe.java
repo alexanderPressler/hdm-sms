@@ -147,11 +147,6 @@ public class EditBaugruppe extends VerticalPanel {
 			bauteilCollection.setWidget(i+1, 3, removeBtButton);
 
 			
-			// Der Wert von i muss final sein, damit sie im
-			// nachfolgenden ClickHandler verwendet werden kann.
-			// Daher wird sie mithilfe von int a finalisiert.
-			final int a = i;
-			
 			// In jeder Reihe wird ein Entfernen-Button platziert, damit
 			// der User schnell und unkompliziert
 			// jederzeit ein ElementPaar von Bauteil wieder entfernen
@@ -213,11 +208,6 @@ public class EditBaugruppe extends VerticalPanel {
 			baugruppeCollection.setText(i+1, 1, ""+ editBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getAnzahl());
 			baugruppeCollection.setText(i+1, 2, editBaugruppe.getStueckliste().getBaugruppenPaare().get(i).getElement().getName());
 			baugruppeCollection.setWidget(i+1, 3, removeBgButton);
-			
-			// Der Wert von i muss final sein, damit sie im
-			// nachfolgenden ClickHandler verwendet werden kann.
-			// Daher wird sie mithilfe von int a finalisiert.
-			final int a = i;
 			
 			// In jeder Reihe wird ein Entfernen-Button platziert, damit
 			// der User schnell und unkompliziert

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Vector;
 
 import de.hdm.gruppe1.shared.DuplicateBaugruppeException;
-import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;

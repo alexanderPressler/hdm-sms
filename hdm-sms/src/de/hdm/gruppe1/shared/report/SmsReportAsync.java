@@ -6,8 +6,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
-import de.hdm.gruppe1.shared.bo.Stueckliste;
-
 
 /**
  * Das asynchrone Gegenstück des Interface {@link BankAdministration}. Es wird

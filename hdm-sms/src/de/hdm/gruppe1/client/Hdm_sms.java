@@ -1,16 +1,12 @@
 package de.hdm.gruppe1.client;
 
-import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.LoginInfo;
 import de.hdm.gruppe1.shared.LoginService;
 import de.hdm.gruppe1.shared.LoginServiceAsync;
-import de.hdm.gruppe1.shared.Sms;
-import de.hdm.gruppe1.shared.SmsAsync;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
@@ -180,7 +176,6 @@ class LoginInfoCallback implements AsyncCallback<Void>{
 
 	@Override
 	public void onSuccess(Void result) {
-		// TODO Auto-generated method stub
 		
 	}
 	

@@ -167,7 +167,6 @@ public class CreateBaugruppe extends VerticalPanel {
 				bauteilPaar.setAnzahl(anzahl);
 				bauteilPaar.setElement(allBauteile.get(index));
 				
-				int c = allBauteile.get(index).getId();
 
 				/**
 				 *  Dem Vektor aller Bauteile der Baugruppe wird das soeben erstellte ElementPaar hinzugef�gt.
@@ -222,15 +221,6 @@ public class CreateBaugruppe extends VerticalPanel {
 						@Override
 						public void onClick(ClickEvent event) {
 
-							/**
-							 *  Zum einen wird die entsprechende Reihe aus der FlexTable entfernt.
-							 */
-//							int rowIndex = bauteilCollection.getCellForEvent(event).getRowIndex();
-							
-
-							// TODO implementieren
-							// ListBox-Element, das hinzugef�gt wurde, wird f�r
-							// doppeltes Hinzuf�gen gesperrt
 							
 							/**
 							 *  Zum anderen wird das ElementPaar von Bauteil aus dem collectBauteile Vektor entfernt.

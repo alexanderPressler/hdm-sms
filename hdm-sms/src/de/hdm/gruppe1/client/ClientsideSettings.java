@@ -3,8 +3,6 @@ package de.hdm.gruppe1.client;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.report.SmsReport;
 import de.hdm.gruppe1.shared.report.SmsReportAsync;

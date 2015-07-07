@@ -3,7 +3,6 @@ package de.hdm.gruppe1.server.report;
 import java.util.Vector;
 
 import de.hdm.gruppe1.server.SmsImpl;
-import de.hdm.gruppe1.server.db.*;
 import de.hdm.gruppe1.shared.*;
 import de.hdm.gruppe1.shared.bo.*;
 import de.hdm.gruppe1.shared.report.SmsReport;
