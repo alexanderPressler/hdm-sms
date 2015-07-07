@@ -241,12 +241,6 @@ public class CreateBaugruppe extends VerticalPanel {
 								}
 							}
 							bauteilCollection.removeRow(rowIndex);
-							String message = new String("Folgende Bauteile sind noch im Vektor: ");
-							for(int i=0; i<collectBauteile.size(); i++){
-								message= message+collectBauteile.get(i).getElement().getName()+" , ";
-							}
-							Window.alert(message);
-
 
 
 						}
@@ -353,11 +347,6 @@ public class CreateBaugruppe extends VerticalPanel {
 								}
 							}
 							baugruppeCollection.removeRow(rowIndex);
-							String message = new String("Folgende Baugruppen sind noch im Vektor: ");
-							for(int i=0; i<collectBaugruppen.size(); i++){
-								message= message+collectBaugruppen.get(i).getElement().getName()+" , ";
-							}
-							Window.alert(message);
 
 						}
 

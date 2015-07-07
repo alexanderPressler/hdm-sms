@@ -781,6 +781,20 @@ public class StuecklisteMapper {
 				Stueckliste stueckliste = new Stueckliste();
 				stueckliste.setId(rs.getInt("sl_ID"));
 				stueckliste.setName(rs.getString("Stueckliste.name"));
+				
+				/**
+				 * Java Util Date wird umgewandelt in SQL Date um das
+				 * Änderungsdatum in die Datenbank zu speichern.
+				 */
+				java.sql.Timestamp sqlDate = rs.getTimestamp("datum");
+				stueckliste.setEditDate(sqlDate);
+
+				/**
+				 * Java Util Date wird umgewandelt in SQL Date um das
+				 * Änderungsdatum in die Datenbank zu speichern.
+				 */
+				java.sql.Timestamp sqlDateCD = rs.getTimestamp("creationDate");
+				stueckliste.setCreationDate(sqlDateCD);
 
 				/**
 				 * Den letzten Aenderer hinzufügen.

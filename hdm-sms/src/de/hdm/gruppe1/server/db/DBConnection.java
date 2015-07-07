@@ -89,32 +89,32 @@ public class DBConnection {
 		 */
 		return con;
 	}
-
-	// private static Connection con = null;
-	//
-	// public static Connection connection() {
-	//
-	// /**
-	// * Falls die DB-Connection noch nicht besteht, führe nachfolgende
-	// * Befehle aus.
-	// */
-	// if (con == null) {
-	//
-	// try {
-	// DriverManager.registerDriver(new AppEngineDriver());
-	//
-	// con = DriverManager.getConnection("jdbc:google:rdbms://hdm-sms:usdb/sms",
-	// "root", "");
-	// }
-	//
-	// catch (SQLException e1) {
-	// con = null;
-	//
-	// e1.printStackTrace();
-	// }
-	// }
-	//
-	// return con;
-	// }
+//
+//	 private static Connection con = null;
+//	
+//	 public static Connection connection() {
+//	
+//	 /**
+//	 * Falls die DB-Connection noch nicht besteht, führe nachfolgende
+//	 * Befehle aus.
+//	 */
+//	 if (con == null) {
+//	
+//	 try {
+//	 DriverManager.registerDriver(new AppEngineDriver());
+//	
+//	 con = DriverManager.getConnection("jdbc:google:rdbms://hdm-sms:usdb/sms",
+//	 "root", "");
+//	 }
+//	
+//	 catch (SQLException e1) {
+//	 con = null;
+//	
+//	 e1.printStackTrace();
+//	 }
+//	 }
+//	
+//	 return con;
+//	 }
 
 }
