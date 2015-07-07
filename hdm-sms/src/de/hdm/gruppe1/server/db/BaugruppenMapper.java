@@ -14,14 +14,14 @@ import de.hdm.gruppe1.shared.bo.*;
  * gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
- * @author Andreas Herrmann (in Anlehnung an Prof. Dr. Thies)
+ * @author Andreas Herrmann (in Anlehnung an Hr. Thies)
  * 
  */
 public class BaugruppenMapper {
 
 	/**
 	 * Die Klasse BaugruppenMapper wird nur einmal instantiiert. Man spricht
-	 * hierbei von einem sogenannten Singleton (Autor: Prof. Dr. Thies).
+	 * hierbei von einem sogenannten Singleton (Autor: Hr. Thies).
 	 */
 	private static BaugruppenMapper baugruppenMapper = null;
 
