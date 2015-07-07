@@ -2,7 +2,6 @@ package de.hdm.gruppe1.client.report;
 
 import java.util.Date;
 import java.util.Vector;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.shared.DateTimeFormat;
@@ -16,7 +15,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-
 import de.hdm.gruppe1.client.ClientsideSettings;
 import de.hdm.gruppe1.shared.FieldVerifier;
 import de.hdm.gruppe1.shared.bo.ElementPaar;
@@ -24,10 +22,24 @@ import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
+/**
+ * Die Klasse Materialbedarf bietet die Möglichkeit, einen Stücklisten-Baum einer gewünschten Baugruppe als
+ * HTML-Report anzeigen zu lassen. Hierzu wird die "TreeViewReport"-Klasse aufgerufen und mithilfe von .toString
+ * in einen HTML-Baum gewandelt.
+ * 
+ * Am Ende der Klasse wird ein HTML-Widget erstellt, welches diverse vordefinierte Strings aneinander reiht.
+ * Diese String werden mithilfe von HTML-Tags getrennt. Sofern zukünftig ein Wechsel der Ausgabe von HTML zu
+ * bspw. PDF erfolgen soll, muss lediglich diese eine Methode angepasst werden und nicht die komplette Klasse.
+ * 
+ * Zusätzlich wird die Anzahl aller identischen Bauteile und Baugruppen zusammen addiert angezeigt.
+ * 
+ * @author Mario Theiler
+ *
+ */
 public class Materialbedarf extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für Materialbedarf initialisieren
+	 * GUI-Elemente für Materialbedarf initialisieren.
 	 */
 	private final Label HeadlineLabel = new Label("Materialbedarf berechnen");
 	private final Label SublineLabel = new Label("Um den gesamten Materialbedarf eines oder mehrerer Enderzeugnisse zu berechnen, wählen Sie zunächst ein Enderzeugnis im Dropdown und anschließend die gewünschte Menge aus.");
@@ -48,29 +60,42 @@ public class Materialbedarf extends VerticalPanel {
 	private String bauteilTableString = new String();
 	private String baugruppeTableString = new String();
 	
-	// Panel, um das Baugruppen-Dropdown neben der Anzahl-TextBox zu platzieren
+	/**
+	 * Panel, um das Baugruppen-Dropdown neben der Anzahl-TextBox zu platzieren.
+	 */
 	HorizontalPanel eEPanel = new HorizontalPanel();
 	
-	// Remote Service via ClientsideSettings
+	/**
+	 * Remote Service via ClientsideSettings wird an dieser Stelle einmalig in
+	 * der Klasse aufgerufen. Im Anschluss kann jederzeit darauf zugegriffen
+	 * werden.
+	 */
 	SmsReportAsync stuecklistenReportVerwaltung = ClientsideSettings.getReportGenerator();
 	
-	// Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
+	/**
+	 * Vektor wird mit allen Bauteilen bzw. Baugruppen aus der DB befüllt
+	 */
 	Vector<Enderzeugnis> allEnderzeugnisse = new Vector<Enderzeugnis>();
 	
-	// Konstruktor der Klasse Materialbedarf. Gibt vor, dass bei jeder
-	// Instantiierung die entsprechenden GUI-Elemente geladen werden.
+	/**
+	 * Konstruktor der Klasse Materialbedarf. Gibt vor, dass bei jeder
+	 * Instantiierung die entsprechenden GUI-Elemente geladen werden.
+	 */
 	public Materialbedarf() {
 		
+		/**
+		 * Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser RPC-Aufruf gestartet.
+		 */
 		stuecklistenReportVerwaltung.getAllEnderzeugnis(new GetAllEnderzeugnisseCallback());
-		// TextBox wird mit Text vorbefüllt, der ausgeblendet wird, sobald
-		// die TextBox vom User fokussiert wird
+
+		/**
+		 * TextBox wird mit Text vorbefüllt, der ausgeblendet wird, sobald die TextBox vom User fokussiert wird.
+		 */
 		amountEnderzeugnisse.getElement().setPropertyString("placeholder", "Anzahl");
 		
-		// Um das Dropdown mit Baugruppen aus der DB zu befüllen, wird dieser
-		// RPC-Aufruf gestartet
-//		stuecklistenReportVerwaltung.getAllEnderzeugnis(new GetAllEnderzeugnisseCallback());
-		
-		// Horizontales Anordnen von zugehörigen Bauteil-Widgets
+		/**
+		 * Horizontales Anordnen von zugehörigen Bauteil-Widgets.
+		 */
 		eEPanel.add(amountEnderzeugnisse);
 		eEPanel.add(listBoxEnderzeugnisse);
 		
@@ -85,7 +110,7 @@ public class Materialbedarf extends VerticalPanel {
 		this.add(createMaterialbedarfButton);
 		
 		/**
-		 * Diverse css-Formatierungen
+		 * Diverse css-Formatierungen.
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
@@ -99,23 +124,19 @@ public class Materialbedarf extends VerticalPanel {
 		createMaterialbedarfButton.addClickHandler(new CreateClickHandler());
 		
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 * Abschließend wird alles dem RootPanel zugeordnet.
 		 */
 		RootPanel.get("content_wrap").add(this);
 		
 	}
-	
-	/*
-	 * Click Handlers.
-	 */
-	
+
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
 	 * der DB vorhandenen Enderzeugnissen liefert. Die Klasse ist eine nested-class
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler, Alexander Pressler
 	 * 
 	 */
 	class GetAllEnderzeugnisseCallback implements AsyncCallback<Vector<Enderzeugnis>> {
@@ -134,6 +155,9 @@ public class Materialbedarf extends VerticalPanel {
 			 */
 			allEnderzeugnisse = alleEnderzeugnisse;
 
+			/**
+			 * Wenn der Ergebnis-Vektor leer ist, gib folgenden Window alert aus.
+			 */
 			if (allEnderzeugnisse.isEmpty() == true) {
 
 				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
@@ -161,24 +185,26 @@ public class Materialbedarf extends VerticalPanel {
 		/**
 		 * Hiermit wird die RPC-Methode aufgerufen, die einen Materialbedarf berechnet und anzeigt.
 		 * 
-		 * @author Mario
+		 * @author Mario Theiler
 		 * 
 		 */
 		private class CreateClickHandler implements ClickHandler {
 			@Override
 			public void onClick(ClickEvent event) {
 
-				// Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint
-				// eine Hinweismeldung.
-				// Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse
-				// FieldVerifier geprüft, ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint
-				// ebenfalls eine Hinweismeldung.
+				/**
+				 * Handler prüft zum einen, ob das Anzahl-Feld leer ist. Falls ja erscheint eine Hinweismeldung.
+				 * Ist das Feld befüllt, wird mithilfe der Methode "istZahl" aus der Klasse FieldVerifier geprüft,
+				 * ob im Textfeld eine Zahl eingetragen wurde. Falls nicht, erscheint ebenfalls eine Hinweismeldung.
+				 */
 				if (amountEnderzeugnisse.getText().isEmpty() == true) {
 					Window.alert("Bitte die gewünschte Anzahl eintragen.");
 				} else if (FieldVerifier.istZahl(amountEnderzeugnisse.getText()) == false) {
 					Window.alert("Bitte nur Zahlen eintragen.");
 					
-				//Sofern beide Bedingungen nicht erfüllt sind, wird der CreateCallback ausgeführt
+				/**
+				 * Sofern beide Bedingungen nicht erfüllt sind, wird der CreateCallback ausgeführt.
+				 */
 				} else {
 					
 					final int index = listBoxEnderzeugnisse.getSelectedIndex();
@@ -186,13 +212,15 @@ public class Materialbedarf extends VerticalPanel {
 					Stueckliste enderzeugnisStueckliste = enderzeugnis.getBaugruppe().getStueckliste();
 					
 					/**
-					 * Eine Instanz der Klasse Impressum wird erstellt und an dieser Stelle dem report1-String hinzugefügt.
+					 * Eine Instanz der Klasse Impressum wird erstellt und an dieser Stelle dem impressumString
+					 * hinzugefügt.
 					 */
 					ImpressumReport imp = new ImpressumReport();
 					impressumString = imp.setImpressum();
 					
 					Integer anzahl =  Integer.parseInt(amountEnderzeugnisse.getText());
 					TreeViewReport treeReport = new TreeViewReport(enderzeugnisStueckliste,anzahl);
+
 					/**
 					 * Mithilfe des treeReport-Objektes wird an dieser Stelle der Ergebnis-Vektor aller Bauteile
 					 * herangezogen, um ihn anschließend aufzubereiten und als HTML anzuzeigen.
@@ -230,7 +258,10 @@ public class Materialbedarf extends VerticalPanel {
 							+creationDate.format(enderzeugnisStueckliste.getCreationDate())+"</p>"
 							+anzahlString+anzahl+"</br>"+"</p>"+treeReport.toString()+"<p><b>"+headlineForSummedBauteile+"</b><p>"
 							+bauteilTableString+"<p><b>"+headlineForSummedBaugruppen+"</b><p>"+baugruppeTableString+"<p>"+impressumString);
-										
+					
+					/**
+					 * Abschließend wird alles dem RootPanel zugeordnet.
+					 */					
 					RootPanel.get("content_wrap").clear();
 					RootPanel.get("content_wrap").add(reportHTML);
 				}
