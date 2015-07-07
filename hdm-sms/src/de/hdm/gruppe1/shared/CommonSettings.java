@@ -5,8 +5,7 @@ package de.hdm.gruppe1.shared;
  * werden. Superklasse von <code>ClientsideSettings</code> und
  * <code>ServersideSettings</code>.
  * 
- * @author Peter Thies
- * @version 1.0
+ * @author Thies, Schmidt & Pressler
  */
 public class CommonSettings {
 
