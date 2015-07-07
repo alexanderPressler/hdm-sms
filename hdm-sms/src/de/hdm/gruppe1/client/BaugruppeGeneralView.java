@@ -27,7 +27,7 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
  * @author Katja Thiere, Mario Thieler
  * @version 1.0
  */
- */
+
 public class BaugruppeGeneralView extends VerticalPanel {
 
 	/**
@@ -43,7 +43,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	private HorizontalPanel editButtonPanel = new HorizontalPanel();
 	private HorizontalPanel deleteButtonPanel = new HorizontalPanel();
 
-	**
+	/**
 	 * Erzeugen von Labels, um eine textuelle Beschreibung der dazugehörigen Buttons mitzuliefern
 	 */
 	private final Label editLabel = new Label(

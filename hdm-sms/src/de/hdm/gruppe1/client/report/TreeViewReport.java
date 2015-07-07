@@ -1,6 +1,5 @@
 package de.hdm.gruppe1.client.report;
 
-import java.util.LinkedList;
 import java.util.Vector;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;

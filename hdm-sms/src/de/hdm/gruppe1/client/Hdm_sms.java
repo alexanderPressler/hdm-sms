@@ -76,7 +76,13 @@ public class Hdm_sms extends VerticalPanel implements EntryPoint {
 	/**
 	 * Die Login-Methode setzt unter anderem das GUI-Element in den div-Container "head_wrap_right".
 	 */
-	  private void loadLogin() 
+	 private void loadLogin() {
+		    // Assemble login panel.
+		    signInLink.setHref(loginInfo.getLoginUrl());
+		    loginPanel.add(loginLabel);
+		    loginPanel.add(signInLink);
+		    RootPanel.get("head_wrap_right").add(loginPanel);
+		  }
 	  
 	  /**
 	   * Bei erfolgreichem Login wird folgende Methode geladen und dem Benutzer das Menü angezeigt.
