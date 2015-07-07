@@ -8,15 +8,23 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
+/**
+ * Implementierung des <code>LoginService</code>-Interface. Die technische
+ * Realisierung bzgl. <code>RemoteServiceServlet</code> bzw. GWT RPC erfolgt
+ * analog zu {@SmsImpl}. Für Details zu GWT RPC siehe dort.
+ * 
+ * @see LoginService
+ * @author Thies, Schmidt & Pressler
+ */
 public class LoginServiceImpl extends RemoteServiceServlet implements
     LoginService {
 
-  /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
+	/**
+	* Nutzerdaten mit Hilfe des Google User Service abgereifen
+	* 
+	* @see #getUserInfo(String requestUri)
+	*/
 public LoginInfo getUserInfo(String requestUri) {
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
