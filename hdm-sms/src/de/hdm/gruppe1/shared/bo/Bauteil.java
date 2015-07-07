@@ -1,12 +1,22 @@
 package de.hdm.gruppe1.shared.bo;
-
+/**
+ * Realisierung eines exemplarischen Bauteils. 
+ * 
+ * Ein Bauteil ist das Kleinste Elementare Teil des Stuecklisten-Systems.
+ * Es besitzt eine Beschreibung und eine zusätzliche Materialbeschreibung
+ * @author Schmidt & Pressler 
+ * 
+ */
 public class Bauteil extends Element {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Bauteilbeschreibung + die Setzen und Auslesen Methoden
-	 **/
+	 * Deklaration der Attribute
+	 * Bauteilbeschreibung
+	 * Materialbeschreibung
+	 * + Setter & Getter
+	 */
 	String bauteilBeschreibung = "leer";
 	String materialBeschreibung = "leer";
 
