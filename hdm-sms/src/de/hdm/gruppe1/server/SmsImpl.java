@@ -12,12 +12,12 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
  * <p>
- * Implementierungsklasse des Interface <code>BankAdministration</code>. Diese
- * Klasse ist <em>die</em> Klasse, die neben {@link ReportGeneratorImpl}
- * sämtliche Applikationslogik (oder engl. Business Logic) aggregiert. Sie ist
- * wie eine Spinne, die sämtliche Zusammenhänge in ihrem Netz (in unserem Fall
- * die Daten der Applikation) überblickt und für einen geordneten Ablauf und
- * dauerhafte Konsistenz der Daten und Abläufe sorgt.
+ * Implementierungsklasse des Interface <code>Sms</code>. Diese Klasse ist
+ * <em>die</em> Klasse, die neben {@link SmsReportImpl} sämtliche
+ * Applikationslogik (oder engl. Business Logic) aggregiert. Sie ist wie eine
+ * Spinne, die sämtliche Zusammenhänge in ihrem Netz (in unserem Fall die Daten
+ * der Applikation) überblickt und für einen geordneten Ablauf und dauerhafte
+ * Konsistenz der Daten und Abläufe sorgt.
  * </p>
  * <p>
  * Die Applikationslogik findet sich in den Methoden dieser Klasse. Jede dieser
@@ -26,31 +26,29 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * Transaktion gleiche mehrere Teilaktionen durchgeführt werden, die das System
  * von einem konsistenten Zustand in einen anderen, auch wieder konsistenten
  * Zustand überführen. Wenn dies zwischenzeitig scheitern sollte, dann ist das
- * jeweilige Transaction Script dafür verwantwortlich, eine Fehlerbehandlung
+ * jeweilige Transaction Script dafür verantwortlich, eine Fehlerbehandlung
  * durchzuführen.
  * </p>
  * <p>
  * Diese Klasse steht mit einer Reihe weiterer Datentypen in Verbindung. Dies
  * sind:
  * <ol>
- * <li>{@link BankAdministration}: Dies ist das <em>lokale</em> - also
- * Server-seitige - Interface, das die im System zur Verfügung gestellten
- * Funktionen deklariert.</li>
- * <li>{@link BankAdministrationAsync}: <code>BankVerwaltungImpl</code> und
- * <code>BankAdministration</code> bilden nur die Server-seitige Sicht der
- * Applikationslogik ab. Diese basiert vollständig auf synchronen
- * Funktionsaufrufen. Wir müssen jedoch in der Lage sein, Client-seitige
- * asynchrone Aufrufe zu bedienen. Dies bedingt ein weiteres Interface, das in
- * der Regel genauso benannt wird, wie das synchrone Interface, jedoch mit dem
- * zusätzlichen Suffix "Async". Es steht nur mittelbar mit dieser Klasse in
- * Verbindung. Die Erstellung und Pflege der Async Interfaces wird durch das
- * Google Plugin semiautomatisch unterstützt. Weitere Informationen unter
- * {@link BankAdministrationAsync}.</li>
+ * <li>{@link Sms}: Dies ist das <em>lokale</em> - also Server-seitige -
+ * Interface, das die im System zur Verfügung gestellten Funktionen deklariert.</li>
+ * <li>{@link SmsAsync}: <code>SmsImpl</code> und<code>Sms</code> bilden nur die
+ * Server-seitige Sicht der Applikationslogik ab. Diese basiert vollständig auf
+ * synchronen Funktionsaufrufen. Wir müssen jedoch in der Lage sein,
+ * Client-seitige asynchrone Aufrufe zu bedienen. Dies bedingt ein weiteres
+ * Interface, das in der Regel genauso benannt wird, wie das synchrone
+ * Interface, jedoch mit dem zusätzlichen Suffix "Async". Es steht nur mittelbar
+ * mit dieser Klasse in Verbindung. Die Erstellung und Pflege der Async
+ * Interfaces wird durch das Google Plugin semiautomatisch unterstützt. Weitere
+ * Informationen unter {@link SmsAsync}.</li>
  * <li> {@link RemoteServiceServlet}: Jede Server-seitig instantiierbare und
  * Client-seitig über GWT RPC nutzbare Klasse muss die Klasse
  * <code>RemoteServiceServlet</code> implementieren. Sie legt die funktionale
- * Basis für die Anbindung von <code>BankVerwaltungImpl</code> an die Runtime
- * des GWT RPC-Mechanismus.</li>
+ * Basis für die Anbindung von <code>SmsImpl</code> an die Runtime des GWT
+ * RPC-Mechanismus.</li>
  * </ol>
  * </p>
  * <p>
@@ -58,15 +56,15 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * Mapper-Klassen. Sie gehören der Datenbank-Schicht an und bilden die
  * objektorientierte Sicht der Applikationslogik auf die relationale
  * organisierte Datenbank ab. Zuweilen kommen "kreative" Zeitgenossen auf die
- * Idee, in diesen Mappern auch Applikationslogik zu realisieren. Siehe dazu
- * auch die Hinweise in {@link #delete(Customer)} Einzig nachvollziehbares
- * Argument für einen solchen Ansatz ist die Steigerung der Performance
- * umfangreicher Datenbankoperationen. Doch auch dieses Argument zieht nur dann,
- * wenn wirklich große Datenmengen zu handhaben sind. In einem solchen Fall
- * würde man jedoch eine entsprechend erweiterte Architektur realisieren, die
- * wiederum sämtliche Applikationslogik in der Applikationsschicht isolieren
- * würde. Also, keine Applikationslogik in die Mapper-Klassen "stecken" sondern
- * dies auf die Applikationsschicht konzentrieren!
+ * Idee, in diesen Mappern auch Applikationslogik zu realisieren. Einzig
+ * nachvollziehbares Argument für einen solchen Ansatz ist die Steigerung der
+ * Performance umfangreicher Datenbankoperationen. Doch auch dieses Argument
+ * zieht nur dann, wenn wirklich große Datenmengen zu handhaben sind. In einem
+ * solchen Fall würde man jedoch eine entsprechend erweiterte Architektur
+ * realisieren, die wiederum sämtliche Applikationslogik in der
+ * Applikationsschicht isolieren würde. Also, keine Applikationslogik in die
+ * Mapper-Klassen "stecken" sondern dies auf die Applikationsschicht
+ * konzentrieren!
  * </p>
  * <p>
  * Beachten Sie, dass sämtliche Methoden, die mittels GWT RPC aufgerufen werden
@@ -81,10 +79,10 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * Infos erhalten Sie in der Lehrveranstaltung.
  * </p>
  * 
- * @see BankAdministration
- * @see BankAdministrationAsync
+ * @see Sms
+ * @see SmsAsync
  * @see RemoteServiceServlet
- * @author Alexander Pressler & Thies
+ * @author Thies, Schmidt & Pressler
  */
 @SuppressWarnings("serial")
 public class SmsImpl extends RemoteServiceServlet implements
@@ -171,19 +169,20 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ABSCHNITT, Beginn: Methoden für Bauteil-Objekte
 	   * ***************************************************************************
 	   */
+	   
 	  /**
-	   * <p>
-	   * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
-	   * neuen Bauteiles in der Datenbank.
-	   * </p>
-	   * 
-	   * <p>
-	   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
-	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
-	   * </p>
-	   * 
-	   * @see save(Bauteil b)
-	   */
+	 * <p>
+	 * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
+	 * neuen Bauteiles in der Datenbank.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
+	 * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
+	 * </p>
+	 * 
+	 * @see #createBauteil(String, String, String)
+	 */
 	  @Override
 	public Bauteil createBauteil(String name, String bauteilBeschreibung, String materialBeschreibung)
 	      throws IllegalArgumentException, DuplicateBauteilException {
@@ -203,24 +202,18 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    Date date = new Date();
 	    b.setEditDate(date);
 	    
-	  
+	// Setzen des Users   
         b.setEditUser(logInfo.getUser());
 
-	    /*
-	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
-	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
-	     */
-
 	    // Objekt in der DB speichern.
-	    
-        
         return this.bauteilMapper.insert(b);
 	  }
 	  
 
 	  /**
-	   * Speichern eines Bauteils.
-	   */
+	 * Speichern eines Bauteils.
+	 * @see #save(Bauteil)
+	 */
 	  @Override
 	public void save(Bauteil b) throws IllegalArgumentException, DuplicateBauteilException {
 		  
@@ -242,12 +235,9 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  }
 	  
 	  /**
-	   * Löschen eines Kunden. Natürlich würde ein reales System zur Verwaltung von
-	   * Bankkunden ein Löschen allein schon aus Gründen der Dokumentation nicht
-	   * bieten, sondern deren Status z.B von "aktiv" in "ehemalig" ändern. Wir
-	   * wollen hier aber dennoch zu Demonstrationszwecken eine Löschfunktion
-	   * vorstellen.
-	   */
+	 * Löschen eines Bauteils. 
+	 * @see #delete(Bauteil)
+	 */
 	  @Override
 	public void delete(Bauteil b) throws IllegalArgumentException {
 	 
@@ -265,16 +255,18 @@ public class SmsImpl extends RemoteServiceServlet implements
 	  }
 	  
 	  /**
-	   * Auslesen aller Bauteile.
-	   */
+	 * Auslesen aller Bauteile.
+	 * @see #getAllBauteile()
+	 */
 	  @Override
 	public Vector<Bauteil> getAllBauteile() throws IllegalArgumentException {
 	    return this.bauteilMapper.findAll();
 	  }
 	  
 	  /**
-	   * Auslesen eines Bauteils anhand seiner Id.
-	   */
+	 * Auslesen eines Bauteils anhand seiner Id.
+	 * @see #getBauteilById(int)
+	 */
 	  @Override
 	public Bauteil getBauteilById(int id) throws IllegalArgumentException {
 	    return this.bauteilMapper.findById(id);
@@ -292,11 +284,10 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ***************************************************************************
 	   */
 	  /**
-	   * <p>
-	   * Anlegen eines neuen Stueckliste. Dies führt implizit zu einem Speichern des
-	   * neuen Stuecklistes in der Datenbank.
-	   * @see createStueckliste(String name)
-	   */
+	 * Anlegen eines neuen Stueckliste. Dies führt implizit zu einem Speichern
+	 * des neuen Stuecklistes in der Datenbank.
+	 * @see #createStueckliste(String, Vector, Vector)
+	 */
 	  @Override
 	public Stueckliste createStueckliste(String name, Vector<ElementPaar> BauteilPaare, 
 			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException, DuplicateStuecklisteException {
@@ -323,9 +314,11 @@ public class SmsImpl extends RemoteServiceServlet implements
 	    // Objekt in der DB speichern.
 	    return this.stuecklisteMapper.insert(s);
 	  }
+	  
 	  /**
-	   * Löschen einer Stueckliste 
-	   */
+	 * Löschen einer Stueckliste
+	 * @see #deleteStueckliste(Stueckliste)
+	 */
 	  @Override
 	public void deleteStueckliste(Stueckliste s) throws IllegalArgumentException {
 	 	  
@@ -336,7 +329,6 @@ public class SmsImpl extends RemoteServiceServlet implements
 			  this.stuecklisteMapper.delete(s);  
 		  }
 		  
-		  //TODO Exception
 		  else {
 			  
 			  System.out.println("Stueckliste kann nicht gelöscht werden: ");
@@ -347,8 +339,9 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  
 	  }
 	  /**
-	   * Speichern eines Bauteils.
-	   */
+	 * Speichern einer Stueckliste.
+	 * @see #saveStueckliste(Stueckliste)
+	 */
 	  @Override
 	public void saveStueckliste(Stueckliste s) throws IllegalArgumentException, DuplicateStuecklisteException {
 		  
@@ -367,9 +360,11 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  
 		  this.stuecklisteMapper.update(s);
 	  }
+	  
 	  /**
-	   * Auslesen aller Stuecklisten.
-	   */
+	 * Auslesen aller Stuecklisten.
+	 * @see #getAllStuecklisten()
+	 */
 	  @Override
 	public Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException {
 	    return this.stuecklisteMapper.findAll();
@@ -385,31 +380,25 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ABSCHNITT, Beginn: Methoden für User-Objekte
 	   * ***************************************************************************
 	   */
-	  /**
-	   * <p>
-	   * Anlegen eines neuen Bauteiles. Dies führt implizit zu einem Speichern des
-	   * neuen Bauteiles in der Datenbank.
-	   * </p>
-	   * 
-	   * <p>
-	   * <b>HINWEIS:</b> Änderungen an Bauteil-Objekten müssen stets durch Aufruf
-	   * von {@link #save(Bauteil b)} in die Datenbank transferiert werden.
-	   * </p>
-	   * 
-	   * @see save(Bauteil b)
-	   */
+	 /**
+	 * <p>
+	 * Anlegen eines neuen Users. Dies führt implizit zu einem Speichern des
+	 * neuen User in der Datenbank.
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>HINWEIS:</b> Änderungen an User-Objekten müssen stets durch Aufruf
+	 * von {@link #save(User b)} in die Datenbank transferiert werden.
+	 * </p>
+	 * 
+	 * @see createUser(String googleID, String name)
+	 */
 	  @Override
 	public User createUser(String googleID, String name)
 	      throws IllegalArgumentException {
 	    User u = new User();
 	    u.setGoogleID(googleID);
 	    u.setName(name);
-
-	    /*
-	     * Setzen einer vorläufigen Kundennr. Der insert-Aufruf liefert dann ein
-	     * Objekt, dessen Nummer mit der Datenbank konsistent ist.
-	     */
-//	    b.setId(10);
 
 	    // Objekt in der DB speichern.
 	    return this.userMapper.insert(u);
@@ -426,12 +415,13 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   * ***************************************************************************
 	   */
 	  
-	  /**
-	   * <p>
-	   * Anlegen einer neuen Baugruppe . Dies führt implizit zu einem Speichern des
-	   * neuen Stuecklistes in der Datenbank.
-	   * @see createStueckliste(String name)
-	   */
+	 /**
+	 * <p>
+	 * Anlegen einer neuen Baugruppe . Dies führt implizit zu einem Speichern
+	 * des neuen Baugruppe in der Datenbank.
+	 * 
+	 * @see #createBaugruppe(String, Vector, Vector)
+	 */
 	  @Override
 	public Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare, 
 			Vector<ElementPaar> BaugruppenPaare ) throws IllegalArgumentException, DuplicateBaugruppeException{
@@ -467,8 +457,9 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 
 	  
 	  /**
-	   * Löschen einer Baugruppe 
-	   */
+	 * Löschen einer Baugruppe
+	 * @see #deleteBaugruppe(Baugruppe)
+	 */
 	  @Override
 	public void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException {
 	 
@@ -498,8 +489,9 @@ public class SmsImpl extends RemoteServiceServlet implements
 			  
 		  }
 	  /**
-	   * Speichern eines Baugruppe.
-	   */
+	 * Speichern eines Baugruppe.
+	 * @see #saveBaugruppe(Baugruppe)
+	 */
 	  @Override
 	public void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException, DuplicateBaugruppeException {
 		  
@@ -532,16 +524,18 @@ public class SmsImpl extends RemoteServiceServlet implements
 	        this.baugruppenMapper.update(b);
 	  }
 	  /**
-	   * Auslesen aller Baugruppen.
-	   */
+	 * Auslesen aller Baugruppen.
+	 * @see #getAllBaugruppen()
+	 */
 	  @Override
 	public Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException {
 	    return this.baugruppenMapper.findAll();
 	  }  
 	  
 	  /**
-	   * Auslesen einer Baugruppe anhand seiner Id.
-	   */
+	 * Auslesen einer Baugruppe anhand seiner Id.
+	 * @see #getBaugruppeById(int)
+	 */
 	  @Override
 	public Baugruppe getBaugruppeById(int id) throws IllegalArgumentException {
 	    return this.baugruppenMapper.findByID(id);
@@ -559,11 +553,12 @@ public class SmsImpl extends RemoteServiceServlet implements
 	   */
 	  
 	  /**
-	   * <p>
-	   * Anlegen einer neuen Baugruppe . Dies führt implizit zu einem Speichern des
-	   * neuen Stuecklistes in der Datenbank.
-	   * @see createStueckliste(String name)
-	   */
+	 * <p>
+	 * Anlegen eines neuen Enderzeugnisses . Dies führt implizit zu einem Speichern
+	 * des neuen Enderzeugnisses in der Datenbank.
+	 * 
+	 * @see #createEnderzeugnis(String, Baugruppe)
+	 */
 	  @Override
 	public Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe ) throws IllegalArgumentException, DuplicateEnderzeugnisException {
 		  
@@ -590,16 +585,19 @@ public class SmsImpl extends RemoteServiceServlet implements
 	 
 	  
 	  /**
-	   * Löschen einer Baugruppe 
-	   */
+	 * Löschen eines Enderzeugnisses
+	 * @see #deleteEnderzeugnis(Enderzeugnis)
+	 */
 	  @Override
 	public void deleteEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException {
 	 
 	    this.enderzeugnisMapper.delete(e);
 	  }
+	  
 	  /**
-	   * Speichern eines Enderzeugnisses.
-	   */
+	 * Speichern eines Enderzeugnisses.
+	 * @see #saveEnderzeugnis(Enderzeugnis)
+	 */
 	  @Override
 	public void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException, DuplicateEnderzeugnisException {
 		  
@@ -618,9 +616,11 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  
 	        this.enderzeugnisMapper.update(e);
 	  }
-	  /**
-	   * Auslesen aller Baugruppen.
-	   */
+	  
+	 /**
+	 * Auslesen aller Enderzeugnisse.
+	 * @see #getAllEnderzeugnis()
+	 */
 	  @Override
 	public Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException {
 	    return this.enderzeugnisMapper.findAll();
