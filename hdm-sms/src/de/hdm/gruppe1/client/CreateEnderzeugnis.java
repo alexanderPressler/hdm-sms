@@ -19,10 +19,10 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 
 /**
- * Die Klasse CreateEnderzeugnis ermöglicht dem User, Objekte von Baugruppen in
+ * Die Klasse CreateEnderzeugnis ermöglicht es dem User, Objekte von Baugruppen in
  * der Datenbank als Enderzeugnisse mit entsprechender Referenz zueinander abzuspeichern.
  * 
- * @author Mario Theiler
+ * @author Katja Thiere, Mario Theiler
  * @version 1.0
  */
 public class CreateEnderzeugnis extends VerticalPanel {
@@ -108,9 +108,6 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
-	 * 
-	 * @author Mario
-	 * 
 	 */
 	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
 
@@ -155,8 +152,6 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Enderzeugnis-Objekt in
 	 * der Datenbank anlegt.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	private class CreateClickHandler implements ClickHandler {
@@ -211,8 +206,6 @@ public class CreateEnderzeugnis extends VerticalPanel {
 	/**
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Create-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	class CreateEnderzeugnisCallback implements AsyncCallback<Enderzeugnis> {
