@@ -8,7 +8,7 @@ import de.hdm.gruppe1.shared.bo.Enderzeugnis;
  * und die Ursache zu ermitteln
  * analog zu {@SmsException}  
  * Diese Exception prüft ob der Name eines Enderzeugnisses bereits 
- * existiert, und verhindert sonst ein Anlegen der Stueckliste
+ * existiert, und verhindert sonst ein Anlegen des Enderzeugnisses
  * 
  * @author Andreas Herrmann
  */
