@@ -1,5 +1,12 @@
 package de.hdm.gruppe1.client.report;
 
+/**
+ * Die Klasse ImpressumReport ermöglicht dem Report, einen Impressum-String zu erzeugen und im HTML-Widget
+ * mithilfe der HTML-Tags wie gewünscht anzuzeigen.
+ * 
+ * @author Mario Theiler, Katja Thiere
+ *
+ */
 public class ImpressumReport {
 	
 	public String setImpressum(){
