@@ -3,15 +3,15 @@ package de.hdm.gruppe1.shared.bo;
 import java.util.Date;
 
 /**
- * Element ist die Oberklasse der Business Objekte {@link Bauteil @link Baugruppe
- * @link Enderzeugnis @link Stueckliste}. Diese Oberklasse vererbt an genannte 
+ * Element ist die Oberklasse von Bauteilen und Baugruppen {@link Bauteil @link Baugruppe}.
+ * Diese Oberklasse vererbt an genannte 
  * Klassen die Eigenschaften die auch alle Klassen beinhalten. Das ist zB. Name,
  * der bearbeitende Anwender und das Datum der Bearbeitung.Hier werden diese
  * Eigenschaften erzeugt.
  * Ausserdem erbt Element von der Superklasse Business Object, sie ist die Basisklasse 
  * aller in diesemProjekt für die Umsetzung des Fachkonzepts relevanten Klassen dar.
  * </p>
- * @author Schmidt
+ * @author Schmidt & Pressler
  *
  */
 
@@ -81,6 +81,7 @@ public abstract class Element extends BusinessObject {
 	/**
 	 * Erzeugen einer einfachen textuellen Repräsentation der jeweiligen
 	 * Element-instanz.
+	 * @see #toString()
 	 */
 	@Override
 	public String toString() {
@@ -101,6 +102,7 @@ public abstract class Element extends BusinessObject {
 	 * Objekte beschränkt. In unseren eigenen Klassen können wir diese Methode
 	 * überschreiben und ihr mehr Intelligenz verleihen.
 	 * </p>
+	 * @see #equals(Object)
 	 */
 	@Override
 	public boolean equals(Object o) {
