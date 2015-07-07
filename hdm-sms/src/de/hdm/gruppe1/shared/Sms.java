@@ -14,11 +14,11 @@ import de.hdm.gruppe1.shared.bo.User;
 
 /**
  * <p>
- * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Banken.
+ * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Ausgabe des Reports.
  * </p>
  * <p>
  * <b>Frage:</b> Warum werden diese Methoden nicht als Teil der Klassen
- * {@link Bank}, {@link Customer}, {@link Account} oder {@link Transaction}
+ * {@link Stueckliste}, {@link User}, {@link Baugruppe} oder {@link Bauteil}
  * implementiert?<br>
  * <b>Antwort:</b> Z.B. das Löschen eines Kunden erfordert Kenntnisse über die
  * Verflechtung eines Kunden mit Konto-Objekten. Um die Klasse <code>Bank</code>
@@ -39,9 +39,8 @@ import de.hdm.gruppe1.shared.bo.User;
  * Servlets an.
  * </p>
  * 
- * @author  Alexander Pressler & Thies
+ * @author Thies, Schmidt & Pressler
  */
-// TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
 @RemoteServiceRelativePath("sms")
 public interface Sms extends RemoteService {
 
@@ -56,66 +55,180 @@ public interface Sms extends RemoteService {
 	public void init() throws IllegalArgumentException;
 
 	/**
-	 * Ein Bauteil anlegen.
+	 * Ein Bauteil erstellen.
 	 * 
 	 * @param bauteilBeschreibung
 	 *            BauteilBeschreibung
 	 * @param materialBeschreibung
 	 *            MaterialBeschreibung
-	 * @return Ein fertiges Kunden-Objekt.
+	 * @return Ein fertiges Bauteil-Objekt.
 	 * @throws IllegalArgumentException
-	 * @throws DuplicateBauteilException 
 	 */
 	Bauteil createBauteil(String name, String bauteilBeschreibung,
 			String materialBeschreibung) throws IllegalArgumentException, DuplicateBauteilException;
 
+	/**
+	 * ein Bauteil wird gespreichert
+	 * 
+	 * @param b
+	 * @throws IllegalArgumentException
+	 */
 	 public void save(Bauteil b) throws IllegalArgumentException, DuplicateBauteilException;
 
 	 /**
-	   * Löschen des übergebenen Bauteils.
-	   * 
-	   * @param b der zu löschende Bauteil
-	   * @throws IllegalArgumentException
-	   */
+	 * Das Bauteil löschen
+	 * @param b
+	 *    der zu löschende Bauteil
+	 * @throws IllegalArgumentException
+	 */
 	void delete(Bauteil b) throws IllegalArgumentException;
-
+	
+	/**
+	 * Für den Fall dass alle Bauteile anzeigt werden sollen
+	 * @throws IllegalArgumentException
+	 */
 	Vector<Bauteil> getAllBauteile() throws IllegalArgumentException;
-
+	
+	/**
+	 * Suchen eines Bauteil-Objekts, dessen Bauteilnummer bekannt ist
+	 * @param id
+	 * @throws IllegalArgumentException
+	 */
 	Bauteil getBauteilById(int id) throws IllegalArgumentException;
-
+	
+	/**
+	 * Ein Stuecklisten Objekt wird erstellt. Die Baugruppe kann einen oder
+	 * mehrere BauteilPaare und/oder BaugruppenPaare beinhalten in zusammnehang
+	 * mit Anzahl dessen.Die zu gebende Parameter sind ElementenPaare und der
+	 * Name der Stückliste.
+	 * 
+	 * @param name
+	 * @param BauteilPaare
+	 * @param BaugruppenPaare
+	 * @throws IllegalArgumentException
+	 */
 	Stueckliste createStueckliste(String name,
 			Vector<ElementPaar> BauteilPaare,
 			Vector<ElementPaar> BaugruppenPaare)
 			throws IllegalArgumentException, DuplicateStuecklisteException;
 
+	/**
+	 * Alle Stuecklisten auslesen
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	Vector<Stueckliste> getAllStuecklisten() throws IllegalArgumentException;
-
+	
+	/**
+	 * Eine Stückliste löschen
+	 * @param s
+	 * @throws IllegalArgumentException
+	 */
 	void deleteStueckliste(Stueckliste s) throws IllegalArgumentException;
-
+	
+	/**
+	 * Spreicher eine Stückliste
+	 * @param s
+	 * @throws IllegalArgumentException
+	 * @throws BaugruppenReferenceException
+	 */
 	void saveStueckliste(Stueckliste s) throws IllegalArgumentException, DuplicateStuecklisteException;
 
+	/**
+	 * Erstellen eines AnwenderAccounts Objekts
+	 * @param googleID
+	 * @param name
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
 	User createUser(String googleID, String name)
 			throws IllegalArgumentException;
-
+	
+	/**
+	 * Ein Baugruppen Objekt wird erstellt. Die Baugruppe kann einen oder
+	 * mehrere BauteilPaare und/oder BaugruppenPaare beinhalten. Eine Baugruppe
+	 * ist ein spezielles Bauteil, das aus weiteren Baugruppen und Bauteilen
+	 * besteht, zu denen jeweils deren Anzahl in der übergeordneten Baugruppe
+	 * anzugeben ist.
+	 * 
+	 * @param name
+	 * @param BauteilPaare
+	 * @param BaugruppenPaare
+	 * @return Baugruppen Objekt
+	 * @throws IllegalArgumentException
+	 */
 	Baugruppe createBaugruppe(String name, Vector<ElementPaar> BauteilPaare,
 			Vector<ElementPaar> BaugruppenPaare)
 			throws IllegalArgumentException, DuplicateBaugruppeException;
 
+	/**
+	 * Das löschen von eine Baugruppe
+	 * 
+	 * @param b
+	 * @throws IllegalArgumentException
+	 */
 	void deleteBaugruppe(Baugruppe b) throws IllegalArgumentException;
-
+	
+	/**
+	 * Speichern eines Baugruppen -Objekts in der Datenbank.
+	 * 
+	 * @param b
+	 * @throws IllegalArgumentException
+	 * @throws BaugruppenReferenceException
+	 *             , um ein Loop zu vermeiden.
+	 */
 	void saveBaugruppe(Baugruppe b) throws IllegalArgumentException, BaugruppenReferenceException, DuplicateBaugruppeException;
 
+	/**
+	 * Ausgabe der allen vorhandenen Baugruppen
+	 * 
+	 * @return Vector-Objekt mit allen Baugruppen-Objekten
+	 */
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 
+	/**
+	 * Erstellen eines Enderzeugnis-Objekts, es beinhalten baugruppen-objekte da
+	 * Enderzeugnis eine spezielle Baugruppe ist.
+	 * 
+	 * @param name
+	 * @param baugruppe
+	 * @throws IllegalArgumentException
+	 */
 	Enderzeugnis createEnderzeugnis(String name, Baugruppe baugruppe)
 			throws IllegalArgumentException, DuplicateEnderzeugnisException;
 
+	/**
+	 * Enderzeugnis wird gelöscht
+	 * 
+	 * @param e
+	 * @throws IllegalArgumentException
+	 */
 	void deleteEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException;
 
+	/**
+	 * Speichern eines Enderzeugnis-Objekts in der Datenbank.
+	 * 
+	 * @param e
+	 * @throws IllegalArgumentException
+	 */
 	void saveEnderzeugnis(Enderzeugnis e) throws IllegalArgumentException, DuplicateEnderzeugnisException;
 
+	/**
+	 * Es werde alle Enderzeungisse die gespreichert wurden ausgegeben
+	 * 
+	 * @return Vector-Objekt mit allen erstellten Enderzeugnis-Objekten
+	 * @throws IllegalArgumentException
+	 */
 	Vector<Enderzeugnis> getAllEnderzeugnis() throws IllegalArgumentException;
 
+	/**
+	 * Suchen eines Baugruppen-Objekts, dessen Baugruppennummer bekannt ist
+	 * 
+	 * @param id
+	 * @return Das erste Baugruppen-Objekt, dass den Suchkriterien entspricht.
+	 * @throws IllegalArgumentException
+	 */
 	Baugruppe getBaugruppeById(int id) throws IllegalArgumentException;
+	
 	void setLoginInfo (LoginInfo loginInfo) throws IllegalArgumentException;
 }
