@@ -19,11 +19,11 @@ import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 
 /**
- * Die Klasse BaugruppeGeneralView liefert eine Übersicht mit allen vorhandenen
- * Baugruppen im System und bietet Möglichkeiten, diese zu editieren oder
- * löschen.
+ * Die Klasse EnderzeugnisGeneralView liefert eine Übersicht mit allen vorhandenen
+ * Enderzeugnissen im System. Enderzeugnisse können aus der Übersicht ausgewählt werden, um sie zu editieren oder
+ * zu löschen.
  * 
- * @author Mario Theiler
+ * @author Katja Thiere, Mario Theiler
  * @version 1.0
  */
 public class EnderzeugnisGeneralView extends VerticalPanel {
@@ -158,9 +158,6 @@ public class EnderzeugnisGeneralView extends VerticalPanel {
 	 * der DB vorhandenen Enderzeugnissen liefert. Die Klasse ist eine nested-class
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
-	 * 
-	 * @author Mario Alex
-	 * 
 	 */
 	class GetAllEnderzeugnisseCallback implements AsyncCallback<Vector<Enderzeugnis>> {
 
@@ -307,9 +304,6 @@ public class EnderzeugnisGeneralView extends VerticalPanel {
 
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die ein Enderzeugnis-Objekt löscht.
-	 * 
-	 * @author Mario Alex
-	 * 
 	 */
 	private class deleteClickHandler implements ClickHandler {
 		@Override
@@ -339,8 +333,6 @@ public class EnderzeugnisGeneralView extends VerticalPanel {
 	/**
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Delete-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario Alex
 	 *
 	 */
 	class DeleteEnderzeugnisCallback implements AsyncCallback<Void> {
