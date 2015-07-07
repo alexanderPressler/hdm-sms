@@ -617,7 +617,7 @@ public class CreateBaugruppe extends VerticalPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Das Anlegen der Baugruppe ist fehlgeschlagen!");
+			Window.alert(caught.getMessage());
 		}
 
 		@Override
