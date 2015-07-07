@@ -18,13 +18,15 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.gruppe1.shared.SmsAsync;
 import de.hdm.gruppe1.shared.bo.Baugruppe;
 
+
 /**
  * Die Klasse BaugruppeGeneralView liefert eine Übersicht mit allen vorhandenen
- * Baugruppen im System und bietet Möglichkeiten, diese zu editieren oder
- * löschen.
+ * Baugruppen im System. Baugruppen können aus der Übersicht ausgewählt werden, um sie zu editieren oder
+ * zu löschen.
  * 
- * @author Mario Theiler
+ * @author Katja Thiere, Mario Thieler
  * @version 1.0
+ */
  */
 public class BaugruppeGeneralView extends VerticalPanel {
 
@@ -41,8 +43,8 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	private HorizontalPanel editButtonPanel = new HorizontalPanel();
 	private HorizontalPanel deleteButtonPanel = new HorizontalPanel();
 
-	/**
-	 * Den Buttons wird jeweils ein erklärender Text hinzugefügt.
+	**
+	 * Erzeugen von Labels, um eine textuelle Beschreibung der dazugehörigen Buttons mitzuliefern
 	 */
 	private final Label editLabel = new Label(
 			"Markierte Baugruppe editieren ");
@@ -51,15 +53,13 @@ public class BaugruppeGeneralView extends VerticalPanel {
 
 	/**
 	 * Die RadioButtons und CheckBoxen erhalten jeweils einen globalen edit-
-	 * bzw. delete-Button. Dies entspricht dem neuesten Stand der
-	 * Web-Programmierung.
+	 * bzw. delete-Button. 
 	 */
 	private final Button editBtn = new Button("");
 	private final Button deleteBtn = new Button("");
 
 	/**
-	 * Tabelle, in der jegliche Baugruppen inkl. edit- & delete-Buttons angezeigt
-	 * werden.
+	 * Baugruppe, welche editiert werden soll.
 	 */
 	private final FlexTable table = new FlexTable();
 
@@ -149,7 +149,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 
 	}
 
-	/*
+/*
 	 * Click Handlers.
 	 */
 
@@ -158,8 +158,6 @@ public class BaugruppeGeneralView extends VerticalPanel {
 	 * der DB vorhandenen Baugruppen liefert. Die Klasse ist eine nested-class
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
-	 * 
-	 * @author Mario Alex
 	 * 
 	 */
 	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
@@ -305,12 +303,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 
 	}
 
-	/**
-	 * Hiermit wird die RPC-Methode aufgerufen, die ein Baugruppen-Objekt löscht.
-	 * 
-	 * @author Mario Alex
-	 * 
-	 */
+	
 	private class deleteClickHandler implements ClickHandler {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -336,13 +329,7 @@ public class BaugruppeGeneralView extends VerticalPanel {
 		}
 	}
 
-	/**
-	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
-	 * Delete-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario Alex
-	 *
-	 */
+	
 	class DeleteBaugruppeCallback implements AsyncCallback<Void> {
 
 		@Override
