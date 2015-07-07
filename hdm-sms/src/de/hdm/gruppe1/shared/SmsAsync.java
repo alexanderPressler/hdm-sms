@@ -15,9 +15,9 @@ import de.hdm.gruppe1.shared.bo.User;
  * Das asynchrone Gegenstück des Interface {@link BankAdministration}. Es wird
  * semiautomatisch durch das Google Plugin erstellt und gepflegt. Daher erfolgt
  * hier keine weitere Dokumentation. Für weitere Informationen siehe das
- * synchrone Interface {@link BankAdministration}.
+ * synchrone Interface {@link Sms}.
  * 
- * @author Alexander Pressler &  thies
+ * @author Thies, Schmidt & Pressler
  */
 public interface SmsAsync {
 	
