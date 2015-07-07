@@ -67,7 +67,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	public Strukturstuecklisten() {
 		
 		/**
-		 * Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser RPC-Aufruf gestartet
+		 * Um das Dropdown mit Baugruppen aus der DB zu befüllen, wird dieser RPC-Aufruf gestartet
 		 */
 		stuecklistenReportVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 		
