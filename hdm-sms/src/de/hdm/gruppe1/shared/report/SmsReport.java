@@ -4,17 +4,15 @@ import java.util.Vector;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-
 import de.hdm.gruppe1.shared.bo.*;
-
 
 /**
  * <p>
- * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Verwaltung von Banken.
+ * Synchrone Schnittstelle für eine RPC-fähige Klasse zur Ausgabe des Reports.
  * </p>
  * <p>
  * <b>Frage:</b> Warum werden diese Methoden nicht als Teil der Klassen
- * {@link Bank}, {@link Customer}, {@link Account} oder {@link Transaction}
+ * {@link Stueckliste}, {@link User}, {@link Baugruppe} oder {@link Bauteil}
  * implementiert?<br>
  * <b>Antwort:</b> Z.B. das Löschen eines Kunden erfordert Kenntnisse über die
  * Verflechtung eines Kunden mit Konto-Objekten. Um die Klasse <code>Bank</code>
@@ -35,17 +33,10 @@ import de.hdm.gruppe1.shared.bo.*;
  * Servlets an.
  * </p>
  * 
- * @author  Alexander Pressler & Thies
+ * @author Thies, Schmidt & Pressler
  */
-// TODO: Hier den Path anpassen vorher "greet", Was muss hier rein?
 @RemoteServiceRelativePath("smsReport")
 public interface SmsReport extends RemoteService {
-//
-//	Enderzeugnis createMaterialBedarfReport(int id, int anzahl)
-//			throws IllegalArgumentException;
-//
-//	BaugruppenReport createBaugruppenReport(Stueckliste BaugruppenStueckliste)
-//			throws IllegalArgumentException;
 
 	Vector<Baugruppe> getAllBaugruppen() throws IllegalArgumentException;
 
