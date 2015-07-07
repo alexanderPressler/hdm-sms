@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 	* Dieses Impressum ist mithilfe eines Buttons von jeder Unterseite der Anwendung aus zu erreichen.
 	* <p>Im Footer der html-Seite ist ein eigens angelegter Bereich für den Button vorhanden.
 	* 
-	* @author Mario Theiler
+	* @author Mario Theiler, Katja Thiere
 	* @version 1.0
 	*/
 	public class Impressum extends VerticalPanel {
