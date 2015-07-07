@@ -19,6 +19,7 @@ package de.hdm.gruppe1.shared;
  * system) cannot be compiled into client-side JavaScript. Code that uses native
  * JavaScript (such as Widgets) cannot be run on the server.
  * </p>
+ * @author google, Schmidt & Pressler
  */
 public class FieldVerifier {
 
@@ -32,6 +33,7 @@ public class FieldVerifier {
 	 * 
 	 * @param name the name to validate
 	 * @return true if valid, false if invalid
+	 * @see #isValidName(String)
 	 */
 	public static boolean isValidName(String name) {
 		if (name == null) {
@@ -40,6 +42,10 @@ public class FieldVerifier {
 		return name.length() > 3;
 	}
 	
+	/**
+	 * Prüfen ob eine Zahl eingegeben wurde
+	 * @see #istZahl(String)
+	 */
 	public static boolean istZahl(String boxinhalt) {
 		if (boxinhalt.matches("[0-9]+")){
 			return true;
@@ -49,6 +55,10 @@ public class FieldVerifier {
 		}
 	}
 	
+	/**
+	 * Umwandlung von nicht zulässigen Umlauten
+	 * @see #changeUmlaut(String)
+	 */
 	public String changeUmlaut(String name){
         
         name = name.replace("ä","ae");
