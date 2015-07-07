@@ -15,23 +15,29 @@ import de.hdm.gruppe1.shared.bo.*;
  * Objekte können in DB-Strukturen und DB-Strukturen in Objekte umgewandelt
  * werden.
  * 
- * @author Andreas Herrmann (in Anlehnung an Hr. Thies)
+ * @author Andreas Herrmann (in Anlehnung an Herr Prof. Dr. Thies)
  * 
  */
 public class EnderzeugnisMapper {
 
 	/**
 	 * Die Klasse EnderzeugnisMapper wird nur einmal instantiiert. Man spricht
-	 * hierbei von einem sogenannten Singleton (Autor: Hr. Thies).
+	 * hierbei von einem sogenannten Singleton (Autor: Herr Prof. Dr. Thies).
 	 */
 	private static EnderzeugnisMapper enderzeugnisMapper = null;
-
+	
+	/**
+	 * Der Standartkonstruktor wird auf protected gesetzt, sodass man über <code>new</code>
+	 * kein Objekt der Klasse erzeugen kann
+	 */
 	protected EnderzeugnisMapper() {
 
 	}
 
 	/**
-	 * ?
+	 * Die statische Methode dient dazu die Singleton-Eigenschaft des Mappers sicherzustellen, indem
+	 * sie dafür sorgt, dass nur eine Instanz des Mappers existiert.
+	 * Der Mapper kann nur über <code>UserMapper.userMapper()</code> instanziiert werden
 	 * 
 	 * @return enderzeugnisMapper
 	 */

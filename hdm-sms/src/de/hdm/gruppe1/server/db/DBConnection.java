@@ -16,7 +16,7 @@ import com.google.appengine.api.utils.SystemProperty;
  * allerdings den Rahmen dieses Projekts sprengen bzw. die Software unnötig
  * verkomplizieren, da dies für diesen Anwendungsfall nicht erforderlich ist.
  * 
- * @author Andreas Herrmann (in Anlehnung an Hr. Thies)
+ * @author Andreas Herrmann (in Anlehnung an Herr Prof. Dr. Thies)
  */
 public class DBConnection {
 
@@ -24,8 +24,7 @@ public class DBConnection {
 	 * Die Klasse DBConnection wird nur einmal instantiiert. Man spricht hierbei
 	 * von einem sogenannten Singleton. Diese Variable ist durch den Bezeichner
 	 * static nur einmal für sämtliche eventuellen Instanzen dieser Klasse
-	 * vorhanden. Sie speichert die einzige Instanz dieser Klasse (Autor: Hr.
-	 * Thies).
+	 * vorhanden. Sie speichert die einzige Instanz dieser Klasse (Autor: Herr Prof. Dr. Thies).
 	 */
 	private static Connection con = null;
 
@@ -37,7 +36,13 @@ public class DBConnection {
 	 * Software neu komilieren zu müssen (Autor: Hr. Thies).
 	 */
 	private static String googleUrl = "jdbc:mysql://173.194.236.86:3306/sms?user=root";
-
+	/**
+	 * Der Standartkonstruktor wird auf protected gesetzt, sodass man über <code>new</code>
+	 * kein Objekt der Klasse erzeugen kann
+	 */
+	protected DBConnection (){
+		
+	}
 	/**
 	 * Diese statische Methode kann aufgrufen werden durch
 	 * <code>DBConnection.connection()</code>. Sie stellt die

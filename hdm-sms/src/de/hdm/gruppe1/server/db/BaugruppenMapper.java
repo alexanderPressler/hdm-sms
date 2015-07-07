@@ -14,22 +14,28 @@ import de.hdm.gruppe1.shared.bo.*;
  * gelöscht werden können. Das Mapping ist bidirektional. D.h., Objekte können
  * in DB-Strukturen und DB-Strukturen in Objekte umgewandelt werden.
  * 
- * @author Andreas Herrmann (in Anlehnung an Hr. Thies)
+ * @author Andreas Herrmann (in Anlehnung an Herr Prof. Dr. Thies)
  * 
  */
 public class BaugruppenMapper {
 
 	/**
 	 * Die Klasse BaugruppenMapper wird nur einmal instantiiert. Man spricht
-	 * hierbei von einem sogenannten Singleton (Autor: Hr. Thies).
+	 * hierbei von einem sogenannten Singleton (Autor: Herr Prof. Dr. Thies).
 	 */
 	private static BaugruppenMapper baugruppenMapper = null;
-
+	
+	/**
+	 * Der Standartkonstruktor wird auf protected gesetzt, sodass man über <code>new</code>
+	 * kein Objekt der Klasse erzeugen kann
+	 */
 	protected BaugruppenMapper() {
 	}
 
 	/**
-	 * ?
+	 * Die statische Methode dient dazu die Singleton-Eigenschaft des Mappers sicherzustellen, indem
+	 * sie dafür sorgt, dass nur eine Instanz des Mappers existiert.
+	 * Der Mapper kann nur über <code>UserMapper.userMapper()</code> instanziiert werden
 	 * 
 	 * @return baugruppenMapper
 	 */

@@ -23,23 +23,29 @@ import de.hdm.gruppe1.shared.bo.User;
  * Objekte können in DB-Strukturen und DB-Strukturen in Objekte umgewandelt
  * werden.
  * 
- * @author Andreas Herrmann (in Anlehnung an Hr. Thies)
+ * @author Andreas Herrmann (in Anlehnung an Herr Prof. Dr. Thies)
  */
 public class StuecklisteMapper {
 
 	/**
 	 * Die Klasse BaugruppenMapper wird nur einmal instantiiert. Man spricht
-	 * hierbei von einem sogenannten Singleton (Autor: Hr. Thies).
+	 * hierbei von einem sogenannten Singleton (Autor: Herr Prof. Dr. Thies).
 	 */
 	private static StuecklisteMapper stuecklisteMapper = null;
-
+	
+	/**
+	 * Der Standartkonstruktor wird auf protected gesetzt, sodass man über <code>new</code>
+	 * kein Objekt der Klasse erzeugen kann
+	 */
 	protected StuecklisteMapper() {
 	}
 
 	/**
-	 * ?
+	 * Die statische Methode dient dazu die Singleton-Eigenschaft des Mappers sicherzustellen, indem
+	 * sie dafür sorgt, dass nur eine Instanz des Mappers existiert.
+	 * Der Mapper kann nur über <code>UserMapper.userMapper()</code> instanziiert werden
 	 * 
-	 * @return stuecklisteMapper
+	 * @return stuecklistenMapper
 	 */
 	public static StuecklisteMapper stuecklisteMapper() {
 		if (stuecklisteMapper == null) {
