@@ -3,20 +3,28 @@ package de.hdm.gruppe1.server.report;
 import de.hdm.gruppe1.server.db.UserMapper;
 import de.hdm.gruppe1.shared.report.LoginInfo;
 import de.hdm.gruppe1.shared.report.LoginService;
-
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+/**
+ * Implementierung des <code>ReportGenerator-Login Service</code>-Interface. Die technische
+ * Realisierung bzgl. <code>RemoteServiceServlet</code> bzw. GWT RPC erfolgt
+ * analog zu {@ReportLoginService}. Für Details zu GWT RPC siehe dort.
+ * 
+ * @see ReportLoginService
+ * @author Thies, Schmidt & Pressler 
+ */
 public class ReportLoginServiceImpl extends RemoteServiceServlet implements
     LoginService {
 
-  /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	   /**
+	   * Nutzerdaten mit Hilfe des Google User Service abgereifen
+	   * @see #getUserInfo(String requestUri)
+	   */
 public LoginInfo getUserInfo(String requestUri) {
     UserService userService = UserServiceFactory.getUserService();
     User user = userService.getCurrentUser();
