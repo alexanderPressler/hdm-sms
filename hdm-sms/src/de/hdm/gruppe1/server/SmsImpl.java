@@ -219,7 +219,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  
 		//Überprüfen, ob ein Bauteil mit dem Namen schon existiert
 		  Bauteil bauteil = bauteilMapper.finByName(b.getName());
-		  if(bauteil!=null){
+		  if(bauteil!=null&&b.getId()!=bauteil.getId()){
 			  DuplicateBauteilException dBE = new DuplicateBauteilException(bauteil);
 			  throw dBE;
 		  }
@@ -347,7 +347,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  
 		//Überprüfen, ob eine Stueckliste mit dem Namen schon existiert
 		  Stueckliste stueckliste = stuecklisteMapper.finByName(s.getName());
-		  if(stueckliste!=null){
+		  if(stueckliste!=null&&s.getId()!=stueckliste.getId()){
 			  DuplicateStuecklisteException dSE = new DuplicateStuecklisteException(stueckliste);
 			  throw dSE;
 		  }
@@ -497,7 +497,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  
 		//Überprüfen, ob eine Baugruppe mit dem Namen schon existiert
 		  Baugruppe baugruppe = baugruppenMapper.finByName(b.getName());
-		  if(baugruppe!=null){
+		  if(baugruppe!=null&&b.getId()!=baugruppe.getId()){
 			  DuplicateBaugruppeException dBE = new DuplicateBaugruppeException(baugruppe);
 			  throw dBE;
 		  }
@@ -603,7 +603,7 @@ public class SmsImpl extends RemoteServiceServlet implements
 		  
 		//Überprüfen, ob ein Enderzeugnis mit dem Namen schon existiert
 		  Enderzeugnis enderzeugnis = enderzeugnisMapper.finByName(e.getName());
-		  if(enderzeugnis!=null){
+		  if(enderzeugnis!=null&&e.getId()!=enderzeugnis.getId()){
 			  DuplicateEnderzeugnisException dEE = new DuplicateEnderzeugnisException(enderzeugnis);
 			  throw dEE;
 		  }

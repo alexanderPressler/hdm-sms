@@ -208,19 +208,19 @@ public class EnderzeugnisMapper {
 				/**
 				 * Dem Enderzeugnis einen User zuordnen.
 				 */
-				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				int zugehoerigeUserID = rs.getInt("bearbeitet_Von");
 				UserMapper um = UserMapper.userMapper();
-				User zugehörigerUser = um.findByID(zugehörigeUserID);
-				enderzeugnis.setEditUser(zugehörigerUser);
+				User zugehoerigerUser = um.findByID(zugehoerigeUserID);
+				enderzeugnis.setEditUser(zugehoerigerUser);
 
 				/**
 				 * Dem Enderzeugnis eine Baugruppe zuordnen.
 				 */
-				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				int zugehoerigeBaugruppeID = rs.getInt("baugruppe");
 				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper();
-				Baugruppe zugehörigeBaugruppe = bm
-						.findByID(zugehörigeBaugruppeID);
-				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				Baugruppe zugehoerigeBaugruppe = bm
+						.findByID(zugehoerigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehoerigeBaugruppe);
 
 				/**
 				 * Java Util Date wird umgewandelt in SQL Date um das
@@ -275,19 +275,19 @@ public class EnderzeugnisMapper {
 				/**
 				 * Dem Enderzeugnis einen User zuordnen.
 				 */
-				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				int zugehoerigeUserID = rs.getInt("bearbeitet_Von");
 				UserMapper um = UserMapper.userMapper();
-				User zugehörigerUser = um.findByID(zugehörigeUserID);
-				enderzeugnis.setEditUser(zugehörigerUser);
+				User zugehoerigerUser = um.findByID(zugehoerigeUserID);
+				enderzeugnis.setEditUser(zugehoerigerUser);
 
 				/**
 				 * Dem Enderzeugnis eine Baugruppe zuordnen.
 				 */
-				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				int zugehoerigeBaugruppeID = rs.getInt("baugruppe");
 				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper();
-				Baugruppe zugehörigeBaugruppe = bm
-						.findByID(zugehörigeBaugruppeID);
-				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				Baugruppe zugehoerigeBaugruppe = bm
+						.findByID(zugehoerigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehoerigeBaugruppe);
 
 				vEnderzeugnis.addElement(enderzeugnis);
 
@@ -362,19 +362,19 @@ public class EnderzeugnisMapper {
 				/**
 				 * Dem Enderzeugnis einen User zuordnen.
 				 */
-				int zugehörigeUserID = rs.getInt("bearbeitet_Von");
+				int zugehoerigeUserID = rs.getInt("bearbeitet_Von");
 				UserMapper um = UserMapper.userMapper();
-				User zugehörigerUser = um.findByID(zugehörigeUserID);
-				enderzeugnis.setEditUser(zugehörigerUser);
+				User zugehoerigerUser = um.findByID(zugehoerigeUserID);
+				enderzeugnis.setEditUser(zugehoerigerUser);
 
 				/**
 				 * Dem Enderzeugnis eine Baugruppe zuordnen.
 				 */
-				int zugehörigeBaugruppeID = rs.getInt("baugruppe");
+				int zugehoerigeBaugruppeID = rs.getInt("baugruppe");
 				BaugruppenMapper bm = BaugruppenMapper.baugruppenMapper();
-				Baugruppe zugehörigeBaugruppe = bm
-						.findByID(zugehörigeBaugruppeID);
-				enderzeugnis.setBaugruppe(zugehörigeBaugruppe);
+				Baugruppe zugehoerigeBaugruppe = bm
+						.findByID(zugehoerigeBaugruppeID);
+				enderzeugnis.setBaugruppe(zugehoerigeBaugruppe);
 
 				/**
 				 * Java Util Date wird umgewandelt in SQL Date um das
