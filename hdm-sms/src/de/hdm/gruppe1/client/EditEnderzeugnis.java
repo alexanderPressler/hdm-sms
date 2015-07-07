@@ -21,9 +21,12 @@ import de.hdm.gruppe1.shared.bo.Enderzeugnis;
 /**
  * Die Klasse CreateEnderzeugnis ermöglicht dem User, Objekte von Baugruppen in
  * der Datenbank als Enderzeugnisse mit entsprechender Referenz zueinander abzuspeichern.
- * 
- * @author Mario Theiler
+ * Das Enderzeugniss kann einen differentzierten Namen zur Baugruppe annehmen, welcher für den Verkauf als
+ * externe Artikel Bezeichnung gebraucht wird. 
+ *  
+ * @author Katja Thiere, Mario Theiler
  * @version 1.0
+ * 
  */
 public class EditEnderzeugnis extends VerticalPanel {
 	
@@ -43,13 +46,22 @@ public class EditEnderzeugnis extends VerticalPanel {
 	private final Label BaugruppeLabel = new Label("Gewünschte Baugruppe ändern");
 	private final Button EditEnderzeugnisButton = new Button("ändern");
 	
-	// Vektor wird mit allen Baugruppen aus der DB befüllt
+	/**
+	 * Vektor wird mit allen Baugruppen aus der DB befüllt
+	 */
+	
 	Vector<Baugruppe> allBaugruppen = new Vector<Baugruppe>();
 	
-	//Horizontales Anordnen der Bauteil-Id mit Bauteil-Name
+	/**
+	 * Horizontales Anordnen der Bauteil-Id mit Bauteil-Name
+	 */
+	
 	HorizontalPanel baugruppePanel = new HorizontalPanel();
 	
-	// Remote Service via ClientsideSettings
+	/**
+	 * Remote Service via ClientsideSettings
+	 */
+	
 	SmsAsync stuecklistenVerwaltung = ClientsideSettings.getSmsVerwaltung();
 	
 	public EditEnderzeugnis(Enderzeugnis editEnderzeugnis) {
@@ -131,8 +143,6 @@ public class EditEnderzeugnis extends VerticalPanel {
 	 * wird, da es sich sonst um eine Neuanlage und nicht um einen
 	 * Editier-Vorgang handeln würde.
 	 * 
-	 * @author Mario
-	 * 
 	 */
 	private class EditClickHandler implements ClickHandler {
 		@Override
@@ -191,8 +201,6 @@ public class EditEnderzeugnis extends VerticalPanel {
 	/**
 	 * Hiermit wird sichergestellt, dass beim (nicht) erfolgreichen
 	 * Update-Befehl eine entsprechende Hinweismeldung ausgegeben wird.
-	 * 
-	 * @author Mario
 	 * 
 	 */
 	class SaveCallback implements AsyncCallback<Void> {
