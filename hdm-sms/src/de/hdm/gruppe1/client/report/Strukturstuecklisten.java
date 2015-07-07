@@ -18,10 +18,22 @@ import de.hdm.gruppe1.shared.bo.Baugruppe;
 import de.hdm.gruppe1.shared.bo.Stueckliste;
 import de.hdm.gruppe1.shared.report.SmsReportAsync;
 
+/**
+ * Die Klasse Strukturstuecklisten bietet die Möglichkeit, einen Stücklisten-Baum einer gewünschten Baugruppe als
+ * HTML-Report anzeigen zu lassen. Hierzu wird die "TreeViewReport"-Klasse aufgerufen und mithilfe von .toString
+ * in einen HTML-Baum gewandelt.
+ * 
+ * Am Ende der Klasse wird ein HTML-Widget erstellt, welches diverse vordefinierte Strings aneinander reiht.
+ * Diese String werden mithilfe von HTML-Tags getrennt. Sofern zukünftig ein Wechsel der Ausgabe von HTML zu
+ * bspw. PDF erfolgen soll, muss lediglich diese eine Methode angepasst werden und nicht die komplette Klasse.
+ * 
+ * @author Mario Theiler
+ *
+ */
 public class Strukturstuecklisten extends VerticalPanel {
 
 	/**
-	 * GUI-Elemente für Strukturstuecklisten initialisieren
+	 * GUI-Elemente für Strukturstuecklisten initialisieren.
 	 */
 	private final Label HeadlineLabel = new Label("Strukturstückliste anzeigen");
 	private final Label SublineLabel = new Label("Um eine Strukturstückliste zu generieren, wählen Sie zunächst eine Baugruppe im Dropdown aus.");
@@ -43,15 +55,20 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 */
 	SmsReportAsync stuecklistenReportVerwaltung = ClientsideSettings.getReportGenerator();
 	
-	// Vektor wird mit allen Baugruppen aus der DB befüllt
+	/**
+	 * Vektor wird mit allen Baugruppen aus der DB befüllt.
+	 */
 	Vector<Baugruppe> allBaugruppe = new Vector<Baugruppe>();
 	
-	// Konstruktor der Klasse Strukturstuecklisten. Gibt vor, dass bei jeder
-	// Instantiierung die entsprechenden GUI-Elemente geladen werden.
+	/**
+	 * Konstruktor der Klasse Strukturstuecklisten. Gibt vor, dass bei jeder
+	 * Instantiierung die entsprechenden GUI-Elemente geladen werden.
+	 */
 	public Strukturstuecklisten() {
 		
-		// Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser
-		// RPC-Aufruf gestartet
+		/**
+		 * Um das Dropdown mit Enderzeugnissen aus der DB zu befüllen, wird dieser RPC-Aufruf gestartet
+		 */
 		stuecklistenReportVerwaltung.getAllBaugruppen(new GetAllBaugruppenCallback());
 		
 		/**
@@ -65,7 +82,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 		this.add(CreateStrukturstuecklisteButton);
 		
 		/**
-		 * Diverse css-Formatierungen
+		 * Diverse css-Formatierungen.
 		 */
 		HeadlineLabel.setStyleName("headline");
 		SublineLabel.setStyleName("subline");
@@ -78,15 +95,11 @@ public class Strukturstuecklisten extends VerticalPanel {
 		CreateStrukturstuecklisteButton.addClickHandler(new CreateClickHandler());
 		
 		/**
-		 * Abschließend wird alles dem RootPanel zugeordnet
+		 * Abschließend wird alles dem RootPanel zugeordnet.
 		 */
 		RootPanel.get("content_wrap").add(this);
 		
 	}
-	
-	/*
-	 * Click Handlers.
-	 */
 	
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die einen Vektor von allen in
@@ -94,7 +107,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	 * und erlaubt daher, auf die Attribute der übergeordneten Klasse
 	 * zuzugreifen.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler, Alexander Pressler
 	 * 
 	 */
 	class GetAllBaugruppenCallback implements AsyncCallback<Vector<Baugruppe>> {
@@ -113,6 +126,9 @@ public class Strukturstuecklisten extends VerticalPanel {
 			 */
 			allBaugruppe = alleBaugruppen;
 
+			/**
+			 * Wenn der Ergebnis-Vektor leer ist, gib folgenden Window alert aus.
+			 */
 			if (allBaugruppe.isEmpty() == true) {
 
 				Window.alert("Es sind leider keine Daten in der Datenbank vorhanden.");
@@ -140,7 +156,7 @@ public class Strukturstuecklisten extends VerticalPanel {
 	/**
 	 * Hiermit wird die RPC-Methode aufgerufen, die eine Strukturstückliste erstellt.
 	 * 
-	 * @author Mario
+	 * @author Mario Theiler
 	 * 
 	 */
 	private class CreateClickHandler implements ClickHandler {
@@ -151,27 +167,36 @@ public class Strukturstuecklisten extends VerticalPanel {
 			Baugruppe baugruppe = allBaugruppe.get(index);
 			Stueckliste baugruppenStueckliste = baugruppe.getStueckliste();
 			
-				/**
-				 * Die konkrete RPC-Methode für den create-Befehl wird
-				 * aufgerufen. Hierbei werden die gewünschten Werte
-				 * mitgeschickt.
-				 */
-//			stuecklistenReportVerwaltung.createBaugruppenReport(BaugruppenStueckliste, new BaugruppenReportCallback());
-
-			//Test für Tree im Client-Package
+			/**
+			 * Die Klasse TreeViewReport wird aufgerufen und in "treeReport" zwischengespeichert.
+			 * Die Variable "anzahl" wird in dieser Klasse standardmäßig mit 1 befüllt, da nur
+			 * eine Baugruppe ausgewählt werden kann.
+			 */
 			TreeViewReport treeReport = new TreeViewReport(baugruppenStueckliste, 1);
 			
 			/**
-			 * Eine Instanz der Klasse Impressum wird erstellt und an dieser Stelle dem report1-String hinzugefügt.
+			 * Eine Instanz der Klasse Impressum wird erstellt und an dieser Stelle dem impressumString-String
+			 * hinzugefügt.
 			 */
 			ImpressumReport imp = new ImpressumReport();
 			impressumString = imp.setImpressum();
 			
+			/**
+			 * Das HTML-Widget wird mit vordefinierten Strings für Überschrift und diversen zusätzlichen Informationen
+			 * über die Stückliste befüllt. Zwischen den Strings werden HTML-Tags platziert, damit die Anzeige
+			 * hinterher wie gewünscht dargestellt wird.
+			 * Sollte zukünftig ein Wechsel der Ausgabe von HTML zu bspw. PDF stattfinden, muss lediglich dieses
+			 * HTML-Widget inkl. der HTML-Tags ausgetauscht werden. Die restliche Klasse wäre von einem solchen
+			 * Wechsel nicht betroffen.
+			 */
 			HTML reportHTML = new HTML("<h3>"+headlineString+baugruppe.getName()+"</h3>"+reportCreationDateString+"</p>"
 			+stuecklistenIDString+baugruppenStueckliste.getId()+"<br>"+stuecklistenCreationDateString
 			+creationDate.format(baugruppenStueckliste.getCreationDate())+"</p>"
 			+treeReport.toString()+"<p>"+impressumString);
 			
+			/**
+			 * Abschließend wird alles dem RootPanel zugeordnet.
+			 */
 			RootPanel.get("content_wrap").clear();
 			RootPanel.get("content_wrap").add(reportHTML);
 			
