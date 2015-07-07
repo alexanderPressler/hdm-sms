@@ -6,12 +6,18 @@ import de.hdm.gruppe1.shared.bo.BusinessObject;
  * Nutzerklasse, diese Klasse greift auf die Nutzerdaten
  * über die Google Accounts API zu .
  * 
- * @author alex
- * @version 1.0
+ * @author Schmidt & Pressler
  */
 public class User extends BusinessObject {
 
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Deklaration der Attribute
+	 * name
+	 * googleID
+	 * + Setter & Getter
+	 */
 	private String name = "";
 	private String googleID ="";
 	
